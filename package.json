@@ -1,0 +1,9 @@
+{
+  "name": "ffq",
+  "version": "1.0.0",
+  "description": "FFQ lets you create and carry out food frequency questionaires. ",
+  "main": "index.js",
+  "repository": "https://github.com/Space-Korbi/ffq.git",
+  "author": "Korbinian Baumer <baumer.korbinian@gmail.com>",
+  "license": "MIT"
+}
