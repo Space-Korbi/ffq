@@ -6,7 +6,5 @@
   "repository": "https://github.com/Space-Korbi/ffq.git",
   "author": "Korbinian Baumer <baumer.korbinian@gmail.com>",
   "license": "MIT",
-  "devDependencies": {
-    "nodemon": "^2.0.6"
-  }
+  "devDependencies": {}
 }
