@@ -23,7 +23,7 @@ brew services start mongodb-community@4.4
 cd ffq/server && yarn node index.js
 cd ffq/client && yarn start
 
-### ESLint & Prettier
+### ESLint & Prettier in Visula Studio Code
 
 Download these two extensions for autoformatting and linting in VSCode:
 "Prettier Formatter" @5.7.1+
