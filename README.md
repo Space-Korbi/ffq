@@ -4,12 +4,12 @@
 
 ### yarn
 
-- brew install yarn
+- `brew install yarn`
 
 ### mongodb
 
-- brew tap mongodb/brew
-- brew install mongodb-community@4.4
+1. `brew tap mongodb/brew`
+2. `brew install mongodb-community@4.4`
 
 ### node.js
 
