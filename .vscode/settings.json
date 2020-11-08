@@ -1,0 +1,29 @@
+{
+  "workbench.colorTheme": "Monokai Dimmed",
+  "git.confirmSync": false,
+  "notebook.displayOrder": [],
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // Default (format when you paste)
+  "editor.formatOnPaste": true,
+  // Default (format when you save)
+  "editor.formatOnSave": true,
+  "workbench.startupEditor": "newUntitledFile",
+  "prettier.packageManager": "yarn",
+  "prettier.singleQuote": true,
+  "eslint.codeAction.showDocumentation": {
+    "enable": true
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.validate": ["javascript"],
+  "json.format.enable": false
+}
