@@ -1,5 +1,10 @@
 # ffq
 
+## Prerequisites
+
+- [Homebrew](https://treehouse.github.io/installation-guides/mac/homebrew)
+- [node.js](https://nodejs.org/en/)
+
 ## Local installation for development
 
 ### yarn
