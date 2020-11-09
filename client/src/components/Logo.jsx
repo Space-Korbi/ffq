@@ -1,20 +1,19 @@
-import React, { Component } from 'react'
-import styled from 'styled-components'
+import React from 'react';
+import styled from 'styled-components';
 
-import logo from '../logo.svg'
+import logo from '../logo.svg';
 
 const Wrapper = styled.a.attrs({
-    className: 'navbar-brand',
-})``
+  className: 'navbar-brand'
+})``;
 
-class Logo extends Component {
-    render() {
-        return (
-            <Wrapper href="https://nytimes.com">
-                <img src={logo} width="50" height="50" alt="sambarros.com" />
-            </Wrapper>
-        )
-    }
-}
+// * Stateless component
+const Logo = () => {
+  return (
+    <Wrapper href="https://nytimes.com">
+      <img src={logo} width="50" height="50" alt="sambarros.com" />
+    </Wrapper>
+  );
+};
 
-export default Logo
+export default Logo;
