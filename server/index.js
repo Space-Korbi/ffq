@@ -1,5 +1,5 @@
 /**
- * * Why we dont use ES6 but CommonJS in server files
+ * * Why I dont use ES6 but CommonJS in server files
  * * 'import' vs 'require'
  * You can't selectively load only the pieces you need with 'require'
  * but with 'imports', you can selectively load only the pieces you need.
