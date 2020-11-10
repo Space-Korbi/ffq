@@ -1,5 +1,10 @@
 const Movie = require('../models/movie-model');
 
+/**
+ * * Movie controller
+ * This class contains the functions to
+ * create, update, delete and get movie entries
+ */
 createMovie = (req, res) => {
   const body = req.body;
 
