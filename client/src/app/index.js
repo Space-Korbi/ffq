@@ -2,7 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 // Import my components
-import { NavBar } from '../components';
+import NavBar from '../components/NavBar';
+
 import { MoviesList, MoviesInsert, MoviesUpdate } from '../pages';
 
 // Import Bootstrap’s ready-to-use css

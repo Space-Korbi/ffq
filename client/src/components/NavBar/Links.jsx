@@ -23,9 +23,6 @@ const Item = styled.div.attrs({
 const Links = () => {
   return (
     <div>
-      <Link to="/" className="navbar-brand">
-        My first MERN Application
-      </Link>
       <Collapse>
         <List>
           <Item>
