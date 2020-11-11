@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const Movie = require('../models/movie-model');
 
 /**
@@ -5,8 +6,8 @@ const Movie = require('../models/movie-model');
  * This class contains the functions to
  * create, update, delete and get movie entries
  */
-createMovie = (req, res) => {
-  const body = req.body;
+const createMovie = (req, res) => {
+  const { body } = req;
 
   if (!body) {
     return res.status(400).json({
@@ -38,8 +39,8 @@ createMovie = (req, res) => {
     });
 };
 
-updateMovie = async (req, res) => {
-  const body = req.body;
+const updateMovie = async (req, res) => {
+  const { body } = req;
 
   if (!body) {
     return res.status(400).json({
@@ -55,10 +56,11 @@ updateMovie = async (req, res) => {
         message: 'Movie not found!'
       });
     }
-    movie.name = body.name;
-    movie.time = body.time;
-    movie.rating = body.rating;
-    movie
+    const movieUpdate = movie;
+    movieUpdate.name = body.name;
+    movieUpdate.time = body.time;
+    movieUpdate.rating = body.rating;
+    movieUpdate
       .save()
       .then(() => {
         return res.status(200).json({
@@ -76,7 +78,7 @@ updateMovie = async (req, res) => {
   });
 };
 
-deleteMovie = async (req, res) => {
+const deleteMovie = async (req, res) => {
   await Movie.findOneAndDelete({ _id: req.params.id }, (err, movie) => {
     if (err) {
       return res.status(400).json({ success: false, error: err });
@@ -90,7 +92,7 @@ deleteMovie = async (req, res) => {
   }).catch((err) => console.log(err));
 };
 
-getMovieById = async (req, res) => {
+const getMovieById = async (req, res) => {
   await Movie.findOne({ _id: req.params.id }, (err, movie) => {
     if (err) {
       return res.status(400).json({ success: false, error: err });
@@ -103,7 +105,7 @@ getMovieById = async (req, res) => {
   }).catch((err) => console.log(err));
 };
 
-getMovies = async (req, res) => {
+const getMovies = async (req, res) => {
   await Movie.find({}, (err, movies) => {
     if (err) {
       return res.status(400).json({ success: false, error: err });
