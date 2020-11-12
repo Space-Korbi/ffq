@@ -11,7 +11,7 @@ const Wrapper = styled.a.attrs({
 const Logo = () => {
   return (
     <Wrapper href="https://nytimes.com">
-      <img src={logo} width="50" height="50" alt="sambarros.com" />
+      <img src={logo} width="50" height="50" alt="tagesschau.de" />
     </Wrapper>
   );
 };
