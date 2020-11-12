@@ -6,9 +6,6 @@ import Dashboard from '../components/Dashboard';
 
 import { MoviesList, MoviesInsert, MoviesUpdate } from '../pages';
 
-// Import Bootstrap’s ready-to-use css
-import 'bootstrap/dist/css/bootstrap.min.css';
-
 // * The app’s entry point
 function App() {
   return (

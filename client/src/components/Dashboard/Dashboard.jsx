@@ -1,10 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
-import './dashboard.css';
 
 const Dashboard = () => {
   return (
-    <div>
+    <div className="frame">
       <nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
         <a className="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">
           FFQ
