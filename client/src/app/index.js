@@ -10,8 +10,13 @@ import { MoviesList, MoviesInsert, MoviesUpdate } from '../pages';
 function App() {
   return (
     <Router>
-      <Dashboard />
       <Switch>
+        <Route path="/" exact>
+          <div>
+            <h2>Home</h2>
+          </div>
+        </Route>
+        <Route path="/dashboard" component={Dashboard} />
         <Route path="/movies/list" exact component={MoviesList} />
         <Route path="/movies/create" exact component={MoviesInsert} />
         <Route path="/movies/update/:id" exact component={MoviesUpdate} />

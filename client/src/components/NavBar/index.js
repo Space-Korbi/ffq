@@ -1,5 +1,6 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
-import Links from './Links';
+import Links from '../Dashboard/Links';
 import Logo from './Logo';
 
 const NavBar = () => {

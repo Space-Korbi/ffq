@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 
 const List = styled.div.attrs({
@@ -17,21 +17,17 @@ const Item = styled.div.attrs({
  * Stateless components are in general easier to reason about.
  */
 const Links = () => {
+  const match = useRouteMatch();
   return (
     <div>
       <List>
         <Item>
-          <Link to="/introduction" className="nav-link">
-            Introduction
-          </Link>
-        </Item>
-        <Item>
-          <Link to="/movies/list" className="nav-link">
+          <Link to={`${match.url}/movies/list`} className="nav-link">
             List Movies
           </Link>
         </Item>
         <Item>
-          <Link to="/movies/create" className="nav-link">
+          <Link to={`${match.url}/movies/create`} className="nav-link">
             Create Movie
           </Link>
         </Item>
