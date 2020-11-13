@@ -2,6 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Route, Switch, useRouteMatch, Link } from 'react-router-dom';
 import { MoviesList, MoviesInsert } from '../../pages';
+import Table from '../Table';
 
 const Dashboard = () => {
   const { path, url } = useRouteMatch();
@@ -58,9 +59,9 @@ const Dashboard = () => {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    Reports
-                  </a>
+                  <Link to={`${url}/table`} className="nav-link">
+                    Table
+                  </Link>
                 </li>
                 <li className="nav-item">
                   <a className="nav-link" href="#">
@@ -254,6 +255,9 @@ const Dashboard = () => {
                 </Route>
                 <Route path={`${path}/movies/create`}>
                   <MoviesInsert />
+                </Route>
+                <Route path={`${path}/table`}>
+                  <Table />
                 </Route>
               </Switch>
             </div>

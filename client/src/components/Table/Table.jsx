@@ -1,88 +1,51 @@
-/* eslint-disable react/button-has-type */
 /* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-unused-vars */
-/* eslint-disable no-underscore-dangle */
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useTable } from 'react-table';
-import { getAllMovies } from '../../api';
-import UpdateMovie from './UpdateMovie';
-import DeleteMovie from './DeleteMovie';
 
-const MoviesList = () => {
-  // Declare a new state variable, which we'll call "movie"
-  const [movieList, setMovieList] = useState([]);
-
-  useEffect(async () => {
-    /**
-     * * Infinite loop
-     * One of the popular cases that using useState inside of useEffect
-     * will not cause an infinite loop is when you pass an empty array
-     * as a second argument to useEffect like useEffect(() => {....}, [])
-     * which means that the effect function should be called once:
-     * after the first mount/render only.
-     */
-    await getAllMovies().then((movies) => {
-      setMovieList(movies.data.data);
-    });
-  }, []);
-
+const Table = () => {
+  /**
+   * * useMemo
+   * It's important that we're using React.useMemo here
+   * to ensure that our data isn't recreated on every render.
+   * If we didn't use React.useMemo,
+   * the table would think it was receiving new data on every render
+   * and attempt to recalculate a lot of logic every single time.
+   */
   const columns = React.useMemo(
     () => [
       {
-        Header: 'ID',
-        accessor: '_id' // accessor is the "key" in the data
+        Header: 'Column 1',
+        accessor: 'col1' // accessor is the "key" in the data
       },
       {
-        Header: 'Name',
-        accessor: 'name'
-      },
-      {
-        Header: 'Rating',
-        accessor: 'rating'
-      },
-      {
-        Header: 'Time',
-        accessor: 'time'
-      },
-      {
-        Header: '',
-        accessor: 'delete'
-      },
-      {
-        Header: '',
-        accessor: 'update'
+        Header: 'Column 2',
+        accessor: 'col2'
       }
     ],
     []
   );
 
-  const data = React.useMemo(() => {
-    if (movieList.length === 0) {
-      return [
-        {
-          _id: 'Data',
-          name: 'Not',
-          rating: 'Loaded',
-          time: 'Yet'
-        }
-      ];
-    }
-    console.log(movieList);
-    const movieRow = movieList.map((movie) => {
-      return {
-        _id: movie._id,
-        name: movie.name,
-        rating: movie.rating,
-        time: movie.time.join(' / '),
-        delete: <DeleteMovie id={movie._id} />,
-        update: <UpdateMovie id={movie._id} />
-      };
-    });
-    return movieRow;
-  });
+  const data = React.useMemo(
+    () => [
+      {
+        col1: 'Hello',
+        col2: 'World'
+      },
+      {
+        col1: 'react-table',
+        col2: 'rocks'
+      },
+      {
+        col1: 'whatever',
+        col2: 'you want'
+      }
+    ],
+    []
+  );
 
   const tableInstance = useTable({ columns, data });
+
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
 
   return (
@@ -143,4 +106,4 @@ const MoviesList = () => {
   );
 };
 
-export default MoviesList;
+export default Table;
