@@ -1,10 +1,8 @@
-/* eslint-disable react/button-has-type */
 /* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-underscore-dangle */
 import React, { useState, useEffect } from 'react';
 import { useTable } from 'react-table';
+import BTable from 'react-bootstrap/Table';
 import { getAllMovies } from '../../api';
 import UpdateMovie from './UpdateMovie';
 import DeleteMovie from './DeleteMovie';
@@ -87,7 +85,7 @@ const MoviesList = () => {
 
   return (
     <div>
-      <table {...getTableProps()}>
+      <BTable striped bordered hover size="sm" {...getTableProps()}>
         <thead>
           {
             // Loop over the header rows
@@ -138,7 +136,7 @@ const MoviesList = () => {
             })
           }
         </tbody>
-      </table>
+      </BTable>
     </div>
   );
 };
