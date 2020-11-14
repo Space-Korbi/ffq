@@ -1,56 +1,18 @@
 /* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { useTable } from 'react-table';
+import BTable from 'react-bootstrap/Table';
 
-const Table = () => {
-  /**
-   * * useMemo
-   * It's important that we're using React.useMemo here
-   * to ensure that our data isn't recreated on every render.
-   * If we didn't use React.useMemo,
-   * the table would think it was receiving new data on every render
-   * and attempt to recalculate a lot of logic every single time.
-   */
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: 'Column 1',
-        accessor: 'col1' // accessor is the "key" in the data
-      },
-      {
-        Header: 'Column 2',
-        accessor: 'col2'
-      }
-    ],
-    []
-  );
-
-  const data = React.useMemo(
-    () => [
-      {
-        col1: 'Hello',
-        col2: 'World'
-      },
-      {
-        col1: 'react-table',
-        col2: 'rocks'
-      },
-      {
-        col1: 'whatever',
-        col2: 'you want'
-      }
-    ],
-    []
-  );
-
-  const tableInstance = useTable({ columns, data });
-
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
+function StandardTable({ columns, data }) {
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
+    columns,
+    data
+  });
 
   return (
-    <div>
-      <table {...getTableProps()}>
+    <>
+      <BTable striped bordered hover size="sm" {...getTableProps()}>
         <thead>
           {
             // Loop over the header rows
@@ -101,9 +63,9 @@ const Table = () => {
             })
           }
         </tbody>
-      </table>
-    </div>
+      </BTable>
+    </>
   );
-};
+}
 
-export default Table;
+export default StandardTable;

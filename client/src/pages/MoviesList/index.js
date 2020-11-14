@@ -4,7 +4,7 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import EditableTable from './EditableTable';
+import { EditableTable } from '../../components/Table';
 import { getAllMovies } from '../../api';
 import UpdateMovie from './UpdateMovie';
 import DeleteMovie from './DeleteMovie';
