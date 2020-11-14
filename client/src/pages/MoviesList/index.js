@@ -11,6 +11,7 @@ import DeleteMovie from './DeleteMovie';
 const MoviesList = () => {
   // Declare a new state variable, which we'll call "movie"
   const [movieList, setMovieList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(async () => {
     /**
@@ -23,6 +24,7 @@ const MoviesList = () => {
      */
     await getAllMovies().then((movies) => {
       setMovieList(movies.data.data);
+      setLoading(false);
     });
   }, []);
 
@@ -86,58 +88,62 @@ const MoviesList = () => {
 
   return (
     <div>
-      <BTable striped bordered hover size="sm" {...getTableProps()}>
-        <thead>
-          {
-            // Loop over the header rows
-            headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {
-                  // Loop over the headers in each row
-                  headerGroup.headers.map((column) => (
-                    // Apply the header cell props
-                    <th {...column.getHeaderProps()}>
-                      {
-                        // Render the header
-                        column.render('Header')
-                      }
-                    </th>
-                  ))
-                }
-              </tr>
-            ))
-          }
-        </thead>
-        {/* Apply the table body props */}
-        <tbody {...getTableBodyProps()}>
-          {
-            // Loop over the table rows
-            rows.map((row) => {
-              // Prepare the row for display
-              prepareRow(row);
-              return (
-                // Apply the row props
-                <tr {...row.getRowProps()}>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <BTable striped bordered hover size="sm" {...getTableProps()}>
+          <thead>
+            {
+              // Loop over the header rows
+              headerGroups.map((headerGroup) => (
+                <tr {...headerGroup.getHeaderGroupProps()}>
                   {
-                    // Loop over the rows cells
-                    row.cells.map((cell) => {
-                      // Apply the cell props
-                      return (
-                        <td {...cell.getCellProps()}>
-                          {
-                            // Render the cell contents
-                            cell.render('Cell')
-                          }
-                        </td>
-                      );
-                    })
+                    // Loop over the headers in each row
+                    headerGroup.headers.map((column) => (
+                      // Apply the header cell props
+                      <th {...column.getHeaderProps()}>
+                        {
+                          // Render the header
+                          column.render('Header')
+                        }
+                      </th>
+                    ))
                   }
                 </tr>
-              );
-            })
-          }
-        </tbody>
-      </BTable>
+              ))
+            }
+          </thead>
+          {/* Apply the table body props */}
+          <tbody {...getTableBodyProps()}>
+            {
+              // Loop over the table rows
+              rows.map((row) => {
+                // Prepare the row for display
+                prepareRow(row);
+                return (
+                  // Apply the row props
+                  <tr {...row.getRowProps()}>
+                    {
+                      // Loop over the rows cells
+                      row.cells.map((cell) => {
+                        // Apply the cell props
+                        return (
+                          <td {...cell.getCellProps()}>
+                            {
+                              // Render the cell contents
+                              cell.render('Cell')
+                            }
+                          </td>
+                        );
+                      })
+                    }
+                  </tr>
+                );
+              })
+            }
+          </tbody>
+        </BTable>
+      )}
     </div>
   );
 };
