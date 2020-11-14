@@ -107,28 +107,28 @@ function EditableTable({ columns, data, updateMyData, skipPageReset }) {
             <button
               className="btn btn-outline-primary"
               onClick={() => gotoPage(0)}
-              disabled={canNextPage}
+              disabled={!canPreviousPage}
             >
               {'<<'}
             </button>
             <button
               className="btn btn-outline-primary"
               onClick={() => previousPage()}
-              disabled={canNextPage}
+              disabled={!canPreviousPage}
             >
               {'<'}
             </button>
             <button
               className="btn btn-outline-primary"
               onClick={() => nextPage()}
-              disabled={canPreviousPage}
+              disabled={!canNextPage}
             >
               {'>'}
             </button>
             <button
               className="btn btn-outline-primary"
               onClick={() => gotoPage(pageCount - 1)}
-              disabled={canPreviousPage}
+              disabled={!canNextPage}
             >
               {'>>'}
             </button>
