@@ -108,7 +108,7 @@ const MoviesList = () => {
         <div>Loading...</div>
       ) : (
         <div>
-          <EditableTable columns={columns} data={data} />
+          <EditableTable columns={columns} data={data} updateMyData={updateMyData} />
         </div>
       )}
     </div>
