@@ -2,7 +2,7 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import StandardTable from './Table';
+import EditableTable from './EditableTable';
 import { getAllMovies } from '../../api';
 import UpdateMovie from './UpdateMovie';
 import DeleteMovie from './DeleteMovie';
@@ -71,8 +71,45 @@ const MoviesList = () => {
     return movieRow;
   });
 
+  /**
+   * TODO update Data on server
+   * @param {rowIndex}
+   * @param {columnId}
+   * @param {value}
+   * This function gets the the changed value from the cell,
+   * specified by rowIndex and columnIndex and updates the
+   * Database accordingly
+   */
+  const updateMyData = (rowIndex, columnId, value) => {
+    // We also turn on the flag to not reset the page
+    console.log('Updating data:');
+    console.log('rowIndex', rowIndex);
+    console.log('columnId', columnId);
+    console.log('value', value);
+    /* setSkipPageReset(true);
+    setData((old) =>
+      old.map((row, index) => {
+        if (index === rowIndex) {
+          return {
+            ...old[rowIndex],
+            [columnId]: value
+          };
+        }
+        return row;
+      })
+    ); */
+  };
+
   return (
-    <div>{loading ? <div>Loading...</div> : <StandardTable columns={columns} data={data} />}</div>
+    <div>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <div>
+          <EditableTable columns={columns} data={data} updateMyData={updateMyData} />
+        </div>
+      )}
+    </div>
   );
 };
 
