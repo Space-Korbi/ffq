@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-underscore-dangle */
 import React, { useState, useEffect } from 'react';
@@ -47,11 +48,13 @@ const MoviesList = () => {
       },
       {
         Header: '',
-        accessor: 'delete'
+        accessor: 'delete',
+        Cell: ({ row: { original } }) => <DeleteMovie id={original._id} />
       },
       {
         Header: '',
-        accessor: 'update'
+        accessor: 'update',
+        Cell: ({ row: { original } }) => <UpdateMovie id={original._id} />
       }
     ],
     []
@@ -63,9 +66,7 @@ const MoviesList = () => {
         _id: movie._id,
         name: movie.name,
         rating: movie.rating,
-        time: movie.time.join(' / '),
-        delete: <DeleteMovie id={movie._id} />,
-        update: <UpdateMovie id={movie._id} />
+        time: movie.time.join(' / ')
       };
     });
     return movieRow;
@@ -80,6 +81,7 @@ const MoviesList = () => {
    * specified by rowIndex and columnIndex and updates the
    * Database accordingly
    */
+  // eslint-disable-next-line no-unused-vars
   const updateMyData = (rowIndex, columnId, value) => {
     // We also turn on the flag to not reset the page
     console.log('Updating data:');
@@ -106,7 +108,7 @@ const MoviesList = () => {
         <div>Loading...</div>
       ) : (
         <div>
-          <EditableTable columns={columns} data={data} updateMyData={updateMyData} />
+          <EditableTable columns={columns} data={data} />
         </div>
       )}
     </div>

@@ -79,8 +79,6 @@ function EditableTable({ columns, data, updateMyData, skipPageReset }) {
   return (
     <>
       <BTable striped bordered hover size="sm" {...getTableProps()}>
-        {console.log('PrevPage', canPreviousPage)}
-        {console.log('NextPage', canNextPage)}
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
