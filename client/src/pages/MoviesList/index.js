@@ -5,7 +5,8 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { EditableTable } from '../../components/Table';
-import { getAllMovies } from '../../api';
+// eslint-disable-next-line no-unused-vars
+import { getAllMovies, updateMovieById } from '../../api';
 import UpdateMovie from './UpdateMovie';
 import DeleteMovie from './DeleteMovie';
 
@@ -83,12 +84,14 @@ const MoviesList = () => {
    * Database accordingly
    */
   // eslint-disable-next-line no-unused-vars
-  const updateMyData = (rowIndex, columnId, value) => {
+  const updateMyData = (index, cells, columnId, newValue) => {
     // We also turn on the flag to not reset the page
     console.log('Updating data:');
-    console.log('rowIndex', rowIndex);
-    console.log('columnId', columnId);
-    console.log('value', value);
+    console.log('index', index);
+    console.log('cells', cells);
+    console.log('index', columnId);
+
+    console.log('newValue', newValue);
     /* setSkipPageReset(true);
     setData((old) =>
       old.map((row, index) => {
