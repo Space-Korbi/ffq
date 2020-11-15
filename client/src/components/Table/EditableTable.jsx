@@ -10,7 +10,7 @@ import BTable from 'react-bootstrap/Table';
 // Create an editable cell renderer
 const EditableCell = ({
   value: initialValue,
-  row: { index },
+  row,
   column: { id },
   updateMyData // This is a custom function that we supplied to our table instance
 }) => {
@@ -23,7 +23,7 @@ const EditableCell = ({
 
   // We'll only update the external data when the input is blurred
   const onBlur = () => {
-    updateMyData(index, id, value);
+    updateMyData(row, id, value);
   };
 
   // If the initialValue is changed external, sync it up with our state
@@ -77,30 +77,32 @@ function EditableTable({ columns, data, updateMyData, skipPageReset }) {
 
   // Render the UI for your table
   return (
-    <>
-      <BTable striped bordered hover size="sm" {...getTableProps()}>
-        <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {page.map((row, i) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell) => {
-                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
-                })}
+    <div>
+      <div className="overflow-auto">
+        <BTable striped bordered hover size="sm" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column) => (
+                  <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                ))}
               </tr>
-            );
-          })}
-        </tbody>
-      </BTable>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {page.map((row, i) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map((cell) => {
+                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </BTable>
+      </div>
       <div>
         <div className="btn-toolbar" role="toolbar">
           <div className="btn-group mr-2" role="group">
@@ -153,7 +155,7 @@ function EditableTable({ columns, data, updateMyData, skipPageReset }) {
           Page {pageIndex + 1} of {pageOptions.length}
         </span>
       </div>
-    </>
+    </div>
   );
 }
 
