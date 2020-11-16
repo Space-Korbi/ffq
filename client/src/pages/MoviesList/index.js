@@ -1,106 +1,122 @@
+/* eslint-disable no-console */
+/* eslint-disable react/prop-types */
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-underscore-dangle */
-import React, { Component } from 'react';
-import ReactTable from 'react-table';
-import styled from 'styled-components';
-import { getAllMovies } from '../../api';
+import React, { useState, useEffect } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { EditableTable } from '../../components/Table';
+// eslint-disable-next-line no-unused-vars
+import { getAllMovies, updateMovieById } from '../../api';
 import UpdateMovie from './UpdateMovie';
 import DeleteMovie from './DeleteMovie';
 
-import 'react-table/react-table.css';
+const MoviesList = () => {
+  // Declare a new state variable, which we'll call "movie"
+  const [movieList, setMovieList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-const Wrapper = styled.div`
-  padding: 0 40px 40px 40px;
-`;
-
-class MoviesList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      movies: [],
-      isLoading: false
-    };
-  }
-
-  componentDidMount = async () => {
-    this.setState({ isLoading: true });
-
+  useEffect(async () => {
+    /**
+     * * Infinite loop
+     * One of the popular cases that using useState inside of useEffect
+     * will not cause an infinite loop is when you pass an empty array
+     * as a second argument to useEffect like useEffect(() => {....}, [])
+     * which means that the effect function should be called once:
+     * after the first mount/render only.
+     */
     await getAllMovies().then((movies) => {
-      this.setState({
-        movies: movies.data.data,
-        isLoading: false
-      });
+      setMovieList(movies.data.data);
+      setLoading(false);
     });
-  };
+  }, []);
 
-  render() {
-    const { movies, isLoading } = this.state;
-    console.log('TCL: MoviesList -> render -> movies', movies);
-
-    const columns = [
+  const columns = React.useMemo(
+    () => [
       {
         Header: 'ID',
-        accessor: '_id',
-        filterable: true
+        accessor: '_id' // accessor is the "key" in the data
       },
       {
         Header: 'Name',
-        accessor: 'name',
-        filterable: true
+        accessor: 'name'
       },
       {
         Header: 'Rating',
-        accessor: 'rating',
-        filterable: true
+        accessor: 'rating'
       },
       {
         Header: 'Time',
-        accessor: 'time',
-        Cell: (props) => <span>{props.value.join(' / ')}</span>
+        accessor: 'time'
       },
       {
         Header: '',
-        accessor: '',
-        Cell(props) {
-          return (
-            <span>
-              <DeleteMovie id={props.original._id} />
-            </span>
-          );
-        }
+        accessor: 'delete',
+        Cell: ({ row: { original } }) => <DeleteMovie id={original._id} />
       },
       {
         Header: '',
-        accessor: '',
-        Cell(props) {
-          return (
-            <span>
-              <UpdateMovie id={props.original._id} />
-            </span>
-          );
-        }
+        accessor: 'update',
+        Cell: ({ row: { original } }) => <UpdateMovie id={original._id} />
       }
-    ];
+    ],
+    []
+  );
 
-    let showTable = true;
-    if (!movies.length) {
-      showTable = false;
-    }
+  const data = React.useMemo(() => {
+    const movieRow = movieList.map((movie) => {
+      return {
+        _id: movie._id,
+        name: movie.name,
+        rating: movie.rating,
+        time: movie.time.join(' / ')
+      };
+    });
+    return movieRow;
+  });
 
-    return (
-      <Wrapper>
-        {showTable && (
-          <ReactTable
-            data={movies}
-            columns={columns}
-            loading={isLoading}
-            defaultPageSize={10}
-            showPageSizeOptions
-            minRows={0}
-          />
-        )}
-      </Wrapper>
-    );
-  }
-}
+  /**
+   * TODO update Data on server
+   * @param {rowIndex}
+   * @param {columnId}
+   * @param {value}
+   * This function gets the the changed value from the cell,
+   * specified by rowIndex and columnIndex and updates the
+   * Database accordingly
+   */
+  // eslint-disable-next-line no-unused-vars
+  const updateMyData = (index, cells, columnId, newValue) => {
+    // We also turn on the flag to not reset the page
+    console.log('Updating data:');
+    console.log('index', index);
+    console.log('cells', cells);
+    console.log('index', columnId);
+
+    console.log('newValue', newValue);
+    /* setSkipPageReset(true);
+    setData((old) =>
+      old.map((row, index) => {
+        if (index === rowIndex) {
+          return {
+            ...old[rowIndex],
+            [columnId]: value
+          };
+        }
+        return row;
+      })
+    ); */
+  };
+
+  return (
+    <div>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <div>
+          <EditableTable columns={columns} data={data} updateMyData={updateMyData} />
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default MoviesList;
