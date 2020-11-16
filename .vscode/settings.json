@@ -1,7 +1,9 @@
 {
-  "workbench.colorTheme": "Monokai Dimmed",
   "git.confirmSync": false,
   "notebook.displayOrder": [],
+  "workbench.colorCustomizations": {
+    "statusBar.background": "#004c8a"
+  },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import logo from '../logo.svg';
+import logo from '../../logo.svg';
 
 const Wrapper = styled.a.attrs({
   className: 'navbar-brand'
@@ -11,7 +11,7 @@ const Wrapper = styled.a.attrs({
 const Logo = () => {
   return (
     <Wrapper href="https://nytimes.com">
-      <img src={logo} width="50" height="50" alt="sambarros.com" />
+      <img src={logo} width="50" height="50" alt="tagesschau.de" />
     </Wrapper>
   );
 };

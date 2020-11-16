@@ -83,6 +83,7 @@ class MoviesUpdate extends Component {
     const payload = { name, rating, time: arrayTime };
 
     await updateMovieById(id, payload).then(() => {
+      // eslint-disable-next-line no-alert
       window.alert(`Movie updated successfully`);
       this.setState({
         name: '',
