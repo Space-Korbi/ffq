@@ -1,3 +1,3 @@
-import FFQParticipation from './FFQParticipation';
+import FFQPresentation from './FFQPresentation';
 
-export default FFQParticipation;
+export default FFQPresentation;

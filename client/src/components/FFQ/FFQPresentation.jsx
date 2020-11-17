@@ -7,7 +7,7 @@ import pizzaWhole from '../../images/pizza-whole-example.jpg';
 import pizzaHalf from '../../images/pizza-half-example.jpg';
 import pizzaQuarter from '../../images/pizza-quarter-example.jpg';
 
-function FFQParticipation() {
+function FFQPresentation() {
   const [currentQuestionID, setCurrentQuestionID] = useState(0);
   const [canNextQuestion, setCanNextQuestion] = useState(true);
   const [canPrevQuestion, setCanPrevQuestion] = useState(false);
@@ -144,4 +144,4 @@ function FFQParticipation() {
   );
 }
 
-export default FFQParticipation;
+export default FFQPresentation;
