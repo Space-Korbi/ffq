@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const ProgressIndicator = (props) => {
   const { currentQuestionID, numberOfQuestions } = props;
-  const percentage = `${Math.trunc((currentQuestionID / numberOfQuestions) * 100)}%`;
+  const percentage = `${Math.round((currentQuestionID / numberOfQuestions) * 100)}%`;
   return (
     <div className="mt-2">
       <div className="d-flex justify-content-center">
