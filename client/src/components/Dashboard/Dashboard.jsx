@@ -1,8 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
-import { BrowserRouter as Route, Switch, useRouteMatch, Link } from 'react-router-dom';
-import { MoviesList, MoviesInsert } from '../../pages';
+import { Route, Switch, useRouteMatch, Link } from 'react-router-dom';
+import { MoviesList, MoviesInsert, MoviesUpdate } from '../../pages';
 import { Table } from '../Table';
+import FFQPresentation from '../FFQ';
 
 const Dashboard = () => {
   const { path, url } = useRouteMatch();
@@ -91,9 +92,9 @@ const Dashboard = () => {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    Integrations
-                  </a>
+                  <Link to={`${url}/questionnaire`} className="nav-link">
+                    Questionnaire
+                  </Link>
                 </li>
               </ul>
               <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
@@ -146,12 +147,10 @@ const Dashboard = () => {
                 <Route path={`${path}/sample`}>
                   <Table columns={columns} data={data} checkMyData={checkMyData} />
                 </Route>
-                <Route path={`${path}/movies/list`}>
-                  <MoviesList />
-                </Route>
-                <Route path={`${path}/movies/create`}>
-                  <MoviesInsert />
-                </Route>
+                <Route path={`${path}/movies/list/movies/update/:id`} component={MoviesUpdate} />
+                <Route path={`${path}/movies/list`} component={MoviesList} />
+                <Route path={`${path}/movies/create`} component={MoviesInsert} />
+                <Route path={`${path}/questionnaire`} component={FFQPresentation} />
               </Switch>
             </div>
           </main>

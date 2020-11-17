@@ -1,29 +1,25 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 // Import my components
 import Dashboard from '../components/Dashboard';
-import FFQPresentation from '../components/FFQ';
 
-import { MoviesList, MoviesInsert, MoviesUpdate } from '../pages';
+// const researcherID = '1234';
+// const participantID = '5678';
 
-// * The app’s entry point
+/**
+ * * Routing
+ * The Switch component will render the first route that matches that pattern.
+ * Order is important. Since the router will exit as soon as it finds a match,
+ * always put a more specific route before a less specific route.
+ */
 function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <Switch>
-        <Route path="/" exact>
-          <div>
-            <h2>Home</h2>
-          </div>
-        </Route>
-        <Route path="/questionnaire" component={FFQPresentation} />
-        <Route path="/dashboard" component={Dashboard} />
-        <Route path="/movies/list" exact component={MoviesList} />
-        <Route path="/movies/create" exact component={MoviesInsert} />
-        <Route path="/movies/update/:id" exact component={MoviesUpdate} />
+        <Route path="/user/:id" component={Dashboard} />
       </Switch>
-    </Router>
+    </BrowserRouter>
   );
 }
 
