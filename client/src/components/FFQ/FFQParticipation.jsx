@@ -1,4 +1,3 @@
-/* eslint-disable react/prefer-stateless-function */
 import React, { useState } from 'react';
 import Question from './Question';
 import Navigation from './Navigation';
@@ -15,77 +14,77 @@ function FFQParticipation() {
 
   const questions = [
     <Question
-      questionHeadline="Question 1"
+      questionTitle="Question 1"
       questionText="This is the 1. FFQ question"
       imageLarge={pizzaWhole}
       imageMedium={pizzaHalf}
       imageSmall={pizzaQuarter}
     />,
     <Question
-      questionHeadline="Question 2"
+      questionTitle="Question 2"
       questionText="This is the 2. FFQ question"
       imageLarge={pizzaWhole}
       imageMedium={pizzaHalf}
       imageSmall={pizzaQuarter}
     />,
     <Question
-      questionHeadline="Question 3"
+      questionTitle="Question 3"
       questionText="This is the 3. FFQ question"
       imageLarge={pizzaWhole}
       imageMedium={pizzaHalf}
       imageSmall={pizzaQuarter}
     />,
     <Question
-      questionHeadline="Question 4"
+      questionTitle="Question 4"
       questionText="This is the 4. FFQ question"
       imageLarge={pizzaWhole}
       imageMedium={pizzaHalf}
       imageSmall={pizzaQuarter}
     />,
     <Question
-      questionHeadline="Question 5"
+      questionTitle="Question 5"
       questionText="This is the 5. FFQ question"
       imageLarge={pizzaWhole}
       imageMedium={pizzaHalf}
       imageSmall={pizzaQuarter}
     />,
     <Question
-      questionHeadline="Question 6"
+      questionTitle="Question 6"
       questionText="This is the 6. FFQ question"
       imageLarge={pizzaWhole}
       imageMedium={pizzaHalf}
       imageSmall={pizzaQuarter}
     />,
     <Question
-      questionHeadline="Question 7"
+      questionTitle="Question 7"
       questionText="This is the 7. FFQ question"
       imageLarge={pizzaWhole}
       imageMedium={pizzaHalf}
       imageSmall={pizzaQuarter}
     />,
     <Question
-      questionHeadline="Question 6"
+      questionTitle="Question 6"
       questionText="This is the 6. FFQ question"
       imageLarge={pizzaWhole}
       imageMedium={pizzaHalf}
       imageSmall={pizzaQuarter}
     />,
     <Question
-      questionHeadline="Question 7"
+      questionTitle="Question 7"
       questionText="This is the 7. FFQ question"
       imageLarge={pizzaWhole}
       imageMedium={pizzaHalf}
       imageSmall={pizzaQuarter}
     />,
     <Question
-      questionHeadline="Question 6"
+      questionTitle="Question 6"
       questionText="This is the 6. FFQ question"
       imageLarge={pizzaWhole}
       imageMedium={pizzaHalf}
       imageSmall={pizzaQuarter}
     />,
     <Question
-      questionHeadline="Question 7"
+      questionTitle="Question 7"
       questionText="This is the 7. FFQ question"
       imageLarge={pizzaWhole}
       imageMedium={pizzaHalf}
@@ -132,8 +131,6 @@ function FFQParticipation() {
       />
 
       <Navigation
-        currentQuestionID={currentQuestionID}
-        totalQuestions={questions.length}
         prevQuestion={() => {
           prevQuestion();
         }}

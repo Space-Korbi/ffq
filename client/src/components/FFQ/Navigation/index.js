@@ -1,13 +1,5 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
-import React, { useState } from 'react';
-
-/**
- * TODO fix progress bar and navigation buttons
- * Progress bar needs to be full when submit page is reached
- * Nav buttons need to be enabled and disabled accordingly
- * ! Think about how to pass data and which component controlls the data. Which has what responsibility?
- */
+import React from 'react';
+import PropTypes from 'prop-types';
 
 function Navigation(props) {
   const { prevQuestion, nextQuestion, canPrevQuestion, canNextQuestion } = props;
@@ -39,5 +31,12 @@ function Navigation(props) {
     </div>
   );
 }
+
+Navigation.propTypes = {
+  prevQuestion: PropTypes.func.isRequired,
+  nextQuestion: PropTypes.func.isRequired,
+  canPrevQuestion: PropTypes.bool.isRequired,
+  canNextQuestion: PropTypes.bool.isRequired
+};
 
 export default Navigation;

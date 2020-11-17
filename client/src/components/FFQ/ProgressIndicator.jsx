@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const ProgressIndicator = (props) => {
   const { currentQuestionID, numberOfQuestions } = props;
@@ -25,6 +25,11 @@ const ProgressIndicator = (props) => {
       </div>
     </div>
   );
+};
+
+ProgressIndicator.propTypes = {
+  currentQuestionID: PropTypes.number.isRequired,
+  numberOfQuestions: PropTypes.number.isRequired
 };
 
 export default ProgressIndicator;

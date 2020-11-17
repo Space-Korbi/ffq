@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 
 const Submit = () => {
@@ -9,9 +8,9 @@ const Submit = () => {
         <div className="card-body">
           <h5 className="card-title">Well Done</h5>
           <p className="card-text">You did great</p>
-          <a href="#" className="btn btn-primary">
+          <button type="submit" className="btn btn-primary">
             Submit Questionnaire
-          </a>
+          </button>
         </div>
         <div className="card-footer text-muted"> All questions answered</div>
       </div>
