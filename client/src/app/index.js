@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 // Import my components
 import Dashboard from '../components/Dashboard';
+import FFQPresentation from '../components/FFQ';
 
 import { MoviesList, MoviesInsert, MoviesUpdate } from '../pages';
 
@@ -16,6 +17,7 @@ function App() {
             <h2>Home</h2>
           </div>
         </Route>
+        <Route path="/questionnaire" component={FFQPresentation} />
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/movies/list" exact component={MoviesList} />
         <Route path="/movies/create" exact component={MoviesInsert} />
