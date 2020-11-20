@@ -68,12 +68,9 @@ class App extends React.Component {
             <Route exact path="/">
               <div>Logged out</div>
             </Route>
-            <PrivateRoute
-              path="/dashboard"
-              currentUser={currentUser}
-              roles={[Role.Participant]}
-              component={Dashboard}
-            />
+            {currentUser && (
+              <PrivateRoute path="/dashboard" roles={[currentUser.role]} component={Dashboard} />
+            )}
           </Switch>
         </div>
       </BrowserRouter>

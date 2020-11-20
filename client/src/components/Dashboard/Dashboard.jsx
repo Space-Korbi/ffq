@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 // import PropTypes from 'prop-types';
 import { Route, Switch, useRouteMatch, Link } from 'react-router-dom';
+import PrivateRoute from '../PrivateRoute';
 import { MoviesList, MoviesInsert, MoviesUpdate } from '../../pages';
 import { Table } from '../Table';
 import FFQPresentation from '../FFQ';
@@ -31,7 +32,7 @@ const Dashboard = (props) => {
         setIsAdmin(true);
         break;
       default:
-        console.log('User has no role and no authentication');
+        console.log('User could not be authenticated');
     }
   }, []);
 
@@ -190,9 +191,17 @@ const Dashboard = (props) => {
             <h2>Section title</h2>
             <div>
               <Switch>
-                <Route path={`${path}/admin`} component={AdminPage} />
-                <Route path={`${path}/researcher`} component={ResearcherPage} />
-                <Route path={`${path}/participant`} component={ParticipantPage} />
+                <PrivateRoute path={`${path}/admin`} roles={[Role.Admin]} component={AdminPage} />
+                <PrivateRoute
+                  path={`${path}/researcher`}
+                  roles={[Role.Researcher]}
+                  component={ResearcherPage}
+                />
+                <PrivateRoute
+                  path={`${path}/participant`}
+                  roles={[Role.Participant]}
+                  component={ParticipantPage}
+                />
 
                 <Route path={`${path}/sample`}>
                   <Table columns={columns} data={data} checkMyData={checkMyData} />
