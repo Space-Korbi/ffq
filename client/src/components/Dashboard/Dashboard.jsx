@@ -1,12 +1,39 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+// import PropTypes from 'prop-types';
 import { Route, Switch, useRouteMatch, Link } from 'react-router-dom';
 import { MoviesList, MoviesInsert, MoviesUpdate } from '../../pages';
 import { Table } from '../Table';
 import FFQPresentation from '../FFQ';
+import AdminPage from '../../pages/AdminPage';
+import ResearcherPage from '../../pages/ResearcherPage';
+import ParticipantPage from '../../pages/ParticipantPage';
+import Role from '../../helpers/role';
 
-const Dashboard = () => {
+const Dashboard = (props) => {
   const { path, url } = useRouteMatch();
+  const { roles } = props;
+
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isResearcher, setIsResearcher] = useState(false);
+  const [isParticipant, setIsParticipant] = useState(false);
+
+  useEffect(() => {
+    switch (roles[0]) {
+      case Role.Participant:
+        setIsParticipant(true);
+        break;
+      case Role.Researcher:
+        setIsResearcher(true);
+        break;
+      case Role.Admin:
+        setIsAdmin(true);
+        break;
+      default:
+        console.log('User has no role and no authentication');
+    }
+  }, []);
 
   /**
    * ! Deletable Sample
@@ -76,11 +103,30 @@ const Dashboard = () => {
                     Dashboard <span className="sr-only">(current)</span>
                   </a>
                 </li>
-                <li className="nav-item">
-                  <Link to={`${url}/sample`} className="nav-link">
-                    Sample
-                  </Link>
-                </li>
+                {isAdmin && (
+                  <li className="nav-item">
+                    <Link to={`${url}/admin`} className="nav-link">
+                      Admin Panel
+                    </Link>
+                  </li>
+                )}
+                {isResearcher && (
+                  <li className="nav-item">
+                    <Link to={`${url}/researcher`} className="nav-link">
+                      Research Panel
+                    </Link>
+                  </li>
+                )}
+                {isParticipant && (
+                  <li className="nav-item">
+                    <Link to={`${url}/participant`} className="nav-link">
+                      Participant Panel
+                    </Link>
+                  </li>
+                )}
+                <Link to={`${url}/sample`} className="nav-link">
+                  Sample
+                </Link>
                 <li className="nav-item">
                   <Link to={`${url}/movies/list`} className="nav-link">
                     List Movies
@@ -144,6 +190,10 @@ const Dashboard = () => {
             <h2>Section title</h2>
             <div>
               <Switch>
+                <Route path={`${path}/admin`} component={AdminPage} />
+                <Route path={`${path}/researcher`} component={ResearcherPage} />
+                <Route path={`${path}/participant`} component={ParticipantPage} />
+
                 <Route path={`${path}/sample`}>
                   <Table columns={columns} data={data} checkMyData={checkMyData} />
                 </Route>
@@ -159,5 +209,13 @@ const Dashboard = () => {
     </div>
   );
 };
+
+/*
+Dashboard.propTypes = {
+  isAdmin: PropTypes.bool.isRequired,
+  isResearcher: PropTypes.bool.isRequired,
+  isParticipant: PropTypes.bool.isRequired
+};
+*/
 
 export default Dashboard;
