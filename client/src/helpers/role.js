@@ -1,6 +1,5 @@
 const Role = {
   Admin: 'Admin',
-  Researcher: 'Researcher',
   Participant: 'Participant'
 };
 

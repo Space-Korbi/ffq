@@ -1,40 +1,18 @@
-/* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useEffect } from 'react';
-// import PropTypes from 'prop-types';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Route, Switch, useRouteMatch, Link } from 'react-router-dom';
 import PrivateRoute from '../PrivateRoute';
 import { MoviesList, MoviesInsert, MoviesUpdate } from '../../pages';
 import { Table } from '../Table';
 import FFQPresentation from '../FFQ';
 import AdminPage from '../../pages/AdminPage';
-import ResearcherPage from '../../pages/ResearcherPage';
 import ParticipantPage from '../../pages/ParticipantPage';
 import Role from '../../helpers/role';
 
 const Dashboard = (props) => {
   const { path, url } = useRouteMatch();
-  const { roles } = props;
-
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isResearcher, setIsResearcher] = useState(false);
-  const [isParticipant, setIsParticipant] = useState(false);
-
-  useEffect(() => {
-    switch (roles[0]) {
-      case Role.Participant:
-        setIsParticipant(true);
-        break;
-      case Role.Researcher:
-        setIsResearcher(true);
-        break;
-      case Role.Admin:
-        setIsAdmin(true);
-        break;
-      default:
-        console.log('User could not be authenticated');
-    }
-  }, []);
+  const { isAdmin } = props;
 
   /**
    * ! Deletable Sample
@@ -111,14 +89,7 @@ const Dashboard = (props) => {
                     </Link>
                   </li>
                 )}
-                {isResearcher && (
-                  <li className="nav-item">
-                    <Link to={`${url}/researcher`} className="nav-link">
-                      Research Panel
-                    </Link>
-                  </li>
-                )}
-                {isParticipant && (
+                {!isAdmin && (
                   <li className="nav-item">
                     <Link to={`${url}/participant`} className="nav-link">
                       Participant Panel
@@ -193,11 +164,6 @@ const Dashboard = (props) => {
               <Switch>
                 <PrivateRoute path={`${path}/admin`} roles={[Role.Admin]} component={AdminPage} />
                 <PrivateRoute
-                  path={`${path}/researcher`}
-                  roles={[Role.Researcher]}
-                  component={ResearcherPage}
-                />
-                <PrivateRoute
                   path={`${path}/participant`}
                   roles={[Role.Participant]}
                   component={ParticipantPage}
@@ -219,12 +185,8 @@ const Dashboard = (props) => {
   );
 };
 
-/*
 Dashboard.propTypes = {
-  isAdmin: PropTypes.bool.isRequired,
-  isResearcher: PropTypes.bool.isRequired,
-  isParticipant: PropTypes.bool.isRequired
+  isAdmin: PropTypes.bool.isRequired
 };
-*/
 
 export default Dashboard;

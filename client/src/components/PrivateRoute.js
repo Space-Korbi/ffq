@@ -11,6 +11,7 @@ const PrivateRoute = ({ component: Component, roles, ...rest }) => (
   <Route
     {...rest}
     render={(props) => {
+      const { isAdmin } = { ...rest };
       const currentUser = AuthenticationService.currentUserValue;
       if (!currentUser) {
         // not logged in so redirect to login page with the return url
@@ -24,7 +25,7 @@ const PrivateRoute = ({ component: Component, roles, ...rest }) => (
       }
 
       // authorised so return component
-      return <Component {...props} roles={roles} />;
+      return <Component {...props} roles={roles} isAdmin={isAdmin} />;
     }}
   />
 );
