@@ -18,14 +18,6 @@ const users = [
     role: Role.Admin
   },
   {
-    id: 2,
-    username: 'research',
-    password: 'research',
-    firstName: 'Research',
-    lastName: 'User',
-    role: Role.Researcher
-  },
-  {
     id: 3,
     username: 'participant',
     password: 'participant',
@@ -46,21 +38,23 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      currentUser: null
+      currentUser: null,
+      isAdmin: false
     };
-    localStorage.setItem('currentUser', JSON.stringify(users[2]));
+    localStorage.setItem('currentUser', JSON.stringify(users[1]));
   }
 
   componentDidMount() {
     AuthenticationService.currentUser.subscribe((x) =>
       this.setState({
-        currentUser: x
+        currentUser: x,
+        isAdmin: x && x.role === Role.Admin
       })
     );
   }
 
   render() {
-    const { currentUser } = this.state;
+    const { currentUser, isAdmin } = this.state;
     return (
       <BrowserRouter>
         <div>
@@ -69,7 +63,12 @@ class App extends React.Component {
               <div>Logged out</div>
             </Route>
             {currentUser && (
-              <PrivateRoute path="/dashboard" roles={[currentUser.role]} component={Dashboard} />
+              <PrivateRoute
+                path="/dashboard"
+                roles={[currentUser.role]}
+                isAdmin={isAdmin}
+                component={Dashboard}
+              />
             )}
           </Switch>
         </div>
