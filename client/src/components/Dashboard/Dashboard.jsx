@@ -34,7 +34,7 @@ const Dashboard = ({ isAdmin }) => {
         </button>
         <ul className="navbar-nav px-3">
           <li className="nav-item text-nowrap">
-            <a className="nav-link" href="/" onClick={() => authenticationService.logout()}>
+            <a className="nav-link" href="/login" onClick={() => authenticationService.logout()}>
               Logout
             </a>
           </li>
