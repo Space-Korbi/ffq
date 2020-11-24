@@ -1,3 +1,3 @@
-import { authenticationService } from './authenticationService';
+import authenticationService from './authenticationService';
 
 export default authenticationService;

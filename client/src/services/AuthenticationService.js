@@ -57,5 +57,4 @@ const authenticationService = {
   }
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export { authenticationService };
+export default authenticationService;

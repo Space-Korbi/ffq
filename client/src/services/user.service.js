@@ -39,5 +39,4 @@ const userService = {
   getById
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export { userService };
+export default userService;
