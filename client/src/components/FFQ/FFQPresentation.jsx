@@ -63,29 +63,29 @@ function FFQPresentation() {
       imageSmall={pizzaQuarter}
     />,
     <Question
-      questionTitle="Question 6"
-      questionText="This is the 6. FFQ question"
+      questionTitle="Question 8"
+      questionText="This is the 8. FFQ question"
       imageLarge={pizzaWhole}
       imageMedium={pizzaHalf}
       imageSmall={pizzaQuarter}
     />,
     <Question
-      questionTitle="Question 7"
-      questionText="This is the 7. FFQ question"
+      questionTitle="Question 9"
+      questionText="This is the 9. FFQ question"
       imageLarge={pizzaWhole}
       imageMedium={pizzaHalf}
       imageSmall={pizzaQuarter}
     />,
     <Question
-      questionTitle="Question 6"
-      questionText="This is the 6. FFQ question"
+      questionTitle="Question 10"
+      questionText="This is the 10. FFQ question"
       imageLarge={pizzaWhole}
       imageMedium={pizzaHalf}
       imageSmall={pizzaQuarter}
     />,
     <Question
-      questionTitle="Question 7"
-      questionText="This is the 7. FFQ question"
+      questionTitle="Question 11"
+      questionText="This is the 11. FFQ question"
       imageLarge={pizzaWhole}
       imageMedium={pizzaHalf}
       imageSmall={pizzaQuarter}

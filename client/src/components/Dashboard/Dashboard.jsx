@@ -1,51 +1,26 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
-import { BrowserRouter as Route, Switch, useRouteMatch, Link } from 'react-router-dom';
-import { MoviesList, MoviesInsert } from '../../pages';
-import { Table } from '../Table';
+import PropTypes from 'prop-types';
+import { Route, Switch, useRouteMatch, Link } from 'react-router-dom';
+import PrivateRoute from '../PrivateRoute';
+import { MoviesList, MoviesInsert, MoviesUpdate } from '../../pages';
+import FFQPresentation from '../FFQ';
+import AdminPage from '../../pages/AdminPage';
+import ParticipantPage from '../../pages/ParticipantPage';
+import { Role } from '../../helpers';
+import authenticationService from '../../services';
 
-const Dashboard = () => {
-  const { path, url } = useRouteMatch();
-
-  /**
-   * ! Deletable Sample
-   * column, data
-   */
-
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: 'ID',
-        accessor: '_id' // accessor is the "key" in the data
-      },
-      {
-        Header: 'Name',
-        accessor: 'name'
-      }
-    ],
-    []
-  );
-
-  const data = React.useMemo(
-    () => [
-      { _id: '1,0', name: 'Lorem' },
-      { _id: '2,0', name: 'ipsum' }
-    ],
-    []
-  );
-
-  const checkMyData = (row) => {
-    // We also turn on the flag to not reset the page
-    // eslint-disable-next-line no-console
-    console.log('Row:', row);
-  };
+const Dashboard = ({ isAdmin }) => {
+  const { path, url, params } = useRouteMatch();
 
   return (
     <div className="frame">
       <nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-        <a className="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">
+        <Link
+          to={`/dashboard/${params.userId}`}
+          className="navbar-brand col-md-3 col-lg-2 mr-0 px-3"
+        >
           FFQ
-        </a>
+        </Link>
         <button
           className="navbar-toggler position-absolute d-md-none collapsed"
           type="button"
@@ -59,8 +34,8 @@ const Dashboard = () => {
         </button>
         <ul className="navbar-nav px-3">
           <li className="nav-item text-nowrap">
-            <a className="nav-link" href="#">
-              Sign out
+            <a className="nav-link" href="/login" onClick={() => authenticationService.logout()}>
+              Logout
             </a>
           </li>
         </ul>
@@ -70,16 +45,20 @@ const Dashboard = () => {
           <nav id="sidebarMenu" className="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
             <div className="sidebar-sticky pt-3">
               <ul className="nav flex-column">
-                <li className="nav-item">
-                  <a className="nav-link active" href="#">
-                    Dashboard <span className="sr-only">(current)</span>
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <Link to={`${url}/sample`} className="nav-link">
-                    Sample
-                  </Link>
-                </li>
+                {isAdmin && (
+                  <li className="nav-item">
+                    <Link to={`${url}/admin`} className="nav-link">
+                      Admin Panel
+                    </Link>
+                  </li>
+                )}
+                {!isAdmin && (
+                  <li className="nav-item">
+                    <Link to={`${url}/participant`} className="nav-link">
+                      Participant Panel
+                    </Link>
+                  </li>
+                )}
                 <li className="nav-item">
                   <Link to={`${url}/movies/list`} className="nav-link">
                     List Movies
@@ -91,9 +70,9 @@ const Dashboard = () => {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    Integrations
-                  </a>
+                  <Link to={`${url}/questionnaire`} className="nav-link">
+                    Questionnaire
+                  </Link>
                 </li>
               </ul>
               <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
@@ -101,23 +80,13 @@ const Dashboard = () => {
               </h6>
               <ul className="nav flex-column mb-2">
                 <li className="nav-item">
-                  <a className="nav-link" href="#">
+                  <a className="nav-link" href="/#">
                     Current month
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="#">
+                  <a className="nav-link" href="/#">
                     Last quarter
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    Social engagement
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    Year-end sale
                   </a>
                 </li>
               </ul>
@@ -143,15 +112,22 @@ const Dashboard = () => {
             <h2>Section title</h2>
             <div>
               <Switch>
-                <Route path={`${path}/sample`}>
-                  <Table columns={columns} data={data} checkMyData={checkMyData} />
-                </Route>
-                <Route path={`${path}/movies/list`}>
-                  <MoviesList />
-                </Route>
-                <Route path={`${path}/movies/create`}>
-                  <MoviesInsert />
-                </Route>
+                <PrivateRoute
+                  path={`${path}/admin`}
+                  roles={[Role.Admin]}
+                  isAdmin={isAdmin}
+                  component={AdminPage}
+                />
+                <PrivateRoute
+                  path={`${path}/participant`}
+                  roles={[Role.Participant]}
+                  isAdmin={isAdmin}
+                  component={ParticipantPage}
+                />
+                <Route path={`${path}/movies/list/movies/update/:id`} component={MoviesUpdate} />
+                <Route path={`${path}/movies/list`} component={MoviesList} />
+                <Route path={`${path}/movies/create`} component={MoviesInsert} />
+                <Route path={`${path}/questionnaire`} component={FFQPresentation} />
               </Switch>
             </div>
           </main>
@@ -159,6 +135,10 @@ const Dashboard = () => {
       </div>
     </div>
   );
+};
+
+Dashboard.propTypes = {
+  isAdmin: PropTypes.bool.isRequired
 };
 
 export default Dashboard;
