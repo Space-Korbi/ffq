@@ -1,38 +1,67 @@
-/* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
-import AuthenticationService from '../services/AuthenticationService';
+import PropTypes, { string } from 'prop-types';
+import authenticationService from '../services';
 
-// import { authenticationService } from '@/_services';
+/**
+ * * PrivateRoute
+ * A wrapper for <Route> that redirects to the login
+ * screen if you're not yet authenticated.
+ */
+const PrivateRoute = ({ location, roles, isAdmin, component: Component, ...rest }) => {
+  return (
+    <Route
+      {...rest}
+      render={() => {
+        const currentUser = authenticationService.currentUserValue;
+        if (!currentUser) {
+          console.log('redirecting');
 
-const PrivateRoute = ({ component: Component, roles, ...rest }) => (
-  <Route
-    {...rest}
-    render={(props) => {
-      const { isAdmin } = { ...rest };
-      const currentUser = AuthenticationService.currentUserValue;
-      if (!currentUser) {
-        // not logged in so redirect to login page with the return url
-        return <Redirect to={{ pathname: '/login', state: { from: props.location } }} />;
-      }
+          return (
+            <Redirect
+              to={{
+                pathname: '/login',
+                state: { from: location }
+              }}
+            />
+          );
+        }
 
-      // check if route is restricted by role
-      if (roles && roles.indexOf(currentUser.role) === -1) {
-        // role not authorised so redirect to home page
-        return <Redirect to={{ pathname: '/dashboard' }} />;
-      }
+        // check if route is restricted by role
+        if (roles && roles.indexOf(currentUser.role) === -1) {
+          // role not authorised so redirect to home page
+          return <Redirect to={{ pathname: `/dashboard/${currentUser.id}` }} />;
+        }
 
-      // authorised so return component
-      return <Component {...props} roles={roles} isAdmin={isAdmin} />;
-    }}
-  />
-);
+        // authorised so return dashboard as admin
+        return <Component isAdmin={isAdmin} />;
+      }}
+    />
+  );
+};
 
 PrivateRoute.propTypes = {
   component: PropTypes.func.isRequired,
-  roles: PropTypes.arrayOf(PropTypes.string).isRequired
+  isAdmin: PropTypes.bool,
+  roles: PropTypes.arrayOf(PropTypes.string),
+  location: PropTypes.shape({
+    key: string,
+    pathname: string,
+    search: string,
+    hash: string
+  })
+};
+
+PrivateRoute.defaultProps = {
+  roles: null,
+  isAdmin: false,
+  location: {
+    key: '',
+    pathname: '/',
+    search: '',
+    hash: ''
+  }
 };
 
 export default PrivateRoute;
