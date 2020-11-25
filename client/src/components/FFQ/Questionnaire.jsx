@@ -14,78 +14,43 @@ function FFQPresentation() {
 
   const questions = [
     <Question
-      questionTitle="Question 1"
+      questionTitle="question-1"
       questionText="This is the 1. FFQ question"
       imageLarge={pizzaWhole}
       imageMedium={pizzaHalf}
       imageSmall={pizzaQuarter}
     />,
     <Question
-      questionTitle="Question 2"
+      questionTitle="question-2"
       questionText="This is the 2. FFQ question"
       imageLarge={pizzaWhole}
       imageMedium={pizzaHalf}
       imageSmall={pizzaQuarter}
     />,
     <Question
-      questionTitle="Question 3"
+      questionTitle="question-3"
       questionText="This is the 3. FFQ question"
       imageLarge={pizzaWhole}
       imageMedium={pizzaHalf}
       imageSmall={pizzaQuarter}
     />,
     <Question
-      questionTitle="Question 4"
+      questionTitle="question-4"
       questionText="This is the 4. FFQ question"
       imageLarge={pizzaWhole}
       imageMedium={pizzaHalf}
       imageSmall={pizzaQuarter}
     />,
     <Question
-      questionTitle="Question 5"
+      questionTitle="question-5"
       questionText="This is the 5. FFQ question"
       imageLarge={pizzaWhole}
       imageMedium={pizzaHalf}
       imageSmall={pizzaQuarter}
     />,
     <Question
-      questionTitle="Question 6"
+      questionTitle="question-6"
       questionText="This is the 6. FFQ question"
-      imageLarge={pizzaWhole}
-      imageMedium={pizzaHalf}
-      imageSmall={pizzaQuarter}
-    />,
-    <Question
-      questionTitle="Question 7"
-      questionText="This is the 7. FFQ question"
-      imageLarge={pizzaWhole}
-      imageMedium={pizzaHalf}
-      imageSmall={pizzaQuarter}
-    />,
-    <Question
-      questionTitle="Question 8"
-      questionText="This is the 8. FFQ question"
-      imageLarge={pizzaWhole}
-      imageMedium={pizzaHalf}
-      imageSmall={pizzaQuarter}
-    />,
-    <Question
-      questionTitle="Question 9"
-      questionText="This is the 9. FFQ question"
-      imageLarge={pizzaWhole}
-      imageMedium={pizzaHalf}
-      imageSmall={pizzaQuarter}
-    />,
-    <Question
-      questionTitle="Question 10"
-      questionText="This is the 10. FFQ question"
-      imageLarge={pizzaWhole}
-      imageMedium={pizzaHalf}
-      imageSmall={pizzaQuarter}
-    />,
-    <Question
-      questionTitle="Question 11"
-      questionText="This is the 11. FFQ question"
       imageLarge={pizzaWhole}
       imageMedium={pizzaHalf}
       imageSmall={pizzaQuarter}
@@ -125,10 +90,7 @@ function FFQPresentation() {
       ) : (
         <div>{questions[currentQuestionID]}</div>
       )}
-      <ProgressIndicator
-        currentQuestionID={currentQuestionID}
-        numberOfQuestions={numberOfQuestions}
-      />
+      <ProgressIndicator currentPosition={currentQuestionID} length={numberOfQuestions} />
 
       <Navigation
         prevQuestion={() => {
