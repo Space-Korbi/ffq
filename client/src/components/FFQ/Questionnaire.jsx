@@ -1,16 +1,24 @@
 import React, { useState } from 'react';
 import Question from './Question';
-import Navigation from './Navigation';
+import NavigationButton from './Navigation';
 import ProgressIndicator from './ProgressIndicator';
 import Submit from './Submit';
 import pizzaWhole from '../../images/pizza-whole-example.jpg';
 import pizzaHalf from '../../images/pizza-half-example.jpg';
 import pizzaQuarter from '../../images/pizza-quarter-example.jpg';
 
-function FFQPresentation() {
+function Questionnaire() {
   const [currentQuestionID, setCurrentQuestionID] = useState(0);
   const [canNextQuestion, setCanNextQuestion] = useState(true);
   const [canPrevQuestion, setCanPrevQuestion] = useState(false);
+
+  // eslint-disable-next-line no-unused-vars
+  const questionData = [
+    { id: 1, title: 'Q1', text: 'T1' },
+    { id: 2, title: 'Q2', text: 'T2' },
+    { id: 3, title: 'Q3', text: 'T3' },
+    { id: 4, title: 'Q4', text: 'T4' }
+  ];
 
   const questions = [
     <Question
@@ -37,20 +45,6 @@ function FFQPresentation() {
     <Question
       questionTitle="question-4"
       questionText="This is the 4. FFQ question"
-      imageLarge={pizzaWhole}
-      imageMedium={pizzaHalf}
-      imageSmall={pizzaQuarter}
-    />,
-    <Question
-      questionTitle="question-5"
-      questionText="This is the 5. FFQ question"
-      imageLarge={pizzaWhole}
-      imageMedium={pizzaHalf}
-      imageSmall={pizzaQuarter}
-    />,
-    <Question
-      questionTitle="question-6"
-      questionText="This is the 6. FFQ question"
       imageLarge={pizzaWhole}
       imageMedium={pizzaHalf}
       imageSmall={pizzaQuarter}
@@ -92,18 +86,14 @@ function FFQPresentation() {
       )}
       <ProgressIndicator currentPosition={currentQuestionID} length={numberOfQuestions} />
 
-      <Navigation
-        prevQuestion={() => {
-          prevQuestion();
-        }}
-        nextQuestion={() => {
-          nextQuestion();
-        }}
-        canPrevQuestion={canPrevQuestion}
-        canNextQuestion={canNextQuestion}
-      />
+      <div className="mt-2">
+        <div className="btn-group" role="group">
+          <NavigationButton disabled={!canPrevQuestion} move={prevQuestion} icon="←" />
+          <NavigationButton disabled={!canNextQuestion} move={nextQuestion} icon="→" />
+        </div>
+      </div>
     </div>
   );
 }
 
-export default FFQPresentation;
+export default Questionnaire;

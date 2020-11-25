@@ -1,3 +1,3 @@
-import FFQPresentation from './FFQPresentation';
+import FFQPresentation from './Questionnaire';
 
 export default FFQPresentation;
