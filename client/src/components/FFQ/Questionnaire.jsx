@@ -7,7 +7,7 @@ import pizzaWhole from '../../images/pizza-whole-example.jpg';
 import pizzaHalf from '../../images/pizza-half-example.jpg';
 import pizzaQuarter from '../../images/pizza-quarter-example.jpg';
 
-const pictures = { small: pizzaQuarter, medium: pizzaHalf, large: pizzaWhole };
+const images = { small: pizzaQuarter, medium: pizzaHalf, large: pizzaWhole };
 
 const questionData = [
   {
@@ -17,8 +17,11 @@ const questionData = [
     category: 'C1',
     subcategory: 'S1',
     answered: false,
-    answers: { frequency: null, amount: null },
-    images: pictures
+    answers: {
+      frequency: { x1: false, x2: false, x3: false },
+      amount: { small: false, medium: false, large: false }
+    },
+    images
   },
   {
     id: 1,
@@ -27,8 +30,11 @@ const questionData = [
     category: 'C2',
     subcategory: 'S2',
     answered: false,
-    answers: { frequency: null, amount: null },
-    images: pictures
+    answers: {
+      frequency: { x1: false, x2: false, x3: false },
+      amount: { small: false, medium: false, large: false }
+    },
+    images
   },
   {
     id: 2,
@@ -37,8 +43,11 @@ const questionData = [
     category: 'C3',
     subcategory: 'S3',
     answered: false,
-    answers: { frequency: null, amount: null },
-    images: pictures
+    answers: {
+      frequency: { x1: false, x2: false, x3: false },
+      amount: { small: false, medium: false, large: false }
+    },
+    images
   }
 ];
 
@@ -49,8 +58,8 @@ function Questionnaire() {
   const [canGoToNext, setCanGoToNext] = useState(true);
   const [canGoToPrevious, setCanGoToPrevious] = useState(false);
   const [collapsed, setCollapsed] = useState('collapse');
-  const [questionAnswered, setQuestionAnswered] = useState(false);
   const [isLastElement, setIsLastElement] = useState(false);
+  const [answered, setAnswered] = useState(false);
   const numberOfQuestions = questionData.length;
 
   const ffqElements = questionData.concat(submitData);
@@ -98,9 +107,9 @@ function Questionnaire() {
     }
   }
 
-  const getFrequencyAnswer = (ffqElementIndex) => {
+  const getAnswers = (ffqElementIndex) => {
     if (isValidQuestionIndex(ffqElementIndex)) {
-      return questionData[ffqElementIndex].answers.frequency;
+      return questionData[ffqElementIndex].answers;
     }
     return null;
   };
@@ -120,44 +129,56 @@ function Questionnaire() {
     checkForLastElement(ffqElementIndex);
     setNavigationOptions(ffqElementIndex);
 
-    const currentElementIsCollapsed = getFrequencyAnswer(currentElementIndex) === null;
-    const targetIsCollapsed = getFrequencyAnswer(ffqElementIndex) === null;
+    let frequencyAnswered = false;
+    let targetElementAnswered = false;
 
-    if (!currentElementIsCollapsed && targetIsCollapsed) {
+    if (isValidQuestionIndex(currentElementIndex)) {
+      frequencyAnswered = Object.values(getAnswers(currentElementIndex).frequency).includes(true);
+    }
+    if (isValidQuestionIndex(ffqElementIndex)) {
+      targetElementAnswered = Object.values(getAnswers(ffqElementIndex).frequency).includes(true);
+      setAnswered(questionData[ffqElementIndex].answered);
+    }
+
+    if (frequencyAnswered && !targetElementAnswered) {
       setCollapsed('collapse');
       setCurrentElementIndex(ffqElementIndex);
-    } else if (currentElementIsCollapsed && !targetIsCollapsed) {
-      setCurrentElementIndex(ffqElementIndex);
+    } else if (!frequencyAnswered && targetElementAnswered) {
       setCollapsed('collapse.show');
+      setCurrentElementIndex(ffqElementIndex);
     } else {
       setCurrentElementIndex(ffqElementIndex);
     }
   };
 
-  const saveFrequency = (answer, questionId) => {
-    questionData[questionId].answers.frequency = answer;
+  const saveFrequency = (values, questionId) => {
+    questionData[questionId].answers.frequency = values;
   };
 
-  const saveAmount = (answer, questionId) => {
-    questionData[questionId].answers.amount = answer;
+  const saveAmount = (values, questionId) => {
+    questionData[questionId].answers.amount = values;
   };
 
-  const saveAnswers = (e, questionId) => {
-    if (e.target.name === 'frequency') {
-      saveFrequency(e.target.value, questionId);
-      // ! Delete below, only for testing
-      questionData[questionId].answered = true;
-      setQuestionAnswered('true');
+  const handleChange = (values, type, questionId) => {
+    switch (type) {
+      case 'frequency':
+        saveFrequency(values, questionId);
+        if (Object.values(getAnswers(questionId).frequency).includes(true)) {
+          setCollapsed('collapse.show');
+        }
+        break;
+      case 'amount':
+        saveAmount(values, questionId);
+        questionData[questionId].answered = true;
+        break;
+      default:
+        break;
     }
-    if (e.target.name === 'amount') {
-      saveAmount(e.target.value, questionId);
-      questionData[questionId].answered = true;
-    }
   };
 
-  const handleClick = (e, questionId) => {
-    saveAnswers(e, questionId);
-    setCollapsed('collapse.show');
+  const markAsAnswered = () => {
+    questionData[currentElementIndex].answered = true;
+    setAnswered(true);
   };
 
   const getLabels = (ffqElementIndex) => {
@@ -180,10 +201,11 @@ function Questionnaire() {
           key={currentElementIndex}
           id={currentElementIndex}
           labels={getLabels(currentElementIndex)}
-          images={pictures}
-          handleClick={handleClick}
+          images={images}
+          handleChange={handleChange}
           collapsed={collapsed}
-          getAnswers={getFrequencyAnswer}
+          getAnswers={getAnswers}
+          markAsAnswered={markAsAnswered}
         />
       )}
       <ProgressIndicator currentPosition={currentElementIndex} length={numberOfQuestions} />
@@ -195,7 +217,7 @@ function Questionnaire() {
             icon="←"
           />
           <NavigationButton
-            disabled={!canGoToNext || !questionAnswered}
+            disabled={!canGoToNext || !answered}
             move={() => transitionTo(currentElementIndex + 1)}
             icon="→"
           />
