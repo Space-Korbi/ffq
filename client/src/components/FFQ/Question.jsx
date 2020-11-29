@@ -80,6 +80,8 @@ const Question = (props) => {
                   frequencyAnswer.x1 ? 'btn btn-success mx-3' : 'btn btn-outline-primary  mx-3'
                 }
                 onClick={(e) => handleFrequencyChange(e)}
+                aria-expanded={!collapsed}
+                aria-controls="collapseAmountSelection"
               >
                 1x pro Woche
               </button>
@@ -92,6 +94,8 @@ const Question = (props) => {
                   frequencyAnswer.x2 ? 'btn btn-success mx-3' : 'btn btn-outline-primary  mx-3'
                 }
                 onClick={(e) => handleFrequencyChange(e)}
+                aria-expanded={!collapsed}
+                aria-controls="collapseAmountSelection"
               >
                 2x pro Woche
               </button>
@@ -104,17 +108,23 @@ const Question = (props) => {
                   frequencyAnswer.x3 ? 'btn btn-success mx-3' : 'btn btn-outline-primary  mx-3'
                 }
                 onClick={(e) => handleFrequencyChange(e)}
+                aria-expanded={!collapsed}
+                aria-controls="collapseAmountSelection"
               >
                 3x pro Woche
               </button>
             </div>
           </div>
           <p />
-          <div className={collapsed} id="collapseAmountSelection">
+          <div className={collapsed ? 'collapse' : 'collapse.show'} id="collapseAmountSelection">
             <div className="col d-flex justify-content-center">
               <div className="card-deck ">
                 <div
-                  className={amountAnswer.small ? 'card border-success mb-3' : 'card  mb-3'}
+                  className={
+                    amountAnswer.small
+                      ? 'card text-white bg-success border-success mb-3'
+                      : 'card mb-3'
+                  }
                   style={{ maxWidth: '12rem' }}
                 >
                   <img className="card-img-top" src={images.small} alt="Small" />
@@ -134,7 +144,11 @@ const Question = (props) => {
                   </div>
                 </div>
                 <div
-                  className={amountAnswer.medium ? 'card border-success mb-3' : 'card  mb-3'}
+                  className={
+                    amountAnswer.medium
+                      ? 'card text-white bg-success border-success mb-3'
+                      : 'card mb-3'
+                  }
                   style={{ maxWidth: '12rem' }}
                 >
                   <img className="card-img-top" src={images.medium} alt="Medium" />
@@ -154,7 +168,11 @@ const Question = (props) => {
                   </div>
                 </div>
                 <div
-                  className={amountAnswer.large ? 'card border-success mb-3' : 'card  mb-3'}
+                  className={
+                    amountAnswer.large
+                      ? 'card text-white bg-success border-success mb-3'
+                      : 'card mb-3'
+                  }
                   style={{ maxWidth: '12rem' }}
                 >
                   <img className="card-img-top" src={images.large} alt="Large" />
@@ -191,7 +209,7 @@ Question.propTypes = {
     subcategory: string
   }).isRequired,
   images: shape({ small: null, medium: null, large: null }).isRequired,
-  collapsed: PropTypes.string.isRequired,
+  collapsed: PropTypes.bool.isRequired,
   handleChange: PropTypes.func.isRequired,
   getAnswers: PropTypes.func.isRequired,
   markAsAnswered: PropTypes.func.isRequired

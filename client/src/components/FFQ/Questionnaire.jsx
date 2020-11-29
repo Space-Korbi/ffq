@@ -57,7 +57,7 @@ function Questionnaire() {
   const [currentElementIndex, setCurrentElementIndex] = useState(0);
   const [canGoToNext, setCanGoToNext] = useState(true);
   const [canGoToPrevious, setCanGoToPrevious] = useState(false);
-  const [collapsed, setCollapsed] = useState('collapse');
+  const [collapsed, setCollapsed] = useState(true);
   const [isLastElement, setIsLastElement] = useState(false);
   const [answered, setAnswered] = useState(false);
   const numberOfQuestions = questionData.length;
@@ -141,10 +141,10 @@ function Questionnaire() {
     }
 
     if (frequencyAnswered && !targetElementAnswered) {
-      setCollapsed('collapse');
+      setCollapsed(true);
       setCurrentElementIndex(ffqElementIndex);
     } else if (!frequencyAnswered && targetElementAnswered) {
-      setCollapsed('collapse.show');
+      setCollapsed(false);
       setCurrentElementIndex(ffqElementIndex);
     } else {
       setCurrentElementIndex(ffqElementIndex);
@@ -164,7 +164,7 @@ function Questionnaire() {
       case 'frequency':
         saveFrequency(values, questionId);
         if (Object.values(getAnswers(questionId).frequency).includes(true)) {
-          setCollapsed('collapse.show');
+          setCollapsed(false);
         }
         break;
       case 'amount':
