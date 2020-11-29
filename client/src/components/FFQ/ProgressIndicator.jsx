@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const ProgressIndicator = (props) => {
-  const { currentQuestionID, numberOfQuestions } = props;
-  const percentage = `${Math.round((currentQuestionID / numberOfQuestions) * 100)}%`;
+  const { currentPosition, length } = props;
+  const percentage = `${Math.round((currentPosition / length) * 100)}%`;
   return (
     <div className="mt-2">
       <div className="d-flex justify-content-center">
         <span className="badge badge-info">
-          {currentQuestionID} of {numberOfQuestions} answered
+          {currentPosition} of {length} answered
         </span>
       </div>
       <div className="progress mt-2">
@@ -28,8 +28,8 @@ const ProgressIndicator = (props) => {
 };
 
 ProgressIndicator.propTypes = {
-  currentQuestionID: PropTypes.number.isRequired,
-  numberOfQuestions: PropTypes.number.isRequired
+  currentPosition: PropTypes.number.isRequired,
+  length: PropTypes.number.isRequired
 };
 
 export default ProgressIndicator;
