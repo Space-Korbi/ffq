@@ -1,6 +1,4 @@
-/* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
-import $ from 'jquery';
+import React, { useState } from 'react';
 import Question from './Question';
 import NavigationButton from './Navigation';
 import ProgressIndicator from './ProgressIndicator';
@@ -8,13 +6,12 @@ import Submit from './Submit';
 import pizzaWhole from '../../images/pizza-whole-example.jpg';
 import pizzaHalf from '../../images/pizza-half-example.jpg';
 import pizzaQuarter from '../../images/pizza-quarter-example.jpg';
-import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 const pictures = { small: pizzaQuarter, medium: pizzaHalf, large: pizzaWhole };
 
 const questionData = [
   {
-    id: 1,
+    id: 0,
     title: 'Q1',
     text: 'T1',
     category: 'C1',
@@ -24,7 +21,7 @@ const questionData = [
     images: pictures
   },
   {
-    id: 2,
+    id: 1,
     title: 'Q2',
     text: 'T2',
     category: 'C2',
@@ -34,21 +31,11 @@ const questionData = [
     images: pictures
   },
   {
-    id: 3,
+    id: 2,
     title: 'Q3',
     text: 'T3',
     category: 'C3',
     subcategory: 'S3',
-    answered: false,
-    answers: { frequency: null, amount: null },
-    images: pictures
-  },
-  {
-    id: 4,
-    title: 'Q4',
-    text: 'T4',
-    category: 'C4',
-    subcategory: 'S4',
     answered: false,
     answers: { frequency: null, amount: null },
     images: pictures
@@ -58,147 +45,158 @@ const questionData = [
 const submitData = { id: questionData.length + 1, userName: 'Gerhard' };
 
 function Questionnaire() {
-  const [currentElementId, setCurrentElementId] = useState(0);
+  const [currentElementIndex, setCurrentElementIndex] = useState(0);
   const [canGoToNext, setCanGoToNext] = useState(true);
   const [canGoToPrevious, setCanGoToPrevious] = useState(false);
   const [collapsed, setCollapsed] = useState('collapse');
   const [questionAnswered, setQuestionAnswered] = useState(false);
+  const [isLastElement, setIsLastElement] = useState(false);
   const numberOfQuestions = questionData.length;
 
   const ffqElements = questionData.concat(submitData);
 
-  const hasPredecessor = (ffqElementId) => {
-    if (ffqElementId <= 0) {
+  const hasPredecessor = (ffqElementIndex) => {
+    if (ffqElementIndex <= 0) {
       return false;
     }
     return true;
   };
 
-  const hasSuccessor = (ffqElementId) => {
-    if (ffqElementId >= ffqElements.length - 1) {
+  const hasSuccessor = (ffqElementIndex) => {
+    if (ffqElementIndex >= ffqElements.length - 1) {
       return false;
     }
     return true;
   };
 
-  const isValidQuestionId = (questionId) => {
-    if (questionId >= 0 && questionId < questionData.length) {
+  const isValidQuestionIndex = (ffqElementIndex) => {
+    if (ffqElementIndex >= 0 && ffqElementIndex < questionData.length) {
       return true;
     }
     return false;
   };
 
-  const isValidFFQElement = (ffqElementId) => {
-    if (ffqElementId >= 0 && ffqElementId < ffqElements.length) {
+  const isValidFFQElement = (ffqElementIndex) => {
+    if (ffqElementIndex >= 0 && ffqElementIndex < ffqElements.length) {
       return true;
     }
     return false;
   };
 
-  function setNavigationOptions(ffqElementId) {
-    if (ffqElementId < currentElementId) {
+  function setNavigationOptions(ffqElementIndex) {
+    if (ffqElementIndex < currentElementIndex) {
       setCanGoToNext(true);
-      if (!hasPredecessor(ffqElementId)) {
+      if (!hasPredecessor(ffqElementIndex)) {
         setCanGoToPrevious(false);
       }
     }
-    if (ffqElementId > currentElementId) {
+    if (ffqElementIndex > currentElementIndex) {
       setCanGoToPrevious(true);
-      if (!hasSuccessor(ffqElementId)) {
+      if (!hasSuccessor(ffqElementIndex)) {
         setCanGoToNext(false);
       }
     }
   }
 
-  const transitionTo = (ffqElementId) => {
-    if (!isValidFFQElement) {
+  const getFrequencyAnswer = (ffqElementIndex) => {
+    if (isValidQuestionIndex(ffqElementIndex)) {
+      return questionData[ffqElementIndex].answers.frequency;
+    }
+    return null;
+  };
+
+  const checkForLastElement = (ffqElementIndex) => {
+    if (ffqElementIndex === ffqElements.length - 1) {
+      setIsLastElement(true);
+    } else {
+      setIsLastElement(false);
+    }
+  };
+
+  const transitionTo = (ffqElementIndex) => {
+    if (!isValidFFQElement(ffqElementIndex)) {
       return;
     }
-    setNavigationOptions(ffqElementId);
+    checkForLastElement(ffqElementIndex);
+    setNavigationOptions(ffqElementIndex);
 
-    if (isValidQuestionId(ffqElementId)) {
-      console.log('QuestionID', ffqElementId);
-      if (questionData[ffqElementId].answered) {
-        setQuestionAnswered(true);
-      }
-      if (!questionData[ffqElementId].answered) {
-        setQuestionAnswered(false);
-        // deselect all
-        $('#collapseExample').collapse('hide');
-        $('#collapseExample').on('hidden.bs.collapse', () => {
-          console.log('now its collpased');
-        });
-      }
-    }
-    setCurrentElementId(ffqElementId);
-  };
+    const currentElementIsCollapsed = getFrequencyAnswer(currentElementIndex) === null;
+    const targetIsCollapsed = getFrequencyAnswer(ffqElementIndex) === null;
 
-  const saveFrequency = (answer) => {
-    if (isValidQuestionId(currentElementId)) {
-      questionData[currentElementId].answers.frequency = answer;
+    if (!currentElementIsCollapsed && targetIsCollapsed) {
+      setCollapsed('collapse');
+      setCurrentElementIndex(ffqElementIndex);
+    } else if (currentElementIsCollapsed && !targetIsCollapsed) {
+      setCurrentElementIndex(ffqElementIndex);
+      setCollapsed('collapse.show');
+    } else {
+      setCurrentElementIndex(ffqElementIndex);
     }
   };
 
-  const saveAmount = (answer) => {
-    if (isValidQuestionId(currentElementId)) {
-      questionData[currentElementId].answers.amount = answer;
-    }
+  const saveFrequency = (answer, questionId) => {
+    questionData[questionId].answers.frequency = answer;
   };
 
-  const handleClick = (e) => {
+  const saveAmount = (answer, questionId) => {
+    questionData[questionId].answers.amount = answer;
+  };
+
+  const saveAnswers = (e, questionId) => {
     if (e.target.name === 'frequency') {
-      saveFrequency(e.target.id);
-      $('#collapseExample').collapse('show');
-      questionData[currentElementId].answered = true;
+      saveFrequency(e.target.value, questionId);
+      // ! Delete below, only for testing
+      questionData[questionId].answered = true;
       setQuestionAnswered('true');
-      console.log(questionData[currentElementId]);
     }
     if (e.target.name === 'amount') {
-      console.log(e.target.id, 'saved to amount');
-      saveAmount(e.target.id);
-      questionData[currentElementId].answered = true;
+      saveAmount(e.target.value, questionId);
+      questionData[questionId].answered = true;
     }
   };
 
-  const questionIsAnswered = (questionId) => {
-    return questionData[questionId].answered;
+  const handleClick = (e, questionId) => {
+    saveAnswers(e, questionId);
+    setCollapsed('collapse.show');
   };
 
-  const getLabels = (ffqElementId) => {
+  const getLabels = (ffqElementIndex) => {
     return {
-      title: questionData[ffqElementId].title,
-      text: questionData[ffqElementId].text,
-      category: questionData[ffqElementId].category,
-      subcategory: questionData[ffqElementId].subcategory
+      title: questionData[ffqElementIndex].title,
+      text: questionData[ffqElementIndex].text,
+      category: questionData[ffqElementIndex].category,
+      subcategory: questionData[ffqElementIndex].subcategory
     };
   };
 
   return (
     <div className="mx-5 my-5">
-      {hasSuccessor(currentElementId) ? (
+      {isLastElement && !isValidQuestionIndex(currentElementIndex) ? (
         <div>
-          <Question
-            id={currentElementId}
-            labels={getLabels(currentElementId)}
-            images={pictures}
-            handleClick={handleClick}
-            collapsed={collapsed}
-          />
+          <Submit />
         </div>
       ) : (
-        <Submit />
+        <Question
+          key={currentElementIndex}
+          id={currentElementIndex}
+          labels={getLabels(currentElementIndex)}
+          images={pictures}
+          handleClick={handleClick}
+          collapsed={collapsed}
+          getAnswers={getFrequencyAnswer}
+        />
       )}
-      <ProgressIndicator currentPosition={currentElementId} length={numberOfQuestions} />
+      <ProgressIndicator currentPosition={currentElementIndex} length={numberOfQuestions} />
       <div className="mt-2">
         <div className="btn-group" role="group">
           <NavigationButton
             disabled={!canGoToPrevious}
-            move={() => transitionTo(currentElementId - 1)}
+            move={() => transitionTo(currentElementIndex - 1)}
             icon="←"
           />
           <NavigationButton
             disabled={!canGoToNext || !questionAnswered}
-            move={() => transitionTo(currentElementId + 1)}
+            move={() => transitionTo(currentElementIndex + 1)}
             icon="→"
           />
         </div>
