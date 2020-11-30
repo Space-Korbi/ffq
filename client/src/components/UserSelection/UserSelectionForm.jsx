@@ -1,19 +1,25 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 
+const DeleteButton = () => {
+  return (
+    <button type="button" className="btn btn-sm btn-outline-danger">
+      X
+    </button>
+  );
+};
+
 const UserSelectionForm = () => {
-  const [criterion, setCriterion] = useState('');
-  const [allSelectionCriteria, setAllSelectionCriteria] = useState([]);
-  const selectors = [];
-  const operators = { and: '&&', or: '||' };
-  const decisions = { accept: 'Accept', reject: 'Reject', wait: 'Wait' };
+  const [newCriterionInput, setNewCriterionInput] = useState('');
+  const [allCriteria, setAllCriteria] = useState([]);
+  const [ruleSpecificCriteria, setRuleSpecificCriteria] = useState([]);
   const rules = [];
 
   return (
     <div>
       <form>
         <div className="form-group">
-          <label htmlFor="criterion">
+          <label htmlFor="newCriterionInput">
             Criteria by which you want to select/reject FFQ participants
           </label>
           <div className="input-group mb-3">
@@ -22,10 +28,10 @@ const UserSelectionForm = () => {
               className="form-control"
               placeholder="i.e. Lactose Intolerant"
               aria-label="i.e. Lactose Intolerant"
-              value={criterion}
+              value={newCriterionInput}
               aria-describedby="basic-addon2"
               onChange={(e) => {
-                setCriterion(e.target.value);
+                setNewCriterionInput(e.target.value);
               }}
             />
             <div className="input-group-append">
@@ -33,9 +39,9 @@ const UserSelectionForm = () => {
                 className="btn btn-outline-secondary"
                 type="button"
                 onClick={() => {
-                  if (criterion !== '') {
-                    setAllSelectionCriteria((prevState) => [...prevState, criterion]);
-                    setCriterion('');
+                  if (newCriterionInput !== '') {
+                    setAllCriteria((prevState) => [...prevState, newCriterionInput]);
+                    setNewCriterionInput('');
                   }
                 }}
               >
@@ -43,6 +49,28 @@ const UserSelectionForm = () => {
               </button>
             </div>
           </div>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="exampleFormControlSelect2">Select Criteria</label>
+          <select
+            multiple
+            className="form-control"
+            id="selectionCriteria"
+            onChange={(e) => {
+              setRuleSpecificCriteria((prevState) => {
+                if (prevState.indexOf(e.target.value) === -1) {
+                  console.log('Already in there');
+                  return [...prevState, e.target.value];
+                }
+                return [...prevState];
+              });
+            }}
+          >
+            {allCriteria.map((option) => {
+              return <option key={option}>{option}</option>;
+            })}
+          </select>
         </div>
 
         <div className="container">
@@ -59,10 +87,15 @@ const UserSelectionForm = () => {
             </div>
             <div className="col-sm align-self-center">
               <ul className="list-group list-group-flush">
-                {allSelectionCriteria.map((criteriaElement) => {
+                {ruleSpecificCriteria.map((criteriaElement) => {
                   return (
-                    <li className="list-group-item" key={criteriaElement}>
+                    <li
+                      className="list-group-item d-flex justify-content-between"
+                      key={criteriaElement}
+                    >
                       {criteriaElement}
+
+                      <DeleteButton />
                     </li>
                   );
                 })}
@@ -81,20 +114,6 @@ const UserSelectionForm = () => {
               </button>
             </div>
           </div>
-        </div>
-        <div className="form-group">
-          <label htmlFor="exampleFormControlSelect2">Example multiple select</label>
-          <select multiple className="form-control" id="exampleFormControlSelect2">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-          </select>
-        </div>
-        <div className="form-group">
-          <label htmlFor="exampleFormControlTextarea1">Example textarea</label>
-          <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" />
         </div>
       </form>
     </div>
