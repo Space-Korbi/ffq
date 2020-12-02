@@ -1,13 +1,8 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
-import { arrayOf, string, func } from 'prop-types';
-import { Trash2, Info } from 'react-feather';
-import AddSelectionCriteria from './AddSelectionCriteria';
+import { Info } from 'react-feather';
+import SelectionCriteria from './SelectionCriteria';
 import AddRule from './AddRule';
-import RemovableListItem from '../List';
 import SelectionRules from './SelectionRules';
-
-import UserSelectionForm from './UserSelectionForm';
 
 const Navigation = () => {
   return (
@@ -22,7 +17,7 @@ const Navigation = () => {
           aria-controls="overview"
           aria-selected="true"
         >
-          Criteria & Rules
+          Selection Criteria
         </a>
       </li>
       <li className="nav-item">
@@ -35,44 +30,40 @@ const Navigation = () => {
           aria-controls="addNew"
           aria-selected="false"
         >
-          Add new
+          Rules
         </a>
       </li>
     </ul>
   );
 };
 
-const SelectionCriteriaList = ({ selectionCriteria, onClick }) => {
-  return (
-    <ul className="list-group mb-3" style={{ minWidth: '15rem' }}>
-      {selectionCriteria.map((criteria) => {
-        return (
-          <RemovableListItem key={criteria} content={criteria} onClick={onClick} Icon={Trash2} />
-        );
-      })}
-    </ul>
-  );
+const rule1 = {
+  id: '1',
+  criteria: ['Laktose Intolerant', 'Vegan'],
+  operator: 'And',
+  decision: 'Accept'
 };
 
-SelectionCriteriaList.propTypes = {
-  selectionCriteria: arrayOf(string).isRequired,
-  onClick: func.isRequired
+const rule2 = {
+  id: '2',
+  criteria: ['Taking Medication'],
+  operator: '',
+  decision: 'Wait'
 };
 
-<<<<<<< HEAD
-const mockSelectionCriteria = ['Laktose Intolerant', 'Vegan'];
-=======
-const mockSelectionCriteria = ['Laktose Intolerant', 'Overweight', 'Pregnant', 'Vegan'];
->>>>>>> d690b19d... Adjust spacing and text-break in RemovableListItem
+const mockSelectionCriteria = ['Laktose Intolerant', 'Taking Medication', 'Pregnant', 'Vegan'];
+const mockRules = [rule1, rule2];
 
 const UserSelection = () => {
   const [selectionCriteria, setSelectionCriteria] = useState(mockSelectionCriteria);
+  const [selectionRules, setSelectionRules] = useState(mockRules);
 
-  // api call to get rules
-  // api call to get Saved criteria
-  const mockRules = [];
+  /**
+   * TODO
+   * api call to get rules && api call to get Saved criteria
+   */
 
-  const addToSelectionCriteria = (newCriteria) => {
+  const saveSelectionCriteria = (newCriteria) => {
     // check if selectionCriteria is not empty and not just whitespace
     if (/\S/.test(newCriteria) && !selectionCriteria.includes(newCriteria)) {
       setSelectionCriteria((prevCrtieria) => [...prevCrtieria, newCriteria]);
@@ -83,9 +74,25 @@ const UserSelection = () => {
     setSelectionCriteria(selectionCriteria.filter((criteria) => criteria !== criteriaToRemove));
   };
 
-  const saveRule = (rule) => {
-    // api call to save rules in db
-    mockRules.push(rule);
+  const saveRule = (newRule) => {
+    /**
+     * TODO
+     * api call to save rules in db
+     */
+
+    if (!selectionRules.includes(newRule)) {
+      setSelectionRules((prevRules) => [...prevRules, newRule]);
+    }
+  };
+
+  const removeRule = (ruleToRemove) => {
+    if (ruleToRemove !== undefined) {
+      setSelectionRules(
+        selectionRules.filter((rule) => {
+          return rule !== ruleToRemove;
+        })
+      );
+    }
   };
 
   return (
@@ -104,48 +111,39 @@ const UserSelection = () => {
             aria-labelledby="overview-tab"
           >
             <div className="row">
-              <div className="col-lg-4 mb-3">
+              <div className="col-lg-7 mb-3">
                 <h6>
                   <sup className="text-info mr-1">
                     <Info size={18} />
                   </sup>
                   Selection Criteria
                 </h6>
-                <SelectionCriteriaList
+                <SelectionCriteria
                   selectionCriteria={selectionCriteria}
-                  onClick={removeFromSelectionCriteria}
+                  addSelectionCriteria={saveSelectionCriteria}
+                  removeSelectionCriteria={removeFromSelectionCriteria}
                 />
-              </div>
-              <div className="col mb-3">
-                <h6 className>
-                  <sup className="text-info mr-1">
-                    <Info size={18} />
-                  </sup>
-                  Rules
-                </h6>
-                <SelectionRules />
               </div>
             </div>
           </div>
           <div className="tab-pane fade" id="addNew" role="tabpanel" aria-labelledby="addNew-tab">
             <div className="row">
-              <div className="col-lg-4 mb-3">
-                <AddSelectionCriteria onClick={addToSelectionCriteria}>
-                  <SelectionCriteriaList
-                    selectionCriteria={selectionCriteria}
-                    onClick={removeFromSelectionCriteria}
-                  />
-                </AddSelectionCriteria>
+              <div className="col-lg-5 mb-3">
+                <h6>
+                  <sup className="text-info mr-1">
+                    <Info size={18} />
+                  </sup>
+                  Rules
+                </h6>
+                <AddRule selectionCriteria={selectionCriteria} saveRule={saveRule} />
               </div>
-              <div className="col-lg mb-3">
-                <AddRule selectionCriteria={selectionCriteria} />
+              <div className="col mb-3">
+                <SelectionRules rules={selectionRules} removeRule={removeRule} />
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      {/*  <UserSelectionForm userSelectionCriteria={mockSelectionCriteria} saveRule={saveRule} /> */}
     </div>
   );
 };
