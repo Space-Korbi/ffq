@@ -1,5 +1,5 @@
 import React from 'react';
-import { string, func } from 'prop-types';
+import { string, func, object, oneOfType } from 'prop-types';
 import { X } from 'react-feather';
 
 const DeleteButton = ({ onClick, element, Icon }) => {
@@ -16,8 +16,8 @@ const DeleteButton = ({ onClick, element, Icon }) => {
 
 DeleteButton.propTypes = {
   onClick: func.isRequired,
-  element: string.isRequired,
-  Icon: func
+  element: oneOfType([string, object]).isRequired,
+  Icon: oneOfType([string, object])
 };
 
 DeleteButton.defaultProps = {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { string, func } from 'prop-types';
+import { string, func, object, oneOfType } from 'prop-types';
 import { X } from 'react-feather';
 import DeleteButton from '../Button';
 
@@ -14,7 +14,7 @@ const RemovableListItem = ({ content, Icon, onClick }) => {
 
 RemovableListItem.propTypes = {
   content: string.isRequired,
-  Icon: func,
+  Icon: oneOfType([string, object]),
   onClick: func.isRequired
 };
 
