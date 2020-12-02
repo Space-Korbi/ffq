@@ -1,16 +1,40 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Route, Switch, useRouteMatch, Link } from 'react-router-dom';
+import { Route, Switch, useRouteMatch, NavLink, Link } from 'react-router-dom';
 import PrivateRoute from '../PrivateRoute';
 import { MoviesList, MoviesInsert, MoviesUpdate } from '../../pages';
 import FFQPresentation from '../FFQ';
 import AdminPage from '../../pages/AdminPage';
 import ParticipantPage from '../../pages/ParticipantPage';
+import UserSelection from '../UserSelection';
 import { Role } from '../../helpers';
 import authenticationService from '../../services';
 
 const Dashboard = ({ isAdmin }) => {
   const { path, url, params } = useRouteMatch();
+
+  /**
+   * * TODO
+   * Move navigation into its own component
+   * Map nav items according to admin and participant
+   * highlight active nav link
+   */
+  const adminLinks = [
+    {
+      name: 'Admin Panel',
+      to: '/admin',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    },
+    {
+      name: 'User Selection',
+      to: '/UserSelection',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    }
+  ];
+
+  // const participantLinks = [];
 
   return (
     <div className="frame">
@@ -46,11 +70,19 @@ const Dashboard = ({ isAdmin }) => {
             <div className="sidebar-sticky pt-3">
               <ul className="nav flex-column">
                 {isAdmin && (
-                  <li className="nav-item">
-                    <Link to={`${url}/admin`} className="nav-link">
-                      Admin Panel
-                    </Link>
-                  </li>
+                  <div>
+                    {adminLinks.map((link) => (
+                      <li className="nav-item" key={link.name}>
+                        <NavLink
+                          to={`${url}${link.to}`}
+                          className={link.className}
+                          activeClassName={link.activeClassName}
+                        >
+                          {link.name}
+                        </NavLink>
+                      </li>
+                    ))}
+                  </div>
                 )}
                 {!isAdmin && (
                   <li className="nav-item">
@@ -109,7 +141,6 @@ const Dashboard = ({ isAdmin }) => {
                 </button>
               </div>
             </div>
-            <h2>Section title</h2>
             <div>
               <Switch>
                 <PrivateRoute
@@ -117,6 +148,12 @@ const Dashboard = ({ isAdmin }) => {
                   roles={[Role.Admin]}
                   isAdmin={isAdmin}
                   component={AdminPage}
+                />
+                <PrivateRoute
+                  path={`${path}/UserSelection`}
+                  roles={[Role.Admin]}
+                  isAdmin={isAdmin}
+                  component={UserSelection}
                 />
                 <PrivateRoute
                   path={`${path}/participant`}
