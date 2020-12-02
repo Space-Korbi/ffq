@@ -1,8 +1,11 @@
-import React from 'react';
-import { arrayOf, string, func } from 'prop-types';
-import { X, Plus } from 'react-feather';
+/* eslint-disable no-unused-vars */
+import React, { useState } from 'react';
+import { arrayOf, func, string } from 'prop-types';
+import { Plus } from 'react-feather';
 
-const SelectionCriteriaInput = () => {
+const SelectionCriteriaInput = ({ onClick }) => {
+  const [newCriteriaInput, setNewCriteriaInput] = useState('');
+
   return (
     <div className="input-group mb-3">
       <input
@@ -10,17 +13,17 @@ const SelectionCriteriaInput = () => {
         name="newCriteria"
         id="newCriteria"
         className="form-control"
+        value={newCriteriaInput}
         placeholder="i.e. Lactose Intolerant"
-        onChange={(e) => {
-          console.log(e);
-        }}
+        onChange={(e) => setNewCriteriaInput(e.target.value)}
       />
       <div className="input-group-append">
         <button
           className="btn btn-outline-secondary d-flex align-items-center"
           type="button"
           onClick={() => {
-            console.log('click +');
+            onClick(newCriteriaInput);
+            setNewCriteriaInput('');
           }}
         >
           <Plus size={18} />
@@ -30,61 +33,23 @@ const SelectionCriteriaInput = () => {
   );
 };
 
-const DeleteButton = ({ onClick, element }) => {
-  return (
-    <button
-      type="button"
-      className="btn btn-sm btn-outline-danger d-flex align-items-center p-1"
-      onClick={() => onClick(element)}
-    >
-      <X size={16} />
-    </button>
-  );
+SelectionCriteriaInput.propTypes = {
+  onClick: func.isRequired
 };
 
-DeleteButton.propTypes = {
-  onClick: func.isRequired,
-  element: string.isRequired
-};
-
-const RemovableListItem = ({ content }) => {
-  return (
-    <li className="list-group-item d-flex align-items-center justify-content-between">
-      {content} <DeleteButton />
-    </li>
-  );
-};
-
-RemovableListItem.propTypes = {
-  content: string.isRequired
-};
-
-const SelectionCriteriaList = ({ selectionCriteria }) => {
-  return (
-    <ul className="list-group mb-3">
-      {selectionCriteria.map((criteria) => {
-        return <RemovableListItem content={criteria} />;
-      })}
-    </ul>
-  );
-};
-
-SelectionCriteriaList.propTypes = {
-  selectionCriteria: arrayOf(string).isRequired
-};
-
-const AddSelectionCriteria = ({ selectionCriteria }) => {
+const AddSelectionCriteria = ({ children, onClick }) => {
   return (
     <>
-      <h6>Add Selection Criteria</h6>
-      <SelectionCriteriaInput />
-      <SelectionCriteriaList selectionCriteria={selectionCriteria} />
+      <h6>Add selection criteria</h6>
+      <SelectionCriteriaInput onClick={onClick} />
+      {children}
     </>
   );
 };
 
 AddSelectionCriteria.propTypes = {
-  selectionCriteria: arrayOf(string).isRequired
+  children: func.isRequired,
+  onClick: func.isRequired
 };
 
 export default AddSelectionCriteria;
