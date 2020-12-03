@@ -1,23 +1,17 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import { Link, useRouteMatch } from 'react-router-dom';
 
-const Update = styled.div`
-  color: #ef9b0f;
-  cursor: pointer;
-`;
+const UpdateMovie = (props) => {
+  const { url } = useRouteMatch();
+  const { id } = props;
 
-class UpdateMovie extends Component {
-  updateUser = (event) => {
-    event.preventDefault();
-    const { id } = this.props;
-    window.location.href = `/movies/update/${id}`;
-  };
-
-  render() {
-    return <Update onClick={this.updateUser}>Update</Update>;
-  }
-}
+  return (
+    <Link to={`${url}/movies/update/${id}`} className="btn btn-outline-warning btn-sm">
+      Update
+    </Link>
+  );
+};
 
 UpdateMovie.propTypes = {
   id: PropTypes.string.isRequired

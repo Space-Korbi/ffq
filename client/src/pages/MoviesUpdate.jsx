@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { getMovieById, updateMovieById } from '../api';
@@ -53,7 +55,6 @@ class MoviesUpdate extends Component {
     super(props);
 
     this.state = {
-      // eslint-disable-next-line react/destructuring-assignment, react/prop-types
       id: this.props.match.params.id,
       name: '',
       rating: '',
@@ -83,6 +84,7 @@ class MoviesUpdate extends Component {
     const payload = { name, rating, time: arrayTime };
 
     await updateMovieById(id, payload).then(() => {
+      // eslint-disable-next-line no-alert
       window.alert(`Movie updated successfully`);
       this.setState({
         name: '',
