@@ -34,8 +34,8 @@ const NewRuleCard = ({ criteria, removeCriteriaFromCard, onSubmit }) => {
         <div className="card">
           <div className="card-header">New Rule</div>
           <div className="card-body">
-            <div className="row">
-              <div className="col">
+            <div className="row d-flex">
+              <div className="col flex-grow-1 mb-2">
                 <ul className="list-group">
                   {criteria.map((criterion) => (
                     <RemovableListItem
@@ -46,7 +46,7 @@ const NewRuleCard = ({ criteria, removeCriteriaFromCard, onSubmit }) => {
                   ))}
                 </ul>
               </div>
-              <div className="col align-self-center d-flex justify-content-center">
+              <div className="col align-self-center d-flex flex-shrink-1 justify-content-center">
                 <div className="btn-group btn-group-toggle" data-toggle="buttons">
                   <label className="btn btn-outline-primary active">
                     <input type="radio" name="option" id="and" autoComplete="off" defaultChecked />
