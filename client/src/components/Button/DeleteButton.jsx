@@ -1,15 +1,28 @@
 import React from 'react';
-import { string, func, object, oneOfType } from 'prop-types';
-import { X } from 'react-feather';
+import { string, func, object, bool, oneOfType } from 'prop-types';
+import { TrashIcon, XIcon } from '@primer/octicons-react';
 
-const DeleteButton = ({ onClick, element, Icon }) => {
+function DeleteIcon({ trashCan }) {
+  console.log(trashCan);
+  return trashCan ? <TrashIcon /> : <XIcon />;
+}
+
+DeleteIcon.propTypes = {
+  trashCan: bool
+};
+
+DeleteIcon.defaultProps = {
+  trashCan: false
+};
+
+const DeleteButton = ({ onClick, element, trashCan }) => {
   return (
     <button
       type="button"
       className="btn btn-sm btn-outline-danger d-flex align-items-center p-1 ml-2"
       onClick={() => onClick(element)}
     >
-      <Icon size={16} />
+      <DeleteIcon trashCan={trashCan} />
     </button>
   );
 };
@@ -17,11 +30,11 @@ const DeleteButton = ({ onClick, element, Icon }) => {
 DeleteButton.propTypes = {
   onClick: func.isRequired,
   element: oneOfType([string, object]).isRequired,
-  Icon: oneOfType([string, object])
+  trashCan: bool
 };
 
 DeleteButton.defaultProps = {
-  Icon: X
+  trashCan: false
 };
 
 export default DeleteButton;

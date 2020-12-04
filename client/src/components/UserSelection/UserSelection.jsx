@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Info } from 'react-feather';
+import { InfoIcon } from '@primer/octicons-react';
 import SelectionCriteria from './SelectionCriteria';
 import AddRule from './AddRule';
 import SelectionRules from './SelectionRules';
@@ -114,7 +114,7 @@ const UserSelection = () => {
               <div className="col-lg-7 mb-3">
                 <h6>
                   <sup className="text-info mr-1">
-                    <Info size={18} />
+                    <InfoIcon />
                   </sup>
                   Selection Criteria
                 </h6>
@@ -131,7 +131,7 @@ const UserSelection = () => {
               <div className="col-lg-5 mb-3">
                 <h6>
                   <sup className="text-info mr-1">
-                    <Info size={18} />
+                    <InfoIcon />
                   </sup>
                   Rules
                 </h6>
