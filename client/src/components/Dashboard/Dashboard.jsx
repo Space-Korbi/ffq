@@ -176,7 +176,7 @@ const Dashboard = ({ isAdmin }) => {
               </ul>
             </nav>
           )}
-          <main role="main" className="col px-sm-1 px-lg-5 mt-2">
+          <main role="main" className="col px-sm-1 px-lg-3 my-3">
             <div className="col">
               <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 className="h2">Dashboard</h1>
