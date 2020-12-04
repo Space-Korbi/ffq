@@ -16,8 +16,6 @@ const PrivateRoute = ({ location, roles, isAdmin, component: Component, ...rest 
       render={() => {
         const currentUser = authenticationService.currentUserValue;
         if (!currentUser) {
-          console.log('redirecting');
-
           return (
             <Redirect
               to={{
