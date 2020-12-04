@@ -7,6 +7,7 @@ import { MoviesList, MoviesInsert, MoviesUpdate } from '../../pages';
 import FFQPresentation from '../FFQ';
 import AdminPage from '../../pages/AdminPage';
 import ParticipantPage from '../../pages/ParticipantPage';
+import AccountPage from '../../pages/AccountPage';
 import WelcomePage from '../../pages/WelcomePage';
 import UserSelection from '../UserSelection';
 import { Role } from '../../helpers';
@@ -26,13 +27,28 @@ const Dashboard = ({ isAdmin }) => {
    * Map nav items according to admin and participant
    * highlight active nav link
    */
-  const adminLinks = [
+  const adminLinksFFQs = [
     {
       name: 'Admin Panel',
       to: '/admin',
       className: 'nav-link',
       activeClassName: 'nav-link active'
     },
+    {
+      name: 'Questionnaire',
+      to: '/questionnaire',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    },
+    {
+      name: 'Create Movies',
+      to: '/movies/create',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    }
+  ];
+
+  const adminLinksParticipants = [
     {
       name: 'User Selection',
       to: '/UserSelection',
@@ -42,18 +58,6 @@ const Dashboard = ({ isAdmin }) => {
     {
       name: 'Movies List',
       to: '/movies/list',
-      className: 'nav-link',
-      activeClassName: 'nav-link active'
-    },
-    {
-      name: 'Create Movies',
-      to: '/movies/create',
-      className: 'nav-link',
-      activeClassName: 'nav-link active'
-    },
-    {
-      name: 'Questionnaire',
-      to: '/questionnaire',
       className: 'nav-link',
       activeClassName: 'nav-link active'
     }
@@ -126,8 +130,11 @@ const Dashboard = ({ isAdmin }) => {
               className="navbar-light bg-light d-lg-block col-lg-2 collapse navbar-collapse"
             >
               <div className="sidebar-sticky pt-3">
-                <ul className="navbar-nav p-3">
-                  {adminLinks.map((link) => (
+                <h6 className="d-flex align-items-center px-3 mt-3 text-muted">
+                  <span>FFQ</span>
+                </h6>
+                <ul className="navbar-nav px-3">
+                  {adminLinksFFQs.map((link) => (
                     <li className="nav-item" key={link.name}>
                       <NavLink
                         to={`${url}${link.to}`}
@@ -140,19 +147,32 @@ const Dashboard = ({ isAdmin }) => {
                   ))}
                 </ul>
 
-                <h6 className="sidebar-heading d-flex align-items-center px-3 mt-4 text-muted">
-                  <span>Saved reports</span>
+                <h6 className="d-flex align-items-center px-3 mt-5 text-muted">
+                  <span>Participant</span>
                 </h6>
-                <ul className="navbar-nav p-3">
+                <ul className="navbar-nav px-3">
+                  {adminLinksParticipants.map((link) => (
+                    <li className="nav-item" key={link.name}>
+                      <NavLink
+                        to={`${url}${link.to}`}
+                        className={link.className}
+                        activeClassName={link.activeClassName}
+                      >
+                        {link.name}
+                      </NavLink>
+                    </li>
+                  ))}
+                </ul>
+
+                <ul className="navbar-nav mt-5 px-3">
                   <li className="nav-item">
-                    <a className="nav-link" href="/#">
-                      Current month
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="/#">
-                      Last quarter
-                    </a>
+                    <NavLink
+                      to={`${url}/account`}
+                      className="nav-link"
+                      activeClassName="nav-link active"
+                    >
+                      Account
+                    </NavLink>
                   </li>
                 </ul>
               </div>
@@ -221,6 +241,8 @@ const Dashboard = ({ isAdmin }) => {
                   <Route path={`${path}/movies/list`} component={MoviesList} />
                   <Route path={`${path}/movies/create`} component={MoviesInsert} />
                   <Route path={`${path}/questionnaire`} component={FFQPresentation} />
+
+                  <Route path={`${path}/account`} component={AccountPage} />
                   <Route path={`${path}/`} exact component={WelcomePage} />
                 </Switch>
               </div>
