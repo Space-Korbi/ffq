@@ -5,7 +5,7 @@ import DeleteButton from '../Button';
 
 const RemovableListItem = ({ content, Icon, onClick }) => {
   return (
-    <li className="list-group-item d-flex align-items-center justify-content-between text-break">
+    <li className="list-group-item d-flex align-items-center justify-content-between">
       {content}
       <DeleteButton Icon={Icon} element={content} onClick={onClick} />
     </li>
