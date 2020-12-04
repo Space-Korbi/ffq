@@ -2,7 +2,7 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes, { string } from 'prop-types';
-import authenticationService from '../services';
+import authenticationService from '../../services';
 
 /**
  * * PrivateRoute
