@@ -15,7 +15,7 @@ const Help = ({ infoText }) => {
         data-placement="left"
         data-content={infoText}
       >
-        <QuestionIcon size="36" />
+        <QuestionIcon size="40" />
       </button>
     </div>
   );
