@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './app';
 
+import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/dashboard.css';
 
