@@ -8,14 +8,18 @@ const mockInformation =
 const Question = () => {
   return (
     <div>
-      <div className="row d-block">
+      <div className="">
         <Jumbotron />
       </div>
-      <div className="row d-flex justify-content-end mr-1">
-        <Help infoText={mockInformation} />
+      <div className="row no-gutters">
+        <div className="col d-flex justify-content-end mr-1">
+          <Help infoText={mockInformation} />
+        </div>
       </div>
-      <div className="row d-flex">
-        <FrequencySelection />
+      <div className="row no-gutters">
+        <div className="col">
+          <FrequencySelection />
+        </div>
       </div>
     </div>
   );

@@ -122,67 +122,18 @@ const Dashboard = ({ isAdmin }) => {
         </ul>
       </nav>
 
-      <div className="container-fluid">
-        <div className="row">
-          {isAdmin && (
-            <nav
-              id="navigationMenu"
-              className="navbar-light bg-light d-lg-block col-lg-2 collapse navbar-collapse"
-            >
-              <div className="sidebar-sticky pt-3">
-                <h6 className="d-flex align-items-center px-3 mt-3 text-muted">
-                  <span>FFQ</span>
-                </h6>
-                <ul className="navbar-nav px-3">
-                  {adminLinksFFQs.map((link) => (
-                    <li className="nav-item" key={link.name}>
-                      <NavLink
-                        to={`${url}${link.to}`}
-                        className={link.className}
-                        activeClassName={link.activeClassName}
-                      >
-                        {link.name}
-                      </NavLink>
-                    </li>
-                  ))}
-                </ul>
-
-                <h6 className="d-flex align-items-center px-3 mt-5 text-muted">
-                  <span>Participant</span>
-                </h6>
-                <ul className="navbar-nav px-3">
-                  {adminLinksParticipants.map((link) => (
-                    <li className="nav-item" key={link.name}>
-                      <NavLink
-                        to={`${url}${link.to}`}
-                        className={link.className}
-                        activeClassName={link.activeClassName}
-                      >
-                        {link.name}
-                      </NavLink>
-                    </li>
-                  ))}
-                </ul>
-
-                <ul className="navbar-nav mt-5 px-3 mb-4">
-                  <li className="nav-item">
-                    <NavLink
-                      to={`${url}/account`}
-                      className="nav-link"
-                      activeClassName="nav-link active"
-                    >
-                      Account
-                    </NavLink>
-                  </li>
-                </ul>
-              </div>
-            </nav>
-          )}
-
-          {!isAdmin && (
-            <nav id="navigationMenu" className="navbar-dark bg-dark collapse navbar-collapse">
-              <ul className="navbar-nav p-3">
-                {participantLinks.map((link) => (
+      <div className="row no-gutters">
+        {isAdmin && (
+          <nav
+            id="navigationMenu"
+            className="navbar-light bg-light d-lg-block col-lg-2 collapse navbar-collapse"
+          >
+            <div className="sidebar-sticky pt-3">
+              <h6 className="d-flex align-items-center px-3 mt-3 text-muted">
+                <span>FFQ</span>
+              </h6>
+              <ul className="navbar-nav px-3">
+                {adminLinksFFQs.map((link) => (
                   <li className="nav-item" key={link.name}>
                     <NavLink
                       to={`${url}${link.to}`}
@@ -194,9 +145,58 @@ const Dashboard = ({ isAdmin }) => {
                   </li>
                 ))}
               </ul>
-            </nav>
-          )}
-          <main role="main" className="col p-0">
+
+              <h6 className="d-flex align-items-center px-3 mt-5 text-muted">
+                <span>Participant</span>
+              </h6>
+              <ul className="navbar-nav px-3">
+                {adminLinksParticipants.map((link) => (
+                  <li className="nav-item" key={link.name}>
+                    <NavLink
+                      to={`${url}${link.to}`}
+                      className={link.className}
+                      activeClassName={link.activeClassName}
+                    >
+                      {link.name}
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+
+              <ul className="navbar-nav mt-5 px-3 mb-4">
+                <li className="nav-item">
+                  <NavLink
+                    to={`${url}/account`}
+                    className="nav-link"
+                    activeClassName="nav-link active"
+                  >
+                    Account
+                  </NavLink>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        )}
+
+        {!isAdmin && (
+          <nav id="navigationMenu" className="navbar-dark bg-dark collapse navbar-collapse">
+            <ul className="navbar-nav p-3">
+              {participantLinks.map((link) => (
+                <li className="nav-item" key={link.name}>
+                  <NavLink
+                    to={`${url}${link.to}`}
+                    className={link.className}
+                    activeClassName={link.activeClassName}
+                  >
+                    {link.name}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
+        <main role="main" className="col p-0">
+          <div className="row no-gutters">
             <div className="col">
               <div>
                 <Switch>
@@ -228,8 +228,8 @@ const Dashboard = ({ isAdmin }) => {
                 </Switch>
               </div>
             </div>
-          </main>
-        </div>
+          </div>
+        </main>
       </div>
     </div>
   );

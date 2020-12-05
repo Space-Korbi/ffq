@@ -3,7 +3,7 @@ import React from 'react';
 const Jumbotron = () => {
   return (
     <div className="jumbotron jumbotron-fluid jumbotron-question">
-      <div className="container">
+      <div className="m-3">
         <h1 className="display-4">Weißer Reis</h1>
         <h5 className="lead">
           z.B. Basmati, Langkornreis, aromatisierter Reis, Mikrowellenreis; NUR in SELBST
