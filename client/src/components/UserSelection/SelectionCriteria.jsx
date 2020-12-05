@@ -26,7 +26,7 @@ const SelectionCriteriaInput = ({ onClick }) => {
             setNewCriteriaInput('');
           }}
         >
-          <PlusIcon size={18} />
+          <PlusIcon />
         </button>
       </div>
     </div>
@@ -41,7 +41,7 @@ const SelectionCriteriaList = ({ selectionCriteria, onClick }) => {
   return (
     <ul className="list-group mb-3" style={{ minWidth: '15rem' }}>
       {selectionCriteria.map((criteria) => {
-        return <RemovableListItem key={criteria} content={criteria} onClick={onClick} trashCan />;
+        return <RemovableListItem key={criteria} content={criteria} onClick={onClick} isTrashCan />;
       })}
     </ul>
   );

@@ -3,7 +3,6 @@ import { string, func, object, bool, oneOfType } from 'prop-types';
 import { TrashIcon, XIcon } from '@primer/octicons-react';
 
 function DeleteIcon({ trashCan }) {
-  console.log(trashCan);
   return trashCan ? <TrashIcon /> : <XIcon />;
 }
 
@@ -15,14 +14,14 @@ DeleteIcon.defaultProps = {
   trashCan: false
 };
 
-const DeleteButton = ({ onClick, element, trashCan }) => {
+const DeleteButton = ({ onClick, element, isTrashCan }) => {
   return (
     <button
       type="button"
       className="btn btn-sm btn-outline-danger d-flex align-items-center p-1 ml-2"
       onClick={() => onClick(element)}
     >
-      <DeleteIcon trashCan={trashCan} />
+      <DeleteIcon trashCan={isTrashCan} />
     </button>
   );
 };
@@ -30,11 +29,11 @@ const DeleteButton = ({ onClick, element, trashCan }) => {
 DeleteButton.propTypes = {
   onClick: func.isRequired,
   element: oneOfType([string, object]).isRequired,
-  trashCan: bool
+  isTrashCan: bool
 };
 
 DeleteButton.defaultProps = {
-  trashCan: false
+  isTrashCan: false
 };
 
 export default DeleteButton;

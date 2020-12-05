@@ -42,11 +42,12 @@ const NewRuleCard = ({ criteria, removeCriteriaFromCard, onSubmit }) => {
                       key={uuidv4()}
                       content={criterion}
                       onClick={removeCriteriaFromCard}
+                      isTrashCan={false}
                     />
                   ))}
                 </ul>
               </div>
-              <div className="col align-self-center d-flex flex-shrink-1 justify-content-center">
+              <div className="col-4 align-self-center d-flex justify-content-center">
                 <div className="btn-group btn-group-toggle" data-toggle="buttons">
                   <label className="btn btn-outline-primary active">
                     <input type="radio" name="option" id="and" autoComplete="off" defaultChecked />
