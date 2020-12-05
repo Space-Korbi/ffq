@@ -2,7 +2,7 @@ import React from 'react';
 import { string } from 'prop-types';
 import { QuestionIcon } from '@primer/octicons-react';
 
-import './styling/Help.css';
+import './Help.css';
 
 const Help = ({ infoText }) => {
   return (
