@@ -1,17 +1,16 @@
 import React from 'react';
 import Help from './Help';
-
-import './Question.css';
+import FrequencySelection from './FrequencySelection';
 
 const mockInformation =
-  'Vivamus sagittis lacus vel augue laoreet rutrum faucibus. is lacus vel augue laoreet rutrum faucibus.Vivamus sagittis lacus vel augue laoreet rutrum faucibus.Vivamus sagittis lacus vel augue laoreet rutrum faucibus.';
-
+  'Bitte geben Sie die Verzehrshäufigkeiten des Lebensmittels an, indem Sie das passende Kästchen unten durch einmaliges Anklicken auswählen';
 const Question = () => {
   return (
     <div>
-      <div>
+      <div className="d-flex justify-content-end">
         <Help infoText={mockInformation} />
       </div>
+      <FrequencySelection />
     </div>
   );
 };
