@@ -1,20 +1,21 @@
 @import '../../node_modules/bootstrap/scss/bootstrap';
 
-@include media-breakpoint-up(sm) {
-  .popover-body {
-    font-size: 20px;
-  }
-}
-
 .jumbotron-question {
   padding-top: 2rem;
   padding-bottom: 2rem;
   margin-bottom: 0.5rem;
 }
 
-@include media-breakpoint-up(md) {
+.btn-frequency {
+  height: 86px;
+}
+
+@include media-breakpoint-up(sm) {
+  .popover-body {
+    font-size: 20px;
+  }
+
   .btn-frequency {
-    color: green;
-    border-color: goldenrod;
+    height: 60px;
   }
 }

@@ -12,7 +12,7 @@ const Question = () => {
         <Jumbotron />
       </div>
       <div className="row no-gutters">
-        <div className="col d-flex justify-content-end mr-1">
+        <div className="col d-flex justify-content-end">
           <Help infoText={mockInformation} />
         </div>
       </div>

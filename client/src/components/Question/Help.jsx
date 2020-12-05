@@ -4,7 +4,7 @@ import { QuestionIcon } from '@primer/octicons-react';
 
 const Help = ({ infoText }) => {
   return (
-    <div className="text-info">
+    <div className="text-info mx-4">
       <button
         type="button"
         className="btn text-info p-0"

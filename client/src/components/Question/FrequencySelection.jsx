@@ -17,7 +17,7 @@ const saveAnswer = () => {
 
 const FrequencySelection = () => {
   return (
-    <div className="row mx-1 ">
+    <div className="row mx-3">
       <div className="col-6">
         {leftButtonsText.map((button) => (
           <div key={button}>
