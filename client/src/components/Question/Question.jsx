@@ -11,10 +11,10 @@ const Question = () => {
       <div className="row d-block">
         <Jumbotron />
       </div>
-      <div className="row d-flex justify-content-end">
+      <div className="row d-flex justify-content-end mr-1">
         <Help infoText={mockInformation} />
       </div>
-      <div className="row d-flex justify-space-between">
+      <div className="row d-flex">
         <FrequencySelection />
       </div>
     </div>

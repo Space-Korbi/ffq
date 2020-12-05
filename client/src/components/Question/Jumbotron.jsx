@@ -2,7 +2,7 @@ import React from 'react';
 
 const Jumbotron = () => {
   return (
-    <div className="jumbotron jumbotron-fluid jumbotron-question mx-n3 mb-2">
+    <div className="jumbotron jumbotron-fluid jumbotron-question">
       <div className="container">
         <h1 className="display-4">Weißer Reis</h1>
         <h5 className="lead">

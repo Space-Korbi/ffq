@@ -2,8 +2,6 @@ import React from 'react';
 import { string } from 'prop-types';
 import { QuestionIcon } from '@primer/octicons-react';
 
-import './Help.css';
-
 const Help = ({ infoText }) => {
   return (
     <div className="text-info">
@@ -12,7 +10,7 @@ const Help = ({ infoText }) => {
         className="btn text-info p-0"
         data-container="body"
         data-toggle="popover"
-        data-placement="left"
+        data-placement="bottom"
         data-content={infoText}
       >
         <QuestionIcon size="40" />

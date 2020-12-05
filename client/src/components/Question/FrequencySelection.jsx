@@ -17,15 +17,15 @@ const saveAnswer = () => {
 
 const FrequencySelection = () => {
   return (
-    <div className="row">
-      <div className="col">
+    <div className="row mx-1 d-flex justify-content-center">
+      <div className="">
         {leftButtonsText.map((button) => (
           <div key={button}>
             <FrequencyButton text={button} onClick={saveAnswer} />
           </div>
         ))}
       </div>
-      <div className="col">
+      <div className="">
         {rightButtonsText.map((button) => (
           <div key={button}>
             <FrequencyButton text={button} onClick={saveAnswer} />

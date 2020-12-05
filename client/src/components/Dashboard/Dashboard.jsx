@@ -196,7 +196,7 @@ const Dashboard = ({ isAdmin }) => {
               </ul>
             </nav>
           )}
-          <main role="main" className="col px-sm-1 px-lg-3 my-4">
+          <main role="main" className="col p-0">
             <div className="col">
               <div>
                 <Switch>
