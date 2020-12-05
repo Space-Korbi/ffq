@@ -164,7 +164,7 @@ const Dashboard = ({ isAdmin }) => {
                   ))}
                 </ul>
 
-                <ul className="navbar-nav mt-5 px-3">
+                <ul className="navbar-nav mt-5 px-3 mb-4">
                   <li className="nav-item">
                     <NavLink
                       to={`${url}/account`}
