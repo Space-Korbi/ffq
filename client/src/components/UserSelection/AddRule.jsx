@@ -113,7 +113,7 @@ const AddRule = ({ selectionCriteria, saveRule }) => {
   }, [selectedCriteria]);
 
   const addCriteriaToCard = (criteria) => {
-    if (!selectedCriteria.includes(criteria)) {
+    if (!selectedCriteria.includes(criteria) && criteria !== '') {
       setSelectedCriteria((prevCrtieria) => [...prevCrtieria, criteria]);
     }
   };
