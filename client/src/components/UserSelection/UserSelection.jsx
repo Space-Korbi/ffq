@@ -3,39 +3,7 @@ import { InfoIcon } from '@primer/octicons-react';
 import SelectionCriteria from './SelectionCriteria';
 import AddRule from './AddRule';
 import SelectionRules from './SelectionRules';
-
-const Navigation = () => {
-  return (
-    <ul className="nav nav-tabs" id="userSelection" role="tablist">
-      <li className="nav-item">
-        <a
-          className="nav-link active"
-          id="overview-tab"
-          data-toggle="tab"
-          href="#overview"
-          role="tab"
-          aria-controls="overview"
-          aria-selected="true"
-        >
-          Selection Criteria
-        </a>
-      </li>
-      <li className="nav-item">
-        <a
-          className="nav-link"
-          id="addNew-tab"
-          data-toggle="tab"
-          href="#addNew"
-          role="tab"
-          aria-controls="addNew"
-          aria-selected="false"
-        >
-          Rules
-        </a>
-      </li>
-    </ul>
-  );
-};
+import Navigation from '../Navigation';
 
 const rule1 = {
   id: '1',
@@ -100,15 +68,15 @@ const UserSelection = () => {
       <div className="container-fluid">
         <div className="row mb-3 mt-4">
           <div className="col">
-            <Navigation />
+            <Navigation tabs={['Criteria', 'Rules']} />
           </div>
         </div>
         <div className="tab-content" id="userSelectionContent">
           <div
             className="tab-pane fade show active"
-            id="overview"
+            id="Criteria"
             role="tabpanel"
-            aria-labelledby="overview-tab"
+            aria-labelledby="Criteria-tab"
           >
             <div className="row">
               <div className="col-sm-7 mb-3">
@@ -126,7 +94,7 @@ const UserSelection = () => {
               </div>
             </div>
           </div>
-          <div className="tab-pane fade" id="addNew" role="tabpanel" aria-labelledby="addNew-tab">
+          <div className="tab-pane fade" id="Rules" role="tabpanel" aria-labelledby="Rules-tab">
             <div className="row">
               <div className="col mb-3">
                 <h6>
