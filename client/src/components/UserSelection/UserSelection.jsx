@@ -98,7 +98,7 @@ const UserSelection = () => {
   return (
     <div>
       <div className="container-fluid">
-        <div className="row mb-3">
+        <div className="row mb-3 mt-4">
           <div className="col">
             <Navigation />
           </div>
@@ -111,7 +111,7 @@ const UserSelection = () => {
             aria-labelledby="overview-tab"
           >
             <div className="row">
-              <div className="col-lg-7 mb-3">
+              <div className="col-sm-7 mb-3">
                 <h6>
                   <sup className="text-info mr-1">
                     <InfoIcon />
@@ -128,7 +128,7 @@ const UserSelection = () => {
           </div>
           <div className="tab-pane fade" id="addNew" role="tabpanel" aria-labelledby="addNew-tab">
             <div className="row">
-              <div className="col-lg-5 mb-3">
+              <div className="col mb-3">
                 <h6>
                   <sup className="text-info mr-1">
                     <InfoIcon />
