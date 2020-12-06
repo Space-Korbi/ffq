@@ -6,6 +6,7 @@ import { PlusIcon } from '@primer/octicons-react';
 import Navigation from '../Navigation';
 import Question from '../Question';
 import RemovableListItem from '../List';
+import appendState from '../../helpers/Helpers';
 
 const tabs = ['Creation', 'Order'];
 const leftButtonsText = [
@@ -68,6 +69,14 @@ const QuestionCreation = () => {
     setButtonsRight(buttonsRight.filter((button) => button !== buttonToRemove));
   };
 
+  const addButtonLeft = (buttonTitle) => {
+    setButtonsRight((prevButtonsRight) => [...prevButtonsRight, buttonTitle]);
+  };
+
+  const addButtonRight = (buttonTitle) => {
+    setButtonsRight((prevButtonsRight) => [...prevButtonsRight, buttonTitle]);
+  };
+
   const ButtonInputList = ({ buttonTitles, leftColumn }) => {
     return (
       <ul className="px-0">
@@ -83,7 +92,7 @@ const QuestionCreation = () => {
               <div className="input-group input-group-sm">
                 <div className="input-group-prepend">
                   <span className="input-group-text" id="inputGroup-sizing-sm">
-                    Skip
+                    Skip next
                   </span>
                 </div>
                 <input
@@ -129,44 +138,74 @@ const QuestionCreation = () => {
           aria-labelledby={`${tabs[0]}-tab`}
         >
           <div className="row no-gutters">
-            <div className="col-md-5 col-lg-6 m-2 " style={{ border: '1px solid red' }}>
+            <div className="col-md-5 col-lg-6 m-2 ">
               <div className="form-inline" id="inputs">
-                <div className="col px-1" style={{ border: '1px solid orange' }}>
+                <div className="col px-1">
                   <QuestionTypeSelection />
                 </div>
-                <div className="col px-1" style={{ border: '1px solid orange' }}>
+                <div className="col px-1">
                   <QuestionTitelInput />
                 </div>
                 <div className="w-100" />
-                <div className="col px-1" style={{ border: '1px solid orange' }}>
+                <div className="col px-1">
                   <QuestionTitelInput />
                 </div>
-                <div className="col px-1" style={{ border: '1px solid orange' }}>
+                <div className="col px-1">
                   <QuestionTitelInput />
                 </div>
               </div>
               <div className="row no-gutters mt-4" id="buttons">
-                <div className="col my-1 text-center" style={{ border: '1px solid turquoise' }}>
+                <div className="col m-1 text-center">
                   Left
                   <ButtonInputList buttonTitles={buttonsLeft} leftColumn />
-                  <button
-                    type="button"
-                    className="btn btn-outline-primary"
-                    onClick={() => console.log('Left button added')}
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      appendState(e.target.buttonsLeft.value, buttonsLeft, setButtonsLeft);
+                    }}
                   >
-                    Add
-                  </button>
+                    <div className="input-group mb-3">
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="buttonsLeft"
+                        placeholder="New Button"
+                        aria-label="New Button"
+                        aria-describedby="button-addon2"
+                      />
+                      <div className="input-group-append">
+                        <button type="submit" className="btn btn-outline-primary">
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                  </form>
                 </div>
-                <div className="col my-1 text-center" style={{ border: '1px solid turquoise' }}>
+                <div className="col m-1 text-center">
                   Right
                   <ButtonInputList buttonTitles={buttonsRight} />
-                  <button
-                    type="button"
-                    className="btn btn-outline-primary"
-                    onClick={() => console.log('Rigth button added')}
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      appendState(e.target.buttonsRight.value, buttonsRight, setButtonsRight);
+                    }}
                   >
-                    Add
-                  </button>
+                    <div className="input-group mb-3">
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="buttonsRight"
+                        placeholder="New Button"
+                        aria-label="New Button"
+                        aria-describedby="button-addon2"
+                      />
+                      <div className="input-group-append">
+                        <button type="submit" className="btn btn-outline-primary">
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>

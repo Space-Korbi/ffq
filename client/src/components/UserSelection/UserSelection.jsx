@@ -4,6 +4,7 @@ import SelectionCriteria from './SelectionCriteria';
 import AddRule from './AddRule';
 import SelectionRules from './SelectionRules';
 import Navigation from '../Navigation';
+import appendState from '../../helpers/Helpers';
 
 const rule1 = {
   id: '1',
@@ -32,10 +33,7 @@ const UserSelection = () => {
    */
 
   const saveSelectionCriteria = (newCriteria) => {
-    // check if selectionCriteria is not empty and not just whitespace
-    if (/\S/.test(newCriteria) && !selectionCriteria.includes(newCriteria)) {
-      setSelectionCriteria((prevCrtieria) => [...prevCrtieria, newCriteria]);
-    }
+    appendState(newCriteria, selectionCriteria, setSelectionCriteria);
   };
 
   const removeFromSelectionCriteria = (criteriaToRemove) => {
