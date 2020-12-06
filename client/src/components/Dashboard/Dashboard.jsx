@@ -10,6 +10,7 @@ import ParticipantPage from '../../pages/ParticipantPage';
 import AccountPage from '../../pages/AccountPage';
 import WelcomePage from '../../pages/WelcomePage';
 import UserSelection from '../UserSelection';
+import QuestionCreation from '../QuestionCreation';
 import { Role } from '../../helpers';
 import authenticationService from '../../services';
 
@@ -43,6 +44,12 @@ const Dashboard = ({ isAdmin }) => {
     {
       name: 'Create Movies',
       to: '/movies/create',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    },
+    {
+      name: 'Create Question',
+      to: '/questionCreation',
       className: 'nav-link',
       activeClassName: 'nav-link active'
     }
@@ -126,7 +133,8 @@ const Dashboard = ({ isAdmin }) => {
         {isAdmin && (
           <nav
             id="navigationMenu"
-            className="navbar-light bg-light d-lg-block col-lg-2 collapse navbar-collapse"
+            className="navbar-light bg-light d-lg-block collapse navbar-collapse"
+            style={{ maxWidth: '200px' }}
           >
             <div className="sidebar-sticky pt-3">
               <h6 className="d-flex align-items-center px-3 mt-3 text-muted">
@@ -217,6 +225,12 @@ const Dashboard = ({ isAdmin }) => {
                     roles={[Role.Participant]}
                     isAdmin={isAdmin}
                     component={ParticipantPage}
+                  />
+                  <PrivateRoute
+                    path={`${path}/questionCreation`}
+                    roles={[Role.Admin]}
+                    isAdmin={isAdmin}
+                    component={QuestionCreation}
                   />
                   <Route path={`${path}/movies/list/movies/update/:id`} component={MoviesUpdate} />
                   <Route path={`${path}/movies/list`} component={MoviesList} />
