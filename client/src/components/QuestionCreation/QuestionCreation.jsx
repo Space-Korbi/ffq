@@ -1,7 +1,21 @@
-import React from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useState } from 'react';
+import { arrayOf, string } from 'prop-types';
+import { PlusIcon } from '@primer/octicons-react';
 import Navigation from '../Navigation';
+import Question from '../Question';
+import RemovableListItem from '../List';
 
 const tabs = ['Creation', 'Order'];
+const leftButtonsText = [
+  'Nie in den letzten 4 Wochen',
+  '1 - 3 Mal in den letzten 4 Wochen',
+  '1 Mal pro Woche',
+  '2 - 4 Mal pro Woche',
+  '5 - 6 Mal pro Woche'
+];
+
+const rightButtonsText = ['1 Mal pro Tag', '2 Mal pro Tag', '3 - 4 Mal pro Tag', '5+ pro Tag'];
 
 const QuestionTypeSelection = () => {
   return (
@@ -13,7 +27,7 @@ const QuestionTypeSelection = () => {
           </label>
         </div>
         <select className="custom-select" id="inputGroupSelect01">
-          <option selected>Choose...</option>
+          <option defaultValue>Choose...</option>
           <option value="1">Type 1 (Buttons)</option>
           <option value="2">Type 2 (Pictures) </option>
           <option value="3">Type 3 (User Input)</option>
@@ -23,7 +37,66 @@ const QuestionTypeSelection = () => {
   );
 };
 
+const QuestionTitelInput = () => {
+  return (
+    <div className="input-group my-2">
+      <div className="input-group-prepend">
+        <span className="input-group-text" id="inputGroup-sizing-default">
+          Titel
+        </span>
+      </div>
+      <input
+        type="text"
+        className="form-control"
+        aria-label="Sizing example input"
+        aria-describedby="inputGroup-sizing-default"
+      />
+    </div>
+  );
+};
+
 const QuestionCreation = () => {
+  const [buttonsLeft, setButtonsLeft] = useState(leftButtonsText);
+  const [buttonsRight, setButtonsRight] = useState(rightButtonsText);
+
+  const removeButtonLeft = (buttonToRemove) => {
+    setButtonsLeft(buttonsLeft.filter((button) => button !== buttonToRemove));
+  };
+
+  const removeButtonRight = (buttonToRemove) => {
+    setButtonsRight(buttonsRight.filter((button) => button !== buttonToRemove));
+  };
+
+  const ButtonInputList = ({ buttonTitles, leftColumn }) => {
+    return (
+      <ul className="px-0">
+        {buttonTitles.map((button) => {
+          const buttonInput = (
+            <input
+              className="form-control"
+              style={{ minWidth: '180px' }}
+              type="text"
+              placeholder={button}
+            />
+          );
+          return (
+            <div key={button}>
+              <RemovableListItem
+                content={buttonInput}
+                elementToRemove={button}
+                onClick={leftColumn ? removeButtonLeft : removeButtonRight}
+              />
+            </div>
+          );
+        })}
+      </ul>
+    );
+  };
+
+  ButtonInputList.propTypes = {
+    buttonTitles: arrayOf(string).isRequired
+  };
+
   return (
     <div className="m-4">
       <Navigation tabs={tabs} />
@@ -34,11 +107,51 @@ const QuestionCreation = () => {
           role="tabpanel"
           aria-labelledby={`${tabs[0]}-tab`}
         >
-          <div className="row">
-            <div className="col mt-2" style={{ border: '1px solid red' }}>
-              <QuestionTypeSelection />
+          <div className="row no-gutters">
+            <div className="col-md-5 col-lg-6 m-2 " style={{ border: '1px solid red' }}>
+              <div className="form-inline" id="inputs">
+                <div className="col px-1" style={{ border: '1px solid orange' }}>
+                  <QuestionTypeSelection />
+                </div>
+                <div className="col px-1" style={{ border: '1px solid orange' }}>
+                  <QuestionTitelInput />
+                </div>
+                <div className="w-100" />
+                <div className="col px-1" style={{ border: '1px solid orange' }}>
+                  <QuestionTitelInput />
+                </div>
+                <div className="col px-1" style={{ border: '1px solid orange' }}>
+                  <QuestionTitelInput />
+                </div>
+              </div>
+              <div className="row no-gutters mt-4" id="buttons">
+                <div className="col mx-1 text-center" style={{ border: '1px solid turquoise' }}>
+                  Left
+                  <ButtonInputList buttonTitles={buttonsLeft} leftColumn />
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary"
+                    onClick={() => console.log('Left button added')}
+                  >
+                    Add
+                  </button>
+                </div>
+                <div className="col mx-1 text-center" style={{ border: '1px solid turquoise' }}>
+                  Right
+                  <ButtonInputList buttonTitles={buttonsRight} />
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary"
+                    onClick={() => console.log('Rigth button added')}
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
             </div>
-            <div className="col mt-2" style={{ border: '1px solid green' }} />
+            <div className="col mt-2 border border-info">
+              <Question />
+            </div>
           </div>
         </div>
         <div
