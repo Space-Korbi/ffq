@@ -7,7 +7,7 @@
 }
 
 .btn-frequency {
-  height: 86px;
+  min-height: 86px;
 }
 
 @include media-breakpoint-up(sm) {
@@ -16,6 +16,6 @@
   }
 
   .btn-frequency {
-    height: 60px;
+    min-height: 60px;
   }
 }
