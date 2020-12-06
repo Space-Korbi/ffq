@@ -2,7 +2,7 @@ import React from 'react';
 
 const WelcomePage = () => {
   return (
-    <div className="d-flex justify-content-center">
+    <div className="d-flex justify-content-center mt-3">
       <div className="jumbotron" style={{ maxWidth: '800px' }}>
         <h1 className="display-4">Hallo</h1>
         <p className="lead">Um das FFQ zu starten klicken sie bitte &apos;FFQ Starten&apos;</p>
