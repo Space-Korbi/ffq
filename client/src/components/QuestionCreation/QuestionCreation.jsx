@@ -1,49 +1,12 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
-import { PlusIcon } from '@primer/octicons-react';
 import Navigation from '../Navigation';
 import Question from '../Question';
+import QuestionTitles from './QuestionTitleInputs';
+import HelpTextInput from './HelpTextInput';
 import AnswerButtons from './AnswerButtons';
 
 const tabs = ['Creation', 'Order'];
-
-const QuestionTypeSelection = () => {
-  return (
-    <div>
-      <div className="input-group my-2">
-        <div className="input-group-prepend">
-          <label className="input-group-text" htmlFor="inputGroupSelect01">
-            Question Type
-          </label>
-        </div>
-        <select className="custom-select" id="inputGroupSelect01">
-          <option defaultValue>Choose...</option>
-          <option value="1">Type 1 (Buttons)</option>
-          <option value="2">Type 2 (Pictures) </option>
-          <option value="3">Type 3 (User Input)</option>
-        </select>
-      </div>
-    </div>
-  );
-};
-
-const QuestionTitelInput = () => {
-  return (
-    <div className="input-group my-2">
-      <div className="input-group-prepend">
-        <span className="input-group-text" id="inputGroup-sizing-default">
-          Titel
-        </span>
-      </div>
-      <input
-        type="text"
-        className="form-control"
-        aria-label="Sizing example input"
-        aria-describedby="inputGroup-sizing-default"
-      />
-    </div>
-  );
-};
 
 const QuestionCreation = () => {
   return (
@@ -58,21 +21,8 @@ const QuestionCreation = () => {
         >
           <div className="row no-gutters">
             <div className="col-md-5 col-lg-6 m-2 ">
-              <div className="form-inline" id="inputs">
-                <div className="col px-1">
-                  <QuestionTypeSelection />
-                </div>
-                <div className="col px-1">
-                  <QuestionTitelInput />
-                </div>
-                <div className="w-100" />
-                <div className="col px-1">
-                  <QuestionTitelInput />
-                </div>
-                <div className="col px-1">
-                  <QuestionTitelInput />
-                </div>
-              </div>
+              <QuestionTitles />
+              <HelpTextInput />
               <AnswerButtons />
             </div>
             <div className="col mt-2 border border-info">

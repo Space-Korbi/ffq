@@ -15,7 +15,7 @@ const rightButtonsText = ['1 Mal pro Tag', '2 Mal pro Tag', '3 - 4 Mal pro Tag',
 
 const AnswerButtonList = ({ buttonTitles, removeButton }) => {
   return (
-    <ul className="px-0">
+    <ul className="list-group">
       {buttonTitles.map((button) => {
         const buttonInput = (
           <div>
@@ -23,7 +23,7 @@ const AnswerButtonList = ({ buttonTitles, removeButton }) => {
               className="form-control mb-1"
               type="text"
               placeholder={button}
-              style={{ minWidth: '170px' }}
+              style={{ minWidth: '200px' }}
             />
             <div className="input-group input-group-sm">
               <div className="input-group-prepend">
@@ -46,13 +46,12 @@ const AnswerButtonList = ({ buttonTitles, removeButton }) => {
           </div>
         );
         return (
-          <div key={button}>
-            <RemovableListItem
-              content={buttonInput}
-              elementToRemove={button}
-              onClick={removeButton}
-            />
-          </div>
+          <RemovableListItem
+            key={button}
+            content={buttonInput}
+            elementToRemove={button}
+            onClick={removeButton}
+          />
         );
       })}
     </ul>
@@ -87,7 +86,7 @@ const AnswerButtonCreation = () => {
             appendState(e.target.buttonsLeft.value, buttonsLeft, setButtonsLeft);
           }}
         >
-          <div className="input-group mb-3">
+          <div className="input-group my-2">
             <input
               type="text"
               className="form-control"
@@ -113,7 +112,7 @@ const AnswerButtonCreation = () => {
             appendState(e.target.buttonsRight.value, buttonsRight, setButtonsRight);
           }}
         >
-          <div className="input-group mb-3">
+          <div className="input-group my-2">
             <input
               type="text"
               className="form-control"
