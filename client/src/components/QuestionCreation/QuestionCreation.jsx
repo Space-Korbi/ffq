@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { arrayOf, string } from 'prop-types';
@@ -72,12 +73,32 @@ const QuestionCreation = () => {
       <ul className="px-0">
         {buttonTitles.map((button) => {
           const buttonInput = (
-            <input
-              className="form-control"
-              style={{ minWidth: '180px' }}
-              type="text"
-              placeholder={button}
-            />
+            <div>
+              <input
+                className="form-control mb-1"
+                type="text"
+                placeholder={button}
+                style={{ minWidth: '170px' }}
+              />
+              <div className="input-group input-group-sm">
+                <div className="input-group-prepend">
+                  <span className="input-group-text" id="inputGroup-sizing-sm">
+                    Skip
+                  </span>
+                </div>
+                <input
+                  type="number"
+                  className="form-control"
+                  aria-label="Sizing example input"
+                  aria-describedby="inputGroup-sizing-sm"
+                />
+                <div className="input-group-append">
+                  <span className="input-group-text" id="inputGroup-sizing-sm">
+                    Questions
+                  </span>
+                </div>
+              </div>
+            </div>
           );
           return (
             <div key={button}>
@@ -125,7 +146,7 @@ const QuestionCreation = () => {
                 </div>
               </div>
               <div className="row no-gutters mt-4" id="buttons">
-                <div className="col mx-1 text-center" style={{ border: '1px solid turquoise' }}>
+                <div className="col my-1 text-center" style={{ border: '1px solid turquoise' }}>
                   Left
                   <ButtonInputList buttonTitles={buttonsLeft} leftColumn />
                   <button
@@ -136,7 +157,7 @@ const QuestionCreation = () => {
                     Add
                   </button>
                 </div>
-                <div className="col mx-1 text-center" style={{ border: '1px solid turquoise' }}>
+                <div className="col my-1 text-center" style={{ border: '1px solid turquoise' }}>
                   Right
                   <ButtonInputList buttonTitles={buttonsRight} />
                   <button
