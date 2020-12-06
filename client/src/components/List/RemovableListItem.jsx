@@ -1,25 +1,24 @@
 import React from 'react';
-import { string, func, object, oneOfType } from 'prop-types';
-import { X } from 'react-feather';
+import { string, func, bool } from 'prop-types';
 import DeleteButton from '../Button';
 
-const RemovableListItem = ({ content, Icon, onClick }) => {
+const RemovableListItem = ({ content, isTrashCan, onClick }) => {
   return (
     <li className="list-group-item d-flex align-items-center justify-content-between">
       {content}
-      <DeleteButton Icon={Icon} element={content} onClick={onClick} />
+      <DeleteButton isTrashCan={isTrashCan} element={content} onClick={onClick} />
     </li>
   );
 };
 
 RemovableListItem.propTypes = {
   content: string.isRequired,
-  Icon: oneOfType([string, object]),
+  isTrashCan: bool,
   onClick: func.isRequired
 };
 
 RemovableListItem.defaultProps = {
-  Icon: X
+  isTrashCan: false
 };
 
 export default RemovableListItem;

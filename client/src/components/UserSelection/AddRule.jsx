@@ -34,7 +34,7 @@ const NewRuleCard = ({ criteria, removeCriteriaFromCard, onSubmit }) => {
         <div className="card">
           <div className="card-header">New Rule</div>
           <div className="card-body">
-            <div className="row d-flex">
+            <div className="row d-flex align-self-center justify-content-center">
               <div className="col flex-grow-1 mb-2">
                 <ul className="list-group">
                   {criteria.map((criterion) => (
@@ -42,11 +42,12 @@ const NewRuleCard = ({ criteria, removeCriteriaFromCard, onSubmit }) => {
                       key={uuidv4()}
                       content={criterion}
                       onClick={removeCriteriaFromCard}
+                      isTrashCan={false}
                     />
                   ))}
                 </ul>
               </div>
-              <div className="col align-self-center d-flex flex-shrink-1 justify-content-center">
+              <div className="col d-flex align-self-center justify-content-center mr-1">
                 <div className="btn-group btn-group-toggle" data-toggle="buttons">
                   <label className="btn btn-outline-primary active">
                     <input type="radio" name="option" id="and" autoComplete="off" defaultChecked />
@@ -112,7 +113,7 @@ const AddRule = ({ selectionCriteria, saveRule }) => {
   }, [selectedCriteria]);
 
   const addCriteriaToCard = (criteria) => {
-    if (!selectedCriteria.includes(criteria)) {
+    if (!selectedCriteria.includes(criteria) && criteria !== '') {
       setSelectedCriteria((prevCrtieria) => [...prevCrtieria, criteria]);
     }
   };
@@ -147,15 +148,13 @@ const AddRule = ({ selectionCriteria, saveRule }) => {
 
   return (
     <>
-      <div className="row">
-        <div className="col mb-3">
-          <RuleCriteriaSelect criteria={selectionCriteria} onChange={addCriteriaToCard} />
-          <NewRuleCard
-            criteria={selectedCriteria}
-            removeCriteriaFromCard={removeCriteriaFromCard}
-            onSubmit={submitNewRule}
-          />
-        </div>
+      <div className="col mb-3">
+        <RuleCriteriaSelect criteria={selectionCriteria} onChange={addCriteriaToCard} />
+        <NewRuleCard
+          criteria={selectedCriteria}
+          removeCriteriaFromCard={removeCriteriaFromCard}
+          onSubmit={submitNewRule}
+        />
       </div>
       <div className="row">
         <div className="col align-self-center d-flex justify-content-center">
