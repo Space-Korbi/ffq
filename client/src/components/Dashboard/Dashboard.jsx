@@ -15,7 +15,7 @@ import { Role } from '../../helpers';
 import authenticationService from '../../services';
 
 const navbarAdmin =
-  'navbar navbar-expand-lg navbar-dark bg-dark fixed-top flex-nowrap d-flex justify-content-between shadow';
+  'navbar navbar-expand-xl navbar-dark bg-dark fixed-top flex-nowrap d-flex justify-content-between shadow';
 const navbarParticipant = 'navbar navbar-dark bg-dark fixed-top flex-nowrap shadow';
 
 const Dashboard = ({ isAdmin }) => {
@@ -95,7 +95,7 @@ const Dashboard = ({ isAdmin }) => {
     <div>
       <nav className={isAdmin ? navbarAdmin : navbarParticipant}>
         <button
-          className={isAdmin ? 'navbar-toggler d-lg-none' : 'navbar-toggler'}
+          className={isAdmin ? 'navbar-toggler d-xl-none' : 'navbar-toggler'}
           type="button"
           data-toggle="collapse"
           data-target="#navigationMenu"
@@ -133,7 +133,7 @@ const Dashboard = ({ isAdmin }) => {
         {isAdmin && (
           <nav
             id="navigationMenu"
-            className="navbar-light bg-light d-lg-block collapse navbar-collapse"
+            className="navbar-light bg-light d-xl-block collapse navbar-collapse"
             style={{ maxWidth: '200px' }}
           >
             <div className="sidebar-sticky pt-3">
