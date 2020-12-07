@@ -1,22 +1,23 @@
+import { string } from 'prop-types';
 import React from 'react';
 
-const Jumbotron = () => {
+const Jumbotron = ({ title, subtitle, comment }) => {
   return (
     <div className="jumbotron jumbotron-fluid jumbotron-question">
       <div className="m-3">
-        <h1 className="display-4">Weißer Reis</h1>
-        <h5 className="lead">
-          z.B. Basmati, Langkornreis, aromatisierter Reis, Mikrowellenreis; NUR in SELBST
-          zubereiteten Speisen (z.B. Risotto).
-        </h5>
+        <h1 className="display-4">{title}</h1>
+        <h5 className="lead">{subtitle}</h5>
         <hr className="my-2" />
-        <h6>
-          KEIN Naturreis (brauner Reis, Vollkornreis) oder Milchreis; KEIN Reis in Takeaway,
-          Fertiggerichten oder Restaurantspeisen.
-        </h6>
+        <h6>{comment}</h6>
       </div>
     </div>
   );
+};
+
+Jumbotron.propTypes = {
+  title: string.isRequired,
+  subtitle: string.isRequired,
+  comment: string.isRequired
 };
 
 export default Jumbotron;

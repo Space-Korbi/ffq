@@ -2,13 +2,18 @@
 import React, { useState } from 'react';
 import Navigation from '../Navigation';
 import Question from '../Question';
-import QuestionTitles from './QuestionTitleInputs';
+import JumbotronInputs from './JumbotronInputs';
 import HelpTextInput from './HelpTextInput';
 import AnswerButtons from './AnswerButtons';
 
 const tabs = ['Creation', 'Order'];
 
 const QuestionCreation = () => {
+  const [title, setTitle] = useState('');
+  const [subTitle, setSubTitle] = useState('');
+  const [comment, setComment] = useState('');
+  const [help, setHelp] = useState('');
+
   return (
     <div className="m-4">
       <Navigation tabs={tabs} />
@@ -21,12 +26,16 @@ const QuestionCreation = () => {
         >
           <div className="row no-gutters">
             <div className="col-md-5 col-lg-6 m-2 ">
-              <QuestionTitles />
-              <HelpTextInput />
+              <JumbotronInputs
+                onChangeTitle={setTitle}
+                onChangeSubTitle={setSubTitle}
+                onChangeComment={setComment}
+              />
+              <HelpTextInput onChange={setHelp} />
               <AnswerButtons />
             </div>
             <div className="col mt-2 border border-info">
-              <Question />
+              <Question title={title} subtitle={subTitle} comment={comment} help={help} />
             </div>
           </div>
         </div>
