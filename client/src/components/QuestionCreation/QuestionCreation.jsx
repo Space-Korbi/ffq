@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Navigation from '../Navigation';
-import FrequencyQuestion from '../Question';
+import { FrequencyQuestion } from '../Question';
 import JumbotronInputs from './JumbotronInputs';
 import HelpTextInput from './HelpTextInput';
 import AnswerButtons from './AnswerButtons';

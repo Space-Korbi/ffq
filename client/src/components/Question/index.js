@@ -1,3 +1,4 @@
 import FrequencyQuestion from './FrequencyQuestion';
+import AmountQuestion from './AmountQuestion';
 
-export default FrequencyQuestion;
+export { FrequencyQuestion, AmountQuestion };
