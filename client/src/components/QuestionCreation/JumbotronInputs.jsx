@@ -13,9 +13,9 @@ const QuestionTypeSelection = () => {
         </div>
         <select className="custom-select" id="questionTypeSelect">
           <option defaultValue>Choose...</option>
-          <option value="1">Type 1 (Buttons)</option>
-          <option value="2">Type 2 (Pictures) </option>
-          <option value="3">Type 3 (User Input)</option>
+          <option value="1">Frequency Question</option>
+          <option value="2">Amount Question</option>
+          <option value="3">User Input Question</option>
         </select>
       </div>
     </div>
