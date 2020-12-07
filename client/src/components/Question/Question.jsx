@@ -1,14 +1,11 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import { string } from 'prop-types';
+import { arrayOf, string } from 'prop-types';
 import Help from './Help';
 import FrequencySelection from './FrequencySelection';
 import Jumbotron from './Jumbotron';
 
-const mockInformation =
-  'Bitte geben Sie die Verzehrshäufigkeiten des Lebensmittels an, indem Sie das passende Kästchen unten durch einmaliges Anklicken auswählen';
-
-const Question = ({ title, subtitle, comment, help }) => {
+const Question = ({ title, subtitle, comment, help, leftButtons, rightButtons }) => {
   return (
     <div>
       <div className="">
@@ -21,7 +18,7 @@ const Question = ({ title, subtitle, comment, help }) => {
       </div>
       <div className="row no-gutters">
         <div className="col">
-          <FrequencySelection />
+          <FrequencySelection leftButtons={leftButtons} rightButtons={rightButtons} />
         </div>
       </div>
     </div>
@@ -32,7 +29,9 @@ Question.propTypes = {
   title: string,
   subtitle: string,
   comment: string,
-  help: string
+  help: string,
+  leftButtons: arrayOf(string).isRequired,
+  rightButtons: arrayOf(string).isRequired
 };
 
 Question.defaultProps = {

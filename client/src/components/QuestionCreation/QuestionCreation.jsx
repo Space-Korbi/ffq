@@ -8,11 +8,25 @@ import AnswerButtons from './AnswerButtons';
 
 const tabs = ['Creation', 'Order'];
 
+const mockInformation =
+  'Bitte geben Sie die Verzehrshäufigkeiten des Lebensmittels an, indem Sie das passende Kästchen unten durch einmaliges Anklicken auswählen';
+const leftButtonsTextMock = [
+  'Nie in den letzten 4 Wochen',
+  '1 - 3 Mal in den letzten 4 Wochen',
+  '1 Mal pro Woche',
+  '2 - 4 Mal pro Woche',
+  '5 - 6 Mal pro Woche'
+];
+const rightButtonsTextMock = ['1 Mal pro Tag', '2 Mal pro Tag', '3 - 4 Mal pro Tag', '5+ pro Tag'];
+
 const QuestionCreation = () => {
   const [title, setTitle] = useState('');
   const [subTitle, setSubTitle] = useState('');
   const [comment, setComment] = useState('');
-  const [help, setHelp] = useState('');
+  const [help, setHelp] = useState(mockInformation);
+
+  const [leftButtons, setLeftButtons] = useState(leftButtonsTextMock);
+  const [rightButtons, setRightButtons] = useState(rightButtonsTextMock);
 
   return (
     <div className="m-4">
@@ -32,10 +46,22 @@ const QuestionCreation = () => {
                 onChangeComment={setComment}
               />
               <HelpTextInput onChange={setHelp} />
-              <AnswerButtons />
+              <AnswerButtons
+                leftButtons={leftButtons}
+                rightButtons={rightButtons}
+                onChangeLeft={setLeftButtons}
+                onChangeRight={setRightButtons}
+              />
             </div>
             <div className="col mt-2 border border-info">
-              <Question title={title} subtitle={subTitle} comment={comment} help={help} />
+              <Question
+                title={title}
+                subtitle={subTitle}
+                comment={comment}
+                help={help}
+                leftButtons={leftButtons}
+                rightButtons={rightButtons}
+              />
             </div>
           </div>
         </div>

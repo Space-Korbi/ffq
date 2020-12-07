@@ -1,17 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { arrayOf, func, string } from 'prop-types';
 import RemovableListItem from '../List';
 import appendState from '../../helpers/Helpers';
-
-const leftButtonsText = [
-  'Nie in den letzten 4 Wochen',
-  '1 - 3 Mal in den letzten 4 Wochen',
-  '1 Mal pro Woche',
-  '2 - 4 Mal pro Woche',
-  '5 - 6 Mal pro Woche'
-];
-
-const rightButtonsText = ['1 Mal pro Tag', '2 Mal pro Tag', '3 - 4 Mal pro Tag', '5+ pro Tag'];
 
 const AnswerButtonList = ({ buttonTitles, removeButton }) => {
   return (
@@ -63,27 +53,24 @@ AnswerButtonList.propTypes = {
   removeButton: func.isRequired
 };
 
-const AnswerButtonCreation = () => {
-  const [buttonsLeft, setButtonsLeft] = useState(leftButtonsText);
-  const [buttonsRight, setButtonsRight] = useState(rightButtonsText);
-
+const AnswerButtonCreation = ({ leftButtons, rightButtons, onChangeLeft, onChangeRight }) => {
   const removeButtonLeft = (buttonToRemove) => {
-    setButtonsLeft(buttonsLeft.filter((button) => button !== buttonToRemove));
+    onChangeLeft(leftButtons.filter((button) => button !== buttonToRemove));
   };
 
   const removeButtonRight = (buttonToRemove) => {
-    setButtonsRight(buttonsRight.filter((button) => button !== buttonToRemove));
+    onChangeRight(rightButtons.filter((button) => button !== buttonToRemove));
   };
 
   return (
     <div className="row no-gutters mt-4" id="buttons">
       <div className="col m-1 text-center">
         Left
-        <AnswerButtonList buttonTitles={buttonsLeft} removeButton={removeButtonLeft} />
+        <AnswerButtonList buttonTitles={leftButtons} removeButton={removeButtonLeft} />
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            appendState(e.target.buttonsLeft.value, buttonsLeft, setButtonsLeft);
+            appendState(e.target.buttonsLeft.value, leftButtons, onChangeLeft);
           }}
         >
           <div className="input-group my-2">
@@ -105,11 +92,11 @@ const AnswerButtonCreation = () => {
       </div>
       <div className="col m-1 text-center">
         Right
-        <AnswerButtonList buttonTitles={buttonsRight} removeButton={removeButtonRight} />
+        <AnswerButtonList buttonTitles={rightButtons} removeButton={removeButtonRight} />
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            appendState(e.target.buttonsRight.value, buttonsRight, setButtonsRight);
+            appendState(e.target.buttonsRight.value, rightButtons, onChangeRight);
           }}
         >
           <div className="input-group my-2">
@@ -131,6 +118,13 @@ const AnswerButtonCreation = () => {
       </div>
     </div>
   );
+};
+
+AnswerButtonCreation.propTypes = {
+  leftButtons: arrayOf(string).isRequired,
+  rightButtons: arrayOf(string).isRequired,
+  onChangeLeft: func.isRequired,
+  onChangeRight: func.isRequired
 };
 
 export default AnswerButtonCreation;
