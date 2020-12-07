@@ -1,89 +1,51 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
+import { arrayOf, object, string } from 'prop-types';
 import { AmountQuestion } from '../../components/Question';
+import pizzaWhole from '../../images/pizza-whole-example.jpg';
+import pizzaHalf from '../../images/pizza-half-example.jpg';
+import pizzaQuarter from '../../images/pizza-quarter-example.jpg';
 
-const AmountCards = () => {
+const AmountCard = ({ image, title, subtitle }) => {
   return (
-    <div className="container-fluid px-0">
-      <div className="row no-gutters overflow-auto flex-row flex-nowrap">
-        <div className="col-3 mx-2" style={{ minWidth: '200px' }}>
-          <div className="card">
-            <img src="..." className="card-img-top" alt="..." />
-            <div className="card-body">
-              <h5 className="card-title">Card title</h5>
-              <p className="card-text">
-                This is a longer card with supporting text below as a natural lead-in to additional
-                content. This content is a little bit longer.
-              </p>
-              <p className="card-text">
-                <small className="text-muted">Last updated 3 mins ago</small>
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="col-3 mx-2" style={{ minWidth: '200px' }}>
-          <div className="card">
-            <img src="..." className="card-img-top" alt="..." />
-            <div className="card-body">
-              <h5 className="card-title">Card title</h5>
-              <p className="card-text">
-                This is a longer card with supporting text below as a natural lead-in to additional
-                content. This content is a little bit longer.
-              </p>
-              <p className="card-text">
-                <small className="text-muted">Last updated 3 mins ago</small>
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="col-3 mx-2" style={{ minWidth: '200px' }}>
-          <div className="card">
-            <img src="..." className="card-img-top" alt="..." />
-            <div className="card-body">
-              <h5 className="card-title">Card title</h5>
-              <p className="card-text">
-                This is a longer card with supporting text below as a natural lead-in to additional
-                content. This content is a little bit longer.
-              </p>
-              <p className="card-text">
-                <small className="text-muted">Last updated 3 mins ago</small>
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="col-3 mx-2" style={{ minWidth: '200px' }}>
-          <div className="card">
-            <img src="..." className="card-img-top" alt="..." />
-            <div className="card-body">
-              <h5 className="card-title">Card title</h5>
-              <p className="card-text">
-                This is a longer card with supporting text below as a natural lead-in to additional
-                content. This content is a little bit longer.
-              </p>
-              <p className="card-text">
-                <small className="text-muted">Last updated 3 mins ago</small>
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="col-3 mx-2" style={{ minWidth: '200px' }}>
-          <div className="card">
-            <img src="..." className="card-img-top" alt="..." />
-            <div className="card-body">
-              <h5 className="card-title">Card title</h5>
-              <p className="card-text">
-                This is a longer card with supporting text below as a natural lead-in to additional
-                content. This content is a little bit longer.
-              </p>
-              <p className="card-text">
-                <small className="text-muted">Last updated 3 mins ago</small>
-              </p>
-            </div>
-          </div>
-        </div>
+    <div className="card text-center" style={{ minWidth: '270px' }}>
+      <img src={image} className="card-img-top" alt="" />
+      <div className="card-body">
+        <h5 className="card-title">{title}</h5>
+        <p className="card-text">{subtitle}</p>
       </div>
     </div>
   );
 };
+
+AmountCard.propTypes = {
+  image: string,
+  title: string.isRequired,
+  subtitle: string.isRequired
+};
+
+AmountCard.defaultProps = {
+  image: ''
+};
+
+const AmountCardsDeck = ({ amountCards }) => {
+  return amountCards.map((card) => <div className="px-2 align-self-center"> {card} </div>);
+};
+
+AmountCardsDeck.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  amountCards: arrayOf(object).isRequired
+};
+
+const mockAmountCards = [
+  <AmountCard key="1" title="1" subtitle="1.1" />,
+  <AmountCard key="2" image={pizzaQuarter} title="2" subtitle="2.1" />,
+  <AmountCard key="3" title="3" subtitle="3.1" />,
+  <AmountCard key="4" image={pizzaHalf} title="4" subtitle="4.1" />,
+  <AmountCard key="5" title="5" subtitle="5.1" />,
+  <AmountCard key="6" image={pizzaWhole} title="6" subtitle="6.1" />,
+  <AmountCard key="7" title="7" subtitle="7.1" />
+];
 
 const AdminPage = () => {
   return (
@@ -93,8 +55,10 @@ const AdminPage = () => {
         comment="How large was your portion?"
         help="Please select one picture. You can scroll horizontally."
       />
-      <div className="my-2">
-        <AmountCards />
+      <div className="container-fluid px-0">
+        <div className="row no-gutters overflow-auto flex-row flex-nowrap text-center my-3">
+          <AmountCardsDeck amountCards={mockAmountCards} />
+        </div>
       </div>
     </div>
   );
