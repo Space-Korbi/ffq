@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { func } from 'prop-types';
 import Navigation from '../Navigation';
 import { FrequencyQuestion } from '../Question';
 import JumbotronInputs from './JumbotronInputs';
 import HelpTextInput from './HelpTextInput';
 import AnswerButtons from './AnswerButtons';
+import AmountQuestion from '../Question/AmountQuestion';
 
 const tabs = ['Creation', 'Order'];
 
@@ -18,7 +20,36 @@ const leftButtonsTextMock = [
 ];
 const rightButtonsTextMock = ['1 Mal pro Tag', '2 Mal pro Tag', '3 - 4 Mal pro Tag', '5+ pro Tag'];
 
+const QuestionTypeSelection = ({ onChange }) => {
+  return (
+    <div>
+      <div className="input-group my-2">
+        <div className="input-group-prepend">
+          <label className="input-group-text" htmlFor="questionTypeSelect">
+            Question Type
+          </label>
+        </div>
+        <select
+          className="custom-select"
+          id="questionTypeSelect"
+          onChange={(e) => onChange(e.target.value)}
+        >
+          <option defaultValue>Choose...</option>
+          <option value="frequency">Frequency Question</option>
+          <option value="amount">Amount Question</option>
+          <option value="userInput">User Input Question</option>
+        </select>
+      </div>
+    </div>
+  );
+};
+
+QuestionTypeSelection.propTypes = {
+  onChange: func.isRequired
+};
+
 const QuestionCreation = () => {
+  const [questionType, setQuestionType] = useState('');
   const [title, setTitle] = useState('');
   const [subTitle, setSubTitle] = useState('');
   const [comment, setComment] = useState('');
@@ -38,30 +69,38 @@ const QuestionCreation = () => {
           aria-labelledby={`${tabs[0]}-tab`}
         >
           <div className="row no-gutters">
-            <div className="col-lg-6 m-2 ">
+            <div className="col-lg-5 m-2 ">
+              <QuestionTypeSelection onChange={setQuestionType} />
               <JumbotronInputs
                 onChangeTitle={setTitle}
                 onChangeSubTitle={setSubTitle}
                 onChangeComment={setComment}
               />
-
               <HelpTextInput onChange={setHelp} />
-              <AnswerButtons
-                leftButtons={leftButtons}
-                rightButtons={rightButtons}
-                onChangeLeft={setLeftButtons}
-                onChangeRight={setRightButtons}
-              />
+              {questionType === 'frequency' && (
+                <AnswerButtons
+                  leftButtons={leftButtons}
+                  rightButtons={rightButtons}
+                  onChangeLeft={setLeftButtons}
+                  onChangeRight={setRightButtons}
+                />
+              )}
+              {questionType === 'amount' && <> Amount stuff </>}
             </div>
             <div className="col mt-2 border border-info">
-              <FrequencyQuestion
-                title={title}
-                subtitle={subTitle}
-                comment={comment}
-                help={help}
-                leftButtons={leftButtons}
-                rightButtons={rightButtons}
-              />
+              {questionType === 'frequency' && (
+                <FrequencyQuestion
+                  title={title}
+                  subtitle={subTitle}
+                  comment={comment}
+                  help={help}
+                  leftButtons={leftButtons}
+                  rightButtons={rightButtons}
+                />
+              )}
+              {questionType === 'amount' && (
+                <AmountQuestion title={title} subtitle={subTitle} comment={comment} help={help} />
+              )}
             </div>
           </div>
         </div>

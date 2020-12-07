@@ -2,26 +2,6 @@
 import React from 'react';
 import { func, string } from 'prop-types';
 
-const QuestionTypeSelection = () => {
-  return (
-    <div>
-      <div className="input-group my-2">
-        <div className="input-group-prepend">
-          <label className="input-group-text" htmlFor="questionTypeSelect">
-            Question Type
-          </label>
-        </div>
-        <select className="custom-select" id="questionTypeSelect">
-          <option defaultValue>Choose...</option>
-          <option value="1">Frequency Question</option>
-          <option value="2">Amount Question</option>
-          <option value="3">User Input Question</option>
-        </select>
-      </div>
-    </div>
-  );
-};
-
 const TitleInputs = ({ type, onChange }) => {
   return (
     <div className="input-group my-2">
@@ -50,7 +30,6 @@ function JumbotronInputs({ onChangeTitle, onChangeSubTitle, onChangeComment }) {
   return (
     <div>
       <div className="flex-column" id="inputs">
-        <QuestionTypeSelection />
         <TitleInputs type="Title" onChange={onChangeTitle} />
         <TitleInputs type="Subtitle" onChange={onChangeSubTitle} />
         <TitleInputs type="Comment" onChange={onChangeComment} />
