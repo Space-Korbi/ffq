@@ -1,5 +1,4 @@
 import React from 'react';
-import $ from 'jquery';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import authenticationService from '../services';
 import { Role } from '../helpers';
@@ -31,7 +30,6 @@ class App extends React.Component {
         isAdmin: x && x.role === Role.Admin
       })
     );
-    $('[data-toggle="popover"]').popover();
   }
 
   render() {
