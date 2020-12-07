@@ -10,13 +10,7 @@ const AnswerButtonList = ({ buttonTitles, removeButton }) => {
       {buttonTitles.map((button) => {
         const buttonInput = (
           <div>
-            <input
-              className="form-control mb-1"
-              type="text"
-              placeholder={button}
-              readOnly
-              style={{ minWidth: '200px' }}
-            />
+            <input className="form-control mb-1" type="text" placeholder={button} readOnly />
             <div className="input-group input-group-sm">
               <div className="input-group-prepend">
                 <span className="input-group-text" id="inputGroup-sizing-sm">
@@ -55,7 +49,7 @@ AnswerButtonList.propTypes = {
   removeButton: func.isRequired
 };
 
-const AnswerButtonCreation = ({ leftButtons, rightButtons, onChangeLeft, onChangeRight }) => {
+const AnswerButtons = ({ leftButtons, rightButtons, onChangeLeft, onChangeRight }) => {
   const removeButtonLeft = (buttonToRemove) => {
     onChangeLeft(leftButtons.filter((button) => button !== buttonToRemove));
   };
@@ -66,7 +60,7 @@ const AnswerButtonCreation = ({ leftButtons, rightButtons, onChangeLeft, onChang
 
   return (
     <div className="row no-gutters mt-4" id="buttons">
-      <div className="col m-1 text-center">
+      <div className="col-lg-12 col-md-6 p-1 text-center">
         Left
         <AnswerButtonList buttonTitles={leftButtons} removeButton={removeButtonLeft} />
         <form
@@ -92,7 +86,7 @@ const AnswerButtonCreation = ({ leftButtons, rightButtons, onChangeLeft, onChang
           </div>
         </form>
       </div>
-      <div className="col m-1 text-center">
+      <div className="col p-1 text-center">
         Right
         <AnswerButtonList buttonTitles={rightButtons} removeButton={removeButtonRight} />
         <form
@@ -122,11 +116,11 @@ const AnswerButtonCreation = ({ leftButtons, rightButtons, onChangeLeft, onChang
   );
 };
 
-AnswerButtonCreation.propTypes = {
+AnswerButtons.propTypes = {
   leftButtons: arrayOf(string).isRequired,
   rightButtons: arrayOf(string).isRequired,
   onChangeLeft: func.isRequired,
   onChangeRight: func.isRequired
 };
 
-export default AnswerButtonCreation;
+export default AnswerButtons;

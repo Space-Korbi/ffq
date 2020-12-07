@@ -38,12 +38,13 @@ const QuestionCreation = () => {
           aria-labelledby={`${tabs[0]}-tab`}
         >
           <div className="row no-gutters">
-            <div className="col-md-5 col-lg-6 m-2 ">
+            <div className="col-lg-6 m-2 ">
               <JumbotronInputs
                 onChangeTitle={setTitle}
                 onChangeSubTitle={setSubTitle}
                 onChangeComment={setComment}
               />
+
               <HelpTextInput onChange={setHelp} />
               <AnswerButtons
                 leftButtons={leftButtons}
