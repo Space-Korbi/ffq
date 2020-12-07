@@ -1,3 +1,3 @@
-import Question from './Question';
+import FrequencyQuestion from './FrequencyQuestion';
 
-export default Question;
+export default FrequencyQuestion;

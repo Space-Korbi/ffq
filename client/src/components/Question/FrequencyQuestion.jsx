@@ -5,7 +5,7 @@ import Help from './Help';
 import FrequencySelection from './FrequencySelection';
 import Jumbotron from './Jumbotron';
 
-const Question = ({ title, subtitle, comment, help, leftButtons, rightButtons }) => {
+const FrequencyQuestion = ({ title, subtitle, comment, help, leftButtons, rightButtons }) => {
   return (
     <div>
       <div className="">
@@ -25,7 +25,7 @@ const Question = ({ title, subtitle, comment, help, leftButtons, rightButtons })
   );
 };
 
-Question.propTypes = {
+FrequencyQuestion.propTypes = {
   title: string,
   subtitle: string,
   comment: string,
@@ -34,11 +34,11 @@ Question.propTypes = {
   rightButtons: arrayOf(string).isRequired
 };
 
-Question.defaultProps = {
+FrequencyQuestion.defaultProps = {
   title: '',
   subtitle: '',
   comment: '',
   help: ''
 };
 
-export default Question;
+export default FrequencyQuestion;

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import { arrayOf, func, string } from 'prop-types';
 import RemovableListItem from '../List';
@@ -13,6 +14,7 @@ const AnswerButtonList = ({ buttonTitles, removeButton }) => {
               className="form-control mb-1"
               type="text"
               placeholder={button}
+              readOnly
               style={{ minWidth: '200px' }}
             />
             <div className="input-group input-group-sm">

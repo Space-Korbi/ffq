@@ -1,7 +1,6 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import Navigation from '../Navigation';
-import Question from '../Question';
+import FrequencyQuestion from '../Question';
 import JumbotronInputs from './JumbotronInputs';
 import HelpTextInput from './HelpTextInput';
 import AnswerButtons from './AnswerButtons';
@@ -54,7 +53,7 @@ const QuestionCreation = () => {
               />
             </div>
             <div className="col mt-2 border border-info">
-              <Question
+              <FrequencyQuestion
                 title={title}
                 subtitle={subTitle}
                 comment={comment}

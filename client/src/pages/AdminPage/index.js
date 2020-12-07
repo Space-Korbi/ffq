@@ -1,10 +1,15 @@
 import React from 'react';
-import Question from '../../components/Question';
+import FrequencyQuestion from '../../components/Question';
 
 const AdminPage = () => {
   return (
     <div>
-      <Question />
+      <FrequencyQuestion
+        title="Rice"
+        comment="How large was your portion?"
+        leftButtons={['A1', 'A2']}
+        rightButtons={['B1', 'B2']}
+      />
     </div>
   );
 };
