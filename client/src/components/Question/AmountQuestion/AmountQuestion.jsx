@@ -1,8 +1,7 @@
-/* eslint-disable no-unused-vars */
 import React from 'react';
 import { string } from 'prop-types';
-import Jumbotron from './Jumbotron';
-import Help from './Help';
+import Jumbotron from '../Jumbotron';
+import Help from '../Help';
 
 const AmountQuestion = ({ title, subtitle, comment, help }) => {
   return (

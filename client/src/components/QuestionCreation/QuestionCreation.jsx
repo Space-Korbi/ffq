@@ -5,7 +5,7 @@ import { FrequencyQuestion } from '../Question';
 import JumbotronInputs from './JumbotronInputs';
 import HelpTextInput from './HelpTextInput';
 import AnswerButtons from './AnswerButtons';
-import AmountQuestion from '../Question/AmountQuestion';
+import AmountQuestion from '../Question/AmountQuestion/AmountQuestion';
 
 const tabs = ['Creation', 'Order'];
 
@@ -87,7 +87,7 @@ const QuestionCreation = () => {
               )}
               {questionType === 'amount' && <> Amount stuff </>}
             </div>
-            <div className="col mt-2 border border-info">
+            <div className="col mt-2 border border-info" style={{ minHeight: '800px' }}>
               {questionType === 'frequency' && (
                 <FrequencyQuestion
                   title={title}
