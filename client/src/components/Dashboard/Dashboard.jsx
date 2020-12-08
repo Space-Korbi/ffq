@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
@@ -13,10 +14,6 @@ import UserSelection from '../UserSelection';
 import QuestionCreation from '../QuestionCreation';
 import { Role } from '../../helpers';
 import authenticationService from '../../services';
-
-const navbarAdmin =
-  'navbar navbar-expand-xl navbar-dark bg-dark fixed-top flex-nowrap d-flex justify-content-between shadow';
-const navbarParticipant = 'navbar navbar-dark bg-dark fixed-top flex-nowrap shadow';
 
 const Dashboard = ({ isAdmin }) => {
   const { path, url, params } = useRouteMatch();
@@ -93,158 +90,155 @@ const Dashboard = ({ isAdmin }) => {
 
   return (
     <div>
-      <nav className={isAdmin ? navbarAdmin : navbarParticipant}>
+      <nav
+        className={
+          isAdmin ? 'navbar navbar-expand-md navbar-dark bg-dark' : 'navbar navbar-dark bg-dark'
+        }
+      >
         <button
-          className={isAdmin ? 'navbar-toggler d-xl-none' : 'navbar-toggler'}
+          className="navbar-toggler"
           type="button"
           data-toggle="collapse"
-          data-target="#navigationMenu"
-          aria-controls="navigationMenu"
+          data-target="#navbarToggler"
+          aria-controls="navbarToggler"
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon" />
         </button>
-        <span
-          className="navbar-text"
-          style={{
-            color: 'beige',
-            textOverflow: 'ellipsis',
-            overflow: 'hidden',
-            whiteSpace: 'nowrap'
-          }}
-        >
-          {navigationItem}
-        </span>
-        <ul className="navbar-nav">
-          <li className="nav-item">
-            <a
-              className="nav-link ml-auto"
-              href="/login"
-              onClick={() => authenticationService.logout()}
-            >
-              Logout
-            </a>
-          </li>
-        </ul>
-      </nav>
 
-      <div className="row no-gutters">
-        {isAdmin && (
-          <nav
-            id="navigationMenu"
-            className="navbar-light bg-light d-xl-block collapse navbar-collapse"
-            style={{ maxWidth: '200px' }}
+        <div className="collapse navbar-collapse" id="navbarToggler">
+          <span
+            className="navbar-text mr-3"
+            style={{
+              color: 'beige',
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+              whiteSpace: 'nowrap'
+            }}
           >
-            <div className="sidebar-sticky pt-3">
-              <h6 className="d-flex align-items-center px-3 mt-3 text-muted">
-                <span>FFQ</span>
-              </h6>
-              <ul className="navbar-nav px-3">
-                {adminLinksFFQs.map((link) => (
-                  <li className="nav-item" key={link.name}>
-                    <NavLink
-                      to={`${url}${link.to}`}
-                      className={link.className}
-                      activeClassName={link.activeClassName}
-                    >
-                      {link.name}
-                    </NavLink>
-                  </li>
-                ))}
-              </ul>
+            {navigationItem}
+          </span>
 
-              <h6 className="d-flex align-items-center px-3 mt-5 text-muted">
-                <span>Participant</span>
-              </h6>
-              <ul className="navbar-nav px-3">
-                {adminLinksParticipants.map((link) => (
-                  <li className="nav-item" key={link.name}>
-                    <NavLink
-                      to={`${url}${link.to}`}
-                      className={link.className}
-                      activeClassName={link.activeClassName}
-                    >
-                      {link.name}
-                    </NavLink>
-                  </li>
-                ))}
-              </ul>
-
-              <ul className="navbar-nav mt-5 px-3 mb-4">
-                <li className="nav-item">
-                  <NavLink
-                    to={`${url}/account`}
-                    className="nav-link"
-                    activeClassName="nav-link active"
-                  >
-                    Account
-                  </NavLink>
-                </li>
-              </ul>
-            </div>
-          </nav>
-        )}
-
-        {!isAdmin && (
-          <nav id="navigationMenu" className="navbar-dark bg-dark collapse navbar-collapse">
-            <ul className="navbar-nav p-3">
-              {participantLinks.map((link) => (
-                <li className="nav-item" key={link.name}>
-                  <NavLink
-                    to={`${url}${link.to}`}
-                    className={link.className}
-                    activeClassName={link.activeClassName}
-                  >
-                    {link.name}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        )}
-        <main role="main" className="col p-0">
-          <div className="row no-gutters">
-            <div className="col">
+          <div className="flex-grow-1">
+            {isAdmin && (
               <div>
-                <Switch>
-                  <PrivateRoute
-                    path={`${path}/admin`}
-                    roles={[Role.Admin]}
-                    isAdmin={isAdmin}
-                    component={AdminPage}
-                  />
-                  <PrivateRoute
-                    path={`${path}/UserSelection`}
-                    roles={[Role.Admin]}
-                    isAdmin={isAdmin}
-                    component={UserSelection}
-                  />
-                  <PrivateRoute
-                    path={`${path}/participant`}
-                    roles={[Role.Participant]}
-                    isAdmin={isAdmin}
-                    component={ParticipantPage}
-                  />
-                  <PrivateRoute
-                    path={`${path}/questionCreation`}
-                    roles={[Role.Admin]}
-                    isAdmin={isAdmin}
-                    component={QuestionCreation}
-                  />
-                  <Route path={`${path}/movies/list/movies/update/:id`} component={MoviesUpdate} />
-                  <Route path={`${path}/movies/list`} component={MoviesList} />
-                  <Route path={`${path}/movies/create`} component={MoviesInsert} />
-                  <Route path={`${path}/questionnaire`} component={FFQPresentation} />
+                <ul className="navbar-nav mr-auto">
+                  <li className="nav-item dropdown">
+                    <div className="dropdown">
+                      <a
+                        className="nav-link dropdown-toggle"
+                        role="button"
+                        id="dropdownMenuButton1"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        FFQ
+                      </a>
+                      <div className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        {adminLinksFFQs.map((link) => (
+                          <a className="dropdown-item" href={`${url}${link.to}`} key={link.name}>
+                            {link.name}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  </li>
 
-                  <Route path={`${path}/account`} component={AccountPage} />
-                  <Route path={`${path}/`} exact component={WelcomePage} />
-                </Switch>
+                  <li className="nav-item dropdown">
+                    <div className="dropdown">
+                      <a
+                        className="nav-link dropdown-toggle"
+                        role="button"
+                        id="dropdownMenuButton"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        Participants
+                      </a>
+                      <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        {adminLinksParticipants.map((link) => (
+                          <a className="dropdown-item" href={`${url}${link.to}`} key={link.name}>
+                            {link.name}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  </li>
+                </ul>
               </div>
-            </div>
+            )}
+
+            {!isAdmin && (
+              <ul className="navbar-nav">
+                {participantLinks.map((link) => (
+                  <li className="nav-item" key={link.name}>
+                    <NavLink
+                      to={`${url}${link.to}`}
+                      className={link.className}
+                      activeClassName={link.activeClassName}
+                    >
+                      {link.name}
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
-        </main>
-      </div>
+          <ul className="navbar-nav">
+            <li className="nav-item">
+              <a
+                className="nav-link ml-auto"
+                href="/login"
+                onClick={() => authenticationService.logout()}
+              >
+                Logout
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <main role="main" className="col p-0">
+        <div className="row no-gutters">
+          <div className="col">
+            <Switch>
+              <PrivateRoute
+                path={`${path}/admin`}
+                roles={[Role.Admin]}
+                isAdmin={isAdmin}
+                component={AdminPage}
+              />
+              <PrivateRoute
+                path={`${path}/UserSelection`}
+                roles={[Role.Admin]}
+                isAdmin={isAdmin}
+                component={UserSelection}
+              />
+              <PrivateRoute
+                path={`${path}/participant`}
+                roles={[Role.Participant]}
+                isAdmin={isAdmin}
+                component={ParticipantPage}
+              />
+              <PrivateRoute
+                path={`${path}/questionCreation`}
+                roles={[Role.Admin]}
+                isAdmin={isAdmin}
+                component={QuestionCreation}
+              />
+              <Route path={`${path}/movies/list/movies/update/:id`} component={MoviesUpdate} />
+              <Route path={`${path}/movies/list`} component={MoviesList} />
+              <Route path={`${path}/movies/create`} component={MoviesInsert} />
+              <Route path={`${path}/questionnaire`} component={FFQPresentation} />
+
+              <Route path={`${path}/account`} component={AccountPage} />
+              <Route path={`${path}/`} exact component={WelcomePage} />
+            </Switch>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };
