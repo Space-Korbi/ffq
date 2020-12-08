@@ -87,7 +87,10 @@ const QuestionCreation = () => {
               )}
               {questionType === 'amount' && <> Amount stuff </>}
             </div>
-            <div className="col mt-2 border border-info" style={{ minHeight: '800px' }}>
+            <div
+              className="col mt-2 border border-info"
+              style={{ minHeight: '800px', minWidth: '270px', maxWidth: '100%' }}
+            >
               {questionType === 'frequency' && (
                 <FrequencyQuestion
                   title={title}
