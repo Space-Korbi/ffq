@@ -33,11 +33,23 @@ const AmountCardsDeck = ({ amountCards }) => {
   return amountCards.map((card, index) => {
     switch (index) {
       case 0:
-        return <div className="pl-5 pr-2 align-self-center"> {card} </div>;
+        return (
+          <div key={card.key} className="pl-5 pr-2 align-self-center">
+            {card}
+          </div>
+        );
       case amountCards.length - 1:
-        return <div className="pl-2 pr-5 align-self-center"> {card} </div>;
+        return (
+          <div key={card.key} className="pl-2 pr-5 align-self-center">
+            {card}
+          </div>
+        );
       default:
-        return <div className="px-2 align-self-center"> {card} </div>;
+        return (
+          <div key={card.key} className="px-2 align-self-center">
+            {card}
+          </div>
+        );
     }
   });
 };
