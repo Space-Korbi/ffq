@@ -115,7 +115,7 @@ const Dashboard = ({ isAdmin }) => {
           <div className="flex-grow-1">
             {isAdmin && (
               <ul className="navbar-nav p-3">
-                {adminLinks.map((link) => (
+                {adminLinksFFQs.map((link) => (
                   <li className="nav-item" key={link.name}>
                     <NavLink
                       to={`${url}${link.to}`}
@@ -179,32 +179,32 @@ const Dashboard = ({ isAdmin }) => {
 
           <div>
             <Switch>
-                  <PrivateRoute
-                    path={`${path}/admin`}
-                    roles={[Role.Admin]}
-                    isAdmin={isAdmin}
-                    component={AdminPage}
-                  />
-                  <PrivateRoute
-                    path={`${path}/UserSelection`}
-                    roles={[Role.Admin]}
-                    isAdmin={isAdmin}
-                    component={UserSelection}
-                  />
-                  <PrivateRoute
-                    path={`${path}/participant`}
-                    roles={[Role.Participant]}
-                    isAdmin={isAdmin}
-                    component={ParticipantPage}
-                  />
-                  <Route path={`${path}/movies/list/movies/update/:id`} component={MoviesUpdate} />
-                  <Route path={`${path}/movies/list`} component={MoviesList} />
-                  <Route path={`${path}/movies/create`} component={MoviesInsert} />
-                  <Route path={`${path}/questionnaire`} component={FFQPresentation} />
+              <PrivateRoute
+                path={`${path}/admin`}
+                roles={[Role.Admin]}
+                isAdmin={isAdmin}
+                component={AdminPage}
+              />
+              <PrivateRoute
+                path={`${path}/UserSelection`}
+                roles={[Role.Admin]}
+                isAdmin={isAdmin}
+                component={UserSelection}
+              />
+              <PrivateRoute
+                path={`${path}/participant`}
+                roles={[Role.Participant]}
+                isAdmin={isAdmin}
+                component={ParticipantPage}
+              />
+              <Route path={`${path}/movies/list/movies/update/:id`} component={MoviesUpdate} />
+              <Route path={`${path}/movies/list`} component={MoviesList} />
+              <Route path={`${path}/movies/create`} component={MoviesInsert} />
+              <Route path={`${path}/questionnaire`} component={FFQPresentation} />
 
-                  <Route path={`${path}/account`} component={AccountPage} />
-                  <Route path={`${path}/`} exact component={WelcomePage} />
-                </Switch>
+              <Route path={`${path}/account`} component={AccountPage} />
+              <Route path={`${path}/`} exact component={WelcomePage} />
+            </Switch>
           </div>
         </div>
       </main>
