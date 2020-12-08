@@ -3,7 +3,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-underscore-dangle */
 import React, { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { EditableTable } from '../../components/Table';
 // eslint-disable-next-line no-unused-vars
 import { getAllMovies, updateMovieById } from '../../api';

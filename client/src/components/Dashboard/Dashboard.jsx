@@ -8,6 +8,7 @@ import { MoviesList, MoviesInsert, MoviesUpdate } from '../../pages';
 import FFQPresentation from '../FFQ';
 import AdminPage from '../../pages/AdminPage';
 import ParticipantPage from '../../pages/ParticipantPage';
+import AccountPage from '../../pages/AccountPage';
 import WelcomePage from '../../pages/WelcomePage';
 import UserSelection from '../UserSelection';
 import { Role } from '../../helpers';
@@ -23,13 +24,28 @@ const Dashboard = ({ isAdmin }) => {
    * Map nav items according to admin and participant
    * highlight active nav link
    */
-  const adminLinks = [
+  const adminLinksFFQs = [
     {
       name: 'Admin Panel',
       to: '/admin',
       className: 'nav-link',
       activeClassName: 'nav-link active'
     },
+    {
+      name: 'Questionnaire',
+      to: '/questionnaire',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    },
+    {
+      name: 'Create Movies',
+      to: '/movies/create',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    }
+  ];
+
+  const adminLinksParticipants = [
     {
       name: 'User Selection',
       to: '/UserSelection',
@@ -39,18 +55,6 @@ const Dashboard = ({ isAdmin }) => {
     {
       name: 'Movies List',
       to: '/movies/list',
-      className: 'nav-link',
-      activeClassName: 'nav-link active'
-    },
-    {
-      name: 'Create Movies',
-      to: '/movies/create',
-      className: 'nav-link',
-      activeClassName: 'nav-link active'
-    },
-    {
-      name: 'Questionnaire',
-      to: '/questionnaire',
       className: 'nav-link',
       activeClassName: 'nav-link active'
     }
@@ -88,14 +92,15 @@ const Dashboard = ({ isAdmin }) => {
           className="navbar-toggler"
           type="button"
           data-toggle="collapse"
-          data-target="#navbarTogglerDemo01"
-          aria-controls="navbarTogglerDemo01"
+          data-target="#navbarToggler"
+          aria-controls="navbarToggler"
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon" />
         </button>
-        <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
+
+        <div className="collapse navbar-collapse" id="navbarToggler">
           <span
             className="navbar-text  p-3"
             style={{
@@ -171,32 +176,35 @@ const Dashboard = ({ isAdmin }) => {
               </button>
             </div>
           </div>
+
           <div>
             <Switch>
-              <PrivateRoute
-                path={`${path}/admin`}
-                roles={[Role.Admin]}
-                isAdmin={isAdmin}
-                component={AdminPage}
-              />
-              <PrivateRoute
-                path={`${path}/UserSelection`}
-                roles={[Role.Admin]}
-                isAdmin={isAdmin}
-                component={UserSelection}
-              />
-              <PrivateRoute
-                path={`${path}/participant`}
-                roles={[Role.Participant]}
-                isAdmin={isAdmin}
-                component={ParticipantPage}
-              />
-              <Route path={`${path}/movies/list/movies/update/:id`} component={MoviesUpdate} />
-              <Route path={`${path}/movies/list`} component={MoviesList} />
-              <Route path={`${path}/movies/create`} component={MoviesInsert} />
-              <Route path={`${path}/questionnaire`} component={FFQPresentation} />
-              <Route path={`${path}/`} exact component={WelcomePage} />
-            </Switch>
+                  <PrivateRoute
+                    path={`${path}/admin`}
+                    roles={[Role.Admin]}
+                    isAdmin={isAdmin}
+                    component={AdminPage}
+                  />
+                  <PrivateRoute
+                    path={`${path}/UserSelection`}
+                    roles={[Role.Admin]}
+                    isAdmin={isAdmin}
+                    component={UserSelection}
+                  />
+                  <PrivateRoute
+                    path={`${path}/participant`}
+                    roles={[Role.Participant]}
+                    isAdmin={isAdmin}
+                    component={ParticipantPage}
+                  />
+                  <Route path={`${path}/movies/list/movies/update/:id`} component={MoviesUpdate} />
+                  <Route path={`${path}/movies/list`} component={MoviesList} />
+                  <Route path={`${path}/movies/create`} component={MoviesInsert} />
+                  <Route path={`${path}/questionnaire`} component={FFQPresentation} />
+
+                  <Route path={`${path}/account`} component={AccountPage} />
+                  <Route path={`${path}/`} exact component={WelcomePage} />
+                </Switch>
           </div>
         </div>
       </main>

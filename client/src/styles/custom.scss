@@ -1,0 +1,21 @@
+@import '../../node_modules/bootstrap/scss/bootstrap';
+
+.jumbotron-question {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.btn-frequency {
+  height: 86px;
+}
+
+@include media-breakpoint-up(sm) {
+  .popover-body {
+    font-size: 20px;
+  }
+
+  .btn-frequency {
+    height: 60px;
+  }
+}
