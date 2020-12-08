@@ -6,7 +6,6 @@ import { Role } from '../helpers';
 import PrivateRoute from '../components/PrivateRoute';
 import LoginPage from '../pages/LoginPage';
 import Dashboard from '../components/Dashboard';
-import './App.css';
 
 /**
  * * Routing

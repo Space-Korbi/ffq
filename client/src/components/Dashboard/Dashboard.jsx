@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
@@ -12,10 +13,6 @@ import WelcomePage from '../../pages/WelcomePage';
 import UserSelection from '../UserSelection';
 import { Role } from '../../helpers';
 import authenticationService from '../../services';
-
-const navbarAdmin =
-  'navbar navbar-expand-lg navbar-dark bg-dark fixed-top flex-nowrap d-flex justify-content-between shadow';
-const navbarParticipant = 'navbar navbar-dark bg-dark fixed-top flex-nowrap shadow';
 
 const Dashboard = ({ isAdmin }) => {
   const { path, url, params } = useRouteMatch();
@@ -86,120 +83,102 @@ const Dashboard = ({ isAdmin }) => {
 
   return (
     <div>
-      <nav className={isAdmin ? navbarAdmin : navbarParticipant}>
+      <nav
+        className={
+          isAdmin ? 'navbar navbar-expand-md navbar-dark bg-dark' : 'navbar navbar-dark bg-dark'
+        }
+      >
         <button
-          className={isAdmin ? 'navbar-toggler d-lg-none' : 'navbar-toggler'}
+          className="navbar-toggler"
           type="button"
           data-toggle="collapse"
-          data-target="#navigationMenu"
-          aria-controls="navigationMenu"
+          data-target="#navbarToggler"
+          aria-controls="navbarToggler"
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon" />
         </button>
-        <span
-          className="navbar-text"
-          style={{
-            color: 'beige',
-            textOverflow: 'ellipsis',
-            overflow: 'hidden',
-            whiteSpace: 'nowrap'
-          }}
-        >
-          {navigationItem}
-        </span>
-        <ul className="navbar-nav">
-          <li className="nav-item">
-            <a
-              className="nav-link ml-auto"
-              href="/login"
-              onClick={() => authenticationService.logout()}
-            >
-              Logout
-            </a>
-          </li>
-        </ul>
+
+        <div className="collapse navbar-collapse" id="navbarToggler">
+          <span
+            className="navbar-text  p-3"
+            style={{
+              color: 'beige',
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+              whiteSpace: 'nowrap'
+            }}
+          >
+            {navigationItem}
+          </span>
+          <div className="flex-grow-1">
+            {isAdmin && (
+              <ul className="navbar-nav p-3">
+                {adminLinks.map((link) => (
+                  <li className="nav-item" key={link.name}>
+                    <NavLink
+                      to={`${url}${link.to}`}
+                      className={link.className}
+                      activeClassName={link.activeClassName}
+                    >
+                      {link.name}
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {!isAdmin && (
+              <ul className="navbar-nav p-3">
+                {participantLinks.map((link) => (
+                  <li className="nav-item" key={link.name}>
+                    <NavLink
+                      to={`${url}${link.to}`}
+                      className={link.className}
+                      activeClassName={link.activeClassName}
+                    >
+                      {link.name}
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <ul className="navbar-nav p-3">
+            <li className="nav-item">
+              <a
+                className="nav-link ml-auto"
+                href="/login"
+                onClick={() => authenticationService.logout()}
+              >
+                Logout
+              </a>
+            </li>
+          </ul>
+        </div>
       </nav>
 
-      <div className="row no-gutters">
-        {isAdmin && (
-          <nav
-            id="navigationMenu"
-            className="navbar-light bg-light d-lg-block col-lg-2 collapse navbar-collapse"
-          >
-            <div className="sidebar-sticky pt-3">
-              <h6 className="d-flex align-items-center px-3 mt-3 text-muted">
-                <span>FFQ</span>
-              </h6>
-              <ul className="navbar-nav px-3">
-                {adminLinksFFQs.map((link) => (
-                  <li className="nav-item" key={link.name}>
-                    <NavLink
-                      to={`${url}${link.to}`}
-                      className={link.className}
-                      activeClassName={link.activeClassName}
-                    >
-                      {link.name}
-                    </NavLink>
-                  </li>
-                ))}
-              </ul>
-
-              <h6 className="d-flex align-items-center px-3 mt-5 text-muted">
-                <span>Participant</span>
-              </h6>
-              <ul className="navbar-nav px-3">
-                {adminLinksParticipants.map((link) => (
-                  <li className="nav-item" key={link.name}>
-                    <NavLink
-                      to={`${url}${link.to}`}
-                      className={link.className}
-                      activeClassName={link.activeClassName}
-                    >
-                      {link.name}
-                    </NavLink>
-                  </li>
-                ))}
-              </ul>
-
-              <ul className="navbar-nav mt-5 px-3 mb-4">
-                <li className="nav-item">
-                  <NavLink
-                    to={`${url}/account`}
-                    className="nav-link"
-                    activeClassName="nav-link active"
-                  >
-                    Account
-                  </NavLink>
-                </li>
-              </ul>
+      <main role="main" className="col px-sm-1 px-lg-5 mt-2">
+        <div className="col">
+          <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 className="h2">Dashboard</h1>
+            <div className="btn-toolbar mb-2 mb-md-0">
+              <div className="btn-group mr-2">
+                <button type="button" className="btn btn-sm btn-outline-secondary">
+                  Share
+                </button>
+                <button type="button" className="btn btn-sm btn-outline-secondary">
+                  Export
+                </button>
+              </div>
+              <button type="button" className="btn btn-sm btn-outline-secondary dropdown-toggle">
+                This week
+              </button>
             </div>
-          </nav>
-        )}
+          </div>
 
-        {!isAdmin && (
-          <nav id="navigationMenu" className="navbar-dark bg-dark collapse navbar-collapse">
-            <ul className="navbar-nav p-3">
-              {participantLinks.map((link) => (
-                <li className="nav-item" key={link.name}>
-                  <NavLink
-                    to={`${url}${link.to}`}
-                    className={link.className}
-                    activeClassName={link.activeClassName}
-                  >
-                    {link.name}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        )}
-        <main role="main" className="col p-0">
-          <div className="row no-gutters">
-            <div className="col">
-              <div>
-                <Switch>
+          <div>
+            <Switch>
                   <PrivateRoute
                     path={`${path}/admin`}
                     roles={[Role.Admin]}
@@ -226,11 +205,9 @@ const Dashboard = ({ isAdmin }) => {
                   <Route path={`${path}/account`} component={AccountPage} />
                   <Route path={`${path}/`} exact component={WelcomePage} />
                 </Switch>
-              </div>
-            </div>
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
 };
