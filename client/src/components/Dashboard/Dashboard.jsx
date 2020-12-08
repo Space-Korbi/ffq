@@ -11,6 +11,7 @@ import ParticipantPage from '../../pages/ParticipantPage';
 import AccountPage from '../../pages/AccountPage';
 import WelcomePage from '../../pages/WelcomePage';
 import UserSelection from '../UserSelection';
+import QuestionCreation from '../QuestionCreation';
 import { Role } from '../../helpers';
 import authenticationService from '../../services';
 
@@ -40,6 +41,12 @@ const Dashboard = ({ isAdmin }) => {
     {
       name: 'Create Movies',
       to: '/movies/create',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    },
+    {
+      name: 'Create Question',
+      to: '/questionCreation',
       className: 'nav-link',
       activeClassName: 'nav-link active'
     }
@@ -102,7 +109,7 @@ const Dashboard = ({ isAdmin }) => {
 
         <div className="collapse navbar-collapse" id="navbarToggler">
           <span
-            className="navbar-text  p-3"
+            className="navbar-text mr-3"
             style={{
               color: 'beige',
               textOverflow: 'ellipsis',
@@ -112,24 +119,60 @@ const Dashboard = ({ isAdmin }) => {
           >
             {navigationItem}
           </span>
+
           <div className="flex-grow-1">
             {isAdmin && (
-              <ul className="navbar-nav p-3">
-                {adminLinksFFQs.map((link) => (
-                  <li className="nav-item" key={link.name}>
-                    <NavLink
-                      to={`${url}${link.to}`}
-                      className={link.className}
-                      activeClassName={link.activeClassName}
-                    >
-                      {link.name}
-                    </NavLink>
+              <div>
+                <ul className="navbar-nav mr-auto">
+                  <li className="nav-item dropdown">
+                    <div className="dropdown">
+                      <a
+                        className="nav-link dropdown-toggle"
+                        role="button"
+                        id="dropdownMenuButton1"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        FFQ
+                      </a>
+                      <div className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        {adminLinksFFQs.map((link) => (
+                          <a className="dropdown-item" href={`${url}${link.to}`} key={link.name}>
+                            {link.name}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
                   </li>
-                ))}
-              </ul>
+
+                  <li className="nav-item dropdown">
+                    <div className="dropdown">
+                      <a
+                        className="nav-link dropdown-toggle"
+                        role="button"
+                        id="dropdownMenuButton"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        Participants
+                      </a>
+                      <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        {adminLinksParticipants.map((link) => (
+                          <a className="dropdown-item" href={`${url}${link.to}`} key={link.name}>
+                            {link.name}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
             )}
+
             {!isAdmin && (
-              <ul className="navbar-nav p-3">
+              <ul className="navbar-nav">
                 {participantLinks.map((link) => (
                   <li className="nav-item" key={link.name}>
                     <NavLink
@@ -144,7 +187,7 @@ const Dashboard = ({ isAdmin }) => {
               </ul>
             )}
           </div>
-          <ul className="navbar-nav p-3">
+          <ul className="navbar-nav">
             <li className="nav-item">
               <a
                 className="nav-link ml-auto"
@@ -157,27 +200,9 @@ const Dashboard = ({ isAdmin }) => {
           </ul>
         </div>
       </nav>
-
-      <main role="main" className="col px-sm-1 px-lg-5 mt-2">
-        <div className="col">
-          <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 className="h2">Dashboard</h1>
-            <div className="btn-toolbar mb-2 mb-md-0">
-              <div className="btn-group mr-2">
-                <button type="button" className="btn btn-sm btn-outline-secondary">
-                  Share
-                </button>
-                <button type="button" className="btn btn-sm btn-outline-secondary">
-                  Export
-                </button>
-              </div>
-              <button type="button" className="btn btn-sm btn-outline-secondary dropdown-toggle">
-                This week
-              </button>
-            </div>
-          </div>
-
-          <div>
+      <main role="main" className="col p-0">
+        <div className="row no-gutters">
+          <div className="col">
             <Switch>
               <PrivateRoute
                 path={`${path}/admin`}
@@ -196,6 +221,12 @@ const Dashboard = ({ isAdmin }) => {
                 roles={[Role.Participant]}
                 isAdmin={isAdmin}
                 component={ParticipantPage}
+              />
+              <PrivateRoute
+                path={`${path}/questionCreation`}
+                roles={[Role.Admin]}
+                isAdmin={isAdmin}
+                component={QuestionCreation}
               />
               <Route path={`${path}/movies/list/movies/update/:id`} component={MoviesUpdate} />
               <Route path={`${path}/movies/list`} component={MoviesList} />

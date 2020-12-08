@@ -18,7 +18,7 @@ const DeleteButton = ({ onClick, element, isTrashCan }) => {
   return (
     <button
       type="button"
-      className="btn btn-sm btn-outline-danger d-flex align-items-center p-1 ml-2"
+      className="btn btn-sm btn-outline-danger d-flex align-items-center p-1 ml-1"
       onClick={() => onClick(element)}
     >
       <DeleteIcon trashCan={isTrashCan} />

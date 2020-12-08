@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { string } from 'prop-types';
+import $ from 'jquery';
 import { QuestionIcon } from '@primer/octicons-react';
 
 const Help = ({ infoText }) => {
+  useEffect(() => {
+    $('[data-toggle="popover"]').popover();
+  }, []);
+
   return (
     <div className="text-info mx-4">
       <button

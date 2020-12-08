@@ -41,7 +41,15 @@ const SelectionCriteriaList = ({ selectionCriteria, onClick }) => {
   return (
     <ul className="list-group mb-3" style={{ minWidth: '15rem' }}>
       {selectionCriteria.map((criteria) => {
-        return <RemovableListItem key={criteria} content={criteria} onClick={onClick} isTrashCan />;
+        return (
+          <RemovableListItem
+            key={criteria}
+            content={criteria}
+            elementToRemove={criteria}
+            onClick={onClick}
+            isTrashCan
+          />
+        );
       })}
     </ul>
   );
