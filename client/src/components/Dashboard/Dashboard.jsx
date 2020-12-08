@@ -89,7 +89,7 @@ const Dashboard = ({ isAdmin }) => {
   ];
 
   return (
-    <div>
+    <div style={{ minWidth: '300px' }}>
       <nav
         className={
           isAdmin ? 'navbar navbar-expand-md navbar-dark bg-dark' : 'navbar navbar-dark bg-dark'
