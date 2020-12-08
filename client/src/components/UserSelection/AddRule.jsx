@@ -64,7 +64,7 @@ const NewRuleCard = ({ criteria, removeCriteriaFromCard, onSubmit }) => {
             </div>
           </div>
           <div className="card-footer">
-            <div className="input-group ">
+            <div className="input-group flex-nowrap">
               <div className="input-group-prepend">
                 <label className="input-group-text" htmlFor="decisionSelect">
                   Decision:

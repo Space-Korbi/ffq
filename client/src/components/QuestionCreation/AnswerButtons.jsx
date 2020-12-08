@@ -11,10 +11,10 @@ const AnswerButtonList = ({ buttonTitles, removeButton }) => {
         const buttonInput = (
           <div>
             <input className="form-control mb-1" type="text" placeholder={button} readOnly />
-            <div className="input-group input-group-sm">
+            <div className="input-group input-group-sm flex-nowrap">
               <div className="input-group-prepend">
                 <span className="input-group-text" id="inputGroup-sizing-sm">
-                  Skip next
+                  Skip
                 </span>
               </div>
               <input
