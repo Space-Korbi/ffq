@@ -61,11 +61,11 @@ AmountCardsDeck.propTypes = {
   ).isRequired
 };
 
-const AmountQuestion = ({ title, subtitle, comment, help, amountCards }) => {
+const AmountQuestion = ({ title, subtitle1, subtitle2, help, amountCards }) => {
   return (
     <div>
       <div className="">
-        <Jumbotron title={title} subtitle={subtitle} comment={comment} />
+        <Jumbotron title={title} subtitle1={subtitle1} subtitle2={subtitle2} />
       </div>
       <div className="row no-gutters">
         <div className="col d-flex justify-content-end">
@@ -83,14 +83,14 @@ const AmountQuestion = ({ title, subtitle, comment, help, amountCards }) => {
 
 AmountQuestion.propTypes = {
   title: string,
-  subtitle: string,
-  comment: string,
+  subtitle1: string,
+  subtitle2: string,
   help: string,
   amountCards: arrayOf(
     shape({
       key: string.isRequired,
       title: string.isRequired,
-      subtitle: string,
+      subtitle1: string,
       imageURL: string
     })
   ).isRequired
@@ -98,8 +98,8 @@ AmountQuestion.propTypes = {
 
 AmountQuestion.defaultProps = {
   title: '',
-  subtitle: '',
-  comment: '',
+  subtitle1: '',
+  subtitle2: '',
   help: ''
 };
 

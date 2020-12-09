@@ -5,11 +5,11 @@ import Help from '../../Help';
 import FrequencySelection from './FrequencySelection';
 import Jumbotron from '../../Jumbotron/Jumbotron';
 
-const FrequencyQuestion = ({ title, subtitle, comment, help, leftButtons, rightButtons }) => {
+const FrequencyQuestion = ({ title, subtitle1, subtitle2, help, leftButtons, rightButtons }) => {
   return (
     <div>
       <div className="">
-        <Jumbotron title={title} subtitle={subtitle} comment={comment} />
+        <Jumbotron title={title} subtitle1={subtitle1} subtitle2={subtitle2} />
       </div>
       <div className="row no-gutters">
         <div className="col d-flex justify-content-end">
@@ -27,8 +27,8 @@ const FrequencyQuestion = ({ title, subtitle, comment, help, leftButtons, rightB
 
 FrequencyQuestion.propTypes = {
   title: string,
-  subtitle: string,
-  comment: string,
+  subtitle1: string,
+  subtitle2: string,
   help: string,
   leftButtons: arrayOf(string).isRequired,
   rightButtons: arrayOf(string).isRequired
@@ -36,8 +36,8 @@ FrequencyQuestion.propTypes = {
 
 FrequencyQuestion.defaultProps = {
   title: '',
-  subtitle: '',
-  comment: '',
+  subtitle1: '',
+  subtitle2: '',
   help: ''
 };
 

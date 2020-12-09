@@ -1,14 +1,15 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { func } from 'prop-types';
+import { v4 as uuidv4 } from 'uuid';
 import Navigation from '../Navigation';
 import JumbotronInputs from './JumbotronInputs';
 import HelpTextInput from './HelpTextInput';
-import { FrequencyQuestion } from '../Question';
+import { Question, AmountQuestion, FrequencyQuestion } from '../Question';
 import AnswerButtons from './AnswerButtons';
-import AmountQuestion from '../Question/AmountQuestion/AmountQuestion';
 import AmountCardsEditor from './AmountCardsEditor';
 import { appendState } from '../../helpers';
+import { insertQuestion } from '../../api';
 
 import pizzaWhole from '../../images/pizza-whole-example.jpg';
 // import pizzaHalf from '../../images/pizza-half-example.jpg';
@@ -26,9 +27,9 @@ const leftButtonsTextMock = [
 const rightButtonsTextMock = ['1 Mal pro Tag', '2 Mal pro Tag', '3 - 4 Mal pro Tag', '5+ pro Tag'];
 
 const mockAmountCards = [
-  { key: '1', title: '1', subtitle: '1.1' },
-  { key: '2', title: '2', subtitle: '2.1', imageURL: pizzaQuarter },
-  { key: '3', title: '3', subtitle: '3.1', imageURL: pizzaWhole }
+  { key: '1', title: '1', subtitle1: '1.1' },
+  { key: '2', title: '2', subtitle1: '2.1', imageURL: pizzaQuarter },
+  { key: '3', title: '3', subtitle1: '3.1', imageURL: pizzaWhole }
 ];
 
 const tabs = ['Creation', 'Order'];
@@ -48,6 +49,7 @@ const QuestionTypeSelection = ({ onChange }) => {
           onChange={(e) => onChange(e.target.value)}
         >
           <option defaultValue>Choose...</option>
+          <option value="question">Question</option>
           <option value="frequency">Frequency Question</option>
           <option value="amount">Amount Question</option>
           <option value="userInput">User Input Question</option>
@@ -64,14 +66,37 @@ QuestionTypeSelection.propTypes = {
 const QuestionCreation = () => {
   const [questionType, setQuestionType] = useState('');
   const [title, setTitle] = useState('');
-  const [subTitle, setSubTitle] = useState('');
-  const [comment, setComment] = useState('');
-  const [help, setHelp] = useState(mockInformation);
+  const [subtitle1, setSubtitle1] = useState('');
+  const [subtitle2, setSubtitle2] = useState('');
+  const [help, setHelp] = useState('');
 
   const [leftButtons, setLeftButtons] = useState(leftButtonsTextMock);
   const [rightButtons, setRightButtons] = useState(rightButtonsTextMock);
 
   const [amountCards, setAmountCards] = useState(mockAmountCards);
+
+  const handleIncludeQuestion = async () => {
+    const questionUUID = uuidv4();
+    const index = 0;
+    const category = 'No catergory yet';
+    const possibleAnswers = leftButtons.concat(rightButtons);
+
+    const payload = {
+      questionUUID,
+      index,
+      questionType,
+      title,
+      subtitle1,
+      subtitle2,
+      help,
+      category,
+      possibleAnswers
+    };
+
+    await insertQuestion(payload).then(() => {
+      window.alert(`Question inserted successfully`);
+    });
+  };
 
   return (
     <div className="m-4">
@@ -88,8 +113,8 @@ const QuestionCreation = () => {
               <QuestionTypeSelection onChange={setQuestionType} />
               <JumbotronInputs
                 onChangeTitle={setTitle}
-                onChangeSubTitle={setSubTitle}
-                onChangeComment={setComment}
+                onChangeSubtitle={setSubtitle1}
+                onChangeComment={setSubtitle2}
               />
               <HelpTextInput onChange={setHelp} />
               {questionType === 'frequency' && (
@@ -108,29 +133,44 @@ const QuestionCreation = () => {
                 />
               )}
             </div>
-            <div
-              className="col col-lg-5 mt-2 border border-info"
-              style={{ minHeight: '800px', minWidth: '270px', maxWidth: '100%' }}
-            >
-              {questionType === 'frequency' && (
-                <FrequencyQuestion
-                  title={title}
-                  subtitle={subTitle}
-                  comment={comment}
-                  help={help}
-                  leftButtons={leftButtons}
-                  rightButtons={rightButtons}
-                />
-              )}
-              {questionType === 'amount' && (
-                <AmountQuestion
-                  title={title}
-                  subtitle={subTitle}
-                  comment={comment}
-                  help={help}
-                  amountCards={amountCards}
-                />
-              )}
+            <div className="col col-lg-5 mt-2">
+              <div className="text-center my-2">
+                <button
+                  type="button"
+                  className="btn btn-outline-primary"
+                  onClick={() => handleIncludeQuestion()}
+                >
+                  Save Question
+                </button>
+              </div>
+
+              <div
+                className=" border border-info"
+                style={{ minHeight: '800px', minWidth: '270px', maxWidth: '100%' }}
+              >
+                {questionType === 'frequency' && (
+                  <FrequencyQuestion
+                    title={title}
+                    subtitle1={subtitle1}
+                    subtitle2={subtitle2}
+                    help={help}
+                    leftButtons={leftButtons}
+                    rightButtons={rightButtons}
+                  />
+                )}
+                {questionType === 'amount' && (
+                  <AmountQuestion
+                    title={title}
+                    subtitle1={subtitle1}
+                    subtitle2={subtitle2}
+                    help={help}
+                    amountCards={amountCards}
+                  />
+                )}
+                {questionType === 'question' && (
+                  <Question title={title} subtitle1={subtitle1} subtitle2={subtitle2} help={help} />
+                )}
+              </div>
             </div>
           </div>
         </div>
