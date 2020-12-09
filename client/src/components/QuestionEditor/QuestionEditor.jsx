@@ -48,7 +48,7 @@ const AnswerTypeSelection = ({ onChange }) => {
           id="questionTypeSelect"
           onChange={(e) => onChange(e.target.value)}
         >
-          <option defaultValue>Choose...</option>
+          <option value>Choose...</option>
           <option value={AnswerType.Frequency}>Buttons</option>
           <option value={AnswerType.Amount}>Cards</option>
           <option value={AnswerType.UserInput}>User Input</option>
@@ -57,6 +57,12 @@ const AnswerTypeSelection = ({ onChange }) => {
     </div>
   );
 };
+
+const defaultAnswerAlert = (
+  <div className="alert alert-info text-center m-5" role="alert">
+    Choose an Answer Type
+  </div>
+);
 
 AnswerTypeSelection.propTypes = {
   onChange: func.isRequired
@@ -68,11 +74,10 @@ const QuestionEditor = () => {
   const [subtitle1, setSubtitle1] = useState('');
   const [subtitle2, setSubtitle2] = useState('');
   const [help, setHelp] = useState('');
-  const [answerOptions, setAnswerOptions] = useState(<div />);
 
+  const [answerOptions, setAnswerOptions] = useState(defaultAnswerAlert);
   const [leftButtons, setLeftButtons] = useState(leftButtonsTextMock);
   const [rightButtons, setRightButtons] = useState(rightButtonsTextMock);
-
   const [amountCards, setAmountCards] = useState(mockAmountCards);
 
   const setAnswerType = (type) => {
@@ -96,7 +101,7 @@ const QuestionEditor = () => {
         setAnswerOptions(<div>User Input Question</div>);
         break;
       default:
-        setAnswerOptions(<div>Default Question</div>);
+        setAnswerOptions(defaultAnswerAlert);
     }
   };
 
@@ -180,8 +185,8 @@ const QuestionEditor = () => {
                 </div>
 
                 <div
-                  className="my-4 border border-info"
-                  style={{ minHeight: '800px', minWidth: '270px', maxWidth: '100%' }}
+                  className="mt-4 border border-info"
+                  style={{ minHeight: '760px', minWidth: '270px', maxWidth: '100%' }}
                 >
                   <Question
                     title={title}
