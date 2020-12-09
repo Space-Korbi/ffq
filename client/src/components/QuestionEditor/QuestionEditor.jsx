@@ -5,10 +5,10 @@ import { v4 as uuidv4 } from 'uuid';
 import Navigation from '../Navigation';
 import JumbotronInputs from './JumbotronInputs';
 import HelpTextInput from './HelpTextInput';
-import { Question, AmountQuestion, FrequencyQuestion } from '../Question';
+import { Question, AmountAnswer, FrequencyAnswer } from '../Question';
 import AnswerButtons from './AnswerButtons';
 import AmountCardsEditor from './AmountCardsEditor';
-import { appendState } from '../../helpers';
+import { AnswerType, appendState } from '../../helpers';
 import { insertQuestion } from '../../api';
 
 import pizzaWhole from '../../images/pizza-whole-example.jpg';
@@ -49,10 +49,9 @@ const QuestionTypeSelection = ({ onChange }) => {
           onChange={(e) => onChange(e.target.value)}
         >
           <option defaultValue>Choose...</option>
-          <option value="question">Question</option>
-          <option value="frequency">Frequency Question</option>
-          <option value="amount">Amount Question</option>
-          <option value="userInput">User Input Question</option>
+          <option value={AnswerType.Frequency}>Frequency Question</option>
+          <option value={AnswerType.Amount}>Amount Question</option>
+          <option value={AnswerType.UserInput}>User Input Question</option>
         </select>
       </div>
     </div>
@@ -69,11 +68,37 @@ const QuestionCreation = () => {
   const [subtitle1, setSubtitle1] = useState('');
   const [subtitle2, setSubtitle2] = useState('');
   const [help, setHelp] = useState('');
+  const [answerOptions, setAnswerOptions] = useState();
 
   const [leftButtons, setLeftButtons] = useState(leftButtonsTextMock);
   const [rightButtons, setRightButtons] = useState(rightButtonsTextMock);
 
   const [amountCards, setAmountCards] = useState(mockAmountCards);
+
+  const setAnswerType = (type) => {
+    setQuestionType(type);
+    switch (type) {
+      case AnswerType.Frequency:
+        setAnswerOptions(
+          <div>
+            <FrequencyAnswer leftButtons={leftButtons} rightButtons={rightButtons} />
+          </div>
+        );
+        break;
+      case AnswerType.Amount:
+        setAnswerOptions(
+          <div>
+            <AmountAnswer amountCards={amountCards} />
+          </div>
+        );
+        break;
+      case AnswerType.UserInput:
+        setAnswerOptions(<div>User Input Question</div>);
+        break;
+      default:
+        setAnswerOptions(<div>Default Question</div>);
+    }
+  };
 
   const handleIncludeQuestion = async () => {
     const questionUUID = uuidv4();
@@ -110,7 +135,7 @@ const QuestionCreation = () => {
         >
           <div className="row no-gutters">
             <div className="col-lg m-2 ">
-              <QuestionTypeSelection onChange={setQuestionType} />
+              <QuestionTypeSelection onChange={setAnswerType} />
               <JumbotronInputs
                 onChangeTitle={setTitle}
                 onChangeSubtitle={setSubtitle1}
@@ -148,28 +173,13 @@ const QuestionCreation = () => {
                 className=" border border-info"
                 style={{ minHeight: '800px', minWidth: '270px', maxWidth: '100%' }}
               >
-                {questionType === 'frequency' && (
-                  <FrequencyQuestion
-                    title={title}
-                    subtitle1={subtitle1}
-                    subtitle2={subtitle2}
-                    help={help}
-                    leftButtons={leftButtons}
-                    rightButtons={rightButtons}
-                  />
-                )}
-                {questionType === 'amount' && (
-                  <AmountQuestion
-                    title={title}
-                    subtitle1={subtitle1}
-                    subtitle2={subtitle2}
-                    help={help}
-                    amountCards={amountCards}
-                  />
-                )}
-                {questionType === 'question' && (
-                  <Question title={title} subtitle1={subtitle1} subtitle2={subtitle2} help={help} />
-                )}
+                <Question
+                  title={title}
+                  subtitle1={subtitle1}
+                  subtitle2={subtitle2}
+                  help={help}
+                  answerOptions={answerOptions}
+                />
               </div>
             </div>
           </div>

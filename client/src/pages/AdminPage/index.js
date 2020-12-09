@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import { arrayOf, object, string } from 'prop-types';
-import { AmountQuestion } from '../../components/Question';
+import { AmountAnswer } from '../../components/Question';
 import pizzaWhole from '../../images/pizza-whole-example.jpg';
 import pizzaHalf from '../../images/pizza-half-example.jpg';
 import pizzaQuarter from '../../images/pizza-quarter-example.jpg';
@@ -50,7 +50,7 @@ const mockAmountCards = [
 const AdminPage = () => {
   return (
     <div className="border border-info">
-      <AmountQuestion
+      <AmountAnswer
         title="Rice"
         comment="How large was your portion?"
         help="Please select one picture. You can scroll horizontally."
