@@ -1,13 +1,9 @@
 import React from 'react';
-import { arrayOf, string } from 'prop-types';
+import { arrayOf, func, string } from 'prop-types';
 
 import AnswerButton from './AnswerButton';
 
-const saveAnswer = () => {
-  console.log('answer');
-};
-
-const AnswerButtons = ({ leftButtons, rightButtons }) => {
+const AnswerButtons = ({ leftButtons, rightButtons, saveAnswer }) => {
   return (
     <div className="row mx-3">
       <div className="col-6">
@@ -31,7 +27,8 @@ const AnswerButtons = ({ leftButtons, rightButtons }) => {
 
 AnswerButtons.propTypes = {
   leftButtons: arrayOf(string).isRequired,
-  rightButtons: arrayOf(string).isRequired
+  rightButtons: arrayOf(string).isRequired,
+  saveAnswer: func.isRequired
 };
 
 export default AnswerButtons;

@@ -3,12 +3,20 @@ import React from 'react';
 import { arrayOf, string } from 'prop-types';
 import AnswerButtons from './AnswerButtons';
 
+const saveAnswer = () => {
+  console.log('answer');
+};
+
 const FrequencyAnswer = ({ leftButtons, rightButtons }) => {
   return (
     <div>
       <div className="row no-gutters">
         <div className="col">
-          <AnswerButtons leftButtons={leftButtons} rightButtons={rightButtons} />
+          <AnswerButtons
+            leftButtons={leftButtons}
+            rightButtons={rightButtons}
+            saveAnswer={saveAnswer}
+          />
         </div>
       </div>
     </div>
