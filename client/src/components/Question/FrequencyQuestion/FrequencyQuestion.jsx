@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import { arrayOf, string } from 'prop-types';
-import Help from '../Help';
+import Help from '../../Help';
 import FrequencySelection from './FrequencySelection';
-import Jumbotron from '../Jumbotron';
+import Jumbotron from '../../Jumbotron/Jumbotron';
 
 const FrequencyQuestion = ({ title, subtitle, comment, help, leftButtons, rightButtons }) => {
   return (
