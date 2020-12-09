@@ -1,16 +1,12 @@
 import React from 'react';
-import { arrayOf, object, string } from 'prop-types';
-import Jumbotron from '../Jumbotron';
-import Help from '../Help';
+import { arrayOf, string, shape } from 'prop-types';
+import Jumbotron from '../../Jumbotron/Jumbotron';
+import Help from '../../Help';
 
-import pizzaWhole from '../../../images/pizza-whole-example.jpg';
-import pizzaHalf from '../../../images/pizza-half-example.jpg';
-import pizzaQuarter from '../../../images/pizza-quarter-example.jpg';
-
-const AmountCard = ({ image, title, subtitle }) => {
+const AmountCard = ({ imageURL, title, subtitle }) => {
   return (
     <div className="card text-center" style={{ minWidth: '270px' }}>
-      <img src={image} className="card-img-top" alt="" />
+      <img src={imageURL} className="card-img-top" alt="" />
       <div className="card-body">
         <h5 className="card-title">{title}</h5>
         <p className="card-text">{subtitle}</p>
@@ -20,13 +16,13 @@ const AmountCard = ({ image, title, subtitle }) => {
 };
 
 AmountCard.propTypes = {
-  image: string,
+  imageURL: string,
   title: string.isRequired,
   subtitle: string.isRequired
 };
 
 AmountCard.defaultProps = {
-  image: ''
+  imageURL: ''
 };
 
 const AmountCardsDeck = ({ amountCards }) => {
@@ -35,19 +31,19 @@ const AmountCardsDeck = ({ amountCards }) => {
       case 0:
         return (
           <div key={card.key} className="pl-5 pr-2 align-self-center">
-            {card}
+            <AmountCard title={card.title} subtitle={card.subtitle} imageURL={card.imageURL} />
           </div>
         );
       case amountCards.length - 1:
         return (
           <div key={card.key} className="pl-2 pr-5 align-self-center">
-            {card}
+            <AmountCard title={card.title} subtitle={card.subtitle} imageURL={card.imageURL} />
           </div>
         );
       default:
         return (
           <div key={card.key} className="px-2 align-self-center">
-            {card}
+            <AmountCard title={card.title} subtitle={card.subtitle} imageURL={card.imageURL} />
           </div>
         );
     }
@@ -55,21 +51,17 @@ const AmountCardsDeck = ({ amountCards }) => {
 };
 
 AmountCardsDeck.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  amountCards: arrayOf(object).isRequired
+  amountCards: arrayOf(
+    shape({
+      key: string.isRequired,
+      title: string,
+      subtitle: string,
+      imageURL: string
+    })
+  ).isRequired
 };
 
-const mockAmountCards = [
-  <AmountCard key="1" title="1" subtitle="1.1" />,
-  <AmountCard key="2" image={pizzaQuarter} title="2" subtitle="2.1" />,
-  <AmountCard key="3" title="3" subtitle="3.1" />,
-  <AmountCard key="4" image={pizzaHalf} title="4" subtitle="4.1" />,
-  <AmountCard key="5" title="5" subtitle="5.1" />,
-  <AmountCard key="6" image={pizzaWhole} title="6" subtitle="6.1" />,
-  <AmountCard key="7" title="7" subtitle="7.1" />
-];
-
-const AmountQuestion = ({ title, subtitle, comment, help }) => {
+const AmountQuestion = ({ title, subtitle, comment, help, amountCards }) => {
   return (
     <div>
       <div className="">
@@ -81,7 +73,7 @@ const AmountQuestion = ({ title, subtitle, comment, help }) => {
         </div>
         <div className="container-fluid px-0">
           <div className="row no-gutters overflow-auto flex-row flex-nowrap text-center my-3">
-            <AmountCardsDeck amountCards={mockAmountCards} />
+            <AmountCardsDeck amountCards={amountCards} />
           </div>
         </div>
       </div>
@@ -93,7 +85,15 @@ AmountQuestion.propTypes = {
   title: string,
   subtitle: string,
   comment: string,
-  help: string
+  help: string,
+  amountCards: arrayOf(
+    shape({
+      key: string.isRequired,
+      title: string.isRequired,
+      subtitle: string,
+      imageURL: string
+    })
+  ).isRequired
 };
 
 AmountQuestion.defaultProps = {

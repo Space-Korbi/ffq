@@ -4,7 +4,7 @@ import { arrayOf, string } from 'prop-types';
 
 const Navigation = ({ tabs }) => {
   return (
-    <ul className="nav nav-tabs" id="userSelection" role="tablist">
+    <ul className="nav nav-tabs" id="navigation" role="tablist">
       {tabs.map((tab, index) => {
         return (
           <li className="nav-item" key={tab}>
