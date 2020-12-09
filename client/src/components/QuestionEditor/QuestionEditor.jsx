@@ -62,13 +62,13 @@ AnswerTypeSelection.propTypes = {
   onChange: func.isRequired
 };
 
-const QuestionCreation = () => {
+const QuestionEditor = () => {
   const [questionType, setQuestionType] = useState('');
   const [title, setTitle] = useState('');
   const [subtitle1, setSubtitle1] = useState('');
   const [subtitle2, setSubtitle2] = useState('');
   const [help, setHelp] = useState('');
-  const [answerOptions, setAnswerOptions] = useState();
+  const [answerOptions, setAnswerOptions] = useState(<div />);
 
   const [leftButtons, setLeftButtons] = useState(leftButtonsTextMock);
   const [rightButtons, setRightButtons] = useState(rightButtonsTextMock);
@@ -88,7 +88,7 @@ const QuestionCreation = () => {
       case AnswerType.Amount:
         setAnswerOptions(
           <div>
-            <AmountAnswer amountCards={amountCards} />
+            <AmountAnswer answerCards={amountCards} />
           </div>
         );
         break;
@@ -129,7 +129,7 @@ const QuestionCreation = () => {
         <Navigation tabs={tabs} />
       </div>
       <div>
-        <div className="tab-content" id="questionCreationContent">
+        <div className="tab-content" id="questionEditorContent">
           <div
             className="tab-pane fade show active"
             id={tabs[0]}
@@ -210,4 +210,4 @@ const QuestionCreation = () => {
   );
 };
 
-export default QuestionCreation;
+export default QuestionEditor;
