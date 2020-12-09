@@ -1,47 +1,32 @@
 import React from 'react';
 import { arrayOf, string, shape } from 'prop-types';
 
-const AmountCard = ({ imageURL, title, subtitle }) => {
-  return (
-    <div className="card text-center" style={{ minWidth: '270px' }}>
-      <img src={imageURL} className="card-img-top" alt="" />
-      <div className="card-body">
-        <h5 className="card-title">{title}</h5>
-        <p className="card-text">{subtitle}</p>
-      </div>
-    </div>
-  );
-};
+import AnswerCard from './AnswerCard';
 
-AmountCard.propTypes = {
-  imageURL: string,
-  title: string.isRequired,
-  subtitle: string.isRequired
-};
-
-AmountCard.defaultProps = {
-  imageURL: ''
-};
-
+/**
+ * * Amount Cards Spacing
+ * @param amountCards - Array of card data
+ * @returns [<Amount Card/>] - Amount cards wrapped in a div to apply extra spacing to the first and last card
+ */
 const AmountCardsDeck = ({ amountCards }) => {
   return amountCards.map((card, index) => {
     switch (index) {
       case 0:
         return (
           <div key={card.key} className="pl-5 pr-2 align-self-center">
-            <AmountCard title={card.title} subtitle={card.subtitle} imageURL={card.imageURL} />
+            <AnswerCard title={card.title} subtitle={card.subtitle} imageURL={card.imageURL} />
           </div>
         );
       case amountCards.length - 1:
         return (
           <div key={card.key} className="pl-2 pr-5 align-self-center">
-            <AmountCard title={card.title} subtitle={card.subtitle} imageURL={card.imageURL} />
+            <AnswerCard title={card.title} subtitle={card.subtitle} imageURL={card.imageURL} />
           </div>
         );
       default:
         return (
           <div key={card.key} className="px-2 align-self-center">
-            <AmountCard title={card.title} subtitle={card.subtitle} imageURL={card.imageURL} />
+            <AnswerCard title={card.title} subtitle={card.subtitle} imageURL={card.imageURL} />
           </div>
         );
     }
