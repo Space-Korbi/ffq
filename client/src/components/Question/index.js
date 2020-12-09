@@ -1,5 +1,5 @@
 import Question from './Question';
-import FrequencyQuestion from './FrequencyQuestion/FrequencyQuestion';
-import AmountQuestion from './AmountQuestion/AmountQuestion';
+import FrequencyAnswer from './FrequencyAnswer/FrequencyAnswer';
+import AmountAnswer from './AmountAnswer/AmountAnswer';
 
-export { Question, FrequencyQuestion, AmountQuestion };
+export { Question, FrequencyAnswer, AmountAnswer };
