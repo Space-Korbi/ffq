@@ -1,19 +1,19 @@
 import React from 'react';
 import { arrayOf, string } from 'prop-types';
 
-import FrequencyButton from './FrequencyButton';
+import AnswerButton from './AnswerButton';
 
 const saveAnswer = () => {
   console.log('answer');
 };
 
-const FrequencySelection = ({ leftButtons, rightButtons }) => {
+const AnswerButtons = ({ leftButtons, rightButtons }) => {
   return (
     <div className="row mx-3">
       <div className="col-6">
         {leftButtons.map((button) => (
           <div key={button}>
-            <FrequencyButton text={button} onClick={saveAnswer} />
+            <AnswerButton text={button} onClick={saveAnswer} />
           </div>
         ))}
       </div>
@@ -21,7 +21,7 @@ const FrequencySelection = ({ leftButtons, rightButtons }) => {
       <div className="col-6">
         {rightButtons.map((button) => (
           <div key={button}>
-            <FrequencyButton text={button} onClick={saveAnswer} />
+            <AnswerButton text={button} onClick={saveAnswer} />
           </div>
         ))}
       </div>
@@ -29,9 +29,9 @@ const FrequencySelection = ({ leftButtons, rightButtons }) => {
   );
 };
 
-FrequencySelection.propTypes = {
+AnswerButtons.propTypes = {
   leftButtons: arrayOf(string).isRequired,
   rightButtons: arrayOf(string).isRequired
 };
 
-export default FrequencySelection;
+export default AnswerButtons;
