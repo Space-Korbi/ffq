@@ -32,7 +32,7 @@ const mockAmountCards = [
   { key: '3', title: '3', subtitle1: '3.1', imageURL: pizzaWhole }
 ];
 
-const tabs = ['Creation', 'Order'];
+const tabs = ['Edit', 'Arrange'];
 
 const AnswerTypeSelection = ({ onChange }) => {
   return (
@@ -124,80 +124,85 @@ const QuestionCreation = () => {
   };
 
   return (
-    <div className="m-4">
-      <Navigation tabs={tabs} />
-      <div className="tab-content" id="questionCreationContent">
-        <div
-          className="tab-pane fade show active"
-          id={tabs[0]}
-          role="tabpanel"
-          aria-labelledby={`${tabs[0]}-tab`}
-        >
-          <div className="row no-gutters">
-            <div className="col-lg m-2 ">
-              <div className="my-2">
-                <AnswerTypeSelection onChange={setAnswerType} />
-              </div>
-              <div className="my-4">
-                <JumbotronInputs
-                  onChangeTitle={setTitle}
-                  onChangeSubtitle={setSubtitle1}
-                  onChangeComment={setSubtitle2}
-                />
-              </div>
-              <div className="my-4">
-                <HelpTextInput onChange={setHelp} />
-              </div>
-              {questionType === 'frequency' && (
-                <AnswerButtons
-                  leftButtons={leftButtons}
-                  rightButtons={rightButtons}
-                  onChangeLeft={setLeftButtons}
-                  onChangeRight={setRightButtons}
-                />
-              )}
-              {questionType === 'amount' && (
-                <AmountCardsEditor
-                  amountCards={amountCards}
-                  onChange={setAmountCards}
-                  addAmountCard={(element) => appendState(element, amountCards, setAmountCards)}
-                />
-              )}
-            </div>
-            <div className="col col-lg-5 mt-2">
-              <div className="text-center my-2">
-                <button
-                  type="button"
-                  className="btn btn-outline-primary"
-                  onClick={() => handleIncludeQuestion()}
-                >
-                  Save Question
-                </button>
+    <div>
+      <div className="m-3">
+        <Navigation tabs={tabs} />
+      </div>
+      <div>
+        <div className="tab-content" id="questionCreationContent">
+          <div
+            className="tab-pane fade show active"
+            id={tabs[0]}
+            role="tabpanel"
+            aria-labelledby={`${tabs[0]}-tab`}
+          >
+            <div className="row no-gutters my-3">
+              <div className="col-lg mx-3">
+                <div className="my-2">
+                  <AnswerTypeSelection onChange={setAnswerType} />
+                </div>
+                <div className="my-4">
+                  <JumbotronInputs
+                    onChangeTitle={setTitle}
+                    onChangeSubtitle={setSubtitle1}
+                    onChangeComment={setSubtitle2}
+                  />
+                </div>
+                <div className="my-4">
+                  <HelpTextInput onChange={setHelp} />
+                </div>
+                {questionType === 'frequency' && (
+                  <AnswerButtons
+                    leftButtons={leftButtons}
+                    rightButtons={rightButtons}
+                    onChangeLeft={setLeftButtons}
+                    onChangeRight={setRightButtons}
+                  />
+                )}
+                {questionType === 'amount' && (
+                  <AmountCardsEditor
+                    amountCards={amountCards}
+                    onChange={setAmountCards}
+                    addAmountCard={(element) => appendState(element, amountCards, setAmountCards)}
+                  />
+                )}
               </div>
 
-              <div
-                className="my-4 border border-info"
-                style={{ minHeight: '800px', minWidth: '270px', maxWidth: '100%' }}
-              >
-                <Question
-                  title={title}
-                  subtitle1={subtitle1}
-                  subtitle2={subtitle2}
-                  help={help}
-                  answerOptions={answerOptions}
-                />
+              <div className="col col-lg-5 px-0 mx-lg-3">
+                <div className="text-center my-2">
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary"
+                    onClick={() => handleIncludeQuestion()}
+                  >
+                    Save Question
+                  </button>
+                </div>
+
+                <div
+                  className="my-4 border border-info"
+                  style={{ minHeight: '800px', minWidth: '270px', maxWidth: '100%' }}
+                >
+                  <Question
+                    title={title}
+                    subtitle1={subtitle1}
+                    subtitle2={subtitle2}
+                    help={help}
+                    answerOptions={answerOptions}
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          className="tab-pane fade show "
-          id={tabs[1]}
-          role="tabpanel"
-          aria-labelledby={`${tabs[1]}-tab`}
-        >
-          <div className="row">
-            <div className="col">Hello World Order is Born</div>
+          <div
+            className="tab-pane fade show "
+            id={tabs[1]}
+            role="tabpanel"
+            aria-labelledby={`${tabs[1]}-tab`}
+          >
+            <div className="row">
+              <div className="col">Hello World Arrangement is Born</div>
+            </div>
           </div>
         </div>
       </div>
