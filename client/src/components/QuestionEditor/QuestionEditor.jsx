@@ -1,13 +1,18 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { func } from 'prop-types';
 import Navigation from '../Navigation';
-import { FrequencyQuestion } from '../Question';
 import JumbotronInputs from './JumbotronInputs';
 import HelpTextInput from './HelpTextInput';
+import { FrequencyQuestion } from '../Question';
 import AnswerButtons from './AnswerButtons';
 import AmountQuestion from '../Question/AmountQuestion/AmountQuestion';
+import AmountCardsEditor from './AmountCardsEditor';
+import { appendState } from '../../helpers';
 
-const tabs = ['Creation', 'Order'];
+import pizzaWhole from '../../images/pizza-whole-example.jpg';
+// import pizzaHalf from '../../images/pizza-half-example.jpg';
+import pizzaQuarter from '../../images/pizza-quarter-example.jpg';
 
 const mockInformation =
   'Bitte geben Sie die Verzehrshäufigkeiten des Lebensmittels an, indem Sie das passende Kästchen unten durch einmaliges Anklicken auswählen';
@@ -19,6 +24,14 @@ const leftButtonsTextMock = [
   '5 - 6 Mal pro Woche'
 ];
 const rightButtonsTextMock = ['1 Mal pro Tag', '2 Mal pro Tag', '3 - 4 Mal pro Tag', '5+ pro Tag'];
+
+const mockAmountCards = [
+  { key: '1', title: '1', subtitle: '1.1' },
+  { key: '2', title: '2', subtitle: '2.1', imageURL: pizzaQuarter },
+  { key: '3', title: '3', subtitle: '3.1', imageURL: pizzaWhole }
+];
+
+const tabs = ['Creation', 'Order'];
 
 const QuestionTypeSelection = ({ onChange }) => {
   return (
@@ -58,6 +71,8 @@ const QuestionCreation = () => {
   const [leftButtons, setLeftButtons] = useState(leftButtonsTextMock);
   const [rightButtons, setRightButtons] = useState(rightButtonsTextMock);
 
+  const [amountCards, setAmountCards] = useState(mockAmountCards);
+
   return (
     <div className="m-4">
       <Navigation tabs={tabs} />
@@ -69,7 +84,7 @@ const QuestionCreation = () => {
           aria-labelledby={`${tabs[0]}-tab`}
         >
           <div className="row no-gutters">
-            <div className="col-lg-5 m-2 ">
+            <div className="col-lg m-2 ">
               <QuestionTypeSelection onChange={setQuestionType} />
               <JumbotronInputs
                 onChangeTitle={setTitle}
@@ -85,10 +100,16 @@ const QuestionCreation = () => {
                   onChangeRight={setRightButtons}
                 />
               )}
-              {questionType === 'amount' && <> Amount stuff </>}
+              {questionType === 'amount' && (
+                <AmountCardsEditor
+                  amountCards={amountCards}
+                  onChange={setAmountCards}
+                  addAmountCard={(element) => appendState(element, amountCards, setAmountCards)}
+                />
+              )}
             </div>
             <div
-              className="col mt-2 border border-info"
+              className="col col-lg-5 mt-2 border border-info"
               style={{ minHeight: '800px', minWidth: '270px', maxWidth: '100%' }}
             >
               {questionType === 'frequency' && (
@@ -102,7 +123,13 @@ const QuestionCreation = () => {
                 />
               )}
               {questionType === 'amount' && (
-                <AmountQuestion title={title} subtitle={subTitle} comment={comment} help={help} />
+                <AmountQuestion
+                  title={title}
+                  subtitle={subTitle}
+                  comment={comment}
+                  help={help}
+                  amountCards={amountCards}
+                />
               )}
             </div>
           </div>
