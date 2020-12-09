@@ -34,13 +34,13 @@ const mockAmountCards = [
 
 const tabs = ['Creation', 'Order'];
 
-const QuestionTypeSelection = ({ onChange }) => {
+const AnswerTypeSelection = ({ onChange }) => {
   return (
     <div>
       <div className="input-group my-2">
         <div className="input-group-prepend">
           <label className="input-group-text" htmlFor="questionTypeSelect">
-            Question Type
+            Answer Type
           </label>
         </div>
         <select
@@ -49,16 +49,16 @@ const QuestionTypeSelection = ({ onChange }) => {
           onChange={(e) => onChange(e.target.value)}
         >
           <option defaultValue>Choose...</option>
-          <option value={AnswerType.Frequency}>Frequency Question</option>
-          <option value={AnswerType.Amount}>Amount Question</option>
-          <option value={AnswerType.UserInput}>User Input Question</option>
+          <option value={AnswerType.Frequency}>Buttons</option>
+          <option value={AnswerType.Amount}>Cards</option>
+          <option value={AnswerType.UserInput}>User Input</option>
         </select>
       </div>
     </div>
   );
 };
 
-QuestionTypeSelection.propTypes = {
+AnswerTypeSelection.propTypes = {
   onChange: func.isRequired
 };
 
@@ -135,13 +135,19 @@ const QuestionCreation = () => {
         >
           <div className="row no-gutters">
             <div className="col-lg m-2 ">
-              <QuestionTypeSelection onChange={setAnswerType} />
-              <JumbotronInputs
-                onChangeTitle={setTitle}
-                onChangeSubtitle={setSubtitle1}
-                onChangeComment={setSubtitle2}
-              />
-              <HelpTextInput onChange={setHelp} />
+              <div className="my-2">
+                <AnswerTypeSelection onChange={setAnswerType} />
+              </div>
+              <div className="my-4">
+                <JumbotronInputs
+                  onChangeTitle={setTitle}
+                  onChangeSubtitle={setSubtitle1}
+                  onChangeComment={setSubtitle2}
+                />
+              </div>
+              <div className="my-4">
+                <HelpTextInput onChange={setHelp} />
+              </div>
               {questionType === 'frequency' && (
                 <AnswerButtons
                   leftButtons={leftButtons}
@@ -170,7 +176,7 @@ const QuestionCreation = () => {
               </div>
 
               <div
-                className=" border border-info"
+                className="my-4 border border-info"
                 style={{ minHeight: '800px', minWidth: '270px', maxWidth: '100%' }}
               >
                 <Question
