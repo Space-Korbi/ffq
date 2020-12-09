@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import { string } from 'prop-types';
+import { string, element } from 'prop-types';
 
 import Jumbotron from '../Jumbotron';
 import Help from '../Help';
 
-function Question({ title, subtitle1, subtitle2, help }) {
+function Question({ title, subtitle1, subtitle2, help, answerOptions }) {
   return (
     <div>
       <div>
@@ -18,6 +18,7 @@ function Question({ title, subtitle1, subtitle2, help }) {
           </div>
         </div>
       )}
+      <div>{answerOptions}</div>
     </div>
   );
 }
@@ -26,7 +27,8 @@ Question.propTypes = {
   title: string,
   subtitle1: string,
   subtitle2: string,
-  help: string
+  help: string,
+  answerOptions: element.isRequired
 };
 
 Question.defaultProps = {
