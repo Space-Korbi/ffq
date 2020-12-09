@@ -26,7 +26,9 @@ const cors = require('cors');
  */
 require('./db');
 
-const movieRouter = require('./routes/movie-router');
+// const movieRouter = require('./routes/movie-router');
+const ffqRouter = require('./routes/ffq-router');
+const questionRouter = require('./routes/question-router');
 
 // * Create express app
 const app = express();
@@ -40,6 +42,6 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.use('/api', movieRouter);
+app.use('/api', [questionRouter, ffqRouter]);
 
 app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`));
