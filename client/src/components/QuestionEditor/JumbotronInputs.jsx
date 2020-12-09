@@ -31,8 +31,8 @@ function JumbotronInputs({ onChangeTitle, onChangeSubtitle, onChangeComment }) {
     <div>
       <div className="flex-column" id="inputs">
         <TitleInputs type="Title" onChange={onChangeTitle} />
-        <TitleInputs type="Subtitle" onChange={onChangeSubtitle} />
-        <TitleInputs type="Comment" onChange={onChangeComment} />
+        <TitleInputs type="Subtitle 1" onChange={onChangeSubtitle} />
+        <TitleInputs type="Subtitle 2" onChange={onChangeComment} />
       </div>
     </div>
   );
