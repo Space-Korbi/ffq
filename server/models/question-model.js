@@ -24,40 +24,34 @@ const Question = new Schema(
     help: { type: String },
     parentQuestion: { type: Schema.Types.ObjectId },
     childQuestion: [{ type: Schema.Types.ObjectId }],
-    answerType: {
-      frequencyAnswer: {
-        leftColumn: {
-          options: [
-            {
-              name: { type: String },
-              type: { type: String },
-              action: { type: Schema.Types.Mixed },
-              imageURL: { type: String }
-            }
-          ]
-        },
-        rightColumn: {
-          options: [
-            {
-              name: { type: String },
-              type: { type: String },
-              action: { type: Schema.Types.Mixed },
-              imageURL: { type: String }
-            }
-          ]
-        }
-      },
-      amountAnswer: {
-        options: [
+    selectableAnswers: {
+      frequency: {
+        leftColumn: [
           {
             name: { type: String },
             type: { type: String },
-            action: { type: Schema.Types.Mixed },
+            skip: { type: [String] },
+            imageURL: { type: String }
+          }
+        ],
+        rightColumn: [
+          {
+            name: { type: String },
+            type: { type: String },
+            skip: { type: [String] },
             imageURL: { type: String }
           }
         ]
       },
-      userInputAnswer: {
+      amount: [
+        {
+          name: { type: String },
+          type: { type: String },
+          skip: { type: [String] },
+          imageURL: { type: String }
+        }
+      ],
+      userInput: {
         options: { type: Schema.Types.Mixed }
       }
     }
