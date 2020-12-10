@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
-import { func, string, shape, arrayOf, number, oneOfType, array } from 'prop-types';
+import React, { useState, useEffect } from 'react';
+import { func, string, shape, arrayOf, number, oneOfType } from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import Navigation from '../Navigation';
 import JumbotronInputs from './JumbotronInputs';
@@ -31,6 +31,8 @@ const leftButtonsTextMock = [
   '1 Mal pro Woche'
 ];
 const rightButtonsTextMock = ['1 Mal pro Tag', '5+ pro Tag'];
+
+const Answer = { name: String, type: String, skip: arrayOf(number), imageURL: String };
 
 const tabs = ['Edit', 'Arrange'];
 
@@ -69,13 +71,34 @@ const QuestionEditor = ({ question }) => {
   const [help, setHelp] = useState(question.help);
 
   const [answerType, setAnswerType] = useState('');
-  const [answers, setAnswers] = useState([leftButtonsTextMock, rightButtonsTextMock]);
+  const [answers, setAnswers] = useState({
+    type: '',
+    options: [leftButtonsTextMock, rightButtonsTextMock]
+  });
   const [frequencyAnswers, setFrequencyAnswers] = useState([
     leftButtonsTextMock,
     rightButtonsTextMock
   ]);
   const [amountAnswers, setAmountAnswers] = useState([]);
   const [userInputAnswers, setUserInputAnswers] = useState([]);
+
+  useEffect(() => {
+    switch (answerType) {
+      case AnswerType.Frequency:
+        console.log('answerType', answerType);
+        setAnswers({ type: answerType, options: [[], []] });
+        break;
+      case AnswerType.Amount:
+        console.log('answerType', answerType);
+        setAnswers({ type: answerType, options: [] });
+        break;
+      case AnswerType.UserInput:
+        console.log('answerType', answerType);
+        break;
+      default:
+        break;
+    }
+  }, [answerType]);
 
   const handleIncludeQuestion = async () => {
     const { index, questionUUID } = question;
@@ -138,10 +161,7 @@ const QuestionEditor = ({ question }) => {
                   <HelpTextInput onChange={setHelp} />
                 </div>
                 <AnswerEditor
-                  answerType={answerType}
-                  frequencyAnswers={frequencyAnswers}
-                  amountAnswers={amountAnswers}
-                  userInputAnswers={userInputAnswers}
+                  answers={answers}
                   onChangeFrequencyAnswers={setFrequencyAnswers}
                   onChangeAmountAnswers={setAmountAnswers}
                   onChangeUserInputAnswers={setUserInputAnswers}
@@ -168,7 +188,7 @@ const QuestionEditor = ({ question }) => {
                     subtitle1={subtitle1}
                     subtitle2={subtitle2}
                     help={help}
-                    answer={{ type: answerType, options: answers }}
+                    answers={answers}
                   />
                 </div>
               </div>
@@ -189,8 +209,6 @@ const QuestionEditor = ({ question }) => {
     </div>
   );
 };
-
-const Answer = { name: String, type: String, skip: arrayOf(number), imageURL: String };
 
 QuestionEditor.propTypes = {
   question: shape({

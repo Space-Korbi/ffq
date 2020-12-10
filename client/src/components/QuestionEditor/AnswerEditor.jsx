@@ -1,24 +1,21 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
-import { arrayOf, func, string } from 'prop-types';
+import { arrayOf, func, string, oneOfType, shape } from 'prop-types';
 
 import AnswerButtons from './AnswerButtons';
 import AmountCardsEditor from './AmountCardsEditor';
 import { AnswerType, appendState } from '../../helpers';
 
 const AnswerEditor = ({
-  answerType,
-  frequencyAnswers,
-  amountAnswers,
-  userInputAnswers,
+  answers,
   onChangeFrequencyAnswers,
   onChangeAmountAnswers,
   onChangeUserInputAnswers
 }) => {
   return (
     <div>
-      {answerType === AnswerType.Frequency && (
-        <AnswerButtons frequencyAnswers={frequencyAnswers} onChange={onChangeFrequencyAnswers} />
+      {answers.type === AnswerType.Frequency && (
+        <AnswerButtons frequencyAnswers={answers.options} onChange={onChangeFrequencyAnswers} />
       )}
       {/* {answerType === AnswerType.Amount && (
         <AmountCardsEditor
@@ -32,10 +29,10 @@ const AnswerEditor = ({
 };
 
 AnswerEditor.propTypes = {
-  answerType: string.isRequired,
-  frequencyAnswers: arrayOf(arrayOf(string)).isRequired,
-  amountAnswers: arrayOf(string).isRequired,
-  userInputAnswers: arrayOf(string).isRequired,
+  answers: shape({
+    type: string.isRequired,
+    options: oneOfType([arrayOf(arrayOf(string)), arrayOf(string)]).isRequired
+  }).isRequired,
   onChangeFrequencyAnswers: func.isRequired,
   onChangeAmountAnswers: func.isRequired,
   onChangeUserInputAnswers: func.isRequired

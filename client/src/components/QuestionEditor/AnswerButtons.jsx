@@ -45,11 +45,15 @@ const ButtonColumn = ({ buttonTitles, removeButton }) => {
 };
 
 ButtonColumn.propTypes = {
-  buttonTitles: arrayOf(string).isRequired,
+  buttonTitles: arrayOf(string),
   removeButton: func.isRequired
+};
+ButtonColumn.defaultProps = {
+  buttonTitles: []
 };
 
 const AnswerButtons = ({ frequencyAnswers, onChange }) => {
+  console.log('AnswerButtons', frequencyAnswers);
   const [leftButtons, setLeftButtons] = useState(frequencyAnswers[0]);
   const [rightButtons, setRightButtons] = useState(frequencyAnswers[1]);
 

@@ -8,28 +8,28 @@ import FrequencyAnswer from './FrequencyAnswer/FrequencyAnswer';
 import AmountAnswer from './AmountAnswer/AmountAnswer';
 import { AnswerType } from '../../helpers';
 
-function Question({ title, subtitle1, subtitle2, help, answer }) {
+function Question({ title, subtitle1, subtitle2, help, answers }) {
   const [answerContainer, setAnswerContainer] = useState();
 
   useEffect(() => {
-    if (!answer.options) {
+    if (!answers.options) {
       return;
     }
-    switch (answer.type) {
+    switch (answers.type) {
       case AnswerType.Frequency:
-        if (answer.options.length !== 2) {
+        if (answers.options.length !== 2) {
           return;
         }
         setAnswerContainer(
           <div>
-            <FrequencyAnswer leftButtons={answer.options[0]} rightButtons={answer.options[1]} />
+            <FrequencyAnswer leftButtons={answers.options[0]} rightButtons={answers.options[1]} />
           </div>
         );
         break;
       case AnswerType.Amount:
         setAnswerContainer(
           <div>
-            <AmountAnswer answerCards={answer.options} />
+            <AmountAnswer answerCards={answers.options} />
           </div>
         );
         break;
@@ -40,7 +40,7 @@ function Question({ title, subtitle1, subtitle2, help, answer }) {
           </div>
         );
     }
-  }, [answer]);
+  }, [answers]);
 
   return (
     <div>
@@ -64,7 +64,7 @@ Question.propTypes = {
   subtitle1: string,
   subtitle2: string,
   help: string,
-  answer: shape({
+  answers: shape({
     type: string.isRequired,
     options: oneOfType([arrayOf(arrayOf(string)), arrayOf(string)]).isRequired
   }).isRequired
