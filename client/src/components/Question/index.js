@@ -1,4 +1,6 @@
-import FrequencyQuestion from './FrequencyQuestion/FrequencyQuestion';
-import AmountQuestion from './AmountQuestion/AmountQuestion';
+import Question from './Question';
+import FrequencyAnswer from './FrequencyAnswer/FrequencyAnswer';
+import AmountAnswer from './AmountAnswer/AmountAnswer';
+import UserInputAnswer from './UserInputAnswer/UserInputAnswer';
 
-export { FrequencyQuestion, AmountQuestion };
+export { Question, FrequencyAnswer, AmountAnswer, UserInputAnswer };

@@ -16,12 +16,20 @@ export const updateMovieById = (id, payload) => api.put(`/movie/${id}`, payload)
 export const deleteMovieById = (id) => api.delete(`/movie/${id}`);
 export const getMovieById = (id) => api.get(`/movie/${id}`);
 
+export const insertQuestion = (payload) => api.post(`/question`, payload);
+export const getAllQuestions = () => api.get(`/questions`);
+
+export const insertFFQ = (payload) => api.post(`/ffq`, payload);
+
 const apis = {
   insertMovie,
   getAllMovies,
   updateMovieById,
   deleteMovieById,
-  getMovieById
+  getMovieById,
+  insertQuestion,
+  getAllQuestions,
+  insertFFQ
 };
 
 export default apis;

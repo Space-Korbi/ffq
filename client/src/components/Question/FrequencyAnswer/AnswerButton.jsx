@@ -1,7 +1,7 @@
 import React from 'react';
 import { string, func } from 'prop-types';
 
-const FrequencyButton = ({ text, onClick }) => {
+const AnswerButton = ({ text, onClick }) => {
   return (
     <button
       type="button"
@@ -13,9 +13,9 @@ const FrequencyButton = ({ text, onClick }) => {
   );
 };
 
-FrequencyButton.propTypes = {
+AnswerButton.propTypes = {
   text: string.isRequired,
   onClick: func.isRequired
 };
 
-export default FrequencyButton;
+export default AnswerButton;

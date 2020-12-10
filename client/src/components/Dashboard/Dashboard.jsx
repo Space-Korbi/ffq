@@ -11,7 +11,7 @@ import ParticipantPage from '../../pages/ParticipantPage';
 import AccountPage from '../../pages/AccountPage';
 import WelcomePage from '../../pages/WelcomePage';
 import UserSelection from '../UserSelection';
-import QuestionCreation from '../QuestionCreation';
+import QuestionEditor from '../QuestionEditor';
 import { Role } from '../../helpers';
 import authenticationService from '../../services';
 
@@ -45,8 +45,8 @@ const Dashboard = ({ isAdmin }) => {
       activeClassName: 'nav-link active'
     },
     {
-      name: 'Create Question',
-      to: '/questionCreation',
+      name: 'Question Editor',
+      to: '/QuestionEditor',
       className: 'nav-link',
       activeClassName: 'nav-link active'
     }
@@ -89,7 +89,7 @@ const Dashboard = ({ isAdmin }) => {
   ];
 
   return (
-    <div>
+    <div style={{ minWidth: '300px' }}>
       <nav
         className={
           isAdmin ? 'navbar navbar-expand-md navbar-dark bg-dark' : 'navbar navbar-dark bg-dark'
@@ -223,10 +223,10 @@ const Dashboard = ({ isAdmin }) => {
                 component={ParticipantPage}
               />
               <PrivateRoute
-                path={`${path}/questionCreation`}
+                path={`${path}/QuestionEditor`}
                 roles={[Role.Admin]}
                 isAdmin={isAdmin}
-                component={QuestionCreation}
+                component={QuestionEditor}
               />
               <Route path={`${path}/movies/list/movies/update/:id`} component={MoviesUpdate} />
               <Route path={`${path}/movies/list`} component={MoviesList} />

@@ -26,13 +26,13 @@ TitleInputs.propTypes = {
   onChange: func.isRequired
 };
 
-function JumbotronInputs({ onChangeTitle, onChangeSubTitle, onChangeComment }) {
+function JumbotronInputs({ onChangeTitle, onChangeSubtitle, onChangeComment }) {
   return (
     <div>
       <div className="flex-column" id="inputs">
         <TitleInputs type="Title" onChange={onChangeTitle} />
-        <TitleInputs type="Subtitle" onChange={onChangeSubTitle} />
-        <TitleInputs type="Comment" onChange={onChangeComment} />
+        <TitleInputs type="Subtitle 1" onChange={onChangeSubtitle} />
+        <TitleInputs type="Subtitle 2" onChange={onChangeComment} />
       </div>
     </div>
   );
@@ -40,7 +40,7 @@ function JumbotronInputs({ onChangeTitle, onChangeSubTitle, onChangeComment }) {
 
 JumbotronInputs.propTypes = {
   onChangeTitle: func.isRequired,
-  onChangeSubTitle: func.isRequired,
+  onChangeSubtitle: func.isRequired,
   onChangeComment: func.isRequired
 };
 
