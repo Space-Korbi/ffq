@@ -81,8 +81,6 @@ const ButtonsEditor = ({ answers, onChange }) => {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            console.log('Left Buttons', leftButtons);
-            console.log(e.target.buttonsLeft.value);
             appendState(e.target.buttonsLeft.value, leftButtons, setLeftButtons);
           }}
         >
