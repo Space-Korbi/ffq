@@ -16,9 +16,6 @@ import pizzaWhole from '../../images/pizza-whole-example.jpg';
 // import pizzaHalf from '../../images/pizza-half-example.jpg';
 import pizzaQuarter from '../../images/pizza-quarter-example.jpg';
 
-const mockInformation =
-  'Bitte geben Sie die Verzehrshäufigkeiten des Lebensmittels an, indem Sie das passende Kästchen unten durch einmaliges Anklicken auswählen';
-
 const mockAmountCards = [
   { key: '1', title: '1', subtitle1: '1.1' },
   { key: '2', title: '2', subtitle1: '2.1', imageURL: pizzaQuarter },
@@ -103,10 +100,10 @@ const QuestionEditor = ({ question }) => {
   const handleIncludeQuestion = async () => {
     const { index, questionUUID } = question;
 
-    const answersLeft = answers[0].map((text) => {
+    const answersLeft = answers.options[0].map((text) => {
       return { name: text, skip: [], imageURL: '' };
     });
-    const answersRight = answers[1].map((text) => {
+    const answersRight = answers.options[1].map((text) => {
       return { name: text, skip: [], imageURL: '' };
     });
 
@@ -160,12 +157,7 @@ const QuestionEditor = ({ question }) => {
                 <div className="my-4">
                   <HelpTextInput onChange={setHelp} />
                 </div>
-                <AnswerEditor
-                  answers={answers}
-                  onChangeFrequencyAnswers={setFrequencyAnswers}
-                  onChangeAmountAnswers={setAmountAnswers}
-                  onChangeUserInputAnswers={setUserInputAnswers}
-                />
+                <AnswerEditor answers={answers} onChange={setAnswers} />
               </div>
 
               <div className="col col-lg-5 px-0 mx-lg-3">
@@ -234,7 +226,7 @@ QuestionEditor.propTypes = {
 QuestionEditor.defaultProps = {
   question: {
     questionUUID: uuidv4(),
-    index: 1,
+    index: 2,
     title: '',
     subtitle1: '',
     subtitle2: '',
