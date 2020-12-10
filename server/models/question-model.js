@@ -16,17 +16,51 @@ const { Schema } = mongoose;
 
 const Question = new Schema(
   {
-    questionUUID: { type: String, required: true, unique: true },
-    index: { type: Number, required: true, unique: true },
-    answerType: { type: String, required: true },
-    parenQuestion: { type: String, required: false },
-    childQuestion: { type: [String], required: false },
+    questionUUID: { type: String, required: true },
+    index: { type: Number, required: true },
     title: { type: String },
     subtitle1: { type: String },
     subtitle2: { type: String },
     help: { type: String },
-    category: { type: String, required: true },
-    possibleAnswers: { type: [String], required: true }
+    parentQuestion: { type: Schema.Types.ObjectId },
+    childQuestion: [{ type: Schema.Types.ObjectId }],
+    answerType: {
+      frequencyAnswer: {
+        leftColumn: {
+          options: [
+            {
+              name: { type: String },
+              type: { type: String },
+              action: { type: Schema.Types.Mixed },
+              imageURL: { type: String }
+            }
+          ]
+        },
+        rightColumn: {
+          options: [
+            {
+              name: { type: String },
+              type: { type: String },
+              action: { type: Schema.Types.Mixed },
+              imageURL: { type: String }
+            }
+          ]
+        }
+      },
+      amountAnswer: {
+        options: [
+          {
+            name: { type: String },
+            type: { type: String },
+            action: { type: Schema.Types.Mixed },
+            imageURL: { type: String }
+          }
+        ]
+      },
+      userInputAnswer: {
+        options: { type: Schema.Types.Mixed }
+      }
+    }
   },
   { timestamps: true }
 );

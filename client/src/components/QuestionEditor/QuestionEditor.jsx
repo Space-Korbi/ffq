@@ -91,9 +91,7 @@ const QuestionEditor = () => {
       help,
       category,
       answerType,
-      frequencyAnswers,
-      amountAnswers,
-      userInputAnswers
+      answers
     };
 
     await insertQuestion(payload).then(() => {
