@@ -153,7 +153,7 @@ EditorCard.defaultProps = {
   imageURL: ''
 };
 
-const AmountCardsEditor = ({ amountCards, onChange, addAmountCard }) => {
+const CardsEditor = ({ amountCards, onChange, addAmountCard }) => {
   const [image, setImage] = useState();
   return (
     <div>
@@ -173,7 +173,7 @@ const AmountCardsEditor = ({ amountCards, onChange, addAmountCard }) => {
   );
 };
 
-AmountCardsEditor.propTypes = {
+CardsEditor.propTypes = {
   amountCards: arrayOf(
     shape({
       key: string.isRequired,
@@ -186,4 +186,4 @@ AmountCardsEditor.propTypes = {
   addAmountCard: func.isRequired
 };
 
-export default AmountCardsEditor;
+export default CardsEditor;
