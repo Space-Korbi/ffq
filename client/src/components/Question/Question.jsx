@@ -1,11 +1,47 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
-import { string, element } from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import { string, oneOfType, shape, arrayOf } from 'prop-types';
 
 import Jumbotron from '../Jumbotron';
 import Help from '../Help';
+import FrequencyAnswer from './FrequencyAnswer/FrequencyAnswer';
+import AmountAnswer from './AmountAnswer/AmountAnswer';
+import { AnswerType } from '../../helpers';
 
-function Question({ title, subtitle1, subtitle2, help, answerOptions }) {
+function Question({ title, subtitle1, subtitle2, help, answer }) {
+  const [answerContainer, setAnswerContainer] = useState();
+
+  useEffect(() => {
+    if (!answer.options) {
+      return;
+    }
+    switch (answer.type) {
+      case AnswerType.Frequency:
+        if (answer.options.length !== 2) {
+          return;
+        }
+        setAnswerContainer(
+          <div>
+            <FrequencyAnswer leftButtons={answer.options[0]} rightButtons={answer.options[1]} />
+          </div>
+        );
+        break;
+      case AnswerType.Amount:
+        setAnswerContainer(
+          <div>
+            <AmountAnswer answerCards={answer.options} />
+          </div>
+        );
+        break;
+      default:
+        setAnswerContainer(
+          <div className="alert alert-info text-center m-5" role="alert">
+            Choose an Answer Type
+          </div>
+        );
+    }
+  }, [answer]);
+
   return (
     <div>
       <div>
@@ -18,7 +54,7 @@ function Question({ title, subtitle1, subtitle2, help, answerOptions }) {
           </div>
         </div>
       )}
-      <div>{answerOptions}</div>
+      <div>{answerContainer}</div>
     </div>
   );
 }
@@ -28,7 +64,10 @@ Question.propTypes = {
   subtitle1: string,
   subtitle2: string,
   help: string,
-  answerOptions: element.isRequired
+  answer: shape({
+    type: string.isRequired,
+    options: oneOfType([arrayOf(arrayOf(string)), arrayOf(string)]).isRequired
+  }).isRequired
 };
 
 Question.defaultProps = {

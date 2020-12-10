@@ -1,15 +1,16 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { func } from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import Navigation from '../Navigation';
 import JumbotronInputs from './JumbotronInputs';
 import HelpTextInput from './HelpTextInput';
-import { Question, AmountAnswer, FrequencyAnswer } from '../Question';
-import AnswerButtons from './AnswerButtons';
-import AmountCardsEditor from './AmountCardsEditor';
-import { AnswerType, appendState } from '../../helpers';
+import { Question } from '../Question';
+
+import { AnswerType } from '../../helpers';
 import { insertQuestion } from '../../api';
+import AnswerEditor from './AnswerEditor';
+import UserInputAnswer from '../Question/UserInputAnswer/UserInputAnswer';
 
 import pizzaWhole from '../../images/pizza-whole-example.jpg';
 // import pizzaHalf from '../../images/pizza-half-example.jpg';
@@ -17,20 +18,19 @@ import pizzaQuarter from '../../images/pizza-quarter-example.jpg';
 
 const mockInformation =
   'Bitte geben Sie die Verzehrshäufigkeiten des Lebensmittels an, indem Sie das passende Kästchen unten durch einmaliges Anklicken auswählen';
-const leftButtonsTextMock = [
-  'Nie in den letzten 4 Wochen',
-  '1 - 3 Mal in den letzten 4 Wochen',
-  '1 Mal pro Woche',
-  '2 - 4 Mal pro Woche',
-  '5 - 6 Mal pro Woche'
-];
-const rightButtonsTextMock = ['1 Mal pro Tag', '2 Mal pro Tag', '3 - 4 Mal pro Tag', '5+ pro Tag'];
 
 const mockAmountCards = [
   { key: '1', title: '1', subtitle1: '1.1' },
   { key: '2', title: '2', subtitle1: '2.1', imageURL: pizzaQuarter },
   { key: '3', title: '3', subtitle1: '3.1', imageURL: pizzaWhole }
 ];
+
+const leftButtonsTextMock = [
+  'Nie in den letzten 4 Wochen',
+  '1 - 3 Mal in den letzten 4 Wochen',
+  '1 Mal pro Woche'
+];
+const rightButtonsTextMock = ['1 Mal pro Tag', '5+ pro Tag'];
 
 const tabs = ['Edit', 'Arrange'];
 
@@ -48,7 +48,7 @@ const AnswerTypeSelection = ({ onChange }) => {
           id="questionTypeSelect"
           onChange={(e) => onChange(e.target.value)}
         >
-          <option value>Choose...</option>
+          <option defaultValue>Choose...</option>
           <option value={AnswerType.Frequency}>Buttons</option>
           <option value={AnswerType.Amount}>Cards</option>
           <option value={AnswerType.UserInput}>User Input</option>
@@ -58,69 +58,42 @@ const AnswerTypeSelection = ({ onChange }) => {
   );
 };
 
-const defaultAnswerAlert = (
-  <div className="alert alert-info text-center m-5" role="alert">
-    Choose an Answer Type
-  </div>
-);
-
 AnswerTypeSelection.propTypes = {
   onChange: func.isRequired
 };
 
 const QuestionEditor = () => {
-  const [questionType, setQuestionType] = useState('');
   const [title, setTitle] = useState('');
   const [subtitle1, setSubtitle1] = useState('');
   const [subtitle2, setSubtitle2] = useState('');
   const [help, setHelp] = useState('');
 
-  const [answerOptions, setAnswerOptions] = useState(defaultAnswerAlert);
-  const [leftButtons, setLeftButtons] = useState(leftButtonsTextMock);
-  const [rightButtons, setRightButtons] = useState(rightButtonsTextMock);
-  const [amountCards, setAmountCards] = useState(mockAmountCards);
-
-  const setAnswerType = (type) => {
-    setQuestionType(type);
-    switch (type) {
-      case AnswerType.Frequency:
-        setAnswerOptions(
-          <div>
-            <FrequencyAnswer leftButtons={leftButtons} rightButtons={rightButtons} />
-          </div>
-        );
-        break;
-      case AnswerType.Amount:
-        setAnswerOptions(
-          <div>
-            <AmountAnswer answerCards={amountCards} />
-          </div>
-        );
-        break;
-      case AnswerType.UserInput:
-        setAnswerOptions(<div>User Input Question</div>);
-        break;
-      default:
-        setAnswerOptions(defaultAnswerAlert);
-    }
-  };
+  const [answerType, setAnswerType] = useState('');
+  const [answers, setAnswers] = useState([leftButtonsTextMock, rightButtonsTextMock]);
+  const [frequencyAnswers, setFrequencyAnswers] = useState([
+    leftButtonsTextMock,
+    rightButtonsTextMock
+  ]);
+  const [amountAnswers, setAmountAnswers] = useState([]);
+  const [userInputAnswers, setUserInputAnswers] = useState([]);
 
   const handleIncludeQuestion = async () => {
     const questionUUID = uuidv4();
     const index = 0;
     const category = 'No catergory yet';
-    const possibleAnswers = leftButtons.concat(rightButtons);
 
     const payload = {
       questionUUID,
       index,
-      questionType,
       title,
       subtitle1,
       subtitle2,
       help,
       category,
-      possibleAnswers
+      answerType,
+      frequencyAnswers,
+      amountAnswers,
+      userInputAnswers
     };
 
     await insertQuestion(payload).then(() => {
@@ -133,6 +106,7 @@ const QuestionEditor = () => {
       <div className="m-3">
         <Navigation tabs={tabs} />
       </div>
+
       <div>
         <div className="tab-content" id="questionEditorContent">
           <div
@@ -156,21 +130,15 @@ const QuestionEditor = () => {
                 <div className="my-4">
                   <HelpTextInput onChange={setHelp} />
                 </div>
-                {questionType === 'frequency' && (
-                  <AnswerButtons
-                    leftButtons={leftButtons}
-                    rightButtons={rightButtons}
-                    onChangeLeft={setLeftButtons}
-                    onChangeRight={setRightButtons}
-                  />
-                )}
-                {questionType === 'amount' && (
-                  <AmountCardsEditor
-                    amountCards={amountCards}
-                    onChange={setAmountCards}
-                    addAmountCard={(element) => appendState(element, amountCards, setAmountCards)}
-                  />
-                )}
+                <AnswerEditor
+                  answerType={answerType}
+                  frequencyAnswers={frequencyAnswers}
+                  amountAnswers={amountAnswers}
+                  userInputAnswers={userInputAnswers}
+                  onChangeFrequencyAnswers={setFrequencyAnswers}
+                  onChangeAmountAnswers={setAmountAnswers}
+                  onChangeUserInputAnswers={setUserInputAnswers}
+                />
               </div>
 
               <div className="col col-lg-5 px-0 mx-lg-3">
@@ -193,7 +161,7 @@ const QuestionEditor = () => {
                     subtitle1={subtitle1}
                     subtitle2={subtitle2}
                     help={help}
-                    answerOptions={answerOptions}
+                    answer={{ type: answerType, options: answers }}
                   />
                 </div>
               </div>
