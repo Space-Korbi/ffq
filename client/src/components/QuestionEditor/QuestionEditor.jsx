@@ -80,6 +80,17 @@ const QuestionEditor = ({ question }) => {
   const handleIncludeQuestion = async () => {
     const { index, questionUUID } = question;
 
+    const answersLeft = answers[0].map((text) => {
+      return { name: text, skip: [], imageURL: '' };
+    });
+    const answersRight = answers[1].map((text) => {
+      return { name: text, skip: [], imageURL: '' };
+    });
+
+    const selectableAnswers = {
+      frequency: { leftColumn: answersLeft, rightColumn: answersRight }
+    };
+
     const payload = {
       questionUUID,
       index,
@@ -87,9 +98,10 @@ const QuestionEditor = ({ question }) => {
       subtitle1,
       subtitle2,
       help,
-      answerType,
-      answers
+      selectableAnswers
     };
+
+    console.log(payload);
 
     await insertQuestion(payload).then(() => {
       window.alert(`Question inserted successfully`);
@@ -204,6 +216,7 @@ QuestionEditor.propTypes = {
 QuestionEditor.defaultProps = {
   question: {
     questionUUID: uuidv4(),
+    index: 1,
     title: '',
     subtitle1: '',
     subtitle2: '',

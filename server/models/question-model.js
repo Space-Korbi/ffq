@@ -29,7 +29,6 @@ const Question = new Schema(
         leftColumn: [
           {
             name: { type: String },
-            type: { type: String },
             skip: { type: [String] },
             imageURL: { type: String }
           }
@@ -37,7 +36,6 @@ const Question = new Schema(
         rightColumn: [
           {
             name: { type: String },
-            type: { type: String },
             skip: { type: [String] },
             imageURL: { type: String }
           }
@@ -46,7 +44,6 @@ const Question = new Schema(
       amount: [
         {
           name: { type: String },
-          type: { type: String },
           skip: { type: [String] },
           imageURL: { type: String }
         }
