@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
-import { func } from 'prop-types';
+import React, { useState } from 'react';
+import { func, string, shape, arrayOf, number, oneOfType, array } from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import Navigation from '../Navigation';
 import JumbotronInputs from './JumbotronInputs';
@@ -62,11 +62,11 @@ AnswerTypeSelection.propTypes = {
   onChange: func.isRequired
 };
 
-const QuestionEditor = () => {
-  const [title, setTitle] = useState('');
-  const [subtitle1, setSubtitle1] = useState('');
-  const [subtitle2, setSubtitle2] = useState('');
-  const [help, setHelp] = useState('');
+const QuestionEditor = ({ question }) => {
+  const [title, setTitle] = useState(question.title);
+  const [subtitle1, setSubtitle1] = useState(question.subtitle1);
+  const [subtitle2, setSubtitle2] = useState(question.subtitle2);
+  const [help, setHelp] = useState(question.help);
 
   const [answerType, setAnswerType] = useState('');
   const [answers, setAnswers] = useState([leftButtonsTextMock, rightButtonsTextMock]);
@@ -78,9 +78,7 @@ const QuestionEditor = () => {
   const [userInputAnswers, setUserInputAnswers] = useState([]);
 
   const handleIncludeQuestion = async () => {
-    const questionUUID = uuidv4();
-    const index = 0;
-    const category = 'No catergory yet';
+    const { index, questionUUID } = question;
 
     const payload = {
       questionUUID,
@@ -89,7 +87,6 @@ const QuestionEditor = () => {
       subtitle1,
       subtitle2,
       help,
-      category,
       answerType,
       answers
     };
@@ -179,6 +176,41 @@ const QuestionEditor = () => {
       </div>
     </div>
   );
+};
+
+const Answer = { name: String, type: String, skip: arrayOf(number), imageURL: String };
+
+QuestionEditor.propTypes = {
+  question: shape({
+    questionUUID: string,
+    index: number.isRequired,
+    title: string,
+    subtitle1: string,
+    subtitle2: string,
+    help: string,
+    parentQuestion: string,
+    childQuestion: arrayOf(string),
+    selectableAnswers: shape({
+      frequency: shape({
+        leftColumn: { options: arrayOf(Answer) },
+        rightColumn: { options: arrayOf(Answer) }
+      }),
+      amount: shape({ options: arrayOf(Answer) }),
+      userInput: oneOfType([string, number])
+    })
+  })
+};
+
+QuestionEditor.defaultProps = {
+  question: {
+    questionUUID: uuidv4(),
+    title: '',
+    subtitle1: '',
+    subtitle2: '',
+    help: '',
+    parentQuestion: '',
+    childQuestion: ['']
+  }
 };
 
 export default QuestionEditor;
