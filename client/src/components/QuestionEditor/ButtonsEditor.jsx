@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from 'react';
-import { arrayOf, func, string } from 'prop-types';
+import React, { useState, useEffect } from 'react';
+import { arrayOf, func, string, shape } from 'prop-types';
 import RemovableListItem from '../List';
 import appendState from '../../helpers/Helpers';
 
@@ -52,18 +53,24 @@ ButtonColumn.defaultProps = {
   buttonTitles: []
 };
 
-const AnswerButtons = ({ frequencyAnswers, onChange }) => {
-  console.log('AnswerButtons', frequencyAnswers);
-  const [leftButtons, setLeftButtons] = useState(frequencyAnswers[0]);
-  const [rightButtons, setRightButtons] = useState(frequencyAnswers[1]);
+const ButtonsEditor = ({ answers, onChange }) => {
+  const [leftButtons, setLeftButtons] = useState(answers.options[0]);
+  const [rightButtons, setRightButtons] = useState(answers.options[1]);
+
+  useEffect(() => {
+    const answerOptions = {
+      type: answers.type,
+      options: [leftButtons, rightButtons]
+    };
+    onChange(answerOptions);
+  }, [leftButtons, rightButtons]);
 
   const removeButtonLeft = (buttonToRemove) => {
-    console.log(buttonToRemove);
-    onChange(leftButtons.filter((button) => button !== buttonToRemove));
+    setLeftButtons(leftButtons.filter((button) => button !== buttonToRemove));
   };
 
   const removeButtonRight = (buttonToRemove) => {
-    onChange(rightButtons.filter((button) => button !== buttonToRemove));
+    setRightButtons(rightButtons.filter((button) => button !== buttonToRemove));
   };
 
   return (
@@ -74,6 +81,8 @@ const AnswerButtons = ({ frequencyAnswers, onChange }) => {
         <form
           onSubmit={(e) => {
             e.preventDefault();
+            console.log('Left Buttons', leftButtons);
+            console.log(e.target.buttonsLeft.value);
             appendState(e.target.buttonsLeft.value, leftButtons, setLeftButtons);
           }}
         >
@@ -124,9 +133,9 @@ const AnswerButtons = ({ frequencyAnswers, onChange }) => {
   );
 };
 
-AnswerButtons.propTypes = {
-  frequencyAnswers: arrayOf(arrayOf(string)).isRequired,
+ButtonsEditor.propTypes = {
+  answers: shape({ type: string, options: arrayOf(arrayOf(string)) }).isRequired,
   onChange: func.isRequired
 };
 
-export default AnswerButtons;
+export default ButtonsEditor;
