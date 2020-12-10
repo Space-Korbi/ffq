@@ -1,31 +1,45 @@
-/* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { arrayOf, func, string, oneOfType, shape } from 'prop-types';
 
-import AnswerButtons from './AnswerButtons';
-import AmountCardsEditor from './AmountCardsEditor';
-import { AnswerType, appendState } from '../../helpers';
+import ButtonsEditor from './ButtonsEditor';
+import CardsEditor from './CardsEditor';
+import { AnswerType } from '../../helpers';
 
-const AnswerEditor = ({
-  answers,
-  onChangeFrequencyAnswers,
-  onChangeAmountAnswers,
-  onChangeUserInputAnswers
-}) => {
-  return (
-    <div>
-      {answers.type === AnswerType.Frequency && (
-        <AnswerButtons frequencyAnswers={answers.options} onChange={onChangeFrequencyAnswers} />
-      )}
-      {/* {answerType === AnswerType.Amount && (
-        <AmountCardsEditor
-          amountCards={amountCards}
-          onChange={setAmountCards}
-          addAmountCard={(element) => appendState(element, amountCards, setAmountCards)}
-        />
-      )} */}
-    </div>
-  );
+const AnswerEditor = ({ answers, onChange }) => {
+  const [answerEditor, setAnswerEditor] = useState(<div />);
+
+  useEffect(() => {
+    if (!answers.options) {
+      return;
+    }
+    switch (answers.type) {
+      case AnswerType.Frequency:
+        if (answers.options.length !== 2) {
+          return;
+        }
+        setAnswerEditor(
+          <div>
+            <ButtonsEditor answers={answers} onChange={onChange} />
+          </div>
+        );
+        break;
+      case AnswerType.Amount:
+        setAnswerEditor(
+          <div>
+            <CardsEditor answerCards={answers.options} />
+          </div>
+        );
+        break;
+      default:
+        setAnswerEditor(
+          <div className="alert alert-info text-center m-5" role="alert">
+            Choose an Answer Type
+          </div>
+        );
+    }
+  }, [answers]);
+
+  return <div>{answerEditor}</div>;
 };
 
 AnswerEditor.propTypes = {
@@ -33,9 +47,7 @@ AnswerEditor.propTypes = {
     type: string.isRequired,
     options: oneOfType([arrayOf(arrayOf(string)), arrayOf(string)]).isRequired
   }).isRequired,
-  onChangeFrequencyAnswers: func.isRequired,
-  onChangeAmountAnswers: func.isRequired,
-  onChangeUserInputAnswers: func.isRequired
+  onChange: func.isRequired
 };
 
 export default AnswerEditor;
