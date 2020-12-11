@@ -3,14 +3,19 @@
 import React from 'react';
 import { func, string } from 'prop-types';
 
-function AnswerCard({ imageURL, title, subtitle, onClick }) {
+function AnswerCard({ title, subtitle, imageURL, onClick }) {
   return (
-    <div className="card text-center" style={{ minWidth: '270px' }}>
-      <img src={imageURL} className="card-img-top" alt="" />
-      <div className="card-body">
-        <h5 className="card-title">{title}</h5>
-        <p className="card-text">{subtitle}</p>
-      </div>
+    <div className="card" style={{ minWidth: '270px', minHeight: '250px' }}>
+      {imageURL ? (
+        <img src={imageURL} className="card-img-top" alt="..." />
+      ) : (
+        <div className="card-body align-items-center d-flex justify-content-center">
+          <div>
+            <h5 className="card-title">{title}</h5>
+            <p className="card-text">{subtitle}</p>
+          </div>
+        </div>
+      )}
       <a href="#" className="stretched-link" onClick={onClick}>
         {' '}
       </a>
@@ -20,12 +25,14 @@ function AnswerCard({ imageURL, title, subtitle, onClick }) {
 
 AnswerCard.propTypes = {
   imageURL: string,
-  title: string.isRequired,
-  subtitle: string.isRequired,
+  title: string,
+  subtitle: string,
   onClick: func.isRequired
 };
 
 AnswerCard.defaultProps = {
+  title: '',
+  subtitle: '',
   imageURL: ''
 };
 
