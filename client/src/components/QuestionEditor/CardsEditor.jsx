@@ -1,8 +1,10 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { string, func, arrayOf, shape, number } from 'prop-types';
-import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
+
 import DeleteButton from '../Button';
+import appendState from '../../helpers/Helpers';
 
 const TextEdit = ({ content, description }) => {
   const [text, setText] = useState(content);
@@ -119,17 +121,16 @@ EditorCard.propTypes = {
   onChange: func.isRequired
 };
 
-const AmountCardsGrid = ({ amountCards, onChange }) => {
-  console.log(amountCards);
+const AmountCardsGrid = ({ answers, onChange }) => {
   return (
     <div className="row no-gutters row-cols-1 row-cols-md-2">
-      {amountCards.map((card, index) => (
+      {answers.map((answer, index) => (
         <EditorCard
-          key={card.title}
+          key={answer.key}
           id={index + 1}
-          imageURL={card.imageURL}
-          title={card.title}
-          text={card.subtitle}
+          imageURL={answer.imageURL}
+          title={answer.title}
+          text={answer.subtitle}
           onChange={onChange}
         />
       ))}
@@ -138,7 +139,7 @@ const AmountCardsGrid = ({ amountCards, onChange }) => {
 };
 
 AmountCardsGrid.propTypes = {
-  amountCards: arrayOf(
+  answers: arrayOf(
     shape({
       key: string.isRequired,
       title: string,
@@ -153,7 +154,21 @@ EditorCard.defaultProps = {
   imageURL: ''
 };
 
-const CardsEditor = ({ amountCards, onChange, addAmountCard }) => {
+const CardsEditor = ({ answers, onChange }) => {
+  const [cards, setCards] = useState(answers.options);
+
+  useEffect(() => {
+    const answerOptions = {
+      type: answers.type,
+      options: cards
+    };
+    onChange(answerOptions);
+  }, [cards]);
+
+  const removeCard = (cardToRemove) => {
+    setCards(cards.filter((card) => card !== cardToRemove));
+  };
+
   const [image, setImage] = useState();
   return (
     <div>
@@ -161,29 +176,34 @@ const CardsEditor = ({ amountCards, onChange, addAmountCard }) => {
         <button
           type="button"
           className="btn btn-outline-primary mt-3"
-          onClick={() => addAmountCard({ key: uuidv4(), title: 'test', subtitle: 'test2' })}
+          onClick={() => {
+            const newCard = { key: nanoid(), title: '', subtitle: '', imageURL: '' };
+            appendState(newCard, cards, setCards);
+          }}
         >
           Add New Amount Card
         </button>
       </div>
       <div className="border border-danger">
-        <AmountCardsGrid amountCards={amountCards} onChange={onChange} />
+        <AmountCardsGrid answers={cards} onChange={onChange} />
       </div>
     </div>
   );
 };
 
 CardsEditor.propTypes = {
-  amountCards: arrayOf(
-    shape({
-      key: string.isRequired,
-      title: string,
-      subtitle: string,
-      imageURL: string
-    })
-  ).isRequired,
-  onChange: func.isRequired,
-  addAmountCard: func.isRequired
+  answers: shape({
+    type: string,
+    options: arrayOf(
+      shape({
+        key: string.isRequired,
+        title: string,
+        subtitle: string,
+        imageURL: string
+      })
+    )
+  }).isRequired,
+  onChange: func.isRequired
 };
 
 export default CardsEditor;

@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
-import { string, oneOfType, shape, arrayOf } from 'prop-types';
+import { string, oneOfType, shape, arrayOf, number } from 'prop-types';
 
 import Jumbotron from '../Jumbotron';
 import Help from '../Help';
@@ -29,7 +29,7 @@ function Question({ title, subtitle1, subtitle2, help, answers }) {
       case AnswerType.Amount:
         setAnswerContainer(
           <div>
-            <AmountAnswer answers={answers} />
+            <AmountAnswer answers={answers.options} />
           </div>
         );
         break;
@@ -66,7 +66,17 @@ Question.propTypes = {
   help: string,
   answers: shape({
     type: string.isRequired,
-    options: oneOfType([arrayOf(arrayOf(string)), arrayOf(string)]).isRequired
+    options: oneOfType([
+      arrayOf(arrayOf(string)),
+      arrayOf(
+        shape({
+          key: string.isRequired,
+          title: string,
+          subtitle: string,
+          imageURL: string
+        })
+      )
+    ]).isRequired
   }).isRequired
 };
 

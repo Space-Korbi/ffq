@@ -16,6 +16,8 @@ import pizzaWhole from '../../images/pizza-whole-example.jpg';
 // import pizzaHalf from '../../images/pizza-half-example.jpg';
 import pizzaQuarter from '../../images/pizza-quarter-example.jpg';
 
+const AnswerCard = { key: String, title: String, subtitle: String, imageURL: String };
+
 const mockAmountCards = [
   { key: '1', title: '1', subtitle1: '1.1' },
   { key: '2', title: '2', subtitle1: '2.1', imageURL: pizzaQuarter },
@@ -28,8 +30,6 @@ const leftButtonsTextMock = [
   '1 Mal pro Woche'
 ];
 const rightButtonsTextMock = ['1 Mal pro Tag', '5+ pro Tag'];
-
-const Answer = { name: String, type: String, skip: arrayOf(number), imageURL: String };
 
 const tabs = ['Edit', 'Arrange'];
 
@@ -70,27 +70,21 @@ const QuestionEditor = ({ question }) => {
   const [answerType, setAnswerType] = useState('');
   const [answers, setAnswers] = useState({
     type: '',
-    options: [leftButtonsTextMock, rightButtonsTextMock]
+    options: []
   });
-  const [frequencyAnswers, setFrequencyAnswers] = useState([
-    leftButtonsTextMock,
-    rightButtonsTextMock
-  ]);
-  const [amountAnswers, setAmountAnswers] = useState([]);
-  const [userInputAnswers, setUserInputAnswers] = useState([]);
 
   useEffect(() => {
     switch (answerType) {
       case AnswerType.Frequency:
-        console.log('answerType', answerType);
         setAnswers({ type: answerType, options: [[], []] });
         break;
       case AnswerType.Amount:
-        console.log('answerType', answerType);
-        setAnswers({ type: answerType, options: [] });
+        setAnswers({
+          type: answerType,
+          options: []
+        });
         break;
       case AnswerType.UserInput:
-        console.log('answerType', answerType);
         break;
       default:
         break;
@@ -214,10 +208,19 @@ QuestionEditor.propTypes = {
     childQuestion: arrayOf(string),
     selectableAnswers: shape({
       frequency: shape({
-        leftColumn: { options: arrayOf(Answer) },
-        rightColumn: { options: arrayOf(Answer) }
+        leftColumn: { options: arrayOf(string) },
+        rightColumn: { options: arrayOf(string) }
       }),
-      amount: shape({ options: arrayOf(Answer) }),
+      amount: shape({
+        options: arrayOf(
+          shape({
+            key: string.isRequired,
+            title: string,
+            subtitle: string,
+            imageURL: string
+          })
+        )
+      }),
       userInput: oneOfType([string, number])
     })
   })
