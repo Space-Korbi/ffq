@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { func, string, shape, arrayOf, number, oneOfType } from 'prop-types';
-import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
 import Navigation from '../Navigation';
 import JumbotronInputs from './JumbotronInputs';
 import HelpTextInput from './HelpTextInput';
@@ -76,7 +76,10 @@ const QuestionEditor = ({ question }) => {
   useEffect(() => {
     switch (answerType) {
       case AnswerType.Frequency:
-        setAnswers({ type: answerType, options: [[], []] });
+        setAnswers({
+          type: answerType,
+          options: [[], []]
+        });
         break;
       case AnswerType.Amount:
         setAnswers({
@@ -228,7 +231,7 @@ QuestionEditor.propTypes = {
 
 QuestionEditor.defaultProps = {
   question: {
-    questionUUID: uuidv4(),
+    questionUUID: nanoid(),
     index: 2,
     title: '',
     subtitle1: '',
