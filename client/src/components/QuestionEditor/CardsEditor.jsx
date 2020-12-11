@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { string, func, arrayOf, shape, number } from 'prop-types';
@@ -74,13 +75,42 @@ ImageUpload.propTypes = {
   onChange: func.isRequired
 };
 
-const EditorCard = ({ id, imageURL, title, text, onChange }) => {
+const EditorCard = ({ id, imageURL, title, subtitle, onChange }) => {
   return (
     <div className="col my-2">
       <div className="card mx-2">
         <div className="card-header">
-          <div className="d-flex justify-content-between">
-            Card {id} <DeleteButton element={title} onClick={() => console.log('hey')} />
+          <div className="d-flex align-items-center justify-content-between">
+            {id}
+            <ul className="nav nav-tabs card-header-tabs" id="tab" role="tablist">
+              <li className="nav-item">
+                <a
+                  className="nav-link active"
+                  id="text-tab"
+                  data-toggle="tab"
+                  href="#text"
+                  role="tab"
+                  aria-controls="text"
+                  aria-selected="true"
+                >
+                  Text
+                </a>
+              </li>
+              <li className="nav-item">
+                <a
+                  className="nav-link"
+                  id="image-tab"
+                  data-toggle="tab"
+                  href="#image"
+                  role="tab"
+                  aria-controls="image"
+                  aria-selected="false"
+                >
+                  Image
+                </a>
+              </li>
+            </ul>
+            <DeleteButton element={title} onClick={() => console.log('hey')} />
           </div>
         </div>
         <div className="row no-gutters">
@@ -91,23 +121,39 @@ const EditorCard = ({ id, imageURL, title, text, onChange }) => {
           )}
           <div className="col">
             <div className="card-body">
-              <TextEdit content={title} description="Title" />
+              <div className="tab-content" id="tab-content">
+                <div
+                  className="tab-pane fade show active"
+                  id="text"
+                  role="tabpanel"
+                  aria-labelledby="text-tab"
+                >
+                  <TextEdit content={title} description="Title" />
 
-              <TextEdit content={text} description="Text" />
+                  <TextEdit content={subtitle} description="Subtitle" />
+                </div>
+                <div
+                  className="tab-pane fade "
+                  id="image"
+                  role="tabpanel"
+                  aria-labelledby="image-tab"
+                >
+                  {imageURL ? (
+                    <button type="button" className="btn btn-warning">
+                      Remove image
+                    </button>
+                  ) : (
+                    <div className="row no-gutters">
+                      <div className="col mx-3">
+                        <ImageUpload onChange={onChange} />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        {imageURL ? (
-          <button type="button" className="btn btn-warning">
-            Remove image
-          </button>
-        ) : (
-          <div className="row no-gutters">
-            <div className="col mx-3">
-              <ImageUpload onChange={onChange} />
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
@@ -117,7 +163,7 @@ EditorCard.propTypes = {
   id: number.isRequired,
   imageURL: string,
   title: string.isRequired,
-  text: string.isRequired,
+  subtitle: string.isRequired,
   onChange: func.isRequired
 };
 
@@ -130,7 +176,7 @@ const AmountCardsGrid = ({ answers, onChange }) => {
           id={index + 1}
           imageURL={answer.imageURL}
           title={answer.title}
-          text={answer.subtitle}
+          subtitle={answer.subtitle}
           onChange={onChange}
         />
       ))}
@@ -172,10 +218,10 @@ const CardsEditor = ({ answers, onChange }) => {
   const [image, setImage] = useState();
   return (
     <div>
-      <div className="border border-success text-center">
+      <div className="mt-5 text-center">
         <button
           type="button"
-          className="btn btn-outline-primary mt-3"
+          className="btn btn-outline-primary"
           onClick={() => {
             const newCard = { key: nanoid(), title: '', subtitle: '', imageURL: '' };
             appendState(newCard, cards, setCards);
@@ -184,7 +230,7 @@ const CardsEditor = ({ answers, onChange }) => {
           Add New Amount Card
         </button>
       </div>
-      <div className="border border-danger">
+      <div>
         <AmountCardsGrid answers={cards} onChange={onChange} />
       </div>
     </div>
