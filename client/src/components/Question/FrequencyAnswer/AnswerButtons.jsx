@@ -1,23 +1,23 @@
 import React from 'react';
-import { arrayOf, func, string } from 'prop-types';
+import { arrayOf, shape, func, string } from 'prop-types';
 
 import AnswerButton from './AnswerButton';
 
-const AnswerButtons = ({ leftButtons, rightButtons, saveAnswer }) => {
+const AnswerButtons = ({ leftAnswers, rightAnswers, saveAnswer }) => {
   return (
     <div className="row mx-3">
       <div className="col-6">
-        {leftButtons.map((button) => (
-          <div key={button}>
-            <AnswerButton text={button} onClick={saveAnswer} />
+        {leftAnswers.map((answer) => (
+          <div key={answer.title}>
+            <AnswerButton text={answer.title} onClick={saveAnswer} />
           </div>
         ))}
       </div>
 
       <div className="col-6">
-        {rightButtons.map((button) => (
-          <div key={button}>
-            <AnswerButton text={button} onClick={saveAnswer} />
+        {rightAnswers.map((answer) => (
+          <div key={answer.title}>
+            <AnswerButton text={answer.title} onClick={saveAnswer} />
           </div>
         ))}
       </div>
@@ -26,8 +26,8 @@ const AnswerButtons = ({ leftButtons, rightButtons, saveAnswer }) => {
 };
 
 AnswerButtons.propTypes = {
-  leftButtons: arrayOf(string).isRequired,
-  rightButtons: arrayOf(string).isRequired,
+  leftAnswers: arrayOf(shape({ key: string.isRequired, title: string })).isRequired,
+  rightAnswers: arrayOf(shape({ key: string.isRequired, title: string })).isRequired,
   saveAnswer: func.isRequired
 };
 

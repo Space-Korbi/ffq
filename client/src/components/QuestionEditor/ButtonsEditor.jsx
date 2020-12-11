@@ -2,17 +2,18 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
 import { arrayOf, func, string, shape } from 'prop-types';
+import { nanoid } from 'nanoid';
 
 import RemovableListItem from '../List';
 import appendState from '../../helpers/Helpers';
 
-const ButtonColumn = ({ buttonTitles, removeButton }) => {
+const ButtonColumn = ({ answers, removeButton }) => {
   return (
     <ul className="list-group">
-      {buttonTitles.map((button) => {
+      {answers.map((answer) => {
         const buttonInput = (
           <div>
-            <input className="form-control mb-1" type="text" placeholder={button} readOnly />
+            <input className="form-control mb-1" type="text" placeholder={answer.title} readOnly />
             <div className="input-group input-group-sm flex-nowrap">
               <div className="input-group-prepend">
                 <span className="input-group-text" id="inputGroup-sizing-sm">
@@ -35,9 +36,9 @@ const ButtonColumn = ({ buttonTitles, removeButton }) => {
         );
         return (
           <RemovableListItem
-            key={button}
+            key={answer.title}
             content={buttonInput}
-            elementToRemove={button}
+            elementToRemove={answer.title}
             onClick={removeButton}
           />
         );
@@ -47,42 +48,46 @@ const ButtonColumn = ({ buttonTitles, removeButton }) => {
 };
 
 ButtonColumn.propTypes = {
-  buttonTitles: arrayOf(string),
+  answers: arrayOf(shape({ key: string.isRequired, title: string })),
   removeButton: func.isRequired
 };
 ButtonColumn.defaultProps = {
-  buttonTitles: []
+  answers: []
 };
 
 const ButtonsEditor = ({ answers, onChange }) => {
-  const [leftButtons, setLeftButtons] = useState(answers.options[0]);
-  const [rightButtons, setRightButtons] = useState(answers.options[1]);
+  const [leftAnswers, setLeftAnswers] = useState(answers.options[0]);
+  const [rightAnswers, setRightAnswers] = useState(answers.options[1]);
 
   useEffect(() => {
     const answerOptions = {
       type: answers.type,
-      options: [leftButtons, rightButtons]
+      options: [leftAnswers, rightAnswers]
     };
     onChange(answerOptions);
-  }, [leftButtons, rightButtons]);
+  }, [leftAnswers, rightAnswers]);
 
-  const removeButtonLeft = (buttonToRemove) => {
-    setLeftButtons(leftButtons.filter((button) => button !== buttonToRemove));
+  const removeButtonLeft = (titleToRemove) => {
+    setLeftAnswers(leftAnswers.filter((answer) => answer.title !== titleToRemove));
   };
 
-  const removeButtonRight = (buttonToRemove) => {
-    setRightButtons(rightButtons.filter((button) => button !== buttonToRemove));
+  const removeButtonRight = (titleToRemove) => {
+    setRightAnswers(rightAnswers.filter((answer) => answer.title !== titleToRemove));
   };
 
   return (
     <div className="row no-gutters mt-4" id="buttons">
       <div className="col-lg-12 col-md-6 p-1 text-center">
         Left
-        <ButtonColumn buttonTitles={leftButtons} removeButton={removeButtonLeft} />
+        <ButtonColumn answers={leftAnswers} removeButton={removeButtonLeft} />
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            appendState(e.target.buttonsLeft.value, leftButtons, setLeftButtons);
+            appendState(
+              { key: nanoid(), title: e.target.buttonsLeft.value },
+              leftAnswers,
+              setLeftAnswers
+            );
           }}
         >
           <div className="input-group my-2">
@@ -104,11 +109,15 @@ const ButtonsEditor = ({ answers, onChange }) => {
       </div>
       <div className="col p-1 text-center">
         Right
-        <ButtonColumn buttonTitles={rightButtons} removeButton={removeButtonRight} />
+        <ButtonColumn answers={rightAnswers} removeButton={removeButtonRight} />
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            appendState(e.target.buttonsRight.value, rightButtons, setRightButtons);
+            appendState(
+              { key: nanoid(), title: e.target.buttonsRight.value },
+              rightAnswers,
+              setRightAnswers
+            );
           }}
         >
           <div className="input-group my-2">
@@ -133,7 +142,10 @@ const ButtonsEditor = ({ answers, onChange }) => {
 };
 
 ButtonsEditor.propTypes = {
-  answers: shape({ type: string, options: arrayOf(arrayOf(string)) }).isRequired,
+  answers: shape({
+    type: string,
+    options: arrayOf(arrayOf(shape({ key: string.isRequired, title: string })))
+  }).isRequired,
   onChange: func.isRequired
 };
 

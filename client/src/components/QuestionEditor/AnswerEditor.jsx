@@ -46,7 +46,7 @@ AnswerEditor.propTypes = {
   answers: shape({
     type: string.isRequired,
     options: oneOfType([
-      arrayOf(arrayOf(string)),
+      arrayOf(arrayOf(shape({ key: string.isRequired, title: string }))),
       arrayOf(
         shape({
           key: string.isRequired,
