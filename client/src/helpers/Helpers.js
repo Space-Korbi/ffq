@@ -1,6 +1,9 @@
 const appendState = (element, currentState, setState) => {
-  // check if element is not empty and not just whitespace
-  if (/\S/.test(element) && !currentState.includes(element)) {
+  // check if element is not empty, not just whitespace and not contained in the array
+  if (
+    /\S/.test(element.title) &&
+    !currentState.some((stateElement) => stateElement.title === element.title)
+  ) {
     setState((prevState) => [...prevState, element]);
   }
 };
