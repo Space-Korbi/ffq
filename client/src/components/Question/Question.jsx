@@ -1,12 +1,16 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
-import { string, oneOfType, shape, arrayOf, number } from 'prop-types';
+import { string, oneOfType, shape, arrayOf } from 'prop-types';
 
 import Jumbotron from '../Jumbotron';
 import Help from '../Help';
-import FrequencyAnswer from './FrequencyAnswer/FrequencyAnswer';
+import AnswerButtons from './FrequencyAnswer/AnswerButtons';
 import AmountAnswer from './AmountAnswer/AmountAnswer';
 import { AnswerType } from '../../helpers';
+
+const saveAnswer = () => {
+  console.log('answer');
+};
 
 function Question({ title, subtitle1, subtitle2, help, answers }) {
   const [answerContainer, setAnswerContainer] = useState();
@@ -21,8 +25,14 @@ function Question({ title, subtitle1, subtitle2, help, answers }) {
           return;
         }
         setAnswerContainer(
-          <div>
-            <FrequencyAnswer leftButtons={answers.options[0]} rightButtons={answers.options[1]} />
+          <div className="row no-gutters d-flex align-items-stretch">
+            <div className="col">
+              <AnswerButtons
+                leftAnswers={answers.options[0]}
+                rightAnswers={answers.options[1]}
+                saveAnswer={saveAnswer}
+              />
+            </div>
           </div>
         );
         break;
@@ -67,7 +77,7 @@ Question.propTypes = {
   answers: shape({
     type: string.isRequired,
     options: oneOfType([
-      arrayOf(arrayOf(string)),
+      arrayOf(arrayOf(shape({ key: string.isRequired, title: string }))),
       arrayOf(
         shape({
           key: string.isRequired,
