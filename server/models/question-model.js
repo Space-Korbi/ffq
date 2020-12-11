@@ -4,19 +4,20 @@ const { Schema } = mongoose;
 
 /**
  * * Question Schema
- * @param uuid
+ * @param questionID
  * @param index - Place in FFQ
- * @param answerType - One of the three main answer types (Frequency, Amount or User Input)
- * @param parenQuestion - UUID of parent Question
- * @param childQuestion - UUID of child Questions
- * @param isAnswered - Weather or not the question was answered
+ * @param title
+ * @param subtitle1
+ * @param subtitle2
+ * @param help - Message displayed when clicking help icon
+ * @param parenQuestion - ID of parent Question
+ * @param childQuestion - IDs of child Questions
  * @param possibleAnswers - All Answers the user could have selected
- * @param answer - The answer the user has given
  */
 
 const Question = new Schema(
   {
-    questionUUID: { type: String, required: true },
+    questionID: { type: String, required: true },
     index: { type: Number, required: true },
     title: { type: String },
     subtitle1: { type: String },
@@ -28,6 +29,7 @@ const Question = new Schema(
       frequency: {
         leftColumn: [
           {
+            key: { type: String },
             name: { type: String },
             skip: { type: [String] },
             imageURL: { type: String }
@@ -35,6 +37,7 @@ const Question = new Schema(
         ],
         rightColumn: [
           {
+            key: { type: String },
             name: { type: String },
             skip: { type: [String] },
             imageURL: { type: String }
@@ -43,12 +46,14 @@ const Question = new Schema(
       },
       amount: [
         {
+          key: { type: String },
           name: { type: String },
           skip: { type: [String] },
           imageURL: { type: String }
         }
       ],
       userInput: {
+        key: { type: String },
         options: { type: Schema.Types.Mixed }
       }
     }
