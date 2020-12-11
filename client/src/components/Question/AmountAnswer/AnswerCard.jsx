@@ -5,7 +5,7 @@ import { func, string } from 'prop-types';
 
 function AnswerCard({ title, subtitle, imageURL, onClick }) {
   return (
-    <div className="card" style={{ minWidth: '270px', minHeight: '250px' }}>
+    <div className="card my-5" style={{ minWidth: '270px', minHeight: '250px' }}>
       {imageURL ? (
         <img src={imageURL} className="card-img-top" alt="..." />
       ) : (

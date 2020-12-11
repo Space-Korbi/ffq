@@ -5,41 +5,44 @@ import AnswerCard from './AnswerCard';
 
 /**
  * * Amount Cards Spacing
- * @param answers - Array of card data
+ * @param answers - Array of answers data
  * @returns [<Amount Card/>] - Amount cards wrapped in a div to apply extra spacing to the first and last card
  */
 const AnswerCardsDeck = ({ answers, saveAnswer }) => {
-  return answers.map((card, index) => {
+  return answers.map((answer, index) => {
+    if (!answer.key) {
+      return <div />;
+    }
     switch (index) {
       case 0:
         return (
-          <div key={card.key} className="pl-5 pr-2 align-self-center">
+          <div key={answer.key} className="pl-5 pr-2 mt-5 align-self-center">
             <AnswerCard
-              title={card.title}
-              subtitle={card.subtitle}
-              imageURL={card.imageURL}
+              title={answer.title}
+              subtitle={answer.subtitle}
+              imageURL={answer.imageURL}
               onClick={saveAnswer}
             />
           </div>
         );
       case answers.length - 1:
         return (
-          <div key={card.key} className="pl-2 pr-5 align-self-center">
+          <div key={answer.key} className="pl-2 pr-5 mt-5 align-self-center">
             <AnswerCard
-              title={card.title}
-              subtitle={card.subtitle}
-              imageURL={card.imageURL}
+              title={answer.title}
+              subtitle={answer.subtitle}
+              imageURL={answer.imageURL}
               onClick={saveAnswer}
             />
           </div>
         );
       default:
         return (
-          <div key={card.key} className="px-2 align-self-center">
+          <div key={answer.key} className="px-2 mt-5 align-self-center">
             <AnswerCard
-              title={card.title}
-              subtitle={card.subtitle}
-              imageURL={card.imageURL}
+              title={answer.title}
+              subtitle={answer.subtitle}
+              imageURL={answer.imageURL}
               onClick={saveAnswer}
             />
           </div>
