@@ -1,6 +1,6 @@
 import Role from './role';
 import AnswerType from './answer-type';
 import authHeader from './auth-header';
-import appendState from './Helpers';
+import { addValidString, addValidButton, addValidCard } from './Helpers';
 
-export { Role, AnswerType, authHeader, appendState };
+export { Role, AnswerType, authHeader, addValidString, addValidButton, addValidCard };
