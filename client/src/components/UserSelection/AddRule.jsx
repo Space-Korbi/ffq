@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { arrayOf, func, string, bool } from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import RemovableListItem from '../List';
-import appendState from '../../helpers/Helpers';
+import { addValidString } from '../../helpers';
 
 const RuleCriteriaSelect = ({ criteria, onChange }) => {
   return (
@@ -115,7 +115,7 @@ const AddRule = ({ selectionCriteria, saveRule }) => {
   }, [selectedCriteria]);
 
   const addCriteriaToCard = (criteria) => {
-    appendState(criteria, selectedCriteria, setSelectedCriteria);
+    addValidString(criteria, selectedCriteria, setSelectedCriteria);
   };
 
   const removeCriteriaFromCard = (criteriaToRemoveFromCard) => {

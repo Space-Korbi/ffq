@@ -4,7 +4,7 @@ import SelectionCriteria from './SelectionCriteria';
 import AddRule from './AddRule';
 import SelectionRules from './SelectionRules';
 import Navigation from '../Navigation';
-import appendState from '../../helpers/Helpers';
+import { addValidString } from '../../helpers';
 
 const rule1 = {
   id: '1',
@@ -33,7 +33,7 @@ const UserSelection = () => {
    */
 
   const saveSelectionCriteria = (newCriteria) => {
-    appendState(newCriteria, selectionCriteria, setSelectionCriteria);
+    addValidString(newCriteria, selectionCriteria, setSelectionCriteria);
   };
 
   const removeFromSelectionCriteria = (criteriaToRemove) => {

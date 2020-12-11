@@ -5,7 +5,7 @@ import { arrayOf, func, string, shape } from 'prop-types';
 import { nanoid } from 'nanoid';
 
 import RemovableListItem from '../List';
-import appendState from '../../helpers/Helpers';
+import { addValidButton } from '../../helpers';
 
 const ButtonColumn = ({ answers, removeButton }) => {
   return (
@@ -83,7 +83,7 @@ const ButtonsEditor = ({ answers, onChange }) => {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            appendState(
+            addValidButton(
               { key: nanoid(), title: e.target.buttonsLeft.value },
               leftAnswers,
               setLeftAnswers
@@ -113,7 +113,7 @@ const ButtonsEditor = ({ answers, onChange }) => {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            appendState(
+            addValidButton(
               { key: nanoid(), title: e.target.buttonsRight.value },
               rightAnswers,
               setRightAnswers

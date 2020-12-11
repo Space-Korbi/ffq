@@ -5,7 +5,7 @@ import { string, func, arrayOf, shape, number } from 'prop-types';
 import { nanoid } from 'nanoid';
 
 import DeleteButton from '../Button';
-import appendState from '../../helpers/Helpers';
+import { addValidCard } from '../../helpers';
 
 const TextEdit = ({ content, description }) => {
   const [text, setText] = useState(content);
@@ -223,7 +223,7 @@ const CardsEditor = ({ answers, onChange }) => {
           className="btn btn-outline-primary"
           onClick={() => {
             const newCard = { key: nanoid(), title: '', subtitle: '', imageURL: '' };
-            appendState(newCard, cards, setCards);
+            addValidCard(newCard, cards, setCards);
           }}
         >
           Add New Amount Card
