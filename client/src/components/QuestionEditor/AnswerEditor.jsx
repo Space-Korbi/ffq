@@ -26,7 +26,7 @@ const AnswerEditor = ({ answers, onChange }) => {
       case AnswerType.Amount:
         setAnswerEditor(
           <div>
-            <CardsEditor answerCards={answers.options} />
+            <CardsEditor answers={answers} onChange={onChange} />
           </div>
         );
         break;

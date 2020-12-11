@@ -29,14 +29,14 @@ function Question({ title, subtitle1, subtitle2, help, answers }) {
       case AnswerType.Amount:
         setAnswerContainer(
           <div>
-            <AmountAnswer answerCards={answers.options} />
+            <AmountAnswer answers={answers} />
           </div>
         );
         break;
       default:
         setAnswerContainer(
           <div className="alert alert-info text-center m-5" role="alert">
-            Choose an Answer Type
+            This is a live preview
           </div>
         );
     }

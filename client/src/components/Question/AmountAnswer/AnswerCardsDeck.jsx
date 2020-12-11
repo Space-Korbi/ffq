@@ -5,11 +5,11 @@ import AnswerCard from './AnswerCard';
 
 /**
  * * Amount Cards Spacing
- * @param answerCards - Array of card data
+ * @param answers - Array of card data
  * @returns [<Amount Card/>] - Amount cards wrapped in a div to apply extra spacing to the first and last card
  */
-const AnswerCardsDeck = ({ answerCards, saveAnswer }) => {
-  return answerCards.map((card, index) => {
+const AnswerCardsDeck = ({ answers, saveAnswer }) => {
+  return answers.map((card, index) => {
     switch (index) {
       case 0:
         return (
@@ -22,7 +22,7 @@ const AnswerCardsDeck = ({ answerCards, saveAnswer }) => {
             />
           </div>
         );
-      case answerCards.length - 1:
+      case answers.length - 1:
         return (
           <div key={card.key} className="pl-2 pr-5 align-self-center">
             <AnswerCard
@@ -49,7 +49,7 @@ const AnswerCardsDeck = ({ answerCards, saveAnswer }) => {
 };
 
 AnswerCardsDeck.propTypes = {
-  answerCards: arrayOf(
+  answers: arrayOf(
     shape({
       key: string.isRequired,
       title: string,
