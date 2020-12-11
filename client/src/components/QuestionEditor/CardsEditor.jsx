@@ -86,11 +86,11 @@ const EditorCard = ({ id, imageURL, title, subtitle, onChange }) => {
               <li className="nav-item">
                 <a
                   className="nav-link active"
-                  id="text-tab"
+                  id={`text-tab${id}`}
                   data-toggle="tab"
-                  href="#text"
+                  href={`#text${id}`}
                   role="tab"
-                  aria-controls="text"
+                  aria-controls={`text${id}`}
                   aria-selected="true"
                 >
                   Text
@@ -99,11 +99,11 @@ const EditorCard = ({ id, imageURL, title, subtitle, onChange }) => {
               <li className="nav-item">
                 <a
                   className="nav-link"
-                  id="image-tab"
+                  id={`image-tab${id}`}
                   data-toggle="tab"
-                  href="#image"
+                  href={`#image${id}`}
                   role="tab"
-                  aria-controls="image"
+                  aria-controls={`image${id}`}
                   aria-selected="false"
                 >
                   Image
@@ -124,19 +124,18 @@ const EditorCard = ({ id, imageURL, title, subtitle, onChange }) => {
               <div className="tab-content" id="tab-content">
                 <div
                   className="tab-pane fade show active"
-                  id="text"
+                  id={`text${id}`}
                   role="tabpanel"
-                  aria-labelledby="text-tab"
+                  aria-labelledby={`text-tab${id}`}
                 >
                   <TextEdit content={title} description="Title" />
-
                   <TextEdit content={subtitle} description="Subtitle" />
                 </div>
                 <div
                   className="tab-pane fade "
-                  id="image"
+                  id={`image${id}`}
                   role="tabpanel"
-                  aria-labelledby="image-tab"
+                  aria-labelledby={`image-tab${id}`}
                 >
                   {imageURL ? (
                     <button type="button" className="btn btn-warning">
