@@ -4,11 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { string, func, arrayOf, shape, number } from 'prop-types';
 import { nanoid } from 'nanoid';
 
-import DeleteButton from '../Button';
-import { addValidCard } from '../../helpers';
+import DeleteButton from '../../Button';
 
-const TextEdit = ({ content, description }) => {
-  const [text, setText] = useState(content);
+const TextEdit = ({ answer, description, onChange }) => {
   return (
     <div className="input-group input-group-sm mb-3">
       <div className="input-group-prepend">
@@ -21,9 +19,9 @@ const TextEdit = ({ content, description }) => {
         className="form-control"
         aria-label="Sizing example input"
         aria-describedby="inputGroup-sizing-sm"
-        value={text}
+        value={answer.t}
         onChange={(e) => {
-          setText(e.target.value);
+          onChange({ type: 'addCardText', payload: e.target.value });
         }}
       />
     </div>
@@ -31,12 +29,14 @@ const TextEdit = ({ content, description }) => {
 };
 
 TextEdit.propTypes = {
-  content: string,
-  description: string.isRequired
-};
-
-TextEdit.defaultProps = {
-  content: ''
+  answer: shape({
+    id: string.isRequired,
+    title: string,
+    subtitle: string,
+    imageURL: string
+  }).isRequired,
+  description: string.isRequired,
+  onChange: func.isRequired
 };
 
 const ImageUpload = ({ onChange }) => {
@@ -75,9 +75,9 @@ ImageUpload.propTypes = {
   onChange: func.isRequired
 };
 
-const EditorCard = ({ id, imageURL, title, subtitle, onChange }) => {
+const EditorCard = ({ id, answer, dispatch, onChangeImage, removeCard }) => {
   return (
-    <div className="col my-2">
+    <div className="col my-3">
       <div className="card mx-2">
         <div className="card-header">
           <div className="d-flex align-items-center justify-content-between">
@@ -110,13 +110,18 @@ const EditorCard = ({ id, imageURL, title, subtitle, onChange }) => {
                 </a>
               </li>
             </ul>
-            <DeleteButton element={title} onClick={() => console.log('hey')} />
+            <DeleteButton element={answer.title} onClick={() => removeCard(answer.id)} />
           </div>
         </div>
         <div className="row no-gutters">
-          {imageURL && (
+          {answer.imageURL && (
             <div className="col-4 align-self-center">
-              <img src={imageURL} className={imageURL} alt="..." style={{ maxWidth: '100%' }} />
+              <img
+                src={answer.imageURL}
+                className={answer.imageURL}
+                alt="..."
+                style={{ maxWidth: '100%' }}
+              />
             </div>
           )}
           <div className="col">
@@ -128,8 +133,18 @@ const EditorCard = ({ id, imageURL, title, subtitle, onChange }) => {
                   role="tabpanel"
                   aria-labelledby={`text-tab${id}`}
                 >
-                  <TextEdit content={title} description="Title" />
-                  <TextEdit content={subtitle} description="Subtitle" />
+                  <TextEdit
+                    answer={answer}
+                    content={answer.title}
+                    onChange={dispatch}
+                    description="Title"
+                  />
+                  <TextEdit
+                    answer={answer}
+                    content={answer.subtitle}
+                    onChange={dispatch}
+                    description="Subtitle"
+                  />
                 </div>
                 <div
                   className="tab-pane fade "
@@ -137,14 +152,14 @@ const EditorCard = ({ id, imageURL, title, subtitle, onChange }) => {
                   role="tabpanel"
                   aria-labelledby={`image-tab${id}`}
                 >
-                  {imageURL ? (
+                  {answer.imageURL ? (
                     <button type="button" className="btn btn-warning">
                       Remove image
                     </button>
                   ) : (
                     <div className="row no-gutters">
                       <div className="col mx-3">
-                        <ImageUpload onChange={onChange} />
+                        <ImageUpload onChange={onChangeImage} />
                       </div>
                     </div>
                   )}
@@ -160,23 +175,29 @@ const EditorCard = ({ id, imageURL, title, subtitle, onChange }) => {
 
 EditorCard.propTypes = {
   id: number.isRequired,
-  imageURL: string,
-  title: string.isRequired,
-  subtitle: string.isRequired,
-  onChange: func.isRequired
+  answer: shape({
+    id: string.isRequired,
+    title: string,
+    subtitle: string,
+    imageURL: string
+  }).isRequired,
+  dispatch: func.isRequired,
+  onChangeImage: func.isRequired,
+  removeCard: func.isRequired
 };
 
-const AmountCardsGrid = ({ answers, onChange }) => {
+const AmountCardsGrid = ({ answers, onChangeTitle, onChangeImage, removeCard, dispatch }) => {
   return (
     <div className="row no-gutters row-cols-1 row-cols-md-2">
       {answers.map((answer, index) => (
         <EditorCard
-          key={answer.key}
+          key={answer.id}
           id={index + 1}
-          imageURL={answer.imageURL}
-          title={answer.title}
-          subtitle={answer.subtitle}
-          onChange={onChange}
+          answer={answer}
+          onChangeTitle={onChangeTitle}
+          onChangeImage={onChangeImage}
+          removeCard={removeCard}
+          dispatch={dispatch}
         />
       ))}
     </div>
@@ -186,69 +207,82 @@ const AmountCardsGrid = ({ answers, onChange }) => {
 AmountCardsGrid.propTypes = {
   answers: arrayOf(
     shape({
-      key: string.isRequired,
+      id: string.isRequired,
       title: string,
       subtitle: string,
       imageURL: string
     })
   ).isRequired,
-  onChange: func.isRequired
+  onChangeTitle: func.isRequired,
+  onChangeImage: func.isRequired,
+  removeCard: func.isRequired,
+  dispatch: func.isRequired
 };
 
-EditorCard.defaultProps = {
-  imageURL: ''
-};
-
-const CardsEditor = ({ answers, onChange }) => {
-  const [cards, setCards] = useState(answers.options);
+const CardsEditor = ({ answers, onChange, dispatch, answersType }) => {
+  const [cards, setCards] = useState([]);
+  const [title, setTitle] = useState('');
+  const [imageURL, setImageURL] = useState('');
 
   useEffect(() => {
     const answerOptions = {
-      type: answers.type,
+      type: answersType,
       options: cards
     };
     onChange(answerOptions);
   }, [cards]);
 
+  useEffect(() => {
+    console.log(cards);
+
+    console.log(title);
+  }, [title]);
+
   const removeCard = (cardToRemove) => {
-    setCards(cards.filter((card) => card !== cardToRemove));
+    setCards(cards.filter((card) => card.id !== cardToRemove));
   };
 
-  const [image, setImage] = useState();
   return (
     <div>
       <div className="mt-5 text-center">
+        <pre className="m-4">{JSON.stringify(answers, null, 2)}</pre>
+
         <button
           type="button"
           className="btn btn-outline-primary"
           onClick={() => {
-            const newCard = { key: nanoid(), title: '', subtitle: '', imageURL: '' };
-            addValidCard(newCard, cards, setCards);
+            const newCard = { id: nanoid(), title: '', subtitle: '', imageURL: '' };
+            setCards((prevState) => [...prevState, newCard]);
           }}
         >
           Add New Amount Card
         </button>
       </div>
       <div>
-        <AmountCardsGrid answers={cards} onChange={onChange} />
+        <AmountCardsGrid
+          answers={cards}
+          onChangeTitle={setTitle}
+          onChangeImage={setImageURL}
+          removeCard={removeCard}
+          dispatch={dispatch}
+        />
       </div>
     </div>
   );
 };
 
 CardsEditor.propTypes = {
-  answers: shape({
-    type: string,
-    options: arrayOf(
-      shape({
-        key: string.isRequired,
-        title: string,
-        subtitle: string,
-        imageURL: string
-      })
-    )
-  }).isRequired,
-  onChange: func.isRequired
+  answers: arrayOf(
+    shape({
+      id: string.isRequired,
+      title: string,
+      subtitle: string,
+      imageURL: string
+    })
+  ).isRequired,
+  onChange: func.isRequired,
+  dispatch: func.isRequired,
+  answersType: string.isRequired
 };
 
 export default CardsEditor;
