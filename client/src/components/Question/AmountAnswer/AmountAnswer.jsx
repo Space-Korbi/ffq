@@ -22,7 +22,7 @@ const AmountAnswer = ({ answers }) => {
 AmountAnswer.propTypes = {
   answers: arrayOf(
     shape({
-      key: string.isRequired,
+      id: string.isRequired,
       title: string,
       subtitle: string,
       imageURL: string

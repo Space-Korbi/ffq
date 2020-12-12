@@ -8,16 +8,16 @@ const AnswerButtons = ({ leftAnswers, rightAnswers, saveAnswer }) => {
     <div className="row mx-3">
       <div className="col-6">
         {leftAnswers.map((answer) => (
-          <div key={answer.title}>
-            <AnswerButton text={answer.title} onClick={saveAnswer} />
+          <div key={answer.id}>
+            <AnswerButton title={answer.title} onClick={saveAnswer} />
           </div>
         ))}
       </div>
 
       <div className="col-6">
         {rightAnswers.map((answer) => (
-          <div key={answer.title}>
-            <AnswerButton text={answer.title} onClick={saveAnswer} />
+          <div key={answer.id}>
+            <AnswerButton title={answer.title} onClick={saveAnswer} />
           </div>
         ))}
       </div>
@@ -26,8 +26,8 @@ const AnswerButtons = ({ leftAnswers, rightAnswers, saveAnswer }) => {
 };
 
 AnswerButtons.propTypes = {
-  leftAnswers: arrayOf(shape({ key: string.isRequired, title: string })).isRequired,
-  rightAnswers: arrayOf(shape({ key: string.isRequired, title: string })).isRequired,
+  leftAnswers: arrayOf(shape({ id: string.isRequired, title: string })).isRequired,
+  rightAnswers: arrayOf(shape({ id: string.isRequired, title: string })).isRequired,
   saveAnswer: func.isRequired
 };
 

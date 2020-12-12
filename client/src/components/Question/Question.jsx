@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
-import { string, oneOfType, shape, arrayOf } from 'prop-types';
+import { string, shape, arrayOf, exact } from 'prop-types';
 
 import Jumbotron from '../Jumbotron';
 import Help from '../Help';
@@ -12,24 +11,18 @@ const saveAnswer = () => {
   console.log('answer');
 };
 
-function Question({ title, subtitle1, subtitle2, help, answers }) {
+function Question({ title, subtitle1, subtitle2, help, answerType, answers }) {
   const [answerContainer, setAnswerContainer] = useState();
 
   useEffect(() => {
-    if (!answers.options) {
-      return;
-    }
-    switch (answers.type) {
+    switch (answerType) {
       case AnswerType.Frequency:
-        if (answers.options.length !== 2) {
-          return;
-        }
         setAnswerContainer(
           <div className="row no-gutters d-flex align-items-stretch">
             <div className="col">
               <AnswerButtons
-                leftAnswers={answers.options[0]}
-                rightAnswers={answers.options[1]}
+                leftAnswers={answers.frequencyOptions.left}
+                rightAnswers={answers.frequencyOptions.right}
                 saveAnswer={saveAnswer}
               />
             </div>
@@ -39,7 +32,7 @@ function Question({ title, subtitle1, subtitle2, help, answers }) {
       case AnswerType.Amount:
         setAnswerContainer(
           <div>
-            <AmountAnswer answers={answers.options} />
+            <AmountAnswer answers={answers.amountOptions} />
           </div>
         );
         break;
@@ -50,7 +43,7 @@ function Question({ title, subtitle1, subtitle2, help, answers }) {
           </div>
         );
     }
-  }, [answers]);
+  }, [answerType, answers]);
 
   return (
     <div>
@@ -74,19 +67,22 @@ Question.propTypes = {
   subtitle1: string,
   subtitle2: string,
   help: string,
+  answerType: string.isRequired,
   answers: shape({
     type: string.isRequired,
-    options: oneOfType([
-      arrayOf(arrayOf(shape({ key: string.isRequired, title: string }))),
-      arrayOf(
-        shape({
-          key: string.isRequired,
-          title: string,
-          subtitle: string,
-          imageURL: string
-        })
-      )
-    ]).isRequired
+    frequencyAnswers: exact({
+      left: arrayOf(exact({ id: string.isRequired, title: string })),
+      right: arrayOf(exact({ id: string.isRequired, title: string }))
+    }),
+    amountAnswers: arrayOf(
+      shape({
+        id: string.isRequired,
+        title: string,
+        subtitle: string,
+        imageURL: string
+      })
+    ),
+    userInputAnswers: shape({})
   }).isRequired
 };
 

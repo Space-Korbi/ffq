@@ -44,7 +44,7 @@ PrivateRoute.propTypes = {
   isAdmin: PropTypes.bool,
   roles: PropTypes.arrayOf(PropTypes.string),
   location: PropTypes.shape({
-    key: string,
+    id: string,
     pathname: string,
     search: string,
     hash: string
@@ -55,7 +55,7 @@ PrivateRoute.defaultProps = {
   roles: null,
   isAdmin: false,
   location: {
-    key: '',
+    id: '',
     pathname: '/',
     search: '',
     hash: ''

@@ -42,8 +42,7 @@ const NewRuleCard = ({ criteria, removeCriteriaFromCard, onSubmit }) => {
                     <RemovableListItem
                       key={uuidv4()}
                       content={criterion}
-                      elementToRemove={criterion}
-                      onClick={removeCriteriaFromCard}
+                      onClick={() => removeCriteriaFromCard(criterion)}
                       isTrashCan={false}
                     />
                   ))}

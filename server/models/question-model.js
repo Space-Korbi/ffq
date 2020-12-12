@@ -29,7 +29,7 @@ const Question = new Schema(
       frequency: {
         leftColumn: [
           {
-            key: { type: String },
+            id: { type: String },
             name: { type: String },
             skip: { type: [String] },
             imageURL: { type: String }
@@ -37,7 +37,7 @@ const Question = new Schema(
         ],
         rightColumn: [
           {
-            key: { type: String },
+            id: { type: String },
             name: { type: String },
             skip: { type: [String] },
             imageURL: { type: String }
@@ -46,14 +46,14 @@ const Question = new Schema(
       },
       amount: [
         {
-          key: { type: String },
+          id: { type: String },
           name: { type: String },
           skip: { type: [String] },
           imageURL: { type: String }
         }
       ],
       userInput: {
-        key: { type: String },
+        id: { type: String },
         options: { type: Schema.Types.Mixed }
       }
     }

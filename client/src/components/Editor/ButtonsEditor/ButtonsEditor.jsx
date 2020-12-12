@@ -90,7 +90,7 @@ const ButtonsEditor = ({ answers, dispatch }) => {
         </div>
         Left
         <ButtonColumn
-          answers={answers.options.left}
+          answers={answers.left}
           position="left"
           dispatch={dispatch}
           removeButton={removeButton}
@@ -99,7 +99,7 @@ const ButtonsEditor = ({ answers, dispatch }) => {
       <div className="col p-1 text-center">
         Right
         <ButtonColumn
-          answers={answers.options.right}
+          answers={answers.right}
           position="right"
           dispatch={dispatch}
           removeButton={removeButton}
@@ -111,11 +111,8 @@ const ButtonsEditor = ({ answers, dispatch }) => {
 
 ButtonsEditor.propTypes = {
   answers: shape({
-    type: string,
-    options: shape({
-      left: arrayOf(exact({ id: string.isRequired, title: string })),
-      right: arrayOf(exact({ id: string.isRequired, title: string }))
-    })
+    left: arrayOf(exact({ id: string.isRequired, title: string })),
+    right: arrayOf(exact({ id: string.isRequired, title: string }))
   }).isRequired,
   dispatch: func.isRequired
 };

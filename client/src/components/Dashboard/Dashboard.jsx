@@ -11,7 +11,7 @@ import ParticipantPage from '../../pages/ParticipantPage';
 import AccountPage from '../../pages/AccountPage';
 import WelcomePage from '../../pages/WelcomePage';
 import UserSelection from '../UserSelection';
-import QuestionEditor from '../QuestionEditor';
+import QuestionEditor from '../Editor/QuestionEditor';
 import { Role } from '../../helpers';
 import authenticationService from '../../services';
 
