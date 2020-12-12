@@ -1,5 +1,6 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useReducer } from 'react';
 import { func, string, shape, arrayOf, number, oneOfType } from 'prop-types';
 import { nanoid } from 'nanoid';
 import Navigation from '../Navigation';
@@ -7,7 +8,7 @@ import JumbotronInputs from './JumbotronInputs';
 import HelpTextInput from './HelpTextInput';
 import { Question } from '../Question';
 
-import { AnswerType } from '../../helpers';
+import { AnswerType, reducerHelper } from '../../helpers';
 import { insertQuestion } from '../../api';
 import AnswerEditor from './AnswerEditor';
 import UserInputAnswer from '../Question/UserInputAnswer/UserInputAnswer';
@@ -16,12 +17,10 @@ import pizzaWhole from '../../images/pizza-whole-example.jpg';
 // import pizzaHalf from '../../images/pizza-half-example.jpg';
 import pizzaQuarter from '../../images/pizza-quarter-example.jpg';
 
-const AnswerCard = { key: String, title: String, subtitle: String, imageURL: String };
-
 const mockAmountCards = [
-  { key: '1', title: '1', subtitle1: '1.1' },
-  { key: '2', title: '2', subtitle1: '2.1', imageURL: pizzaQuarter },
-  { key: '3', title: '3', subtitle1: '3.1', imageURL: pizzaWhole }
+  { id: '1', title: '1', subtitle1: '1.1' },
+  { id: '2', title: '2', subtitle1: '2.1', imageURL: pizzaQuarter },
+  { id: '3', title: '3', subtitle1: '3.1', imageURL: pizzaWhole }
 ];
 
 const leftButtonsTextMock = [
@@ -61,6 +60,35 @@ AnswerTypeSelection.propTypes = {
   onChange: func.isRequired
 };
 
+const answersReducer = (state, action) => {
+  console.log('State', state);
+  console.log('Action', action);
+  switch (action.type) {
+    case 'addButton': {
+      return reducerHelper.addButton(state, action);
+    }
+    case 'removeButton': {
+      return reducerHelper.removeButton(state, action);
+    }
+    case 'changeButtonTitle': {
+      return reducerHelper.changeButtonTitle(state, action);
+    }
+    case 'addCardText':
+      return { type: AnswerType.Amount, options: [] };
+    case 'addCardImage':
+      return state;
+    default:
+      return state;
+  }
+};
+
+const initialAnswers = {
+  type: '',
+  frequencyOptions: { left: [], right: [] },
+  amountOptions: [],
+  userInputOptions: {}
+};
+
 const QuestionEditor = ({ question }) => {
   const [title, setTitle] = useState(question.title);
   const [subtitle1, setSubtitle1] = useState(question.subtitle1);
@@ -68,40 +96,16 @@ const QuestionEditor = ({ question }) => {
   const [help, setHelp] = useState(question.help);
 
   const [answerType, setAnswerType] = useState('');
-  const [answers, setAnswers] = useState({
-    type: '',
-    options: []
-  });
-
-  useEffect(() => {
-    switch (answerType) {
-      case AnswerType.Frequency:
-        setAnswers({
-          type: answerType,
-          options: [[], []]
-        });
-        break;
-      case AnswerType.Amount:
-        setAnswers({
-          type: answerType,
-          options: []
-        });
-        break;
-      case AnswerType.UserInput:
-        break;
-      default:
-        break;
-    }
-  }, [answerType]);
+  const [answers, dispatch] = useReducer(answersReducer, initialAnswers);
 
   const handleIncludeQuestion = async () => {
     const { index, questionUUID } = question;
 
-    const answersLeft = answers.options[0].map((text) => {
-      return { name: text, skip: [], imageURL: '' };
+    const answersLeft = answers.options.left.map((buttonTitle) => {
+      return { name: buttonTitle, skip: [], imageURL: '' };
     });
-    const answersRight = answers.options[1].map((text) => {
-      return { name: text, skip: [], imageURL: '' };
+    const answersRight = answers.options.left.map((buttonTitle) => {
+      return { name: buttonTitle, skip: [], imageURL: '' };
     });
 
     const selectableAnswers = {
@@ -130,7 +134,6 @@ const QuestionEditor = ({ question }) => {
       <div className="m-3">
         <Navigation tabs={tabs} />
       </div>
-
       <div>
         <div className="tab-content" id="questionEditorContent">
           <div
@@ -154,7 +157,7 @@ const QuestionEditor = ({ question }) => {
                 <div className="my-4">
                   <HelpTextInput onChange={setHelp} />
                 </div>
-                <AnswerEditor answers={answers} onChange={setAnswers} />
+                <AnswerEditor answers={answers} answerType={answerType} dispatch={dispatch} />
               </div>
 
               <div className="col col-lg-5 px-0 mx-lg-3">
@@ -169,7 +172,7 @@ const QuestionEditor = ({ question }) => {
                 </div>
 
                 <div
-                  className="mt-4 border border-info"
+                  className="mt-4 border border-info "
                   style={{ minHeight: '760px', minWidth: '270px', maxWidth: '100%' }}
                 >
                   <Question
@@ -178,6 +181,7 @@ const QuestionEditor = ({ question }) => {
                     subtitle2={subtitle2}
                     help={help}
                     answers={answers}
+                    answerType={answerType}
                   />
                 </div>
               </div>
@@ -199,6 +203,11 @@ const QuestionEditor = ({ question }) => {
   );
 };
 
+/**
+ * Needs refactoring
+ * doesnt fit current data object
+ * Also schema needs to be updated too.
+ */
 QuestionEditor.propTypes = {
   question: shape({
     questionUUID: string,
@@ -217,7 +226,7 @@ QuestionEditor.propTypes = {
       amount: shape({
         options: arrayOf(
           shape({
-            key: string.isRequired,
+            id: string.isRequired,
             title: string,
             subtitle: string,
             imageURL: string
