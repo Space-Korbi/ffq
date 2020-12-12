@@ -21,7 +21,7 @@ const RuleCard = ({ index, rule, removeRule }) => {
       <div className="card" style={{ width: '18rem' }}>
         <div className="card-header">
           <div className="d-flex justify-content-between">
-            Rule {index + 1} <DeleteButton element={rule} onClick={removeRule} />
+            Rule {index + 1} <DeleteButton onClick={() => removeRule(rule)} />
           </div>
         </div>
         <div className="card-body">
