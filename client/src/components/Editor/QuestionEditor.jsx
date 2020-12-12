@@ -73,8 +73,14 @@ const answersReducer = (state, action) => {
     case 'changeButtonTitle': {
       return reducerHelper.changeButtonTitle(state, action);
     }
-    case 'addCardText':
-      return { type: AnswerType.Amount, options: [] };
+    case 'addCard': {
+      return reducerHelper.addCard(state, action);
+    }
+    case 'removeCard': {
+      return reducerHelper.removeCard(state, action);
+    }
+    case 'changeCardTitle':
+      return reducerHelper.changeCardTitle(state, action);
     case 'addCardImage':
       return state;
     default:

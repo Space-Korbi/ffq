@@ -20,11 +20,7 @@ const AnswerEditor = ({ answers, dispatch, answerType }) => {
       case AnswerType.Amount:
         setEditorState(
           <div>
-            <CardsEditor
-              answers={answers.amountOptions}
-              dispatch={dispatch}
-              onChange={() => console.log('Yo')}
-            />
+            <CardsEditor answers={answers.amountOptions} dispatch={dispatch} />
           </div>
         );
         break;
