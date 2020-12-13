@@ -39,7 +39,7 @@ function Question({ title, subtitle1, subtitle2, help, answerType, answers }) {
       default:
         setAnswerContainer(
           <div className="alert alert-info text-center m-5" role="alert">
-            This is a live preview
+            Question Preview
           </div>
         );
     }

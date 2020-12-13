@@ -5,7 +5,10 @@ import { func, string } from 'prop-types';
 
 function AnswerCard({ title, imageURL, onClick }) {
   return (
-    <div className="card my-5" style={{ minWidth: '270px', minHeight: '250px' }}>
+    <div
+      className="card my-5 align-items-center d-flex justify-content-center"
+      style={{ minWidth: '270px', maxWidth: '350px', minHeight: '200px' }}
+    >
       {imageURL ? (
         <img src={imageURL} className="card-img-top" alt="..." />
       ) : (
