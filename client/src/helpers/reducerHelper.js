@@ -80,7 +80,6 @@ const reducerHelper = {
     const newCard = {
       id: action.payload.id,
       title: '',
-      subtitle: '',
       imageURL: ''
     };
     const cards = state.amountOptions.concat(newCard);
@@ -91,7 +90,6 @@ const reducerHelper = {
       userInputOptions: {}
     };
   },
-
   removeCard: (state, action) => {
     const cards = state.amountOptions.filter((card) => card.id !== action.payload.id);
     return {
@@ -101,11 +99,25 @@ const reducerHelper = {
       userInputOptions: {}
     };
   },
-
   changeCardTitle: (state, action) => {
     const newState = state.amountOptions.map((el) =>
       el.id === action.payload.id ? { ...el, title: action.payload.title } : el
     );
+    return {
+      type: AnswerType.Amount,
+      frequencyOptions: { left: [], right: [] },
+      amountOptions: newState,
+      userInputOptions: {}
+    };
+  },
+  changeCardImage: (state, action) => {
+    console.log(action);
+    const newState = state.amountOptions.map((el) => {
+      console.log('EL', el.id);
+      console.log('payloadID', action.payload.id);
+      return el.id === action.payload.id ? { ...el, image: action.payload.image } : el;
+    });
+    console.log('newState', newState);
     return {
       type: AnswerType.Amount,
       frequencyOptions: { left: [], right: [] },

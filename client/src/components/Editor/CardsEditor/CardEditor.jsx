@@ -3,12 +3,12 @@ import { string, func, shape, number } from 'prop-types';
 
 import DeleteButton from '../../Button';
 
-const TextEdit = ({ answer, description, onChange }) => {
+const TextEdit = ({ cardId, title, onChange }) => {
   return (
     <div className="input-group input-group-sm mb-3">
       <div className="input-group-prepend">
         <span className="input-group-text" id="inputGroup-sizing-sm">
-          {description}
+          Title
         </span>
       </div>
       <input
@@ -16,9 +16,9 @@ const TextEdit = ({ answer, description, onChange }) => {
         className="form-control"
         aria-label="Sizing example input"
         aria-describedby="inputGroup-sizing-sm"
-        value={answer.t}
+        value={title}
         onChange={(e) => {
-          onChange({ type: 'changeCardTitle', payload: { id: answer.id, title: e.target.value } });
+          onChange({ type: 'changeCardTitle', payload: { id: cardId, title: e.target.value } });
         }}
       />
     </div>
@@ -26,49 +26,44 @@ const TextEdit = ({ answer, description, onChange }) => {
 };
 
 TextEdit.propTypes = {
-  answer: shape({
-    id: string.isRequired,
-    title: string,
-    imageURL: string
-  }).isRequired,
-  description: string.isRequired,
+  cardId: string.isRequired,
+  title: string.isRequired,
+
   onChange: func.isRequired
 };
 
-const ImageUpload = ({ onChange }) => {
+const ImageUpload = ({ onChange, answerId }) => {
   const [imageUploadLabel, setImageUploadLabel] = useState('Image');
+
   return (
     <div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          console.log(e.target.files[0].name);
-        }}
-      >
-        <div className="input-group mb-3">
-          <div className="custom-file">
-            <input
-              type="file"
-              className="custom-file-input"
-              id="imageUpload"
-              aria-describedby="imageUploadAddon"
-              onChange={(e) => {
-                setImageUploadLabel(e.target.files[0].name);
-                onChange(e.target.files[0]);
-              }}
-            />
-            <label className="custom-file-label" htmlFor="imageUpload">
-              {imageUploadLabel}
-            </label>
-          </div>
+      <div className="input-group mb-3">
+        <div className="custom-file">
+          <input
+            type="file"
+            className="custom-file-input"
+            id="imageUpload"
+            aria-describedby="imageUploadAddon"
+            onChange={(e) => {
+              setImageUploadLabel(e.target.files[0].name);
+              onChange({
+                type: 'changeCardImage',
+                payload: { id: answerId, image: e.target.files[0] }
+              });
+            }}
+          />
+          <label className="custom-file-label" htmlFor="imageUpload">
+            {imageUploadLabel}
+          </label>
         </div>
-      </form>
+      </div>
     </div>
   );
 };
 
 ImageUpload.propTypes = {
-  onChange: func.isRequired
+  onChange: func.isRequired,
+  answerId: string.isRequired
 };
 
 const CardEditor = ({ id, answer, dispatch, removeCard }) => {
@@ -129,12 +124,7 @@ const CardEditor = ({ id, answer, dispatch, removeCard }) => {
                   role="tabpanel"
                   aria-labelledby={`text-tab${id}`}
                 >
-                  <TextEdit
-                    answer={answer}
-                    content={answer.title}
-                    onChange={dispatch}
-                    description="Title"
-                  />
+                  <TextEdit cardId={answer.id} title={answer.title} onChange={dispatch} />
                 </div>
                 <div
                   className="tab-pane fade "
@@ -142,21 +132,11 @@ const CardEditor = ({ id, answer, dispatch, removeCard }) => {
                   role="tabpanel"
                   aria-labelledby={`image-tab${id}`}
                 >
-                  {answer.imageURL ? (
-                    <button type="button" className="btn btn-warning">
-                      Remove image
-                    </button>
-                  ) : (
-                    <div className="row no-gutters">
-                      <div className="col mx-3">
-                        <ImageUpload
-                          onChange={() => {
-                            console.log('Hui');
-                          }}
-                        />
-                      </div>
+                  <div className="row no-gutters">
+                    <div className="col mx-3">
+                      <ImageUpload answerId={answer.id} onChange={dispatch} />
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
             </div>

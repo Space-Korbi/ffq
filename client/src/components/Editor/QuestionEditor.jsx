@@ -81,8 +81,8 @@ const answersReducer = (state, action) => {
     }
     case 'changeCardTitle':
       return reducerHelper.changeCardTitle(state, action);
-    case 'addCardImage':
-      return state;
+    case 'changeCardImage':
+      return reducerHelper.changeCardImage(state, action);
     default:
       return state;
   }
