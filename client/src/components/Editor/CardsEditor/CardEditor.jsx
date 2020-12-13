@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { string, func, shape, number } from 'prop-types';
+import { string, func, shape, number, bool } from 'prop-types';
 
+import { XIcon } from '@primer/octicons-react';
 import DeleteButton from '../../Button';
 
 const TextEdit = ({ cardId, title, onChange }) => {
@@ -28,12 +29,28 @@ TextEdit.propTypes = {
   onChange: func.isRequired
 };
 
-const ImageUpload = ({ onChange, answerId }) => {
-  const [imageUploadLabel, setImageUploadLabel] = useState('Card Image');
+const ImageUpload = ({ onChange, answerId, disabled }) => {
+  const [imageUploadLabel, setImageUploadLabel] = useState('Select Image');
 
   return (
     <div>
       <div className="input-group input-group-sm mx-2">
+        <div className="input-group-prepend">
+          <button
+            type="button"
+            className="btn btn-outline-secondary"
+            disabled={disabled}
+            onClick={() => {
+              setImageUploadLabel('Select Image');
+              onChange({
+                type: 'removeCardImage',
+                payload: { id: answerId }
+              });
+            }}
+          >
+            <XIcon />
+          </button>
+        </div>
         <div className="custom-file">
           <input
             type="file"
@@ -67,7 +84,8 @@ const ImageUpload = ({ onChange, answerId }) => {
 
 ImageUpload.propTypes = {
   onChange: func.isRequired,
-  answerId: string.isRequired
+  answerId: string.isRequired,
+  disabled: bool.isRequired
 };
 
 const CardEditor = ({ id, answer, dispatch }) => {
@@ -139,7 +157,11 @@ const CardEditor = ({ id, answer, dispatch }) => {
                   role="tabpanel"
                   aria-labelledby={`image-tab${id}`}
                 >
-                  <ImageUpload answerId={answer.id} onChange={dispatch} />
+                  <ImageUpload
+                    answerId={answer.id}
+                    onChange={dispatch}
+                    disabled={answer.imageURL === ''}
+                  />
                 </div>
               </div>
             </div>

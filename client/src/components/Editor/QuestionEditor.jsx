@@ -61,8 +61,6 @@ AnswerTypeSelection.propTypes = {
 };
 
 const answersReducer = (state, action) => {
-  console.log('State', state);
-  console.log('Action', action);
   switch (action.type) {
     case 'addButton': {
       return reducerHelper.addButton(state, action);
@@ -83,6 +81,8 @@ const answersReducer = (state, action) => {
       return reducerHelper.changeCardTitle(state, action);
     case 'changeCardImage':
       return reducerHelper.changeCardImage(state, action);
+    case 'removeCardImage':
+      return reducerHelper.removeCardImage(state, action);
     default:
       return state;
   }

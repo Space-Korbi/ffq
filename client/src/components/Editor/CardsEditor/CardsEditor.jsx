@@ -30,8 +30,6 @@ const CardsEditor = ({ answers, dispatch }) => {
   return (
     <div>
       <div className="mt-5 text-center">
-        <pre className="m-4">{JSON.stringify(answers, null, 2)}</pre>
-
         <button
           type="button"
           className="btn btn-outline-primary"
