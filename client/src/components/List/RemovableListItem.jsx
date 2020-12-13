@@ -6,7 +6,7 @@ const RemovableListItem = ({ content, isTrashCan, onClick }) => {
   return (
     <li className="list-group-item d-flex align-items-center justify-content-between px-0">
       <div className="col">{content}</div>
-      <div className="col-2 d-flex justify-content-end">
+      <div className="col-1 d-flex justify-content-end">
         <DeleteButton isTrashCan={isTrashCan} onClick={onClick} />
       </div>
     </li>

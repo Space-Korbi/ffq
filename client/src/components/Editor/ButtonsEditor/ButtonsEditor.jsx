@@ -79,7 +79,7 @@ const ButtonsEditor = ({ answers, dispatch }) => {
 
   return (
     <div className="row no-gutters mt-4">
-      <div className="col-lg-12 col-md-6 text-center">
+      <div className="col-lg-12 col-md text-center">
         <div className="row no-gutters my-3">
           <div className="col pr-1">
             <AddButton position="left" dispatch={dispatch} />
@@ -95,8 +95,6 @@ const ButtonsEditor = ({ answers, dispatch }) => {
           dispatch={dispatch}
           removeButton={removeButton}
         />
-      </div>
-      <div className="col p-1 text-center">
         Right
         <ButtonColumn
           answers={answers.right}

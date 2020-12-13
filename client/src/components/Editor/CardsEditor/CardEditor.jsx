@@ -6,7 +6,7 @@ import DeleteButton from '../../Button';
 
 const TextEdit = ({ cardId, title, onChange }) => {
   return (
-    <div className="input-group mx-2">
+    <div className="input-group">
       <input
         type="text"
         className="form-control"
@@ -34,7 +34,7 @@ const ImageUpload = ({ onChange, answerId, disabled }) => {
 
   return (
     <div>
-      <div className="input-group input-group-sm mx-2">
+      <div className="input-group input-group-sm">
         <div className="input-group-prepend">
           <button
             type="button"
@@ -136,12 +136,12 @@ const CardEditor = ({ id, answer, dispatch }) => {
         </div>
         <div className="row no-gutters">
           {answer.imageURL && (
-            <div className="col-3 align-self-center">
+            <div className="col-2 align-self-center">
               <img src={answer.imageURL} alt="..." style={{ maxWidth: '100%' }} />
             </div>
           )}
-          <div className="col">
-            <div className="card-body">
+          <div className="col align-self-center">
+            <div className="card-body px-2">
               <div className="tab-content" id="tab-content">
                 <div
                   className="tab-pane fade show active"
