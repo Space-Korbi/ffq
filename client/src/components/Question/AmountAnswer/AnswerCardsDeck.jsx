@@ -17,34 +17,19 @@ const AnswerCardsDeck = ({ answers, saveAnswer }) => {
       case 0:
         return (
           <div key={answer.id} className="pl-5 pr-2 mt-5 align-self-center">
-            <AnswerCard
-              title={answer.title}
-              subtitle={answer.subtitle}
-              imageURL={answer.imageURL}
-              onClick={saveAnswer}
-            />
+            <AnswerCard title={answer.title} imageURL={answer.imageURL} onClick={saveAnswer} />
           </div>
         );
       case answers.length - 1:
         return (
           <div key={answer.id} className="pl-2 pr-5 mt-5 align-self-center">
-            <AnswerCard
-              title={answer.title}
-              subtitle={answer.subtitle}
-              imageURL={answer.imageURL}
-              onClick={saveAnswer}
-            />
+            <AnswerCard title={answer.title} imageURL={answer.imageURL} onClick={saveAnswer} />
           </div>
         );
       default:
         return (
           <div key={answer.id} className="px-2 mt-5 align-self-center">
-            <AnswerCard
-              title={answer.title}
-              subtitle={answer.subtitle}
-              imageURL={answer.imageURL}
-              onClick={saveAnswer}
-            />
+            <AnswerCard title={answer.title} imageURL={answer.imageURL} onClick={saveAnswer} />
           </div>
         );
     }
@@ -56,7 +41,6 @@ AnswerCardsDeck.propTypes = {
     shape({
       id: string.isRequired,
       title: string,
-      subtitle: string,
       imageURL: string
     })
   ).isRequired,

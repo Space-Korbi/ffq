@@ -26,7 +26,6 @@ AmountCardsGrid.propTypes = {
     shape({
       id: string.isRequired,
       title: string,
-      subtitle: string,
       imageURL: string
     })
   ).isRequired,
@@ -71,7 +70,6 @@ CardsEditor.propTypes = {
     shape({
       id: string.isRequired,
       title: string,
-      subtitle: string,
       imageURL: string
     })
   ).isRequired,

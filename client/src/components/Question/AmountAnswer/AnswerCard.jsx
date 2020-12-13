@@ -3,7 +3,7 @@
 import React from 'react';
 import { func, string } from 'prop-types';
 
-function AnswerCard({ title, subtitle, imageURL, onClick }) {
+function AnswerCard({ title, imageURL, onClick }) {
   return (
     <div className="card my-5" style={{ minWidth: '270px', minHeight: '250px' }}>
       {imageURL ? (
@@ -12,7 +12,6 @@ function AnswerCard({ title, subtitle, imageURL, onClick }) {
         <div className="card-body align-items-center d-flex justify-content-center">
           <div>
             <h5 className="card-title">{title}</h5>
-            <p className="card-text">{subtitle}</p>
           </div>
         </div>
       )}
@@ -26,13 +25,11 @@ function AnswerCard({ title, subtitle, imageURL, onClick }) {
 AnswerCard.propTypes = {
   imageURL: string,
   title: string,
-  subtitle: string,
   onClick: func.isRequired
 };
 
 AnswerCard.defaultProps = {
   title: '',
-  subtitle: '',
   imageURL: ''
 };
 

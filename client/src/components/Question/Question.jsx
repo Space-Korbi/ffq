@@ -78,7 +78,6 @@ Question.propTypes = {
       shape({
         id: string.isRequired,
         title: string,
-        subtitle: string,
         imageURL: string
       })
     ),

@@ -29,7 +29,6 @@ TextEdit.propTypes = {
   answer: shape({
     id: string.isRequired,
     title: string,
-    subtitle: string,
     imageURL: string
   }).isRequired,
   description: string.isRequired,
@@ -136,12 +135,6 @@ const CardEditor = ({ id, answer, dispatch, removeCard }) => {
                     onChange={dispatch}
                     description="Title"
                   />
-                  <TextEdit
-                    answer={answer}
-                    content={answer.subtitle}
-                    onChange={dispatch}
-                    description="Subtitle"
-                  />
                 </div>
                 <div
                   className="tab-pane fade "
@@ -179,7 +172,6 @@ CardEditor.propTypes = {
   answer: shape({
     id: string.isRequired,
     title: string,
-    subtitle: string,
     imageURL: string
   }).isRequired,
   dispatch: func.isRequired,
