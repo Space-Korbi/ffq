@@ -1,21 +1,15 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from 'react';
+import React from 'react';
 import { string, func, arrayOf, shape } from 'prop-types';
 import { nanoid } from 'nanoid';
 
 import CardEditor from './CardEditor';
 
-const AmountCardsGrid = ({ answers, removeCard, dispatch }) => {
+const AmountCardsGrid = ({ answers, dispatch }) => {
   return (
     <div className="row no-gutters row-cols-1 row-cols-md-2">
       {answers.map((answer, index) => (
-        <CardEditor
-          key={answer.id}
-          id={index + 1}
-          answer={answer}
-          removeCard={removeCard}
-          dispatch={dispatch}
-        />
+        <CardEditor key={answer.id} id={index + 1} answer={answer} dispatch={dispatch} />
       ))}
     </div>
   );
@@ -29,17 +23,10 @@ AmountCardsGrid.propTypes = {
       imageURL: string
     })
   ).isRequired,
-  removeCard: func.isRequired,
   dispatch: func.isRequired
 };
 
 const CardsEditor = ({ answers, dispatch }) => {
-  const [cards, setCards] = useState([]);
-
-  const removeCard = (cardToRemove) => {
-    setCards(cards.filter((card) => card.id !== cardToRemove));
-  };
-
   return (
     <div>
       <div className="mt-5 text-center">
@@ -59,7 +46,7 @@ const CardsEditor = ({ answers, dispatch }) => {
         </button>
       </div>
       <div>
-        <AmountCardsGrid answers={answers} removeCard={removeCard} dispatch={dispatch} />
+        <AmountCardsGrid answers={answers} dispatch={dispatch} />
       </div>
     </div>
   );

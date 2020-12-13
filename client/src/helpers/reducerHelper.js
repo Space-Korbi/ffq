@@ -113,9 +113,9 @@ const reducerHelper = {
   changeCardImage: (state, action) => {
     console.log(action);
     const newState = state.amountOptions.map((el) => {
-      console.log('EL', el.id);
-      console.log('payloadID', action.payload.id);
-      return el.id === action.payload.id ? { ...el, image: action.payload.image } : el;
+      return el.id === action.payload.id
+        ? { ...el, imageURL: URL.createObjectURL(action.payload.image) }
+        : el;
     });
     console.log('newState', newState);
     return {

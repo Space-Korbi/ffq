@@ -5,18 +5,14 @@ import DeleteButton from '../../Button';
 
 const TextEdit = ({ cardId, title, onChange }) => {
   return (
-    <div className="input-group input-group-sm mb-3">
-      <div className="input-group-prepend">
-        <span className="input-group-text" id="inputGroup-sizing-sm">
-          Title
-        </span>
-      </div>
+    <div className="input-group mx-2">
       <input
         type="text"
         className="form-control"
-        aria-label="Sizing example input"
-        aria-describedby="inputGroup-sizing-sm"
+        aria-label="Title input"
+        aria-describedby="title-input"
         value={title}
+        placeholder="Card Text"
         onChange={(e) => {
           onChange({ type: 'changeCardTitle', payload: { id: cardId, title: e.target.value } });
         }}
@@ -33,11 +29,11 @@ TextEdit.propTypes = {
 };
 
 const ImageUpload = ({ onChange, answerId }) => {
-  const [imageUploadLabel, setImageUploadLabel] = useState('Image');
+  const [imageUploadLabel, setImageUploadLabel] = useState('Card Image');
 
   return (
     <div>
-      <div className="input-group mb-3">
+      <div className="input-group input-group-sm mx-2">
         <div className="custom-file">
           <input
             type="file"
@@ -52,7 +48,15 @@ const ImageUpload = ({ onChange, answerId }) => {
               });
             }}
           />
-          <label className="custom-file-label" htmlFor="imageUpload">
+          <label
+            className="custom-file-label"
+            htmlFor="imageUpload"
+            style={{
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+              whiteSpace: 'nowrap'
+            }}
+          >
             {imageUploadLabel}
           </label>
         </div>
@@ -66,7 +70,7 @@ ImageUpload.propTypes = {
   answerId: string.isRequired
 };
 
-const CardEditor = ({ id, answer, dispatch, removeCard }) => {
+const CardEditor = ({ id, answer, dispatch }) => {
   return (
     <div className="col my-3">
       <div className="card mx-2">
@@ -101,18 +105,21 @@ const CardEditor = ({ id, answer, dispatch, removeCard }) => {
                 </a>
               </li>
             </ul>
-            <DeleteButton element={answer.title} onClick={() => removeCard(answer.id)} />
+            <DeleteButton
+              element={answer.title}
+              onClick={() =>
+                dispatch({
+                  type: 'removeCard',
+                  payload: { id: answer.id }
+                })
+              }
+            />
           </div>
         </div>
         <div className="row no-gutters">
           {answer.imageURL && (
-            <div className="col-4 align-self-center">
-              <img
-                src={answer.imageURL}
-                className={answer.imageURL}
-                alt="..."
-                style={{ maxWidth: '100%' }}
-              />
+            <div className="col-3 align-self-center">
+              <img src={answer.imageURL} alt="..." style={{ maxWidth: '100%' }} />
             </div>
           )}
           <div className="col">
@@ -132,11 +139,7 @@ const CardEditor = ({ id, answer, dispatch, removeCard }) => {
                   role="tabpanel"
                   aria-labelledby={`image-tab${id}`}
                 >
-                  <div className="row no-gutters">
-                    <div className="col mx-3">
-                      <ImageUpload answerId={answer.id} onChange={dispatch} />
-                    </div>
-                  </div>
+                  <ImageUpload answerId={answer.id} onChange={dispatch} />
                 </div>
               </div>
             </div>
@@ -154,8 +157,7 @@ CardEditor.propTypes = {
     title: string,
     imageURL: string
   }).isRequired,
-  dispatch: func.isRequired,
-  removeCard: func.isRequired
+  dispatch: func.isRequired
 };
 
 export default CardEditor;

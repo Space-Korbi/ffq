@@ -6,10 +6,10 @@ import pizzaWhole from '../../images/pizza-whole-example.jpg';
 import pizzaHalf from '../../images/pizza-half-example.jpg';
 import pizzaQuarter from '../../images/pizza-quarter-example.jpg';
 
-const AmountCard = ({ image, title }) => {
+const AmountCard = ({ imageURL, title }) => {
   return (
     <div className="card text-center" style={{ minWidth: '270px' }}>
-      <img src={image} className="card-img-top" alt="" />
+      <img src={imageURL} className="card-img-top" alt="" />
       <div className="card-body">
         <h5 className="card-title">{title}</h5>
       </div>
@@ -18,12 +18,12 @@ const AmountCard = ({ image, title }) => {
 };
 
 AmountCard.propTypes = {
-  image: string,
+  imageURL: string,
   title: string.isRequired
 };
 
 AmountCard.defaultProps = {
-  image: ''
+  imageURL: ''
 };
 
 const AmountCardsDeck = ({ amountCards }) => {
@@ -37,11 +37,11 @@ AmountCardsDeck.propTypes = {
 
 const mockAmountCards = [
   <AmountCard key="1" title="1" />,
-  <AmountCard key="2" image={pizzaQuarter} title="2" />,
+  <AmountCard key="2" imageURL={pizzaQuarter} title="2" />,
   <AmountCard key="3" title="3" />,
-  <AmountCard key="4" image={pizzaHalf} title="4" />,
+  <AmountCard key="4" imageURL={pizzaHalf} title="4" />,
   <AmountCard key="5" title="5" />,
-  <AmountCard key="6" image={pizzaWhole} title="6" />,
+  <AmountCard key="6" imageURL={pizzaWhole} title="6" />,
   <AmountCard key="7" title="7" />
 ];
 
