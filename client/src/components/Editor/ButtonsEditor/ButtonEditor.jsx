@@ -10,8 +10,8 @@ const ButtonEditor = ({ dispatch, position, answerOption, index }) => {
       <div className="card mx-2">
         <div className="card-header">
           <div className="d-flex align-items-center">
-            <div className="pr-4">{index}</div>
-            <ul className="nav nav-tabs card-header-tabs" id="tab" role="tablist">
+            <div>{index}</div>
+            <ul className="nav nav-tabs card-header-tabs ml-4" id="tab" role="tablist">
               <li className="nav-item">
                 <a
                   className="nav-link active"
