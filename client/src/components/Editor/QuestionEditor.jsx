@@ -61,28 +61,36 @@ AnswerTypeSelection.propTypes = {
 };
 
 const answersReducer = (state, action) => {
+  console.log(state, action);
   switch (action.type) {
-    case 'addButton': {
+    case 'addButton':
       return reducerHelper.addButton(state, action);
-    }
-    case 'removeButton': {
+    case 'removeButton':
       return reducerHelper.removeButton(state, action);
-    }
-    case 'changeButtonTitle': {
+    case 'changeButtonTitle':
       return reducerHelper.changeButtonTitle(state, action);
-    }
-    case 'addCard': {
+    case 'addCard':
       return reducerHelper.addCard(state, action);
-    }
-    case 'removeCard': {
+    case 'removeCard':
       return reducerHelper.removeCard(state, action);
-    }
     case 'changeCardTitle':
       return reducerHelper.changeCardTitle(state, action);
     case 'changeCardImage':
       return reducerHelper.changeCardImage(state, action);
     case 'removeCardImage':
       return reducerHelper.removeCardImage(state, action);
+    case 'addTextInput':
+      return reducerHelper.addTextInput(state, action);
+    case 'removeTextInput':
+      return reducerHelper.removeTextInput(state, action);
+    case 'changeTextInputTitle':
+      return reducerHelper.changeTextInputTitle(state, action);
+    case 'addNumberInput':
+      return reducerHelper.addNumberInput(state, action);
+    case 'removeNumberInput':
+      return reducerHelper.removeNumberInput(state, action);
+    case 'changeNumberInputTitle':
+      return reducerHelper.changeNumberInputTitle(state, action);
     default:
       return state;
   }
@@ -92,7 +100,7 @@ const initialAnswers = {
   type: '',
   frequencyOptions: { left: [], right: [] },
   amountOptions: [],
-  userInputOptions: {}
+  userInputOptions: []
 };
 
 const QuestionEditor = ({ question }) => {

@@ -3,6 +3,7 @@ import { arrayOf, func, string, shape, exact } from 'prop-types';
 
 import ButtonsEditor from './ButtonsEditor/ButtonsEditor';
 import CardsEditor from './CardsEditor/CardsEditor';
+import InputEditor from './InputEditor/InputEditor';
 import { AnswerType } from '../../helpers';
 
 const AnswerEditor = ({ answers, dispatch, answerType }) => {
@@ -21,6 +22,13 @@ const AnswerEditor = ({ answers, dispatch, answerType }) => {
         setEditorState(
           <div>
             <CardsEditor answers={answers.amountOptions} dispatch={dispatch} />
+          </div>
+        );
+        break;
+      case AnswerType.UserInput:
+        setEditorState(
+          <div>
+            <InputEditor answerOptions={answers.userInputOptions} dispatch={dispatch} />
           </div>
         );
         break;

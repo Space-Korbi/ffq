@@ -5,6 +5,7 @@ import Jumbotron from '../Jumbotron';
 import Help from '../Help';
 import AnswerButtons from './FrequencyAnswer/AnswerButtons';
 import AmountAnswer from './AmountAnswer/AmountAnswer';
+import UserInputAnswer from './UserInputAnswer/UserInputAnswer';
 import { AnswerType } from '../../helpers';
 
 const saveAnswer = () => {
@@ -38,8 +39,10 @@ function Question({ title, subtitle1, subtitle2, help, answerType, answers }) {
         break;
       default:
         setAnswerContainer(
-          <div className="alert alert-info text-center m-5" role="alert">
-            Question Preview
+          <div className="row no-gutters d-flex align-items-stretch">
+            <div className="col">
+              <UserInputAnswer answerOptions={answers.userInputOptions} />
+            </div>
           </div>
         );
     }
