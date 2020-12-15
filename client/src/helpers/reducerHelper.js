@@ -148,7 +148,6 @@ const reducerHelper = {
     };
   },
   removeTextInput: (state, action) => {
-    console.log('here', action);
     const textInputs = state.userInputOptions.filter(
       (textInput) => textInput.id !== action.payload.id
     );

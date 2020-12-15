@@ -41,7 +41,6 @@ AnswerTypeSelection.propTypes = {
 };
 
 const answersReducer = (state, action) => {
-  console.log(state, action);
   switch (action.type) {
     case 'addButton':
       return reducerHelper.addButton(state, action);
