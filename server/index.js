@@ -29,6 +29,7 @@ require('./db');
 // const movieRouter = require('./routes/movie-router');
 const ffqRouter = require('./routes/ffq-router');
 const questionRouter = require('./routes/question-router');
+const imageRouter = require('./routes/image-router');
 
 // * Create express app
 const app = express();
@@ -36,12 +37,13 @@ const apiPort = 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
+app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.use('/api', [questionRouter, ffqRouter]);
+app.use('/api', [questionRouter, ffqRouter, imageRouter]);
 
 app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`));
