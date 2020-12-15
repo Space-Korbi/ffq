@@ -17,45 +17,45 @@ const { Schema } = mongoose;
 
 const Question = new Schema(
   {
-    questionID: { type: String, required: true },
+    questionId: { type: String, required: true },
     index: { type: Number, required: true },
     title: { type: String },
     subtitle1: { type: String },
     subtitle2: { type: String },
     help: { type: String },
-    parentQuestion: { type: Schema.Types.ObjectId },
-    childQuestion: [{ type: Schema.Types.ObjectId }],
-    selectableAnswers: {
-      frequency: {
-        leftColumn: [
+    parentQuestion: { type: String },
+    childQuestion: [{ type: String }],
+    answerOptions: {
+      type: { type: String, required: true },
+      frequencyOptions: {
+        left: [
           {
-            id: { type: String },
-            name: { type: String },
-            skip: { type: [String] },
-            imageURL: { type: String }
+            answerOptionId: { type: String },
+            title: { type: String }
           }
         ],
-        rightColumn: [
+        right: [
           {
-            id: { type: String },
-            name: { type: String },
-            skip: { type: [String] },
-            imageURL: { type: String }
+            answerOptionId: { type: String },
+            title: { type: String }
           }
         ]
       },
-      amount: [
+      amountOptions: [
         {
-          id: { type: String },
-          name: { type: String },
-          skip: { type: [String] },
+          answerOptionId: { type: String },
+          title: { type: String },
           imageURL: { type: String }
         }
       ],
-      userInput: {
-        id: { type: String },
-        options: { type: Schema.Types.Mixed }
-      }
+      userInputOptions: [
+        {
+          answerOptionId: { type: String },
+          title: { type: String },
+          hasNumberInput: { type: Boolean },
+          numberInputTitle: { type: String }
+        }
+      ]
     }
   },
   { timestamps: true }

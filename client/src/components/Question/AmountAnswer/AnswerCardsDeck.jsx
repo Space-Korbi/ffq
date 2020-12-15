@@ -8,28 +8,40 @@ import AnswerCard from './AnswerCard';
  * @param answers - Array of answers data
  * @returns [<Amount Card/>] - Amount cards wrapped in a div to apply extra spacing to the first and last card
  */
-const AnswerCardsDeck = ({ answers, saveAnswer }) => {
-  return answers.map((answer, index) => {
-    if (!answer.id) {
+const AnswerCardsDeck = ({ answerOptions, saveAnswer }) => {
+  return answerOptions.map((answerOption, index) => {
+    if (!answerOption.id) {
       return <div />;
     }
     switch (index) {
       case 0:
         return (
-          <div key={answer.id} className="pl-5 pr-2 mt-5 align-self-center">
-            <AnswerCard title={answer.title} imageURL={answer.imageURL} onClick={saveAnswer} />
+          <div key={answerOption.id} className="pl-5 pr-2 mt-5 align-self-center">
+            <AnswerCard
+              title={answerOption.title}
+              imageURL={answerOption.imageURL}
+              onClick={saveAnswer}
+            />
           </div>
         );
-      case answers.length - 1:
+      case answerOption.length - 1:
         return (
-          <div key={answer.id} className="pl-2 pr-5 mt-5 align-self-center">
-            <AnswerCard title={answer.title} imageURL={answer.imageURL} onClick={saveAnswer} />
+          <div key={answerOption.id} className="pl-2 pr-5 mt-5 align-self-center">
+            <AnswerCard
+              title={answerOption.title}
+              imageURL={answerOption.imageURL}
+              onClick={saveAnswer}
+            />
           </div>
         );
       default:
         return (
-          <div key={answer.id} className="px-2 mt-5 align-self-center">
-            <AnswerCard title={answer.title} imageURL={answer.imageURL} onClick={saveAnswer} />
+          <div key={answerOption.id} className="px-2 mt-5 align-self-center">
+            <AnswerCard
+              title={answerOption.title}
+              imageURL={answerOption.imageURL}
+              onClick={saveAnswer}
+            />
           </div>
         );
     }
@@ -37,7 +49,7 @@ const AnswerCardsDeck = ({ answers, saveAnswer }) => {
 };
 
 AnswerCardsDeck.propTypes = {
-  answers: arrayOf(
+  answerOptions: arrayOf(
     shape({
       id: string.isRequired,
       title: string,

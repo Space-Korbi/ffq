@@ -4,15 +4,15 @@ import { nanoid } from 'nanoid';
 
 import ButtonEditor from './ButtonEditor';
 
-const ButtonColumn = ({ answers, position, dispatch }) => {
+const ButtonColumn = ({ answerOptions, position, dispatch }) => {
   return (
     <div>
-      {answers.length > 0 && <span className="badge badge-secondary">{position}</span>}
-      {answers.map((answer, index) => (
-        <div key={answer.id}>
+      {answerOptions.length > 0 && <span className="badge badge-secondary">{position}</span>}
+      {answerOptions.map((answerOption, index) => (
+        <div key={answerOption.id}>
           <ButtonEditor
             index={index + 1}
-            answerOption={answer}
+            answerOption={answerOption}
             dispatch={dispatch}
             position={position}
           />
@@ -23,12 +23,12 @@ const ButtonColumn = ({ answers, position, dispatch }) => {
 };
 
 ButtonColumn.propTypes = {
-  answers: arrayOf(exact({ id: string.isRequired, title: string })),
+  answerOptions: arrayOf(exact({ id: string.isRequired, title: string })),
   position: string.isRequired,
   dispatch: func.isRequired
 };
 ButtonColumn.defaultProps = {
-  answers: []
+  answerOptions: []
 };
 
 const AddButton = ({ position, dispatch }) => {
@@ -52,7 +52,7 @@ const AddButton = ({ position, dispatch }) => {
 
 AddButton.propTypes = { position: string.isRequired, dispatch: func.isRequired };
 
-const ButtonsEditor = ({ answers, dispatch }) => {
+const ButtonsEditor = ({ answerOptions, dispatch }) => {
   const removeButton = (buttonToRemove, position) => {
     dispatch({ type: 'removeButton', payload: { position, id: buttonToRemove.id } });
   };
@@ -68,20 +68,20 @@ const ButtonsEditor = ({ answers, dispatch }) => {
             <AddButton position="right" dispatch={dispatch} />
           </div>
         </div>
-        {answers.left && (
+        {answerOptions.left && (
           <div>
             <ButtonColumn
-              answers={answers.left}
+              answerOptions={answerOptions.left}
               position="left"
               dispatch={dispatch}
               removeButton={removeButton}
             />
           </div>
         )}
-        {answers.right && (
+        {answerOptions.right && (
           <div>
             <ButtonColumn
-              answers={answers.right}
+              answerOptions={answerOptions.right}
               position="right"
               dispatch={dispatch}
               removeButton={removeButton}
@@ -94,7 +94,7 @@ const ButtonsEditor = ({ answers, dispatch }) => {
 };
 
 ButtonsEditor.propTypes = {
-  answers: shape({
+  answerOptions: shape({
     left: arrayOf(exact({ id: string.isRequired, title: string })),
     right: arrayOf(exact({ id: string.isRequired, title: string }))
   }).isRequired,

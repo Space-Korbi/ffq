@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { string, shape, arrayOf, exact } from 'prop-types';
+import { string, shape, arrayOf, exact, bool } from 'prop-types';
 
 import Jumbotron from '../Jumbotron';
 import Help from '../Help';
@@ -12,7 +12,7 @@ const saveAnswer = () => {
   console.log('answer');
 };
 
-function Question({ title, subtitle1, subtitle2, help, answerType, answers }) {
+function Question({ title, subtitle1, subtitle2, help, answerType, answerOptions }) {
   const [answerContainer, setAnswerContainer] = useState();
 
   useEffect(() => {
@@ -22,8 +22,8 @@ function Question({ title, subtitle1, subtitle2, help, answerType, answers }) {
           <div className="row no-gutters d-flex align-items-stretch">
             <div className="col">
               <AnswerButtons
-                leftAnswers={answers.frequencyOptions.left}
-                rightAnswers={answers.frequencyOptions.right}
+                leftAnswers={answerOptions.frequencyOptions.left}
+                rightAnswers={answerOptions.frequencyOptions.right}
                 saveAnswer={saveAnswer}
               />
             </div>
@@ -33,7 +33,7 @@ function Question({ title, subtitle1, subtitle2, help, answerType, answers }) {
       case AnswerType.Amount:
         setAnswerContainer(
           <div>
-            <AmountAnswer answers={answers.amountOptions} />
+            <AmountAnswer answers={answerOptions.amountOptions} />
           </div>
         );
         break;
@@ -41,12 +41,12 @@ function Question({ title, subtitle1, subtitle2, help, answerType, answers }) {
         setAnswerContainer(
           <div className="row no-gutters d-flex align-items-stretch">
             <div className="col">
-              <UserInputAnswer answerOptions={answers.userInputOptions} />
+              <UserInputAnswer answerOptions={answerOptions.userInputOptions} />
             </div>
           </div>
         );
     }
-  }, [answerType, answers]);
+  }, [answerType, answerOptions]);
 
   return (
     <div>
@@ -71,20 +71,27 @@ Question.propTypes = {
   subtitle2: string,
   help: string,
   answerType: string.isRequired,
-  answers: shape({
+  answerOptions: shape({
     type: string.isRequired,
-    frequencyAnswers: exact({
+    frequencyOptions: exact({
       left: arrayOf(exact({ id: string.isRequired, title: string })),
       right: arrayOf(exact({ id: string.isRequired, title: string }))
     }),
-    amountAnswers: arrayOf(
+    amountOptions: arrayOf(
       shape({
         id: string.isRequired,
         title: string,
         imageURL: string
       })
     ),
-    userInputAnswers: shape({})
+    userInputOptions: arrayOf(
+      shape({
+        answerOptionId: string.isRequired,
+        title: string,
+        hasNumberInput: bool,
+        numberInputTitle: string
+      })
+    )
   }).isRequired
 };
 

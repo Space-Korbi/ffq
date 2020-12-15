@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { arrayOf, func, string, shape, exact } from 'prop-types';
+import { arrayOf, func, string, shape, exact, bool } from 'prop-types';
 
 import ButtonsEditor from './ButtonsEditor/ButtonsEditor';
 import CardsEditor from './CardsEditor/CardsEditor';
 import InputEditor from './InputEditor/InputEditor';
 import { AnswerType } from '../../helpers';
 
-const AnswerEditor = ({ answers, dispatch, answerType }) => {
+const AnswerEditor = ({ answerOptions, dispatch, answerType }) => {
   const [editorState, setEditorState] = useState(<div />);
 
   useEffect(() => {
@@ -14,21 +14,21 @@ const AnswerEditor = ({ answers, dispatch, answerType }) => {
       case AnswerType.Frequency:
         setEditorState(
           <div>
-            <ButtonsEditor answers={answers.frequencyOptions} dispatch={dispatch} />
+            <ButtonsEditor answerOptions={answerOptions.frequencyOptions} dispatch={dispatch} />
           </div>
         );
         break;
       case AnswerType.Amount:
         setEditorState(
           <div>
-            <CardsEditor answers={answers.amountOptions} dispatch={dispatch} />
+            <CardsEditor answerOptions={answerOptions.amountOptions} dispatch={dispatch} />
           </div>
         );
         break;
       case AnswerType.UserInput:
         setEditorState(
           <div>
-            <InputEditor answerOptions={answers.userInputOptions} dispatch={dispatch} />
+            <InputEditor answerOptions={answerOptions.userInputOptions} dispatch={dispatch} />
           </div>
         );
         break;
@@ -39,29 +39,36 @@ const AnswerEditor = ({ answers, dispatch, answerType }) => {
           </div>
         );
     }
-  }, [answerType, answers]);
+  }, [answerType, answerOptions]);
 
   return <div>{editorState}</div>;
 };
 
 AnswerEditor.propTypes = {
-  answers: shape({
+  answerOptions: shape({
     type: string.isRequired,
-    frequencyAnswers: shape({
+    frequencyOptions: shape({
       type: string,
       options: exact({
-        left: arrayOf(exact({ id: string.isRequired, title: string })),
-        right: arrayOf(exact({ id: string.isRequired, title: string }))
+        left: arrayOf(exact({ answerOptionId: string.isRequired, title: string })),
+        right: arrayOf(exact({ answerOptionId: string.isRequired, title: string }))
       })
     }),
-    amountAnswers: arrayOf(
+    amountOptions: arrayOf(
       shape({
-        id: string.isRequired,
+        answerOptionId: string.isRequired,
         title: string,
         imageURL: string
       })
     ),
-    userInputAnswers: shape({})
+    userInputOptions: arrayOf(
+      shape({
+        answerOptionId: string.isRequired,
+        title: string,
+        hasNumberInput: bool,
+        numberInputTitle: string
+      })
+    )
   }).isRequired,
   dispatch: func.isRequired,
   answerType: string.isRequired

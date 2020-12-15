@@ -6,7 +6,7 @@ import { nanoid } from 'nanoid';
 import CardEditor from './CardEditor';
 import CardsGrid from '../../Cards';
 
-const CardsEditor = ({ answers, dispatch }) => {
+const CardsEditor = ({ answerOptions, dispatch }) => {
   return (
     <div>
       <div className="mt-5 text-center">
@@ -24,14 +24,14 @@ const CardsEditor = ({ answers, dispatch }) => {
         </button>
       </div>
       <div>
-        <CardsGrid answerOptions={answers} dispatch={dispatch} Card={CardEditor} />
+        <CardsGrid answerOptions={answerOptions} dispatch={dispatch} Card={CardEditor} />
       </div>
     </div>
   );
 };
 
 CardsEditor.propTypes = {
-  answers: arrayOf(
+  answerOptions: arrayOf(
     shape({
       id: string.isRequired,
       title: string,
