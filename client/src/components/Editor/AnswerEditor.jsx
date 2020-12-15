@@ -50,20 +50,20 @@ AnswerEditor.propTypes = {
     frequencyOptions: shape({
       type: string,
       options: exact({
-        left: arrayOf(exact({ answerOptionId: string.isRequired, title: string })),
-        right: arrayOf(exact({ answerOptionId: string.isRequired, title: string }))
+        left: arrayOf(exact({ id: string.isRequired, title: string })),
+        right: arrayOf(exact({ id: string.isRequired, title: string }))
       })
     }),
     amountOptions: arrayOf(
       shape({
-        answerOptionId: string.isRequired,
+        id: string.isRequired,
         title: string,
         imageURL: string
       })
     ),
     userInputOptions: arrayOf(
       shape({
-        answerOptionId: string.isRequired,
+        id: string.isRequired,
         title: string,
         hasNumberInput: bool,
         numberInputTitle: string

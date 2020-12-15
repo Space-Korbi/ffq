@@ -22,8 +22,8 @@ function Question({ title, subtitle1, subtitle2, help, answerType, answerOptions
           <div className="row no-gutters d-flex align-items-stretch">
             <div className="col">
               <AnswerButtons
-                leftAnswers={answerOptions.frequencyOptions.left}
-                rightAnswers={answerOptions.frequencyOptions.right}
+                leftAnswerOptions={answerOptions.frequencyOptions.left}
+                rightAnswerOptions={answerOptions.frequencyOptions.right}
                 saveAnswer={saveAnswer}
               />
             </div>
@@ -33,7 +33,7 @@ function Question({ title, subtitle1, subtitle2, help, answerType, answerOptions
       case AnswerType.Amount:
         setAnswerContainer(
           <div>
-            <AmountAnswer answers={answerOptions.amountOptions} />
+            <AmountAnswer answerOptions={answerOptions.amountOptions} />
           </div>
         );
         break;
@@ -86,7 +86,7 @@ Question.propTypes = {
     ),
     userInputOptions: arrayOf(
       shape({
-        answerOptionId: string.isRequired,
+        id: string.isRequired,
         title: string,
         hasNumberInput: bool,
         numberInputTitle: string

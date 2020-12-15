@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
 import React from 'react';
-import { shape, arrayOf, string } from 'prop-types';
+import { shape, arrayOf, string, bool } from 'prop-types';
 import { nanoid } from 'nanoid';
 
 /**
@@ -13,7 +12,7 @@ function UserInputAnswer({ answerOptions }) {
     <div>
       {answerOptions.map((answerOption) => {
         return (
-          <div key={answerOption.key} className="m-4">
+          <div key={answerOption.id} className="m-4">
             <form>
               <div className="row">
                 <div className="col">
@@ -55,9 +54,10 @@ function UserInputAnswer({ answerOptions }) {
 UserInputAnswer.propTypes = {
   answerOptions: arrayOf(
     shape({
-      key: string,
-      type: string,
-      title: string
+      id: string.isRequired,
+      title: string,
+      hasNumberInput: bool,
+      numberInputTitle: string
     })
   )
 };

@@ -187,7 +187,7 @@ const QuestionEditor = ({ question }) => {
 
 QuestionEditor.propTypes = {
   question: shape({
-    questionUUID: string,
+    questionId: string,
     index: number.isRequired,
     title: string,
     subtitle1: string,
@@ -210,7 +210,7 @@ QuestionEditor.propTypes = {
       ),
       userInputAnswers: arrayOf(
         shape({
-          key: string,
+          id: string,
           type: string,
           title: string
         })

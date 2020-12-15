@@ -30,27 +30,27 @@ const Question = new Schema(
       frequencyOptions: {
         left: [
           {
-            answerOptionId: { type: String },
+            id: { type: String },
             title: { type: String }
           }
         ],
         right: [
           {
-            answerOptionId: { type: String },
+            id: { type: String },
             title: { type: String }
           }
         ]
       },
       amountOptions: [
         {
-          answerOptionId: { type: String },
+          id: { type: String },
           title: { type: String },
           imageURL: { type: String }
         }
       ],
       userInputOptions: [
         {
-          answerOptionId: { type: String },
+          id: { type: String },
           title: { type: String },
           hasNumberInput: { type: Boolean },
           numberInputTitle: { type: String }

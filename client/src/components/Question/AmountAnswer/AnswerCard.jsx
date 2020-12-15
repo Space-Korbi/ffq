@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-has-content */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import { func, string } from 'prop-types';

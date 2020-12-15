@@ -126,7 +126,7 @@ const CardEditor = ({ id, answerOption, dispatch }) => {
                   aria-labelledby={`text-tab${id}`}
                 >
                   <TextEditor
-                    title={answerOption.title}
+                    placeholder="Card Title"
                     onChange={(value) => {
                       dispatch({
                         type: 'changeCardTitle',

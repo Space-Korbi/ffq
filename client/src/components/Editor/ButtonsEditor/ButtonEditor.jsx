@@ -68,7 +68,7 @@ const ButtonEditor = ({ dispatch, position, answerOption, index }) => {
                   aria-labelledby={`text-tab${answerOption.id}`}
                 >
                   <TextEditor
-                    title={answerOption.title}
+                    placeholder="Button Title"
                     onChange={(value) => {
                       dispatch({
                         type: 'changeButtonTitle',

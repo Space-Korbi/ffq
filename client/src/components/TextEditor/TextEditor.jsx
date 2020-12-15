@@ -1,7 +1,7 @@
 import React from 'react';
 import { string, func } from 'prop-types';
 
-const TextEditor = ({ title, onChange }) => {
+const TextEditor = ({ onChange, placeholder }) => {
   return (
     <div className="input-group">
       <input
@@ -9,8 +9,7 @@ const TextEditor = ({ title, onChange }) => {
         className="form-control"
         aria-label="Title input"
         aria-describedby="title-input"
-        value={title}
-        placeholder="Title"
+        placeholder={placeholder}
         onChange={(e) => {
           onChange(e.target.value);
         }}
@@ -20,7 +19,7 @@ const TextEditor = ({ title, onChange }) => {
 };
 
 TextEditor.propTypes = {
-  title: string.isRequired,
+  placeholder: string.isRequired,
   onChange: func.isRequired
 };
 

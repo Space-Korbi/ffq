@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import { string, func, shape, arrayOf } from 'prop-types';
 import { nanoid } from 'nanoid';

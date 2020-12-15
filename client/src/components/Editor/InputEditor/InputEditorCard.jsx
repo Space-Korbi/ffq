@@ -60,7 +60,7 @@ const InputEditorCard = ({ id, answerOption, dispatch }) => {
                   aria-labelledby={`userInput-tab${id}`}
                 >
                   <TextEditor
-                    title={answerOption.title}
+                    placeholder="Text Input Title"
                     onChange={(value) => {
                       dispatch({
                         type: 'changeTextInputTitle',
@@ -78,7 +78,7 @@ const InputEditorCard = ({ id, answerOption, dispatch }) => {
                   {answerOption.hasNumberInput ? (
                     <div className="d-flex">
                       <TextEditor
-                        title={answerOption.numberInputTitle}
+                        placeholder="Number Input Title"
                         onChange={(value) => {
                           dispatch({
                             type: 'changeNumberInputTitle',
@@ -102,7 +102,10 @@ const InputEditorCard = ({ id, answerOption, dispatch }) => {
                       onClick={() =>
                         dispatch({
                           type: 'addNumberInput',
-                          payload: { id: answerOption.id, numberInputTitle: 'mg' }
+                          payload: {
+                            id: answerOption.id,
+                            numberInputTitle: 'mg'
+                          }
                         })
                       }
                     >
