@@ -7,12 +7,12 @@ const saveAnswer = () => {
   console.log('answer');
 };
 
-const AmountAnswer = ({ answerCards }) => {
+const AmountAnswer = ({ answerOptions }) => {
   return (
     <div>
       <div className="container-fluid px-0">
         <div className="row no-gutters overflow-auto flex-row flex-nowrap text-center my-3">
-          <AnswerCardsDeck answerCards={answerCards} saveAnswer={saveAnswer} />
+          <AnswerCardsDeck answerOptions={answerOptions} saveAnswer={saveAnswer} />
         </div>
       </div>
     </div>
@@ -20,11 +20,10 @@ const AmountAnswer = ({ answerCards }) => {
 };
 
 AmountAnswer.propTypes = {
-  answerCards: arrayOf(
+  answerOptions: arrayOf(
     shape({
-      key: string.isRequired,
-      title: string.isRequired,
-      subtitle1: string,
+      id: string.isRequired,
+      title: string,
       imageURL: string
     })
   ).isRequired

@@ -1,5 +1,5 @@
 import React from 'react';
-import { string, func, object, bool, oneOfType } from 'prop-types';
+import { func, bool } from 'prop-types';
 import { TrashIcon, XIcon } from '@primer/octicons-react';
 
 function DeleteIcon({ trashCan }) {
@@ -14,12 +14,12 @@ DeleteIcon.defaultProps = {
   trashCan: false
 };
 
-const DeleteButton = ({ onClick, element, isTrashCan }) => {
+const DeleteButton = ({ onClick, isTrashCan }) => {
   return (
     <button
       type="button"
       className="btn btn-sm btn-outline-danger d-flex align-items-center p-1 ml-1"
-      onClick={() => onClick(element)}
+      onClick={onClick}
     >
       <DeleteIcon trashCan={isTrashCan} />
     </button>
@@ -28,7 +28,6 @@ const DeleteButton = ({ onClick, element, isTrashCan }) => {
 
 DeleteButton.propTypes = {
   onClick: func.isRequired,
-  element: oneOfType([string, object]).isRequired,
   isTrashCan: bool
 };
 

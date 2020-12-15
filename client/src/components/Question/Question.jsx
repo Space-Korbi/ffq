@@ -1,46 +1,52 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
-import { string, oneOfType, shape, arrayOf } from 'prop-types';
+import { string, shape, arrayOf, exact, bool } from 'prop-types';
 
 import Jumbotron from '../Jumbotron';
 import Help from '../Help';
-import FrequencyAnswer from './FrequencyAnswer/FrequencyAnswer';
+import AnswerButtons from './FrequencyAnswer/AnswerButtons';
 import AmountAnswer from './AmountAnswer/AmountAnswer';
+import UserInputAnswer from './UserInputAnswer/UserInputAnswer';
 import { AnswerType } from '../../helpers';
 
-function Question({ title, subtitle1, subtitle2, help, answer }) {
+const saveAnswer = () => {
+  console.log('answer');
+};
+
+function Question({ title, subtitle1, subtitle2, help, answerType, answerOptions }) {
   const [answerContainer, setAnswerContainer] = useState();
 
   useEffect(() => {
-    if (!answer.options) {
-      return;
-    }
-    switch (answer.type) {
+    switch (answerType) {
       case AnswerType.Frequency:
-        if (answer.options.length !== 2) {
-          return;
-        }
         setAnswerContainer(
-          <div>
-            <FrequencyAnswer leftButtons={answer.options[0]} rightButtons={answer.options[1]} />
+          <div className="row no-gutters d-flex align-items-stretch">
+            <div className="col">
+              <AnswerButtons
+                leftAnswerOptions={answerOptions.frequencyOptions.left}
+                rightAnswerOptions={answerOptions.frequencyOptions.right}
+                saveAnswer={saveAnswer}
+              />
+            </div>
           </div>
         );
         break;
       case AnswerType.Amount:
         setAnswerContainer(
           <div>
-            <AmountAnswer answerCards={answer.options} />
+            <AmountAnswer answerOptions={answerOptions.amountOptions} />
           </div>
         );
         break;
       default:
         setAnswerContainer(
-          <div className="alert alert-info text-center m-5" role="alert">
-            Choose an Answer Type
+          <div className="row no-gutters d-flex align-items-stretch">
+            <div className="col">
+              <UserInputAnswer answerOptions={answerOptions.userInputOptions} />
+            </div>
           </div>
         );
     }
-  }, [answer]);
+  }, [answerType, answerOptions]);
 
   return (
     <div>
@@ -64,9 +70,28 @@ Question.propTypes = {
   subtitle1: string,
   subtitle2: string,
   help: string,
-  answer: shape({
+  answerType: string.isRequired,
+  answerOptions: shape({
     type: string.isRequired,
-    options: oneOfType([arrayOf(arrayOf(string)), arrayOf(string)]).isRequired
+    frequencyOptions: exact({
+      left: arrayOf(exact({ id: string.isRequired, title: string })),
+      right: arrayOf(exact({ id: string.isRequired, title: string }))
+    }),
+    amountOptions: arrayOf(
+      shape({
+        id: string.isRequired,
+        title: string,
+        imageURL: string
+      })
+    ),
+    userInputOptions: arrayOf(
+      shape({
+        id: string.isRequired,
+        title: string,
+        hasNumberInput: bool,
+        numberInputTitle: string
+      })
+    )
   }).isRequired
 };
 

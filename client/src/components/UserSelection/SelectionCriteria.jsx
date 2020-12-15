@@ -45,8 +45,7 @@ const SelectionCriteriaList = ({ selectionCriteria, onClick }) => {
           <RemovableListItem
             key={criteria}
             content={criteria}
-            elementToRemove={criteria}
-            onClick={onClick}
+            onClick={() => onClick(criteria)}
             isTrashCan
           />
         );

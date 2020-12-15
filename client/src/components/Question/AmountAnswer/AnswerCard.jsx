@@ -1,16 +1,22 @@
-/* eslint-disable jsx-a11y/anchor-has-content */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import { func, string } from 'prop-types';
 
-function AnswerCard({ imageURL, title, subtitle, onClick }) {
+function AnswerCard({ title, imageURL, onClick }) {
   return (
-    <div className="card text-center" style={{ minWidth: '270px' }}>
-      <img src={imageURL} className="card-img-top" alt="" />
-      <div className="card-body">
-        <h5 className="card-title">{title}</h5>
-        <p className="card-text">{subtitle}</p>
-      </div>
+    <div
+      className="card my-5 align-items-center d-flex justify-content-center"
+      style={{ minWidth: '270px', maxWidth: '350px', minHeight: '200px' }}
+    >
+      {imageURL ? (
+        <img src={imageURL} className="card-img-top" alt="..." />
+      ) : (
+        <div className="card-body align-items-center d-flex justify-content-center">
+          <div>
+            <h5 className="card-title">{title}</h5>
+          </div>
+        </div>
+      )}
       <a href="#" className="stretched-link" onClick={onClick}>
         {' '}
       </a>
@@ -20,12 +26,12 @@ function AnswerCard({ imageURL, title, subtitle, onClick }) {
 
 AnswerCard.propTypes = {
   imageURL: string,
-  title: string.isRequired,
-  subtitle: string.isRequired,
+  title: string,
   onClick: func.isRequired
 };
 
 AnswerCard.defaultProps = {
+  title: '',
   imageURL: ''
 };
 

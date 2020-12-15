@@ -1,36 +1,14 @@
-/* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
-import { func } from 'prop-types';
-import { v4 as uuidv4 } from 'uuid';
+import React, { useState, useReducer } from 'react';
+import { func, string, shape, arrayOf, number, exact } from 'prop-types';
+import { nanoid } from 'nanoid';
 import Navigation from '../Navigation';
 import JumbotronInputs from './JumbotronInputs';
 import HelpTextInput from './HelpTextInput';
 import { Question } from '../Question';
 
-import { AnswerType } from '../../helpers';
+import { AnswerType, reducerHelper } from '../../helpers';
 import { insertQuestion } from '../../api';
 import AnswerEditor from './AnswerEditor';
-import UserInputAnswer from '../Question/UserInputAnswer/UserInputAnswer';
-
-import pizzaWhole from '../../images/pizza-whole-example.jpg';
-// import pizzaHalf from '../../images/pizza-half-example.jpg';
-import pizzaQuarter from '../../images/pizza-quarter-example.jpg';
-
-const mockInformation =
-  'Bitte geben Sie die Verzehrshäufigkeiten des Lebensmittels an, indem Sie das passende Kästchen unten durch einmaliges Anklicken auswählen';
-
-const mockAmountCards = [
-  { key: '1', title: '1', subtitle1: '1.1' },
-  { key: '2', title: '2', subtitle1: '2.1', imageURL: pizzaQuarter },
-  { key: '3', title: '3', subtitle1: '3.1', imageURL: pizzaWhole }
-];
-
-const leftButtonsTextMock = [
-  'Nie in den letzten 4 Wochen',
-  '1 - 3 Mal in den letzten 4 Wochen',
-  '1 Mal pro Woche'
-];
-const rightButtonsTextMock = ['1 Mal pro Tag', '5+ pro Tag'];
 
 const tabs = ['Edit', 'Arrange'];
 
@@ -62,37 +40,66 @@ AnswerTypeSelection.propTypes = {
   onChange: func.isRequired
 };
 
-const QuestionEditor = () => {
-  const [title, setTitle] = useState('');
-  const [subtitle1, setSubtitle1] = useState('');
-  const [subtitle2, setSubtitle2] = useState('');
-  const [help, setHelp] = useState('');
+const answersReducer = (state, action) => {
+  switch (action.type) {
+    case 'addButton':
+      return reducerHelper.addButton(state, action);
+    case 'removeButton':
+      return reducerHelper.removeButton(state, action);
+    case 'changeButtonTitle':
+      return reducerHelper.changeButtonTitle(state, action);
+    case 'addCard':
+      return reducerHelper.addCard(state, action);
+    case 'removeCard':
+      return reducerHelper.removeCard(state, action);
+    case 'changeCardTitle':
+      return reducerHelper.changeCardTitle(state, action);
+    case 'changeCardImage':
+      return reducerHelper.changeCardImage(state, action);
+    case 'removeCardImage':
+      return reducerHelper.removeCardImage(state, action);
+    case 'addTextInput':
+      return reducerHelper.addTextInput(state, action);
+    case 'removeTextInput':
+      return reducerHelper.removeTextInput(state, action);
+    case 'changeTextInputTitle':
+      return reducerHelper.changeTextInputTitle(state, action);
+    case 'addNumberInput':
+      return reducerHelper.addNumberInput(state, action);
+    case 'removeNumberInput':
+      return reducerHelper.removeNumberInput(state, action);
+    case 'changeNumberInputTitle':
+      return reducerHelper.changeNumberInputTitle(state, action);
+    default:
+      return state;
+  }
+};
+
+const QuestionEditor = ({ question }) => {
+  const [title, setTitle] = useState(question.title);
+  const [subtitle1, setSubtitle1] = useState(question.subtitle1);
+  const [subtitle2, setSubtitle2] = useState(question.subtitle2);
+  const [help, setHelp] = useState(question.help);
 
   const [answerType, setAnswerType] = useState('');
-  const [answers, setAnswers] = useState([leftButtonsTextMock, rightButtonsTextMock]);
-  const [frequencyAnswers, setFrequencyAnswers] = useState([
-    leftButtonsTextMock,
-    rightButtonsTextMock
-  ]);
-  const [amountAnswers, setAmountAnswers] = useState([]);
-  const [userInputAnswers, setUserInputAnswers] = useState([]);
+  const [answerOptions, dispatch] = useReducer(answersReducer, question.answerOptions);
 
   const handleIncludeQuestion = async () => {
-    const questionUUID = uuidv4();
-    const index = 0;
-    const category = 'No catergory yet';
+    const { index, questionId } = question;
 
     const payload = {
-      questionUUID,
+      questionId,
       index,
       title,
       subtitle1,
       subtitle2,
       help,
-      category,
-      answerType,
-      answers
+      parentQuestion: '',
+      childQuestion: [],
+      answerOptions
     };
+
+    console.log(payload);
 
     await insertQuestion(payload).then(() => {
       window.alert(`Question inserted successfully`);
@@ -104,7 +111,6 @@ const QuestionEditor = () => {
       <div className="m-3">
         <Navigation tabs={tabs} />
       </div>
-
       <div>
         <div className="tab-content" id="questionEditorContent">
           <div
@@ -129,13 +135,9 @@ const QuestionEditor = () => {
                   <HelpTextInput onChange={setHelp} />
                 </div>
                 <AnswerEditor
+                  answerOptions={answerOptions}
                   answerType={answerType}
-                  frequencyAnswers={frequencyAnswers}
-                  amountAnswers={amountAnswers}
-                  userInputAnswers={userInputAnswers}
-                  onChangeFrequencyAnswers={setFrequencyAnswers}
-                  onChangeAmountAnswers={setAmountAnswers}
-                  onChangeUserInputAnswers={setUserInputAnswers}
+                  dispatch={dispatch}
                 />
               </div>
 
@@ -151,7 +153,7 @@ const QuestionEditor = () => {
                 </div>
 
                 <div
-                  className="mt-4 border border-info"
+                  className="mt-4 border border-info "
                   style={{ minHeight: '760px', minWidth: '270px', maxWidth: '100%' }}
                 >
                   <Question
@@ -159,7 +161,8 @@ const QuestionEditor = () => {
                     subtitle1={subtitle1}
                     subtitle2={subtitle2}
                     help={help}
-                    answer={{ type: answerType, options: answers }}
+                    answerOptions={answerOptions}
+                    answerType={answerType}
                   />
                 </div>
               </div>
@@ -179,6 +182,60 @@ const QuestionEditor = () => {
       </div>
     </div>
   );
+};
+
+QuestionEditor.propTypes = {
+  question: shape({
+    questionId: string,
+    index: number.isRequired,
+    title: string,
+    subtitle1: string,
+    subtitle2: string,
+    help: string,
+    parentQuestion: string,
+    childQuestion: arrayOf(string),
+    answerOptions: shape({
+      type: string.isRequired,
+      frequencyAnswers: exact({
+        left: arrayOf(exact({ id: string.isRequired, title: string })),
+        right: arrayOf(exact({ id: string.isRequired, title: string }))
+      }),
+      amountAnswers: arrayOf(
+        shape({
+          id: string.isRequired,
+          title: string,
+          imageURL: string
+        })
+      ),
+      userInputAnswers: arrayOf(
+        shape({
+          id: string,
+          type: string,
+          title: string
+        })
+      )
+    }).isRequired
+  })
+};
+
+// TODO index needs to be passed down from parent component
+QuestionEditor.defaultProps = {
+  question: {
+    questionId: nanoid(),
+    index: 2,
+    title: '',
+    subtitle1: '',
+    subtitle2: '',
+    help: '',
+    parentQuestion: '',
+    childQuestion: [''],
+    answerOptions: {
+      type: '',
+      frequencyOptions: { left: [], right: [] },
+      amountOptions: [],
+      userInputOptions: []
+    }
+  }
 };
 
 export default QuestionEditor;

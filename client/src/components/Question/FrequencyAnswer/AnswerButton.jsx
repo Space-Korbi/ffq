@@ -1,20 +1,20 @@
 import React from 'react';
 import { string, func } from 'prop-types';
 
-const AnswerButton = ({ text, onClick }) => {
+const AnswerButton = ({ title, onClick }) => {
   return (
     <button
       type="button"
       className="btn btn-outline-primary btn-block btn-frequency my-4"
       onClick={() => onClick()}
     >
-      {text}
+      {title}
     </button>
   );
 };
 
 AnswerButton.propTypes = {
-  text: string.isRequired,
+  title: string.isRequired,
   onClick: func.isRequired
 };
 

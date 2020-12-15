@@ -4,62 +4,58 @@ const { Schema } = mongoose;
 
 /**
  * * Question Schema
- * @param uuid
+ * @param questionID
  * @param index - Place in FFQ
- * @param answerType - One of the three main answer types (Frequency, Amount or User Input)
- * @param parenQuestion - UUID of parent Question
- * @param childQuestion - UUID of child Questions
- * @param isAnswered - Weather or not the question was answered
+ * @param title
+ * @param subtitle1
+ * @param subtitle2
+ * @param help - Message displayed when clicking help icon
+ * @param parenQuestion - ID of parent Question
+ * @param childQuestion - IDs of child Questions
  * @param possibleAnswers - All Answers the user could have selected
- * @param answer - The answer the user has given
  */
 
 const Question = new Schema(
   {
-    questionUUID: { type: String, required: true },
+    questionId: { type: String, required: true },
     index: { type: Number, required: true },
     title: { type: String },
     subtitle1: { type: String },
     subtitle2: { type: String },
     help: { type: String },
-    parentQuestion: { type: Schema.Types.ObjectId },
-    childQuestion: [{ type: Schema.Types.ObjectId }],
-    answerType: {
-      frequencyAnswer: {
-        leftColumn: {
-          options: [
-            {
-              name: { type: String },
-              type: { type: String },
-              action: { type: Schema.Types.Mixed },
-              imageURL: { type: String }
-            }
-          ]
-        },
-        rightColumn: {
-          options: [
-            {
-              name: { type: String },
-              type: { type: String },
-              action: { type: Schema.Types.Mixed },
-              imageURL: { type: String }
-            }
-          ]
-        }
-      },
-      amountAnswer: {
-        options: [
+    parentQuestion: { type: String },
+    childQuestion: [{ type: String }],
+    answerOptions: {
+      type: { type: String, required: true },
+      frequencyOptions: {
+        left: [
           {
-            name: { type: String },
-            type: { type: String },
-            action: { type: Schema.Types.Mixed },
-            imageURL: { type: String }
+            id: { type: String },
+            title: { type: String }
+          }
+        ],
+        right: [
+          {
+            id: { type: String },
+            title: { type: String }
           }
         ]
       },
-      userInputAnswer: {
-        options: { type: Schema.Types.Mixed }
-      }
+      amountOptions: [
+        {
+          id: { type: String },
+          title: { type: String },
+          imageURL: { type: String }
+        }
+      ],
+      userInputOptions: [
+        {
+          id: { type: String },
+          title: { type: String },
+          hasNumberInput: { type: Boolean },
+          numberInputTitle: { type: String }
+        }
+      ]
     }
   },
   { timestamps: true }
