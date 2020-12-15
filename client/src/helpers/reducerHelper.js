@@ -52,7 +52,6 @@ const reducerHelper = {
       userInputOptions: []
     };
   },
-
   changeButtonTitle: (state, action) => {
     if (action.payload.position === 'left') {
       const newState = state.frequencyOptions.left.map((el) =>
