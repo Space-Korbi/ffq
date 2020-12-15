@@ -4,27 +4,7 @@ import { string, func, arrayOf, shape } from 'prop-types';
 import { nanoid } from 'nanoid';
 
 import CardEditor from './CardEditor';
-
-const AmountCardsGrid = ({ answers, dispatch }) => {
-  return (
-    <div className="row no-gutters row-cols-1 row-cols-md-2">
-      {answers.map((answer, index) => (
-        <CardEditor key={answer.id} id={index + 1} answer={answer} dispatch={dispatch} />
-      ))}
-    </div>
-  );
-};
-
-AmountCardsGrid.propTypes = {
-  answers: arrayOf(
-    shape({
-      id: string.isRequired,
-      title: string,
-      imageURL: string
-    })
-  ).isRequired,
-  dispatch: func.isRequired
-};
+import CardsGrid from '../../Cards';
 
 const CardsEditor = ({ answers, dispatch }) => {
   return (
@@ -44,7 +24,7 @@ const CardsEditor = ({ answers, dispatch }) => {
         </button>
       </div>
       <div>
-        <AmountCardsGrid answers={answers} dispatch={dispatch} />
+        <CardsGrid answerOptions={answers} dispatch={dispatch} Card={CardEditor} />
       </div>
     </div>
   );

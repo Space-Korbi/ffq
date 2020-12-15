@@ -3,31 +3,7 @@ import { string, func, shape, number, bool } from 'prop-types';
 
 import { XIcon } from '@primer/octicons-react';
 import DeleteButton from '../../Button';
-
-const TextEdit = ({ cardId, title, onChange }) => {
-  return (
-    <div className="input-group">
-      <input
-        type="text"
-        className="form-control"
-        aria-label="Title input"
-        aria-describedby="title-input"
-        value={title}
-        placeholder="Card Text"
-        onChange={(e) => {
-          onChange({ type: 'changeCardTitle', payload: { id: cardId, title: e.target.value } });
-        }}
-      />
-    </div>
-  );
-};
-
-TextEdit.propTypes = {
-  cardId: string.isRequired,
-  title: string.isRequired,
-
-  onChange: func.isRequired
-};
+import TextEditor from '../../TextEditor';
 
 const ImageUpload = ({ onChange, answerId, disabled }) => {
   const [imageUploadLabel, setImageUploadLabel] = useState('Select Image');
@@ -88,7 +64,7 @@ ImageUpload.propTypes = {
   disabled: bool.isRequired
 };
 
-const CardEditor = ({ id, answer, dispatch }) => {
+const CardEditor = ({ id, answerOption, dispatch }) => {
   return (
     <div className="col my-3">
       <div className="card mx-2">
@@ -124,20 +100,20 @@ const CardEditor = ({ id, answer, dispatch }) => {
               </li>
             </ul>
             <DeleteButton
-              element={answer.title}
+              element={answerOption.title}
               onClick={() =>
                 dispatch({
                   type: 'removeCard',
-                  payload: { id: answer.id }
+                  payload: { id: answerOption.id }
                 })
               }
             />
           </div>
         </div>
         <div className="row no-gutters">
-          {answer.imageURL && (
+          {answerOption.imageURL && (
             <div className="col-2 align-self-center">
-              <img src={answer.imageURL} alt="..." style={{ maxWidth: '100%' }} />
+              <img src={answerOption.imageURL} alt="..." style={{ maxWidth: '100%' }} />
             </div>
           )}
           <div className="col align-self-center">
@@ -149,7 +125,15 @@ const CardEditor = ({ id, answer, dispatch }) => {
                   role="tabpanel"
                   aria-labelledby={`text-tab${id}`}
                 >
-                  <TextEdit cardId={answer.id} title={answer.title} onChange={dispatch} />
+                  <TextEditor
+                    title={answerOption.title}
+                    onChange={(value) => {
+                      dispatch({
+                        type: 'changeCardTitle',
+                        payload: { id: answerOption.id, title: value }
+                      });
+                    }}
+                  />
                 </div>
                 <div
                   className="tab-pane fade "
@@ -158,9 +142,9 @@ const CardEditor = ({ id, answer, dispatch }) => {
                   aria-labelledby={`image-tab${id}`}
                 >
                   <ImageUpload
-                    answerId={answer.id}
+                    answerId={answerOption.id}
                     onChange={dispatch}
-                    disabled={answer.imageURL === ''}
+                    disabled={answerOption.imageURL === ''}
                   />
                 </div>
               </div>
@@ -174,7 +158,7 @@ const CardEditor = ({ id, answer, dispatch }) => {
 
 CardEditor.propTypes = {
   id: number.isRequired,
-  answer: shape({
+  answerOption: shape({
     id: string.isRequired,
     title: string,
     imageURL: string
