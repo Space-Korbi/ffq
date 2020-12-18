@@ -31,14 +31,12 @@ const Question = new Schema(
         left: [
           {
             id: { type: String },
-            index: { type: Number },
             title: { type: String }
           }
         ],
         right: [
           {
             id: { type: String },
-            index: { type: Number },
             title: { type: String }
           }
         ]
@@ -46,7 +44,6 @@ const Question = new Schema(
       amountOptions: [
         {
           id: { type: String },
-          index: { type: Number },
           title: { type: String },
           imageURL: { type: String },
           imageName: { type: String }
@@ -55,7 +52,6 @@ const Question = new Schema(
       userInputOptions: [
         {
           id: { type: String },
-          index: { type: Number },
           title: { type: String },
           hasNumberInput: { type: Boolean },
           numberInputTitle: { type: String }
