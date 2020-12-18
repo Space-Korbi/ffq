@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { arrayOf, func, string, bool } from 'prop-types';
-import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
 import RemovableListItem from '../List';
 import { addValidString } from '../../helpers';
 
@@ -40,7 +40,7 @@ const NewRuleCard = ({ criteria, removeCriteriaFromCard, onSubmit }) => {
                 <ul className="list-group">
                   {criteria.map((criterion) => (
                     <RemovableListItem
-                      key={uuidv4()}
+                      key={nanoid()}
                       content={criterion}
                       onClick={() => removeCriteriaFromCard(criterion)}
                       isTrashCan={false}
@@ -136,7 +136,7 @@ const AddRule = ({ selectionCriteria, saveRule }) => {
     }
 
     const newRule = {
-      id: uuidv4(),
+      id: nanoid(),
       criteria: selectedCriteria,
       operator,
       decision: e.target.decisionSelect.value
