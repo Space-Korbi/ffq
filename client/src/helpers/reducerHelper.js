@@ -124,7 +124,7 @@ const reducerHelper = {
   },
   removeCardImage: (state, action) => {
     const newState = state.amountOptions.map((el) => {
-      return el.id === action.payload.id ? { ...el, imageURL: '' } : el;
+      return el.id === action.payload.id ? { ...el, imageURL: '', imageData: undefined } : el;
     });
     return {
       type: AnswerType.Amount,

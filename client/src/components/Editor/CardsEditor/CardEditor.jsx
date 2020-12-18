@@ -116,8 +116,6 @@ const CardEditor = ({ id, answerOption, dispatch }) => {
           </div>
         </div>
         <div className="row no-gutters">
-          {JSON.stringify(answerOption.imageURL, null, 2)}
-
           {answerOption.imageURL && (
             <div className="col-2 align-self-center">
               <img src={answerOption.imageURL} alt="..." style={{ maxWidth: '100%' }} />

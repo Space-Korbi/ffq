@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-restricted-syntax */
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useReducer } from 'react';
 import { func, string, shape, arrayOf, number, exact } from 'prop-types';
 import { nanoid } from 'nanoid';
 import Navigation from '../Navigation';
@@ -78,6 +78,35 @@ const answersReducer = (state, action) => {
   }
 };
 
+const setDBImagePath = async (amountOptions) => {
+  const amountOptionsWithDBImagePaths = await Promise.all(
+    amountOptions.map(async (amountOption) => {
+      if (!amountOption.imageData) {
+        const amountOptionWithText = {
+          id: amountOption.id,
+          title: amountOption.title
+        };
+        return Promise.resolve(amountOptionWithText);
+      }
+
+      const data = new FormData();
+      data.append('imageData', amountOption.imageData);
+
+      const response = await uploadImage(data);
+      const imageName = response;
+      const amountOptionWithImagePath = {
+        id: amountOption.id,
+        imageName: imageName.data.filename,
+        imageURL: imageName.data.path
+      };
+
+      return Promise.resolve(amountOptionWithImagePath);
+    })
+  );
+
+  return amountOptionsWithDBImagePaths;
+};
+
 const QuestionEditor = ({ question }) => {
   const [title, setTitle] = useState(question.title);
   const [subtitle1, setSubtitle1] = useState(question.subtitle1);
@@ -87,101 +116,40 @@ const QuestionEditor = ({ question }) => {
   const [answerType, setAnswerType] = useState('');
   const [answerOptions, dispatch] = useReducer(answersReducer, question.answerOptions);
 
-  const initialImage = [{ url: '', imageData: {}, answerId: '' }];
-
   const handleSaveQuestion = async () => {
     const { index, questionId } = question;
 
-    const amountOptionsWithDBImagePaths = await Promise.all(
-      answerOptions.amountOptions.map(async (amountOption) => {
-        if (!amountOption.imageData) {
-          const amountOptionWithText = {
-            id: amountOption.id,
-            title: amountOption.title
-          };
-          return Promise.resolve(amountOptionWithText);
-        }
+    let newAnswerOptions = {};
 
-        console.log('-------------------------');
-
-        console.log('IMAGE Data', amountOption.imageData);
-
-        const data = new FormData();
-        console.log('amountOption1', amountOption);
-        data.append('imageData', amountOption.imageData);
-        const response = await uploadImage(data);
-        const imageName = await response;
-        console.log('Image name:', imageName.data.filename);
-        const amountOptionWithImagePath = {
-          id: amountOption.id,
-          imageName: imageName.data.filename,
-          imageURL: imageName.data.path
+    switch (answerType) {
+      case AnswerType.Frequency:
+        newAnswerOptions = {
+          type: AnswerType.Frequency,
+          frequencyOptions: answerOptions.frequencyOptions,
+          amountOptions: [],
+          userInputOptions: []
         };
-        console.log('+++++++++++++++++++++++++', amountOptionWithImagePath);
-
-        return Promise.resolve(amountOptionWithImagePath);
-      })
-    );
-
-    const answerOptionsWithImages = () => {
-      return {
-        type: AnswerType.Amount,
-        frequencyOptions: { left: [], right: [] },
-        amountOptions: amountOptionsWithDBImagePaths,
-        userInputOptions: []
-      };
-    };
-
-    console.log('===================', answerOptionsWithImages());
-
-    /*
-    async function uploadImages() {
-      for (const image of images) {
-        await uploadImage(data).then((res) => {
-          console.log('Answer ID', image.answerId);
-          console.log('Image Name', res.data.data);
-
-          dispatch({
-            type: 'changeCardImageName',
-            payload: { id: image.answerId, imageName: res.data.data }
-          });
-        });
-        console.log(contents);
-      }
+        break;
+      case AnswerType.Amount:
+        newAnswerOptions = {
+          type: AnswerType.Amount,
+          frequencyOptions: { left: [], right: [] },
+          amountOptions: await setDBImagePath(answerOptions.amountOptions),
+          userInputOptions: []
+        };
+        break;
+      case AnswerType.UserInput:
+        newAnswerOptions = {
+          type: AnswerType.UserInput,
+          frequencyOptions: { left: [], right: [] },
+          amountOptions: [],
+          userInputOptions: answerOptions.userInputOptions
+        };
+        break;
+      default:
+        console.log('OOPS');
     }
 
-    const imageUpload = new Promise((resolve) => {
-      images.map(async (image) => {
-        const data = new FormData();
-        data.append('imageData', image.image);
-        await uploadImage(data)
-          .then((res) => {
-            console.log('Answer ID', image.answerId);
-            console.log('Image Name', res.data.data);
-
-            dispatch({
-              type: 'changeCardImageName',
-              payload: { id: image.answerId, imageName: res.data.data }
-            });
-          })
-          .then(() => resolve(answerOptions));
-      });
-    });
-
-    imageUpload.then(async (res) => {
-      console.log('res', res);
-      const payload = {
-        questionId,
-        index,
-        title,
-        subtitle1,
-        subtitle2,
-        help,
-        parentQuestion: '',
-        childQuestion: [],
-        answerOptions
-      };
-*/
     const payload = {
       questionId,
       index,
@@ -191,7 +159,7 @@ const QuestionEditor = ({ question }) => {
       help,
       parentQuestion: '',
       childQuestion: [],
-      answerOptions: answerOptionsWithImages()
+      answerOptions: newAnswerOptions
     };
 
     console.log('Payload', payload);
