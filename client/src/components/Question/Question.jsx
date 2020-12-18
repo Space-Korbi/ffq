@@ -81,7 +81,7 @@ Question.propTypes = {
       shape({
         id: string.isRequired,
         title: string,
-        imageURL: string
+        imageName: string
       })
     ),
     userInputOptions: arrayOf(

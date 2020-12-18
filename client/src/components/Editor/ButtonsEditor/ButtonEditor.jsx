@@ -53,11 +53,6 @@ const ButtonEditor = ({ dispatch, position, answerOption, index }) => {
           </div>
         </div>
         <div className="row no-gutters">
-          {answerOption.imageURL && (
-            <div className="col-2 align-self-center">
-              <img src={answerOption.imageURL} alt="..." style={{ maxWidth: '100%' }} />
-            </div>
-          )}
           <div className="col align-self-center">
             <div className="card-body px-2">
               <div className="tab-content" id="tab-content">

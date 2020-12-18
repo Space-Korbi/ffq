@@ -1,4 +1,6 @@
-import React, { useState, useReducer } from 'react';
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-restricted-syntax */
+import React, { useState, useEffect, useReducer } from 'react';
 import { func, string, shape, arrayOf, number, exact } from 'prop-types';
 import { nanoid } from 'nanoid';
 import Navigation from '../Navigation';
@@ -7,7 +9,8 @@ import HelpTextInput from './HelpTextInput';
 import { Question } from '../Question';
 
 import { AnswerType, reducerHelper } from '../../helpers';
-import { insertQuestion } from '../../api';
+import { insertQuestion, uploadImage } from '../../api';
+
 import AnswerEditor from './AnswerEditor';
 
 const tabs = ['Edit', 'Arrange'];
@@ -84,9 +87,101 @@ const QuestionEditor = ({ question }) => {
   const [answerType, setAnswerType] = useState('');
   const [answerOptions, dispatch] = useReducer(answersReducer, question.answerOptions);
 
-  const handleIncludeQuestion = async () => {
+  const initialImage = [{ url: '', imageData: {}, answerId: '' }];
+
+  const handleSaveQuestion = async () => {
     const { index, questionId } = question;
 
+    const amountOptionsWithDBImagePaths = await Promise.all(
+      answerOptions.amountOptions.map(async (amountOption) => {
+        if (!amountOption.imageData) {
+          const amountOptionWithText = {
+            id: amountOption.id,
+            title: amountOption.title
+          };
+          return Promise.resolve(amountOptionWithText);
+        }
+
+        console.log('-------------------------');
+
+        console.log('IMAGE Data', amountOption.imageData);
+
+        const data = new FormData();
+        console.log('amountOption1', amountOption);
+        data.append('imageData', amountOption.imageData);
+        const response = await uploadImage(data);
+        const imageName = await response;
+        console.log('Image name:', imageName.data.filename);
+        const amountOptionWithImagePath = {
+          id: amountOption.id,
+          imageName: imageName.data.filename,
+          imageURL: imageName.data.path
+        };
+        console.log('+++++++++++++++++++++++++', amountOptionWithImagePath);
+
+        return Promise.resolve(amountOptionWithImagePath);
+      })
+    );
+
+    const answerOptionsWithImages = () => {
+      return {
+        type: AnswerType.Amount,
+        frequencyOptions: { left: [], right: [] },
+        amountOptions: amountOptionsWithDBImagePaths,
+        userInputOptions: []
+      };
+    };
+
+    console.log('===================', answerOptionsWithImages());
+
+    /*
+    async function uploadImages() {
+      for (const image of images) {
+        await uploadImage(data).then((res) => {
+          console.log('Answer ID', image.answerId);
+          console.log('Image Name', res.data.data);
+
+          dispatch({
+            type: 'changeCardImageName',
+            payload: { id: image.answerId, imageName: res.data.data }
+          });
+        });
+        console.log(contents);
+      }
+    }
+
+    const imageUpload = new Promise((resolve) => {
+      images.map(async (image) => {
+        const data = new FormData();
+        data.append('imageData', image.image);
+        await uploadImage(data)
+          .then((res) => {
+            console.log('Answer ID', image.answerId);
+            console.log('Image Name', res.data.data);
+
+            dispatch({
+              type: 'changeCardImageName',
+              payload: { id: image.answerId, imageName: res.data.data }
+            });
+          })
+          .then(() => resolve(answerOptions));
+      });
+    });
+
+    imageUpload.then(async (res) => {
+      console.log('res', res);
+      const payload = {
+        questionId,
+        index,
+        title,
+        subtitle1,
+        subtitle2,
+        help,
+        parentQuestion: '',
+        childQuestion: [],
+        answerOptions
+      };
+*/
     const payload = {
       questionId,
       index,
@@ -96,10 +191,10 @@ const QuestionEditor = ({ question }) => {
       help,
       parentQuestion: '',
       childQuestion: [],
-      answerOptions
+      answerOptions: answerOptionsWithImages()
     };
 
-    console.log(payload);
+    console.log('Payload', payload);
 
     await insertQuestion(payload).then(() => {
       window.alert(`Question inserted successfully`);
@@ -146,7 +241,7 @@ const QuestionEditor = ({ question }) => {
                   <button
                     type="button"
                     className="btn btn-outline-primary"
-                    onClick={() => handleIncludeQuestion()}
+                    onClick={() => handleSaveQuestion()}
                   >
                     Save Question
                   </button>
@@ -197,19 +292,22 @@ QuestionEditor.propTypes = {
     answerOptions: shape({
       type: string.isRequired,
       frequencyAnswers: exact({
-        left: arrayOf(exact({ id: string.isRequired, title: string })),
-        right: arrayOf(exact({ id: string.isRequired, title: string }))
+        left: arrayOf(exact({ id: string.isRequired, index: number.isRequired, title: string })),
+        right: arrayOf(exact({ id: string.isRequired, index: number.isRequired, title: string }))
       }),
       amountAnswers: arrayOf(
         shape({
           id: string.isRequired,
+          index: number.isRequired,
           title: string,
-          imageURL: string
+          imageName: string,
+          imageURLs: string
         })
       ),
       userInputAnswers: arrayOf(
         shape({
-          id: string,
+          id: string.isRequired,
+          index: number.isRequired,
           type: string,
           title: string
         })

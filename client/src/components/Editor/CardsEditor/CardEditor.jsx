@@ -27,6 +27,7 @@ const ImageUpload = ({ onChange, answerId, disabled }) => {
             <XIcon />
           </button>
         </div>
+
         <div className="custom-file">
           <input
             type="file"
@@ -37,7 +38,11 @@ const ImageUpload = ({ onChange, answerId, disabled }) => {
               setImageUploadLabel(e.target.files[0].name);
               onChange({
                 type: 'changeCardImage',
-                payload: { id: answerId, image: e.target.files[0] }
+                payload: {
+                  id: answerId,
+                  imageData: e.target.files[0],
+                  imageURL: URL.createObjectURL(e.target.files[0])
+                }
               });
             }}
           />
@@ -111,6 +116,8 @@ const CardEditor = ({ id, answerOption, dispatch }) => {
           </div>
         </div>
         <div className="row no-gutters">
+          {JSON.stringify(answerOption.imageURL, null, 2)}
+
           {answerOption.imageURL && (
             <div className="col-2 align-self-center">
               <img src={answerOption.imageURL} alt="..." style={{ maxWidth: '100%' }} />
@@ -161,7 +168,7 @@ CardEditor.propTypes = {
   answerOption: shape({
     id: string.isRequired,
     title: string,
-    imageURL: string
+    imageName: string
   }).isRequired,
   dispatch: func.isRequired
 };

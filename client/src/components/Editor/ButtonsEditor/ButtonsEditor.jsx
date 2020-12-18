@@ -40,7 +40,7 @@ const AddButton = ({ position, dispatch }) => {
         onClick={() =>
           dispatch({
             type: 'addButton',
-            payload: { position, title: '', id: nanoid() }
+            payload: { id: nanoid(), title: '', position }
           })
         }
       >

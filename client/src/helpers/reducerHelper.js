@@ -112,7 +112,7 @@ const reducerHelper = {
   changeCardImage: (state, action) => {
     const newState = state.amountOptions.map((el) => {
       return el.id === action.payload.id
-        ? { ...el, imageURL: URL.createObjectURL(action.payload.image) }
+        ? { ...el, imageURL: action.payload.imageURL, imageData: action.payload.imageData }
         : el;
     });
     return {

@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useEffect } from 'react';
 import { string, func, arrayOf, shape } from 'prop-types';
 import { nanoid } from 'nanoid';
 
@@ -7,8 +8,8 @@ import CardsGrid from '../../Cards';
 
 const CardsEditor = ({ answerOptions, dispatch }) => {
   return (
-    <div>
-      <div className="mt-5 text-center">
+    <div className="my-5 text-center">
+      <div>
         <button
           type="button"
           className="btn btn-outline-primary"
@@ -34,7 +35,7 @@ CardsEditor.propTypes = {
     shape({
       id: string.isRequired,
       title: string,
-      imageURL: string
+      imageName: string
     })
   ).isRequired,
   dispatch: func.isRequired

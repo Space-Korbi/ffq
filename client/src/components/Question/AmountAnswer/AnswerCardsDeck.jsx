@@ -13,12 +13,14 @@ const AnswerCardsDeck = ({ answerOptions, saveAnswer }) => {
     if (!answerOption.id) {
       return <div />;
     }
+
     switch (index) {
       case 0:
         return (
           <div key={answerOption.id} className="pl-5 pr-2 mt-5 align-self-center">
             <AnswerCard
               title={answerOption.title}
+              imageName={answerOption.imageName}
               imageURL={answerOption.imageURL}
               onClick={saveAnswer}
             />
@@ -29,8 +31,9 @@ const AnswerCardsDeck = ({ answerOptions, saveAnswer }) => {
           <div key={answerOption.id} className="pl-2 pr-5 mt-5 align-self-center">
             <AnswerCard
               title={answerOption.title}
-              imageURL={answerOption.imageURL}
+              imageName={answerOption.imageName}
               onClick={saveAnswer}
+              imageURL={answerOption.imageURL}
             />
           </div>
         );
@@ -39,8 +42,9 @@ const AnswerCardsDeck = ({ answerOptions, saveAnswer }) => {
           <div key={answerOption.id} className="px-2 mt-5 align-self-center">
             <AnswerCard
               title={answerOption.title}
-              imageURL={answerOption.imageURL}
+              imageName={answerOption.imageName}
               onClick={saveAnswer}
+              imageURL={answerOption.imageURL}
             />
           </div>
         );
@@ -53,7 +57,7 @@ AnswerCardsDeck.propTypes = {
     shape({
       id: string.isRequired,
       title: string,
-      imageURL: string
+      imageName: string
     })
   ).isRequired,
   saveAnswer: func.isRequired

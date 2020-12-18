@@ -58,6 +58,7 @@ AnswerEditor.propTypes = {
       shape({
         id: string.isRequired,
         title: string,
+        imageName: string,
         imageURL: string
       })
     ),
