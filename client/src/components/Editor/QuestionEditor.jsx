@@ -292,13 +292,12 @@ QuestionEditor.propTypes = {
     answerOptions: shape({
       type: string.isRequired,
       frequencyAnswers: exact({
-        left: arrayOf(exact({ id: string.isRequired, index: number.isRequired, title: string })),
-        right: arrayOf(exact({ id: string.isRequired, index: number.isRequired, title: string }))
+        left: arrayOf(exact({ id: string.isRequired, title: string })),
+        right: arrayOf(exact({ id: string.isRequired, title: string }))
       }),
       amountAnswers: arrayOf(
         shape({
           id: string.isRequired,
-          index: number.isRequired,
           title: string,
           imageName: string,
           imageURLs: string
@@ -307,7 +306,6 @@ QuestionEditor.propTypes = {
       userInputAnswers: arrayOf(
         shape({
           id: string.isRequired,
-          index: number.isRequired,
           type: string,
           title: string
         })
