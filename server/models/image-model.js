@@ -10,7 +10,7 @@ const { Schema } = mongoose;
 
 const Image = new Schema({
   imageName: { type: String, default: 'none', required: true },
-  imageData: { type: String, required: true }
+  imagePath: { type: String, required: true }
 });
 
 module.exports = mongoose.model('image', Image);
