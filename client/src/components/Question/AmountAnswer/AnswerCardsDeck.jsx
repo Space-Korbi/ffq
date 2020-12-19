@@ -26,7 +26,7 @@ const AnswerCardsDeck = ({ answerOptions, saveAnswer }) => {
             />
           </div>
         );
-      case answerOption.length - 1:
+      case answerOptions.length - 1:
         return (
           <div key={answerOption.id} className="pl-2 pr-5 mt-5 align-self-center">
             <AnswerCard
