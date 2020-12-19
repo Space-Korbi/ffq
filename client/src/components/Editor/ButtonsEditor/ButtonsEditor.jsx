@@ -2,13 +2,13 @@ import React from 'react';
 import { arrayOf, func, string, shape, exact } from 'prop-types';
 import { nanoid } from 'nanoid';
 
-import ButtonEditorCard from './ButtonEditorCard';
+import ButtonEditor from './ButtonEditor';
 import { CardsGrid2 } from '../../Cards/CardsGrid';
 
 const ButtonColumn = ({ answerOptions, position, dispatch }) => {
-  const ButtonEditorCards = answerOptions.map((answerOption, index) => {
+  const ButtonEditors = answerOptions.map((answerOption, index) => {
     return (
-      <ButtonEditorCard
+      <ButtonEditor
         key={answerOption.id}
         index={index + 1}
         answerOption={answerOption}
@@ -22,7 +22,7 @@ const ButtonColumn = ({ answerOptions, position, dispatch }) => {
     <div>
       {answerOptions.length > 0 && <span className="badge badge-secondary">{position}</span>}
       <CardsGrid2
-        Cards={ButtonEditorCards}
+        Cards={ButtonEditors}
         gridColumns="row-cols-1 row-cols-md-2 row-cols-lg-1 row-cols-xl-2"
       />
     </div>
