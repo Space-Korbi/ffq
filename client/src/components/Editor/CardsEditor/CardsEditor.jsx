@@ -31,7 +31,7 @@ const CardsEditor = ({ answerOptions, dispatch }) => {
             });
           }}
         >
-          Add New Amount Card
+          Add card
         </button>
       </div>
       <div>
