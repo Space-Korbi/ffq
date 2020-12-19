@@ -3,7 +3,7 @@ import { arrayOf, func, string, shape, exact } from 'prop-types';
 import { nanoid } from 'nanoid';
 
 import ButtonEditor from './ButtonEditor';
-import { CardsGrid2 } from '../../Cards/CardsGrid';
+import CardsGrid from '../../Cards';
 
 const ButtonColumn = ({ answerOptions, position, dispatch }) => {
   const ButtonEditors = answerOptions.map((answerOption, index) => {
@@ -21,7 +21,7 @@ const ButtonColumn = ({ answerOptions, position, dispatch }) => {
   return (
     <div>
       {answerOptions.length > 0 && <span className="badge badge-secondary">{position}</span>}
-      <CardsGrid2
+      <CardsGrid
         Cards={ButtonEditors}
         gridColumns="row-cols-1 row-cols-md-2 row-cols-lg-1 row-cols-xl-2"
       />

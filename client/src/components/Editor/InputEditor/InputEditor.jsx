@@ -6,6 +6,17 @@ import InputEditorCard from './InputEditorCard';
 import CardsGrid from '../../Cards';
 
 const InputEditor = ({ answerOptions, dispatch }) => {
+  const InputEditors = answerOptions.map((answerOption, index) => {
+    return (
+      <InputEditorCard
+        key={answerOption.id}
+        id={index + 1}
+        answerOption={answerOption}
+        dispatch={dispatch}
+      />
+    );
+  });
+
   return (
     <div>
       <div className="mt-5 text-center">
@@ -25,7 +36,7 @@ const InputEditor = ({ answerOptions, dispatch }) => {
         </div>
 
         <div>
-          <CardsGrid answerOptions={answerOptions} dispatch={dispatch} Card={InputEditorCard} />
+          <CardsGrid Cards={InputEditors} gridColumns="row-cols-1 row-cols-md-2" />
         </div>
       </div>
     </div>
