@@ -1,8 +1,8 @@
-/* eslint-disable no-unused-vars */
-import React, { useEffect } from 'react';
+import React from 'react';
 import { string, func, arrayOf, shape } from 'prop-types';
 import { nanoid } from 'nanoid';
 
+import ButtonOutline from '../../Button';
 import CardEditor from './CardEditor';
 import { CardsGrid } from '../../Cards';
 
@@ -20,20 +20,15 @@ const CardsEditor = ({ answerOptions, dispatch }) => {
 
   return (
     <div className="my-5 text-center">
-      <div>
-        <button
-          type="button"
-          className="btn btn-outline-primary"
-          onClick={() => {
-            dispatch({
-              type: 'addCard',
-              payload: { id: nanoid() }
-            });
-          }}
-        >
-          Add card
-        </button>
-      </div>
+      <ButtonOutline
+        title="Add card"
+        onClick={() =>
+          dispatch({
+            type: 'addCard',
+            payload: { id: nanoid() }
+          })
+        }
+      />
       <div>
         <CardsGrid Cards={CardEditors} gridColumns="row-cols-1 row-cols-md-2" />
       </div>

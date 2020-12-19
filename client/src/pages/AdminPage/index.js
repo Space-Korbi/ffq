@@ -2,9 +2,6 @@
 import React from 'react';
 import { arrayOf, object, string } from 'prop-types';
 import { AmountAnswer } from '../../components/Question';
-import pizzaWhole from '../../images/pizza-whole-example.jpg';
-import pizzaHalf from '../../images/pizza-half-example.jpg';
-import pizzaQuarter from '../../images/pizza-quarter-example.jpg';
 
 const AmountCard = ({ imageName, title }) => {
   return (
@@ -37,11 +34,11 @@ AmountCardsDeck.propTypes = {
 
 const mockAmountCards = [
   <AmountCard key="1" title="1" />,
-  <AmountCard key="2" imageName={pizzaQuarter} title="2" />,
+  <AmountCard key="2" imageName="pizzaQuarter" title="2" />,
   <AmountCard key="3" title="3" />,
-  <AmountCard key="4" imageName={pizzaHalf} title="4" />,
+  <AmountCard key="4" imageName="pizzaHalf" title="4" />,
   <AmountCard key="5" title="5" />,
-  <AmountCard key="6" imageName={pizzaWhole} title="6" />,
+  <AmountCard key="6" imageName="pizzaWhole" title="6" />,
   <AmountCard key="7" title="7" />
 ];
 

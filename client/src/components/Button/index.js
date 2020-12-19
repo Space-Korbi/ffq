@@ -1,3 +1,4 @@
 import DeleteButton from './DeleteButton';
+import ButtonOutline from './ButtonOutline';
 
-export default DeleteButton;
+export { DeleteButton, ButtonOutline };

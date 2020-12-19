@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 
 import CardTabContents from './CardTabContents';
 import CardNavTabs from './CardNavTabs';
-import DeleteButton from '../Button';
+import { DeleteButton } from '../Button';
 
 const EditorCard = ({ index, tabNames, tabContents, removeCard }) => {
   const cardId = nanoid();

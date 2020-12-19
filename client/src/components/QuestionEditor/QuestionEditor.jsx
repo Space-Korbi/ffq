@@ -11,7 +11,7 @@ import { Question } from '../Question';
 import { AnswerType, reducerHelper } from '../../helpers';
 import { insertQuestion, uploadImage } from '../../api';
 
-import AnswerEditor from './AnswerEditor';
+import AnswerEditor from '../AnswerEditor/AnswerEditor';
 
 const tabs = ['Edit', 'Arrange'];
 
@@ -45,8 +45,8 @@ AnswerTypeSelection.propTypes = {
 
 const answersReducer = (state, action) => {
   switch (action.type) {
-    case 'addButton':
-      return reducerHelper.addButton(state, action);
+    case 'ButtonOutline':
+      return reducerHelper.ButtonOutline(state, action);
     case 'removeButton':
       return reducerHelper.removeButton(state, action);
     case 'changeButtonTitle':
@@ -147,6 +147,7 @@ const QuestionEditor = ({ question }) => {
         };
         break;
       default:
+        // eslint-disable-next-line
         console.log('OOPS');
     }
 
@@ -161,10 +162,11 @@ const QuestionEditor = ({ question }) => {
       childQuestion: [],
       answerOptions: newAnswerOptions
     };
-
+    // eslint-disable-next-line
     console.log('Payload', payload);
 
     await insertQuestion(payload).then(() => {
+      // eslint-disable-next-line
       window.alert(`Question inserted successfully`);
     });
   };
@@ -193,8 +195,6 @@ const QuestionEditor = ({ question }) => {
                     onChangeSubtitle={setSubtitle1}
                     onChangeComment={setSubtitle2}
                   />
-                </div>
-                <div className="my-4">
                   <HelpTextInput onChange={setHelp} />
                 </div>
                 <AnswerEditor

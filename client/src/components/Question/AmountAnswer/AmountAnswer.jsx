@@ -4,6 +4,7 @@ import { arrayOf, string, shape } from 'prop-types';
 import AnswerCardsDeck from './AnswerCardsDeck';
 
 const saveAnswer = () => {
+  // eslint-disable-next-line
   console.log('answer');
 };
 

@@ -6,11 +6,11 @@ const reducerHelper = {
    * These functions are called in the QuestionEditor reducer function.
    * Each function either adds, removes or changes a value of the answer object.
    * The answer object only contains one type of answer option. All other keys will be returned empty.
-   * i.e. addButton() returns only frequencyOptions.
+   * i.e. ButtonOutline() returns only frequencyOptions.
    * The other keys for amountOptions and userInputOptions are empty.
    */
 
-  addButton: (state, action) => {
+  ButtonOutline: (state, action) => {
     const newButton = { id: action.payload.id, title: action.payload.title };
     if (action.payload.position === 'left') {
       const buttonsLeft = state.frequencyOptions.left.concat(newButton);

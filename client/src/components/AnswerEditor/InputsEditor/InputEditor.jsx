@@ -1,7 +1,7 @@
 import React from 'react';
 import { bool, func, number, shape, string } from 'prop-types';
 
-import DeleteButton from '../../Button';
+import { DeleteButton } from '../../Button';
 import TextEditor from '../../TextEditor';
 import { EditorCard } from '../../Cards';
 

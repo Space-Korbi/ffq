@@ -35,7 +35,7 @@ ButtonColumn.defaultProps = {
   answerOptions: []
 };
 
-const AddButton = ({ position, dispatch }) => {
+const ButtonOutline = ({ position, dispatch }) => {
   return (
     <div>
       <button
@@ -43,7 +43,7 @@ const AddButton = ({ position, dispatch }) => {
         className="btn btn-outline-primary"
         onClick={() =>
           dispatch({
-            type: 'addButton',
+            type: 'ButtonOutline',
             payload: { id: nanoid(), title: '', position }
           })
         }
@@ -54,7 +54,7 @@ const AddButton = ({ position, dispatch }) => {
   );
 };
 
-AddButton.propTypes = { position: string.isRequired, dispatch: func.isRequired };
+ButtonOutline.propTypes = { position: string.isRequired, dispatch: func.isRequired };
 
 const ButtonsEditor = ({ answerOptions, dispatch }) => {
   const removeButton = (buttonToRemove, position) => {
@@ -66,10 +66,10 @@ const ButtonsEditor = ({ answerOptions, dispatch }) => {
       <div className="col-lg-12 col-md text-center">
         <div className="row no-gutters my-3">
           <div className="col pr-1">
-            <AddButton position="left" dispatch={dispatch} />
+            <ButtonOutline position="left" dispatch={dispatch} />
           </div>
           <div className="col pl-1">
-            <AddButton position="right" dispatch={dispatch} />
+            <ButtonOutline position="right" dispatch={dispatch} />
           </div>
         </div>
         <div className="row no-gutters my-3">

@@ -9,6 +9,7 @@ import UserInputAnswer from './UserInputAnswer/UserInputAnswer';
 import { AnswerType } from '../../helpers';
 
 const saveAnswer = () => {
+  // eslint-disable-next-line
   console.log('answer');
 };
 

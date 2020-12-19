@@ -1,6 +1,6 @@
 import React from 'react';
 import { arrayOf, func, number, shape, string } from 'prop-types';
-import DeleteButton from '../Button';
+import { DeleteButton } from '../Button';
 
 const checkResult = (result) => {
   switch (result) {
