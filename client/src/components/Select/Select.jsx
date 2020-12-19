@@ -3,7 +3,7 @@ import { func } from 'prop-types';
 
 import { AnswerType } from '../../helpers';
 
-const Select = ({ onChange }) => {
+const Select = ({ onChange, dispatch }) => {
   return (
     <>
       <div className="input-group my-2">
@@ -12,7 +12,17 @@ const Select = ({ onChange }) => {
             Answer Type
           </label>
         </div>
-        <select className="custom-select" id="select" onChange={(e) => onChange(e.target.value)}>
+        <select
+          className="custom-select"
+          id="select"
+          onChange={(e) => {
+            onChange(e.target.value);
+            dispatch({
+              type: 'setDefaultState',
+              payload: { answerType: e.target.value }
+            });
+          }}
+        >
           <option defaultValue>Choose...</option>
           <option value={AnswerType.Frequency}>Buttons</option>
           <option value={AnswerType.Amount}>Cards</option>
@@ -23,6 +33,6 @@ const Select = ({ onChange }) => {
   );
 };
 
-Select.propTypes = { onChange: func.isRequired };
+Select.propTypes = { onChange: func.isRequired, dispatch: func.isRequired };
 
 export default Select;
