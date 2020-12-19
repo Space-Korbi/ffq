@@ -3,7 +3,7 @@ import { arrayOf, func, string, shape, exact } from 'prop-types';
 import { nanoid } from 'nanoid';
 
 import ButtonEditor from './ButtonEditor';
-import CardsGrid from '../../Cards';
+import { CardsGrid } from '../../Cards';
 
 const ButtonColumn = ({ answerOptions, position, dispatch }) => {
   const ButtonEditors = answerOptions.map((answerOption, index) => {
@@ -21,10 +21,7 @@ const ButtonColumn = ({ answerOptions, position, dispatch }) => {
   return (
     <div>
       {answerOptions.length > 0 && <span className="badge badge-secondary">{position}</span>}
-      <CardsGrid
-        Cards={ButtonEditors}
-        gridColumns="row-cols-1 row-cols-md-2 row-cols-lg-1 row-cols-xl-2"
-      />
+      <CardsGrid Cards={ButtonEditors} gridColumns="row-cols-1" />
     </div>
   );
 };
@@ -75,26 +72,28 @@ const ButtonsEditor = ({ answerOptions, dispatch }) => {
             <AddButton position="right" dispatch={dispatch} />
           </div>
         </div>
-        {answerOptions.left && (
-          <div>
-            <ButtonColumn
-              answerOptions={answerOptions.left}
-              position="left"
-              dispatch={dispatch}
-              removeButton={removeButton}
-            />
-          </div>
-        )}
-        {answerOptions.right && (
-          <div>
-            <ButtonColumn
-              answerOptions={answerOptions.right}
-              position="right"
-              dispatch={dispatch}
-              removeButton={removeButton}
-            />
-          </div>
-        )}
+        <div className="row no-gutters my-3">
+          {answerOptions.left && (
+            <div className="col-12 col-sm-6">
+              <ButtonColumn
+                answerOptions={answerOptions.left}
+                position="left"
+                dispatch={dispatch}
+                removeButton={removeButton}
+              />
+            </div>
+          )}
+          {answerOptions.right && (
+            <div className="col">
+              <ButtonColumn
+                answerOptions={answerOptions.right}
+                position="right"
+                dispatch={dispatch}
+                removeButton={removeButton}
+              />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
