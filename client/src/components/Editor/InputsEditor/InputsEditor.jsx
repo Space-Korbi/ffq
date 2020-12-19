@@ -2,15 +2,15 @@ import React from 'react';
 import { string, func, shape, arrayOf } from 'prop-types';
 import { nanoid } from 'nanoid';
 
-import InputEditorCard from './InputEditorCard';
-import CardsGrid from '../../Cards';
+import InputEditor from './InputEditor';
+import { CardsGrid } from '../../Cards';
 
-const InputEditor = ({ answerOptions, dispatch }) => {
+const InputsEditor = ({ answerOptions, dispatch }) => {
   const InputEditors = answerOptions.map((answerOption, index) => {
     return (
-      <InputEditorCard
+      <InputEditor
         key={answerOption.id}
-        id={index + 1}
+        index={index + 1}
         answerOption={answerOption}
         dispatch={dispatch}
       />
@@ -43,7 +43,7 @@ const InputEditor = ({ answerOptions, dispatch }) => {
   );
 };
 
-InputEditor.propTypes = {
+InputsEditor.propTypes = {
   answerOptions: arrayOf(
     shape({
       key: string,
@@ -54,4 +54,4 @@ InputEditor.propTypes = {
   dispatch: func.isRequired
 };
 
-export default InputEditor;
+export default InputsEditor;

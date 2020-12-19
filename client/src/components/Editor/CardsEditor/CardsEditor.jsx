@@ -4,7 +4,7 @@ import { string, func, arrayOf, shape } from 'prop-types';
 import { nanoid } from 'nanoid';
 
 import CardEditor from './CardEditor';
-import CardsGrid from '../../Cards';
+import { CardsGrid } from '../../Cards';
 
 const CardsEditor = ({ answerOptions, dispatch }) => {
   const CardEditors = answerOptions.map((answerOption, index) => {

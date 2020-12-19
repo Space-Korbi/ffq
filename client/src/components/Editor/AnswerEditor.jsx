@@ -3,7 +3,7 @@ import { arrayOf, func, string, shape, exact, bool } from 'prop-types';
 
 import ButtonsEditor from './ButtonsEditor/ButtonsEditor';
 import CardsEditor from './CardsEditor/CardsEditor';
-import InputEditor from './InputEditor/InputEditor';
+import InputsEditor from './InputsEditor/InputsEditor';
 import { AnswerType } from '../../helpers';
 
 const AnswerEditor = ({ answerOptions, dispatch, answerType }) => {
@@ -28,7 +28,7 @@ const AnswerEditor = ({ answerOptions, dispatch, answerType }) => {
       case AnswerType.UserInput:
         setEditorState(
           <div>
-            <InputEditor answerOptions={answerOptions.userInputOptions} dispatch={dispatch} />
+            <InputsEditor answerOptions={answerOptions.userInputOptions} dispatch={dispatch} />
           </div>
         );
         break;

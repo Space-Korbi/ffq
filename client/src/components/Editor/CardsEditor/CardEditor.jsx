@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { string, func, shape, number, bool } from 'prop-types';
 
 import { XIcon } from '@primer/octicons-react';
-import DeleteButton from '../../Button';
 import TextEditor from '../../TextEditor';
+
+import { EditorCard } from '../../Cards';
 
 const ImageUpload = ({ onChange, answerId, disabled }) => {
   const [imageUploadLabel, setImageUploadLabel] = useState('Select Image');
@@ -70,93 +71,43 @@ ImageUpload.propTypes = {
 };
 
 const CardEditor = ({ id, answerOption, dispatch }) => {
+  const tabNames = ['Text', 'Image'];
+
+  const textTabContent = (
+    <TextEditor
+      placeholder="Card Title"
+      onChange={(value) => {
+        dispatch({
+          type: 'changeCardTitle',
+          payload: { id: answerOption.id, title: value }
+        });
+      }}
+    />
+  );
+
+  const imageTabContent = (
+    <ImageUpload
+      answerId={answerOption.id}
+      onChange={dispatch}
+      disabled={answerOption.imageURL === ''}
+    />
+  );
+
+  const removeCard = () => {
+    dispatch({
+      type: 'removeCard',
+      payload: { id: answerOption.id }
+    });
+  };
+
   return (
     <div className="col my-3">
-      <div className="card mx-2">
-        <div className="card-header">
-          <div className="d-flex align-items-center justify-content-between">
-            {id}
-            <ul className="nav nav-tabs card-header-tabs" id="tab" role="tablist">
-              <li className="nav-item">
-                <a
-                  className="nav-link active"
-                  id={`text-tab${id}`}
-                  data-toggle="tab"
-                  href={`#text${id}`}
-                  role="tab"
-                  aria-controls={`text${id}`}
-                  aria-selected="true"
-                >
-                  Text
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  className="nav-link"
-                  id={`image-tab${id}`}
-                  data-toggle="tab"
-                  href={`#image${id}`}
-                  role="tab"
-                  aria-controls={`image${id}`}
-                  aria-selected="false"
-                >
-                  Image
-                </a>
-              </li>
-            </ul>
-            <DeleteButton
-              element={answerOption.title}
-              onClick={() =>
-                dispatch({
-                  type: 'removeCard',
-                  payload: { id: answerOption.id }
-                })
-              }
-            />
-          </div>
-        </div>
-        <div className="row no-gutters">
-          {answerOption.imageURL && (
-            <div className="col-2 align-self-center">
-              <img src={answerOption.imageURL} alt="..." style={{ maxWidth: '100%' }} />
-            </div>
-          )}
-          <div className="col align-self-center">
-            <div className="card-body px-2">
-              <div className="tab-content" id="tab-content">
-                <div
-                  className="tab-pane fade show active"
-                  id={`text${id}`}
-                  role="tabpanel"
-                  aria-labelledby={`text-tab${id}`}
-                >
-                  <TextEditor
-                    placeholder="Card Title"
-                    onChange={(value) => {
-                      dispatch({
-                        type: 'changeCardTitle',
-                        payload: { id: answerOption.id, title: value }
-                      });
-                    }}
-                  />
-                </div>
-                <div
-                  className="tab-pane fade "
-                  id={`image${id}`}
-                  role="tabpanel"
-                  aria-labelledby={`image-tab${id}`}
-                >
-                  <ImageUpload
-                    answerId={answerOption.id}
-                    onChange={dispatch}
-                    disabled={answerOption.imageURL === ''}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <EditorCard
+        index={id}
+        tabNames={tabNames}
+        tabContents={[textTabContent, imageTabContent]}
+        removeCard={removeCard}
+      />
     </div>
   );
 };
