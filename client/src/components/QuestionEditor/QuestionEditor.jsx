@@ -1,52 +1,23 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-restricted-syntax */
 import React, { useState, useReducer } from 'react';
-import { func, string, shape, arrayOf, number, exact } from 'prop-types';
+import { string, shape, arrayOf, number, exact } from 'prop-types';
 import { nanoid } from 'nanoid';
-import Navigation from '../Navigation';
+
+import { NavTabs, NavContents } from '../Navigation';
 import JumbotronInputs from './JumbotronInputs';
 import HelpTextInput from './HelpTextInput';
-import { Question } from '../Question';
-
+import QuestionPreview from './QuestionPreview';
+import Select from '../Select';
 import { AnswerType, reducerHelper } from '../../helpers';
 import { insertQuestion, uploadImage } from '../../api';
-
 import AnswerEditor from '../AnswerEditor/AnswerEditor';
 
-const tabs = ['Edit', 'Arrange'];
-
-const AnswerTypeSelection = ({ onChange }) => {
-  return (
-    <div>
-      <div className="input-group my-2">
-        <div className="input-group-prepend">
-          <label className="input-group-text" htmlFor="questionTypeSelect">
-            Answer Type
-          </label>
-        </div>
-        <select
-          className="custom-select"
-          id="questionTypeSelect"
-          onChange={(e) => onChange(e.target.value)}
-        >
-          <option defaultValue>Choose...</option>
-          <option value={AnswerType.Frequency}>Buttons</option>
-          <option value={AnswerType.Amount}>Cards</option>
-          <option value={AnswerType.UserInput}>User Input</option>
-        </select>
-      </div>
-    </div>
-  );
-};
-
-AnswerTypeSelection.propTypes = {
-  onChange: func.isRequired
-};
+const tabNames = ['Edit', 'Arrange'];
 
 const answersReducer = (state, action) => {
   switch (action.type) {
-    case 'ButtonOutline':
-      return reducerHelper.ButtonOutline(state, action);
+    case 'addButton':
+      return reducerHelper.addButton(state, action);
     case 'removeButton':
       return reducerHelper.removeButton(state, action);
     case 'changeButtonTitle':
@@ -78,7 +49,7 @@ const answersReducer = (state, action) => {
   }
 };
 
-const setDBImagePath = async (amountOptions) => {
+const genericFunction = async (amountOptions) => {
   const amountOptionsWithDBImagePaths = await Promise.all(
     amountOptions.map(async (amountOption) => {
       if (!amountOption.imageData) {
@@ -91,8 +62,8 @@ const setDBImagePath = async (amountOptions) => {
 
       const data = new FormData();
       data.append('imageData', amountOption.imageData);
-
       const response = await uploadImage(data);
+
       const imageName = response;
       const amountOptionWithImagePath = {
         id: amountOption.id,
@@ -125,30 +96,23 @@ const QuestionEditor = ({ question }) => {
       case AnswerType.Frequency:
         newAnswerOptions = {
           type: AnswerType.Frequency,
-          frequencyOptions: answerOptions.frequencyOptions,
-          amountOptions: [],
-          userInputOptions: []
+          frequencyOptions: answerOptions.frequencyOptions
         };
         break;
       case AnswerType.Amount:
         newAnswerOptions = {
           type: AnswerType.Amount,
-          frequencyOptions: { left: [], right: [] },
-          amountOptions: await setDBImagePath(answerOptions.amountOptions),
-          userInputOptions: []
+          amountOptions: await genericFunction(answerOptions.amountOptions)
         };
         break;
       case AnswerType.UserInput:
         newAnswerOptions = {
           type: AnswerType.UserInput,
-          frequencyOptions: { left: [], right: [] },
-          amountOptions: [],
           userInputOptions: answerOptions.userInputOptions
         };
         break;
       default:
-        // eslint-disable-next-line
-        console.log('OOPS');
+        break;
     }
 
     const payload = {
@@ -171,77 +135,58 @@ const QuestionEditor = ({ question }) => {
     });
   };
 
+  const editor = (
+    <div className="row no-gutters my-3">
+      <div className="col-lg mx-3">
+        <div className="my-2">
+          <Select onChange={setAnswerType} />
+        </div>
+        <div className="my-4">
+          <JumbotronInputs
+            onChangeTitle={setTitle}
+            onChangeSubtitle={setSubtitle1}
+            onChangeComment={setSubtitle2}
+          />
+          <HelpTextInput onChange={setHelp} />
+        </div>
+        <AnswerEditor answerOptions={answerOptions} answerType={answerType} dispatch={dispatch} />
+      </div>
+
+      <div className="col col-lg-5 px-0 mx-lg-3">
+        <div className="text-center my-2">
+          <button
+            type="button"
+            className="btn btn-outline-primary"
+            onClick={() => handleSaveQuestion()}
+          >
+            Save Question
+          </button>
+        </div>
+        <QuestionPreview
+          title={title}
+          subtitle1={subtitle1}
+          subtitle2={subtitle2}
+          help={help}
+          answerOptions={answerOptions}
+          answerType={answerType}
+        />
+      </div>
+    </div>
+  );
+
+  const arrange = (
+    <div className="row">
+      <div className="col">Hello World Arrangement</div>
+    </div>
+  );
+
   return (
     <div>
       <div className="m-3">
-        <Navigation tabs={tabs} />
+        <NavTabs tabNames={tabNames} />
       </div>
       <div>
-        <div className="tab-content" id="questionEditorContent">
-          <div
-            className="tab-pane fade show active"
-            id={tabs[0]}
-            role="tabpanel"
-            aria-labelledby={`${tabs[0]}-tab`}
-          >
-            <div className="row no-gutters my-3">
-              <div className="col-lg mx-3">
-                <div className="my-2">
-                  <AnswerTypeSelection onChange={setAnswerType} />
-                </div>
-                <div className="my-4">
-                  <JumbotronInputs
-                    onChangeTitle={setTitle}
-                    onChangeSubtitle={setSubtitle1}
-                    onChangeComment={setSubtitle2}
-                  />
-                  <HelpTextInput onChange={setHelp} />
-                </div>
-                <AnswerEditor
-                  answerOptions={answerOptions}
-                  answerType={answerType}
-                  dispatch={dispatch}
-                />
-              </div>
-
-              <div className="col col-lg-5 px-0 mx-lg-3">
-                <div className="text-center my-2">
-                  <button
-                    type="button"
-                    className="btn btn-outline-primary"
-                    onClick={() => handleSaveQuestion()}
-                  >
-                    Save Question
-                  </button>
-                </div>
-
-                <div
-                  className="mt-4 border border-info "
-                  style={{ minHeight: '760px', minWidth: '270px', maxWidth: '100%' }}
-                >
-                  <Question
-                    title={title}
-                    subtitle1={subtitle1}
-                    subtitle2={subtitle2}
-                    help={help}
-                    answerOptions={answerOptions}
-                    answerType={answerType}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            className="tab-pane fade show "
-            id={tabs[1]}
-            role="tabpanel"
-            aria-labelledby={`${tabs[1]}-tab`}
-          >
-            <div className="row">
-              <div className="col">Hello World Arrangement is Born</div>
-            </div>
-          </div>
-        </div>
+        <NavContents tabNames={tabNames} tabContents={[editor, arrange]} />
       </div>
     </div>
   );

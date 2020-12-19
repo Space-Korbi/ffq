@@ -1,3 +1,4 @@
-import Navigation from './Navigation';
+import NavTabs from './NavTabs';
+import NavContents from './NavContents';
 
-export default Navigation;
+export { NavTabs, NavContents };

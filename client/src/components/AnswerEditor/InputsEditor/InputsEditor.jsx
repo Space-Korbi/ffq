@@ -3,7 +3,7 @@ import { string, func, shape, arrayOf } from 'prop-types';
 import { nanoid } from 'nanoid';
 
 import InputEditor from './InputEditor';
-import { ButtonOutline } from '../../Button';
+import { OutlineButton } from '../../Button';
 import { CardsGrid } from '../../Cards';
 
 const InputsEditor = ({ answerOptions, dispatch }) => {
@@ -21,7 +21,7 @@ const InputsEditor = ({ answerOptions, dispatch }) => {
   return (
     <div>
       <div className="mt-5 text-center">
-        <ButtonOutline
+        <OutlineButton
           title="Add text input"
           onClick={() =>
             dispatch({

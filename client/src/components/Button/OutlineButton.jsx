@@ -1,7 +1,7 @@
 import React from 'react';
 import { func, string } from 'prop-types';
 
-function ButtonOutline({ title, onClick }) {
+function OutlineButton({ title, onClick }) {
   return (
     <div>
       <button type="button" className="btn btn-outline-primary" onClick={() => onClick()}>
@@ -11,9 +11,9 @@ function ButtonOutline({ title, onClick }) {
   );
 }
 
-ButtonOutline.propTypes = {
+OutlineButton.propTypes = {
   title: string.isRequired,
   onClick: func.isRequired
 };
 
-export default ButtonOutline;
+export default OutlineButton;

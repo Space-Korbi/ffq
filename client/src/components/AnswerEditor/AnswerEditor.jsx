@@ -7,33 +7,33 @@ import InputsEditor from './InputsEditor/InputsEditor';
 import { AnswerType } from '../../helpers';
 
 const AnswerEditor = ({ answerOptions, dispatch, answerType }) => {
-  const [editorState, setEditorState] = useState(<div />);
+  const [editor, setEditor] = useState(<div />);
 
   useEffect(() => {
     switch (answerType) {
       case AnswerType.Frequency:
-        setEditorState(
+        setEditor(
           <div>
             <ButtonsEditor answerOptions={answerOptions.frequencyOptions} dispatch={dispatch} />
           </div>
         );
         break;
       case AnswerType.Amount:
-        setEditorState(
+        setEditor(
           <div>
             <CardsEditor answerOptions={answerOptions.amountOptions} dispatch={dispatch} />
           </div>
         );
         break;
       case AnswerType.UserInput:
-        setEditorState(
+        setEditor(
           <div>
             <InputsEditor answerOptions={answerOptions.userInputOptions} dispatch={dispatch} />
           </div>
         );
         break;
       default:
-        setEditorState(
+        setEditor(
           <div className="alert alert-info text-center m-5" role="alert">
             Choose an Answer Type
           </div>
@@ -41,7 +41,7 @@ const AnswerEditor = ({ answerOptions, dispatch, answerType }) => {
     }
   }, [answerType, answerOptions]);
 
-  return <div>{editorState}</div>;
+  return <div>{editor}</div>;
 };
 
 AnswerEditor.propTypes = {

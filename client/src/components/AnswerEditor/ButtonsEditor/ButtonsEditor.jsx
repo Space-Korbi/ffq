@@ -2,6 +2,7 @@ import React from 'react';
 import { arrayOf, func, string, shape, exact } from 'prop-types';
 import { nanoid } from 'nanoid';
 
+import { OutlineButton } from '../../Button';
 import ButtonEditor from './ButtonEditor';
 import { CardsGrid } from '../../Cards';
 
@@ -35,26 +36,23 @@ ButtonColumn.defaultProps = {
   answerOptions: []
 };
 
-const ButtonOutline = ({ position, dispatch }) => {
+const AddButton = ({ position, dispatch }) => {
   return (
     <div>
-      <button
-        type="submit"
-        className="btn btn-outline-primary"
+      <OutlineButton
+        title={`Add button ${position}`}
         onClick={() =>
           dispatch({
-            type: 'ButtonOutline',
+            type: 'addButton',
             payload: { id: nanoid(), title: '', position }
           })
         }
-      >
-        Add button {position}
-      </button>
+      />
     </div>
   );
 };
 
-ButtonOutline.propTypes = { position: string.isRequired, dispatch: func.isRequired };
+AddButton.propTypes = { position: string.isRequired, dispatch: func.isRequired };
 
 const ButtonsEditor = ({ answerOptions, dispatch }) => {
   const removeButton = (buttonToRemove, position) => {
@@ -66,10 +64,10 @@ const ButtonsEditor = ({ answerOptions, dispatch }) => {
       <div className="col-lg-12 col-md text-center">
         <div className="row no-gutters my-3">
           <div className="col pr-1">
-            <ButtonOutline position="left" dispatch={dispatch} />
+            <AddButton position="left" dispatch={dispatch} />
           </div>
           <div className="col pl-1">
-            <ButtonOutline position="right" dispatch={dispatch} />
+            <AddButton position="right" dispatch={dispatch} />
           </div>
         </div>
         <div className="row no-gutters my-3">

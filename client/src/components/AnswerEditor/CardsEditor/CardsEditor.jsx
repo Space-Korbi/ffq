@@ -2,7 +2,7 @@ import React from 'react';
 import { string, func, arrayOf, shape } from 'prop-types';
 import { nanoid } from 'nanoid';
 
-import ButtonOutline from '../../Button';
+import { OutlineButton } from '../../Button';
 import CardEditor from './CardEditor';
 import { CardsGrid } from '../../Cards';
 
@@ -20,7 +20,7 @@ const CardsEditor = ({ answerOptions, dispatch }) => {
 
   return (
     <div className="my-5 text-center">
-      <ButtonOutline
+      <OutlineButton
         title="Add card"
         onClick={() =>
           dispatch({
