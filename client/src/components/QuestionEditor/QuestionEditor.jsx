@@ -8,46 +8,11 @@ import JumbotronInputs from './JumbotronInputs';
 import HelpTextInput from './HelpTextInput';
 import QuestionPreview from './QuestionPreview';
 import Select from '../Select';
-import { AnswerType, reducerHelper } from '../../helpers';
+import { AnswerType, answerReducer } from '../../helpers';
 import { insertQuestion, uploadImage } from '../../api';
 import AnswerEditor from '../AnswerEditor/AnswerEditor';
 
 const tabNames = ['Edit', 'Arrange'];
-
-const answersReducer = (state, action) => {
-  switch (action.type) {
-    case 'addButton':
-      return reducerHelper.addButton(state, action);
-    case 'removeButton':
-      return reducerHelper.removeButton(state, action);
-    case 'changeButtonTitle':
-      return reducerHelper.changeButtonTitle(state, action);
-    case 'addCard':
-      return reducerHelper.addCard(state, action);
-    case 'removeCard':
-      return reducerHelper.removeCard(state, action);
-    case 'changeCardTitle':
-      return reducerHelper.changeCardTitle(state, action);
-    case 'changeCardImage':
-      return reducerHelper.changeCardImage(state, action);
-    case 'removeCardImage':
-      return reducerHelper.removeCardImage(state, action);
-    case 'addTextInput':
-      return reducerHelper.addTextInput(state, action);
-    case 'removeTextInput':
-      return reducerHelper.removeTextInput(state, action);
-    case 'changeTextInputTitle':
-      return reducerHelper.changeTextInputTitle(state, action);
-    case 'addNumberInput':
-      return reducerHelper.addNumberInput(state, action);
-    case 'removeNumberInput':
-      return reducerHelper.removeNumberInput(state, action);
-    case 'changeNumberInputTitle':
-      return reducerHelper.changeNumberInputTitle(state, action);
-    default:
-      return state;
-  }
-};
 
 const genericFunction = async (amountOptions) => {
   const amountOptionsWithDBImagePaths = await Promise.all(
@@ -85,7 +50,7 @@ const QuestionEditor = ({ question }) => {
   const [help, setHelp] = useState(question.help);
 
   const [answerType, setAnswerType] = useState('');
-  const [answerOptions, dispatch] = useReducer(answersReducer, question.answerOptions);
+  const [answerOptions, dispatch] = useReducer(answerReducer, question.answerOptions);
 
   const handleSaveQuestion = async () => {
     const { index, questionId } = question;
@@ -139,7 +104,7 @@ const QuestionEditor = ({ question }) => {
     <div className="row no-gutters my-3">
       <div className="col-lg mx-3">
         <div className="my-2">
-          <Select onChange={setAnswerType} />
+          <Select onChange={setAnswerType} dispatch={dispatch} />
         </div>
         <div className="my-4">
           <JumbotronInputs

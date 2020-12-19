@@ -3,33 +3,38 @@ import AnswerType from './answer-type';
 const reducerHelper = {
   /**
    * * Reducer Helper
-   * These functions are called in the QuestionEditor reducer function.
+   * The Reducer is initalized in the QuestionEditor component.
+   * The dispatch method is passed down to the component that recieves the user input.
+   * Then dispatch is called with one of the following action types.
    * Each function either adds, removes or changes a value of the answer object.
-   * The answer object only contains one type of answer option. All other keys will be returned empty.
-   * i.e. ButtonOutline() returns only frequencyOptions.
-   * The other keys for amountOptions and userInputOptions are empty.
+   * The answer object only contains one type of answer option. All other keys will be omitted.
+   * i.e. addButton() returns only frequencyOptions.
+   * The other keys for amountOptions and userInputOptions are omitted.
    */
 
-  ButtonOutline: (state, action) => {
+  setDefaultState: (action) => {
+    return {
+      type: action.payload.answerType,
+      frequencyOptions: { left: [], right: [] },
+      amountOptions: [],
+      userInputOptions: []
+    };
+  },
+  addButton: (state, action) => {
     const newButton = { id: action.payload.id, title: action.payload.title };
     if (action.payload.position === 'left') {
       const buttonsLeft = state.frequencyOptions.left.concat(newButton);
       return {
         type: AnswerType.Frequency,
-        frequencyOptions: { left: buttonsLeft, right: state.frequencyOptions.right },
-        amountOptions: [],
-        userInputOptions: []
+        frequencyOptions: { left: buttonsLeft, right: state.frequencyOptions.right }
       };
     }
     const buttonsRight = state.frequencyOptions.right.concat(newButton);
     return {
       type: AnswerType.Frequency,
-      frequencyOptions: { left: state.frequencyOptions.left, right: buttonsRight },
-      amountOptions: [],
-      userInputOptions: []
+      frequencyOptions: { left: state.frequencyOptions.left, right: buttonsRight }
     };
   },
-
   removeButton: (state, action) => {
     if (action.payload.position === 'left') {
       const buttonsLeft = state.frequencyOptions.left.filter(
@@ -37,9 +42,7 @@ const reducerHelper = {
       );
       return {
         type: AnswerType.Frequency,
-        frequencyOptions: { left: buttonsLeft, right: state.frequencyOptions.right },
-        amountOptions: [],
-        userInputOptions: []
+        frequencyOptions: { left: buttonsLeft, right: state.frequencyOptions.right }
       };
     }
     const buttonsRight = state.frequencyOptions.right.filter(
@@ -47,9 +50,7 @@ const reducerHelper = {
     );
     return {
       type: AnswerType.Frequency,
-      frequencyOptions: { left: state.frequencyOptions.left, right: buttonsRight },
-      amountOptions: [],
-      userInputOptions: []
+      frequencyOptions: { left: state.frequencyOptions.left, right: buttonsRight }
     };
   },
   changeButtonTitle: (state, action) => {
@@ -59,9 +60,7 @@ const reducerHelper = {
       );
       return {
         type: AnswerType.Frequency,
-        frequencyOptions: { left: newState, right: state.frequencyOptions.right },
-        amountOptions: [],
-        userInputOptions: []
+        frequencyOptions: { left: newState, right: state.frequencyOptions.right }
       };
     }
     const newState = state.frequencyOptions.right.map((el) =>
@@ -69,9 +68,7 @@ const reducerHelper = {
     );
     return {
       type: AnswerType.Frequency,
-      frequencyOptions: { left: state.frequencyOptions.left, right: newState },
-      amountOptions: [],
-      userInputOptions: []
+      frequencyOptions: { left: state.frequencyOptions.left, right: newState }
     };
   },
 
@@ -84,18 +81,14 @@ const reducerHelper = {
     const cards = state.amountOptions.concat(newCard);
     return {
       type: AnswerType.Amount,
-      frequencyOptions: { left: [], right: [] },
-      amountOptions: cards,
-      userInputOptions: []
+      amountOptions: cards
     };
   },
   removeCard: (state, action) => {
     const cards = state.amountOptions.filter((card) => card.id !== action.payload.id);
     return {
       type: AnswerType.Amount,
-      frequencyOptions: { left: [], right: [] },
-      amountOptions: cards,
-      userInputOptions: []
+      amountOptions: cards
     };
   },
   changeCardTitle: (state, action) => {
@@ -104,9 +97,7 @@ const reducerHelper = {
     );
     return {
       type: AnswerType.Amount,
-      frequencyOptions: { left: [], right: [] },
-      amountOptions: newState,
-      userInputOptions: []
+      amountOptions: newState
     };
   },
   changeCardImage: (state, action) => {
@@ -117,9 +108,7 @@ const reducerHelper = {
     });
     return {
       type: AnswerType.Amount,
-      frequencyOptions: { left: [], right: [] },
-      amountOptions: newState,
-      userInputOptions: []
+      amountOptions: newState
     };
   },
   removeCardImage: (state, action) => {
@@ -128,9 +117,7 @@ const reducerHelper = {
     });
     return {
       type: AnswerType.Amount,
-      frequencyOptions: { left: [], right: [] },
-      amountOptions: newState,
-      userInputOptions: []
+      amountOptions: newState
     };
   },
   addTextInput: (state, action) => {
@@ -142,8 +129,6 @@ const reducerHelper = {
     const textInputs = state.userInputOptions.concat(newTextInput);
     return {
       type: AnswerType.UserInput,
-      frequencyOptions: { left: [], right: [] },
-      amountOptions: [],
       userInputOptions: textInputs
     };
   },
@@ -153,8 +138,6 @@ const reducerHelper = {
     );
     return {
       type: AnswerType.UserInput,
-      frequencyOptions: { left: [], right: [] },
-      amountOptions: [],
       userInputOptions: textInputs
     };
   },
@@ -164,8 +147,6 @@ const reducerHelper = {
     );
     return {
       type: AnswerType.UserInput,
-      frequencyOptions: { left: [], right: [] },
-      amountOptions: [],
       userInputOptions: newState
     };
   },
@@ -177,8 +158,6 @@ const reducerHelper = {
     );
     return {
       type: AnswerType.UserInput,
-      frequencyOptions: { left: [], right: [] },
-      amountOptions: [],
       userInputOptions: newState
     };
   },
@@ -188,8 +167,6 @@ const reducerHelper = {
     );
     return {
       type: AnswerType.UserInput,
-      frequencyOptions: { left: [], right: [] },
-      amountOptions: [],
       userInputOptions: newState
     };
   },
@@ -201,11 +178,46 @@ const reducerHelper = {
     );
     return {
       type: AnswerType.UserInput,
-      frequencyOptions: { left: [], right: [] },
-      amountOptions: [],
       userInputOptions: newState
     };
   }
 };
 
-export default reducerHelper;
+const answerReducer = (state, action) => {
+  switch (action.type) {
+    case 'setDefaultState':
+      return reducerHelper.setDefaultState(action);
+    case 'addButton':
+      return reducerHelper.addButton(state, action);
+    case 'removeButton':
+      return reducerHelper.removeButton(state, action);
+    case 'changeButtonTitle':
+      return reducerHelper.changeButtonTitle(state, action);
+    case 'addCard':
+      return reducerHelper.addCard(state, action);
+    case 'removeCard':
+      return reducerHelper.removeCard(state, action);
+    case 'changeCardTitle':
+      return reducerHelper.changeCardTitle(state, action);
+    case 'changeCardImage':
+      return reducerHelper.changeCardImage(state, action);
+    case 'removeCardImage':
+      return reducerHelper.removeCardImage(state, action);
+    case 'addTextInput':
+      return reducerHelper.addTextInput(state, action);
+    case 'removeTextInput':
+      return reducerHelper.removeTextInput(state, action);
+    case 'changeTextInputTitle':
+      return reducerHelper.changeTextInputTitle(state, action);
+    case 'addNumberInput':
+      return reducerHelper.addNumberInput(state, action);
+    case 'removeNumberInput':
+      return reducerHelper.removeNumberInput(state, action);
+    case 'changeNumberInputTitle':
+      return reducerHelper.changeNumberInputTitle(state, action);
+    default:
+      return state;
+  }
+};
+
+export default answerReducer;
