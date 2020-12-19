@@ -4,7 +4,7 @@ import { arrayOf, func, string, shape, exact, number } from 'prop-types';
 import TextEditor from '../../TextEditor';
 import DeleteButton from '../../Button';
 
-const ButtonEditor = ({ dispatch, position, answerOption, index }) => {
+const ButtonEditorCard = ({ dispatch, position, answerOption, index }) => {
   return (
     <div className="col my-3">
       <div className="card mx-2">
@@ -106,7 +106,7 @@ const ButtonEditor = ({ dispatch, position, answerOption, index }) => {
   );
 };
 
-ButtonEditor.propTypes = {
+ButtonEditorCard.propTypes = {
   answerOption: shape({
     type: string,
     options: shape({
@@ -119,4 +119,4 @@ ButtonEditor.propTypes = {
   index: number.isRequired
 };
 
-export default ButtonEditor;
+export default ButtonEditorCard;

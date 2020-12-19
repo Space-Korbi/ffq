@@ -1,5 +1,5 @@
 import React from 'react';
-import { arrayOf, shape, string, func } from 'prop-types';
+import { arrayOf, shape, string, func, element } from 'prop-types';
 
 const CardsGrid = ({ answerOptions, dispatch, Card }) => {
   return (
@@ -11,13 +11,34 @@ const CardsGrid = ({ answerOptions, dispatch, Card }) => {
             id={index + 1}
             answerOption={answerOption}
             dispatch={dispatch}
-            imageURL={answerOption.imageURL}
           />
         );
       })}
     </div>
   );
 };
+
+export const CardsGrid2 = ({ Cards, gridColumns }) => {
+  console.log('CARDS', Cards);
+  return (
+    <div className={`row no-gutters ${gridColumns}`}>
+      {Cards.map((Card) => {
+        return Card;
+      })}
+    </div>
+  );
+};
+
+CardsGrid2.propTypes = {
+  Cards: arrayOf(element).isRequired,
+  gridColumns: string.isRequired
+};
+
+/**
+ * - Cards
+ * - gridColumns: [string]
+ * - dispatch
+ */
 
 CardsGrid.propTypes = {
   answerOptions: arrayOf(
