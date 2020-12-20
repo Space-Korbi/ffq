@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import React, { useState, useReducer } from 'react';
-import { string, shape, arrayOf, number, exact } from 'prop-types';
+import { string, shape, arrayOf, number, bool, exact, oneOfType } from 'prop-types';
 import { nanoid } from 'nanoid';
 
 import { NavTabs, NavContents } from '../Navigation';
@@ -24,6 +24,7 @@ const QuestionEditor = ({ question }) => {
   const [answerType, setAnswerType] = useState('');
   const [answerOptions, dispatch] = useReducer(answerReducer, question.answerOptions);
 
+  console.log('-----------', answerOptions);
   const editor = (
     <div className="row no-gutters my-3">
       <div className="col-lg mx-3">
@@ -98,25 +99,28 @@ QuestionEditor.propTypes = {
     childQuestion: arrayOf(string),
     answerOptions: shape({
       type: string.isRequired,
-      frequencyAnswers: exact({
-        left: arrayOf(exact({ id: string.isRequired, title: string })),
-        right: arrayOf(exact({ id: string.isRequired, title: string }))
-      }),
-      amountAnswers: arrayOf(
-        shape({
-          id: string.isRequired,
-          title: string,
-          imageName: string,
-          imageURLs: string
-        })
-      ),
-      userInputAnswers: arrayOf(
-        shape({
-          id: string.isRequired,
-          type: string,
-          title: string
-        })
-      )
+      options: oneOfType([
+        exact({
+          left: arrayOf(exact({ id: string.isRequired, title: string })),
+          right: arrayOf(exact({ id: string.isRequired, title: string }))
+        }),
+        arrayOf(
+          shape({
+            id: string.isRequired,
+            title: string,
+            imageName: string,
+            imageURL: string
+          })
+        ),
+        arrayOf(
+          shape({
+            id: string.isRequired,
+            title: string,
+            hasNumberInput: bool,
+            numberInputTitle: string
+          })
+        )
+      ])
     }).isRequired
   })
 };
@@ -134,9 +138,7 @@ QuestionEditor.defaultProps = {
     childQuestion: [''],
     answerOptions: {
       type: '',
-      frequencyOptions: { left: [], right: [] },
-      amountOptions: [],
-      userInputOptions: []
+      options: []
     }
   }
 };

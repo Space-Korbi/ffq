@@ -12,7 +12,7 @@ const { Schema } = mongoose;
  * @param help - Message displayed when clicking help icon
  * @param parenQuestion - ID of parent Question
  * @param childQuestion - IDs of child Questions
- * @param possibleAnswers - All Answers the user could have selected
+ * @param answerOptions - All Answers the user can select
  */
 
 const Question = new Schema(
@@ -27,36 +27,7 @@ const Question = new Schema(
     childQuestion: [{ type: String }],
     answerOptions: {
       type: { type: String, required: true },
-      frequencyOptions: {
-        left: [
-          {
-            id: { type: String },
-            title: { type: String }
-          }
-        ],
-        right: [
-          {
-            id: { type: String },
-            title: { type: String }
-          }
-        ]
-      },
-      amountOptions: [
-        {
-          id: { type: String },
-          title: { type: String },
-          imageURL: { type: String },
-          imageName: { type: String }
-        }
-      ],
-      userInputOptions: [
-        {
-          id: { type: String },
-          title: { type: String },
-          hasNumberInput: { type: Boolean },
-          numberInputTitle: { type: String }
-        }
-      ]
+      options: { type: Schema.Types.Mixed, required: true }
     }
   },
   { timestamps: true }

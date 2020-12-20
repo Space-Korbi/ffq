@@ -1,5 +1,5 @@
 import React from 'react';
-import { shape, string } from 'prop-types';
+import { arrayOf, bool, exact, oneOfType, shape, string } from 'prop-types';
 
 import { Question } from '../Question';
 
@@ -29,7 +29,31 @@ QuestionPreview.propTypes = {
   subtitle2: string.isRequired,
   help: string.isRequired,
   answerType: string.isRequired,
-  answerOptions: shape({}).isRequired
+  answerOptions: shape({
+    type: string.isRequired,
+    options: oneOfType([
+      exact({
+        left: arrayOf(exact({ id: string.isRequired, title: string })),
+        right: arrayOf(exact({ id: string.isRequired, title: string }))
+      }),
+      arrayOf(
+        shape({
+          id: string.isRequired,
+          title: string,
+          imageName: string,
+          imageURL: string
+        })
+      ),
+      arrayOf(
+        shape({
+          id: string.isRequired,
+          title: string,
+          hasNumberInput: bool,
+          numberInputTitle: string
+        })
+      )
+    ]).isRequired
+  }).isRequired
 };
 
 export default QuestionPreview;
