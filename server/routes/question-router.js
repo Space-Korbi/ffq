@@ -18,6 +18,7 @@ const router = express.Router();
  * This code is executed for every POST request on the '/api/question' path
  */
 router.post('/question', QuestionCtrl.createQuestion);
+router.delete('/question/:id', QuestionCtrl.deleteQuestion);
 router.get('/questions', QuestionCtrl.getQuestions);
 
 module.exports = router;

@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
@@ -23,12 +24,19 @@ const FFQEditor = () => {
     setQuestions(fetchedQuestions);
   }, []);
 
+  const deleteQuestion = async (id) => {
+    const response = await questionService.deleteQuestion(id);
+    setQuestions(
+      questions.filter((question) => question.questionId !== response.data.data.questionId)
+    );
+  };
+
   const columns = React.useMemo(
     () => [
-      {
+      /* {
         Header: 'ID',
         accessor: 'id' // accessor is the "key" in the data
-      },
+      }, */
       {
         Header: 'Index',
         accessor: 'index'
@@ -70,7 +78,7 @@ const FFQEditor = () => {
         accessor: 'delete',
         Cell: ({ row: { original } }) => (
           <div className="d-flex justify-content-center my-auto">
-            <DeleteButton isTrashCan onClick={() => console.log('Deleting')} />
+            <DeleteButton isTrashCan onClick={() => deleteQuestion(original.id)} />
           </div>
         )
       }
@@ -80,9 +88,8 @@ const FFQEditor = () => {
 
   const data = React.useMemo(() => {
     const questionRow = questions.map((question) => {
-      console.log('=-========', question.answerOptions.options);
       return {
-        id: question.questionId,
+        id: question._id,
         index: question.index,
         title: question.title,
         subtitle1: question.subtitle1,
