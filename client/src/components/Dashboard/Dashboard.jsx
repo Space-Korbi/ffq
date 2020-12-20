@@ -12,6 +12,7 @@ import AccountPage from '../../pages/AccountPage';
 import WelcomePage from '../../pages/WelcomePage';
 import UserSelection from '../UserSelection';
 import QuestionEditor from '../QuestionEditor';
+import FFQEditor from '../FFQEditor';
 import { Role } from '../../helpers';
 import { authenticationService } from '../../services';
 
@@ -47,6 +48,12 @@ const Dashboard = ({ isAdmin }) => {
     {
       name: 'Question Editor',
       to: '/QuestionEditor',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    },
+    {
+      name: 'FFQ Editor',
+      to: '/FFQEditor',
       className: 'nav-link',
       activeClassName: 'nav-link active'
     }
@@ -227,6 +234,12 @@ const Dashboard = ({ isAdmin }) => {
                 roles={[Role.Admin]}
                 isAdmin={isAdmin}
                 component={QuestionEditor}
+              />
+              <PrivateRoute
+                path={`${path}/FFQEditor`}
+                roles={[Role.Admin]}
+                isAdmin={isAdmin}
+                component={FFQEditor}
               />
               <Route path={`${path}/movies/list/movies/update/:id`} component={MoviesUpdate} />
               <Route path={`${path}/movies/list`} component={MoviesList} />
