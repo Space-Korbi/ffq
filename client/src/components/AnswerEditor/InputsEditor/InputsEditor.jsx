@@ -20,7 +20,7 @@ const InputsEditor = ({ answerOptions, dispatch }) => {
 
   return (
     <div>
-      <div className="mt-5 text-center">
+      <div className="my-5 text-center">
         <OutlineButton
           title="Add text input"
           onClick={() =>

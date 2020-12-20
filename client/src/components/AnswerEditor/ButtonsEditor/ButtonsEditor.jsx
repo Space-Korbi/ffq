@@ -20,7 +20,7 @@ const ButtonColumn = ({ answerOptions, position, dispatch }) => {
   });
 
   return (
-    <div>
+    <div className="text-center">
       {answerOptions.length > 0 && <span className="badge badge-secondary">{position}</span>}
       <CardsGrid Cards={ButtonEditors} gridColumns="row-cols-1" />
     </div>
@@ -60,9 +60,9 @@ const ButtonsEditor = ({ answerOptions, dispatch }) => {
   };
 
   return (
-    <div className="row no-gutters mt-4">
+    <div className="row no-gutters my-5">
       <div className="col-lg-12 col-md text-center">
-        <div className="row no-gutters my-3">
+        <div className="row no-gutters">
           <div className="col pr-1">
             <AddButton position="left" dispatch={dispatch} />
           </div>
@@ -70,7 +70,7 @@ const ButtonsEditor = ({ answerOptions, dispatch }) => {
             <AddButton position="right" dispatch={dispatch} />
           </div>
         </div>
-        <div className="row no-gutters my-3">
+        <div className="row no-gutters ">
           {answerOptions.left && (
             <div className="col-12 col-sm-6">
               <ButtonColumn
