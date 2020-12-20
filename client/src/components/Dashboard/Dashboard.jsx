@@ -13,7 +13,7 @@ import WelcomePage from '../../pages/WelcomePage';
 import UserSelection from '../UserSelection';
 import QuestionEditor from '../QuestionEditor';
 import { Role } from '../../helpers';
-import authenticationService from '../../services';
+import { authenticationService } from '../../services';
 
 const Dashboard = ({ isAdmin }) => {
   const { path, url, params } = useRouteMatch();
