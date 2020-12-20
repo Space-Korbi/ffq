@@ -1,4 +1,4 @@
-import { insertQuestion, uploadImage } from '../api';
+import { insertQuestion, uploadImage, getAllQuestions, deleteQuestionById } from '../api';
 import AnswerType from '../types';
 
 /**
@@ -40,8 +40,8 @@ const saveQuestion = async (questionData, answerOptions) => {
   payload.answerOptions = answerOptions;
 
   if (answerOptions.type === AnswerType.Amount) {
-    const updatedAmountOptions = await updateAmountOptions(answerOptions.amountOptions);
-    payload.answerOptions.amountOptions = updatedAmountOptions;
+    const updatedAmountOptions = await updateAmountOptions(answerOptions.options);
+    payload.answerOptions.options = updatedAmountOptions;
   }
 
   console.log('Payload', payload);
@@ -51,6 +51,16 @@ const saveQuestion = async (questionData, answerOptions) => {
   });
 };
 
-const questionService = { saveQuestion };
+const fetchAllQuestions = async () => {
+  const questions = await getAllQuestions();
+  return questions.data.data;
+};
+
+const deleteQuestion = async (id) => {
+  const deletedQuestion = await deleteQuestionById(id);
+  return deletedQuestion;
+};
+
+const questionService = { saveQuestion, fetchAllQuestions, deleteQuestion };
 
 export default questionService;
