@@ -4,7 +4,7 @@ import { arrayOf, func, string, shape, exact, bool } from 'prop-types';
 import ButtonsEditor from './ButtonsEditor/ButtonsEditor';
 import CardsEditor from './CardsEditor/CardsEditor';
 import InputsEditor from './InputsEditor/InputsEditor';
-import { AnswerType } from '../../helpers';
+import AnswerType from '../../types';
 
 const AnswerEditor = ({ answerOptions, dispatch, answerType }) => {
   const [editor, setEditor] = useState(<div />);

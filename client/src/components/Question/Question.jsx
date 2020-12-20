@@ -6,7 +6,7 @@ import Help from '../Help';
 import AnswerButtons from './FrequencyAnswer/AnswerButtons';
 import AmountAnswer from './AmountAnswer/AmountAnswer';
 import UserInputAnswer from './UserInputAnswer/UserInputAnswer';
-import { AnswerType } from '../../helpers';
+import AnswerType from '../../types';
 
 const saveAnswer = () => {
   // eslint-disable-next-line

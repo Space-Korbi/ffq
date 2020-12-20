@@ -1,4 +1,4 @@
-import AnswerType from './answer-type';
+import AnswerType from '../types/answer-type';
 
 const reducerHelper = {
   /**

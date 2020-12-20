@@ -1,7 +1,7 @@
 import React from 'react';
 import { func } from 'prop-types';
 
-import { AnswerType } from '../../helpers';
+import AnswerType from '../../types';
 
 const Select = ({ onChange, dispatch }) => {
   return (

@@ -1,6 +1,5 @@
 import { insertQuestion, uploadImage } from '../api';
-// eslint-disable-next-line import/no-cycle
-import { AnswerType } from '../helpers';
+import AnswerType from '../types';
 
 /**
  * * Image Paths
