@@ -1,3 +1,4 @@
 import authenticationService from './authenticationService';
+import questionService from './questionService';
 
-export default authenticationService;
+export { authenticationService, questionService };

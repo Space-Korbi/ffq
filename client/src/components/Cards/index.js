@@ -1,3 +1,4 @@
+import EditorCard from './EditorCard';
 import CardsGrid from './CardsGrid';
 
-export default CardsGrid;
+export { CardsGrid, EditorCard };

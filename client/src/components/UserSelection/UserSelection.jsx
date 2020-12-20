@@ -3,7 +3,7 @@ import { InfoIcon } from '@primer/octicons-react';
 import SelectionCriteria from './SelectionCriteria';
 import AddRule from './AddRule';
 import SelectionRules from './SelectionRules';
-import Navigation from '../Navigation';
+import { NavTabs } from '../Navigation';
 import { addValidString } from '../../helpers';
 
 const rule1 = {
@@ -66,7 +66,7 @@ const UserSelection = () => {
       <div className="container-fluid">
         <div className="row mb-3 mt-4">
           <div className="col">
-            <Navigation tabs={['Criteria', 'Rules']} />
+            <NavTabs tabs={['Criteria', 'Rules']} />
           </div>
         </div>
         <div className="tab-content" id="userSelectionContent">

@@ -2,7 +2,7 @@ import Role from './role';
 import AnswerType from './answer-type';
 import authHeader from './auth-header';
 import { addValidString, addValidButton, addValidCard } from './Helpers';
-import reducerHelper from './reducerHelper';
+import answerReducer from './answerReducer';
 
 export {
   Role,
@@ -11,5 +11,5 @@ export {
   addValidString,
   addValidButton,
   addValidCard,
-  reducerHelper
+  answerReducer
 };

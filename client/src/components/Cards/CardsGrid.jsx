@@ -1,31 +1,19 @@
 import React from 'react';
-import { arrayOf, shape, string, func } from 'prop-types';
+import { arrayOf, string, element } from 'prop-types';
 
-const CardsGrid = ({ answerOptions, dispatch, Card }) => {
+const CardsGrid = ({ Cards, gridColumns }) => {
   return (
-    <div className="row no-gutters row-cols-1 row-cols-md-2">
-      {answerOptions.map((answerOption, index) => (
-        <Card
-          key={answerOption.id}
-          id={index + 1}
-          answerOption={answerOption}
-          dispatch={dispatch}
-        />
-      ))}
+    <div className={`row no-gutters ${gridColumns}`}>
+      {Cards.map((Card) => {
+        return Card;
+      })}
     </div>
   );
 };
 
 CardsGrid.propTypes = {
-  answerOptions: arrayOf(
-    shape({
-      id: string.isRequired,
-      title: string,
-      imageURL: string
-    })
-  ).isRequired,
-  dispatch: func.isRequired,
-  Card: func.isRequired
+  Cards: arrayOf(element).isRequired,
+  gridColumns: string.isRequired
 };
 
 export default CardsGrid;

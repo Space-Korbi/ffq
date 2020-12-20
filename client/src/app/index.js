@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import authenticationService from '../services';
+import { authenticationService } from '../services';
 import { Role } from '../helpers';
 import PrivateRoute from '../components/PrivateRoute';
 import LoginPage from '../pages/LoginPage';

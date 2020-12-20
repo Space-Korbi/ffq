@@ -2,22 +2,27 @@ import React from 'react';
 import { arrayOf, func, string, shape, exact } from 'prop-types';
 import { nanoid } from 'nanoid';
 
+import { OutlineButton } from '../../Button';
 import ButtonEditor from './ButtonEditor';
+import { CardsGrid } from '../../Cards';
 
 const ButtonColumn = ({ answerOptions, position, dispatch }) => {
+  const ButtonEditors = answerOptions.map((answerOption, index) => {
+    return (
+      <ButtonEditor
+        key={answerOption.id}
+        index={index + 1}
+        answerOption={answerOption}
+        dispatch={dispatch}
+        position={position}
+      />
+    );
+  });
+
   return (
-    <div>
+    <div className="text-center">
       {answerOptions.length > 0 && <span className="badge badge-secondary">{position}</span>}
-      {answerOptions.map((answerOption, index) => (
-        <div key={answerOption.id}>
-          <ButtonEditor
-            index={index + 1}
-            answerOption={answerOption}
-            dispatch={dispatch}
-            position={position}
-          />
-        </div>
-      ))}
+      <CardsGrid Cards={ButtonEditors} gridColumns="row-cols-1" />
     </div>
   );
 };
@@ -34,18 +39,15 @@ ButtonColumn.defaultProps = {
 const AddButton = ({ position, dispatch }) => {
   return (
     <div>
-      <button
-        type="submit"
-        className="btn btn-outline-primary"
+      <OutlineButton
+        title={`Add button ${position}`}
         onClick={() =>
           dispatch({
             type: 'addButton',
-            payload: { position, title: '', id: nanoid() }
+            payload: { id: nanoid(), title: '', position }
           })
         }
-      >
-        Add button {position}
-      </button>
+      />
     </div>
   );
 };
@@ -58,9 +60,9 @@ const ButtonsEditor = ({ answerOptions, dispatch }) => {
   };
 
   return (
-    <div className="row no-gutters mt-4">
+    <div className="row no-gutters my-5">
       <div className="col-lg-12 col-md text-center">
-        <div className="row no-gutters my-3">
+        <div className="row no-gutters">
           <div className="col pr-1">
             <AddButton position="left" dispatch={dispatch} />
           </div>
@@ -68,26 +70,28 @@ const ButtonsEditor = ({ answerOptions, dispatch }) => {
             <AddButton position="right" dispatch={dispatch} />
           </div>
         </div>
-        {answerOptions.left && (
-          <div>
-            <ButtonColumn
-              answerOptions={answerOptions.left}
-              position="left"
-              dispatch={dispatch}
-              removeButton={removeButton}
-            />
-          </div>
-        )}
-        {answerOptions.right && (
-          <div>
-            <ButtonColumn
-              answerOptions={answerOptions.right}
-              position="right"
-              dispatch={dispatch}
-              removeButton={removeButton}
-            />
-          </div>
-        )}
+        <div className="row no-gutters ">
+          {answerOptions.left && (
+            <div className="col-12 col-sm-6">
+              <ButtonColumn
+                answerOptions={answerOptions.left}
+                position="left"
+                dispatch={dispatch}
+                removeButton={removeButton}
+              />
+            </div>
+          )}
+          {answerOptions.right && (
+            <div className="col">
+              <ButtonColumn
+                answerOptions={answerOptions.right}
+                position="right"
+                dispatch={dispatch}
+                removeButton={removeButton}
+              />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

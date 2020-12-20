@@ -45,7 +45,8 @@ const Question = new Schema(
         {
           id: { type: String },
           title: { type: String },
-          imageURL: { type: String }
+          imageURL: { type: String },
+          imageName: { type: String }
         }
       ],
       userInputOptions: [

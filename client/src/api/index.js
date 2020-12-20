@@ -19,6 +19,11 @@ export const getMovieById = (id) => api.get(`/movie/${id}`);
 export const insertQuestion = (payload) => api.post(`/question`, payload);
 export const getAllQuestions = () => api.get(`/questions`);
 
+export const uploadImage = (payload) => api.post(`/upload`, payload);
+export const getAllImages = () => api.get(`/images`);
+export const deleteImageById = (id) => api.delete(`/image/${id}`);
+export const getImageById = (id) => api.get(`/image/${id}`);
+
 export const insertFFQ = (payload) => api.post(`/ffq`, payload);
 
 const apis = {
@@ -29,7 +34,8 @@ const apis = {
   getMovieById,
   insertQuestion,
   getAllQuestions,
-  insertFFQ
+  insertFFQ,
+  uploadImage
 };
 
 export default apis;

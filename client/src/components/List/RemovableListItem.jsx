@@ -1,6 +1,6 @@
 import React from 'react';
 import { string, func, bool, oneOfType, element } from 'prop-types';
-import DeleteButton from '../Button';
+import { DeleteButton } from '../Button';
 
 const RemovableListItem = ({ content, isTrashCan, onClick }) => {
   return (

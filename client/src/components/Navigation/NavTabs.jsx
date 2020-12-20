@@ -1,22 +1,23 @@
 import React from 'react';
 import { arrayOf, string } from 'prop-types';
 
-const Navigation = ({ tabs }) => {
+const NavTabs = ({ tabNames }) => {
   return (
     <ul className="nav nav-tabs" id="navigation" role="tablist">
-      {tabs.map((tab, index) => {
+      {tabNames.map((tabName, index) => {
+        const tabNameLowerCase = tabName.toLowerCase();
         return (
-          <li className="nav-item" key={tab}>
+          <li className="nav-item" key={tabName}>
             <a
               className={index === 0 ? 'nav-link active' : 'nav-link'}
-              id={`${tab}-tab`}
+              id={`${tabNameLowerCase}-tab`}
               data-toggle="tab"
-              href={`#${tab}`}
+              href={`#${tabNameLowerCase}`}
               role="tab"
-              aria-controls={tab}
+              aria-controls={tabNameLowerCase}
               aria-selected="true"
             >
-              {tab}
+              {tabName}
             </a>
           </li>
         );
@@ -25,8 +26,8 @@ const Navigation = ({ tabs }) => {
   );
 };
 
-Navigation.propTypes = {
-  tabs: arrayOf(string).isRequired
+NavTabs.propTypes = {
+  tabNames: arrayOf(string).isRequired
 };
 
-export default Navigation;
+export default NavTabs;

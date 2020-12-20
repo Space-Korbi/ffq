@@ -4,6 +4,7 @@ import { arrayOf, string, shape } from 'prop-types';
 import AnswerCardsDeck from './AnswerCardsDeck';
 
 const saveAnswer = () => {
+  // eslint-disable-next-line
   console.log('answer');
 };
 
@@ -24,7 +25,7 @@ AmountAnswer.propTypes = {
     shape({
       id: string.isRequired,
       title: string,
-      imageURL: string
+      imageName: string
     })
   ).isRequired
 };

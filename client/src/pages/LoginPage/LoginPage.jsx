@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
-import authenticationService from '../../services';
+import { authenticationService } from '../../services';
 
 const LoginPage = () => {
   const history = useHistory();
