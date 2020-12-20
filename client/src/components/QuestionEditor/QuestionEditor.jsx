@@ -24,7 +24,6 @@ const QuestionEditor = ({ question }) => {
   const [answerType, setAnswerType] = useState('');
   const [answerOptions, dispatch] = useReducer(answerReducer, question.answerOptions);
 
-  console.log('-----------', answerOptions);
   const editor = (
     <div className="row no-gutters my-3">
       <div className="col-lg mx-3">

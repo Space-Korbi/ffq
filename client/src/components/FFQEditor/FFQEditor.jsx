@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import PropTypes, { func } from 'prop-types';
@@ -5,7 +6,7 @@ import PropTypes, { func } from 'prop-types';
 import { questionService } from '../../services';
 
 import { NavTabs, NavContents } from '../Navigation';
-import { OutlineButton } from '../Button';
+import { OutlineButton, DeleteButton } from '../Button';
 import { Table } from '../Table';
 
 const tabNames = ['Edit', 'Settings'];
@@ -49,12 +50,29 @@ const FFQEditor = () => {
         accessor: 'help'
       },
       {
-        Header: 'Answer Type',
+        Header: 'Type',
         accessor: 'answerType'
       },
       {
-        Header: 'Answer with Action',
-        accessor: 'answerWithAction'
+        Header: 'Answer Options',
+        accessor: 'answerOptions'
+      },
+
+      {
+        Header: 'Edit',
+        accessor: 'update',
+        Cell: ({ row: { original } }) => (
+          <OutlineButton title="Edit" onClick={() => console.log('Editing')} />
+        )
+      },
+      {
+        Header: 'Delete',
+        accessor: 'delete',
+        Cell: ({ row: { original } }) => (
+          <div className="d-flex justify-content-center my-auto">
+            <DeleteButton isTrashCan onClick={() => console.log('Deleting')} />
+          </div>
+        )
       }
     ],
     []
@@ -62,6 +80,7 @@ const FFQEditor = () => {
 
   const data = React.useMemo(() => {
     const questionRow = questions.map((question) => {
+      console.log('=-========', question.answerOptions.options);
       return {
         id: question.questionId,
         index: question.index,
@@ -69,17 +88,19 @@ const FFQEditor = () => {
         subtitle1: question.subtitle1,
         subtitle2: question.subtitle2,
         help: question.help,
-        answerType: question.answerOptions.type
+        answerType: question.answerOptions.type,
+        answerOptions: JSON.stringify(question.answerOptions.options, null, 0)
       };
     });
     return questionRow;
   });
 
   const editor = (
-    <div className="row no-gutters my-5">
-      <div className="col-lg text-center mx-3">
+    <div className=" my-5">
+      <div className="col-lg text-center">
         <OutlineButton title="Add Question" onClick={() => addQuestion()} />
-        <div className="my-3">
+
+        <div className="row no-gutters overflow-auto flex-row flex-nowrap my-3">
           <Table columns={columns} data={data} />
         </div>
         {JSON.stringify(questions, null, 2)}
