@@ -3,12 +3,14 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import PropTypes, { func } from 'prop-types';
+import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 
 import { questionService } from '../../services';
 
 import { NavTabs, NavContents } from '../Navigation';
 import { OutlineButton, DeleteButton } from '../Button';
 import { Table } from '../Table';
+import AnswerType from '../../types';
 
 const tabNames = ['Edit', 'Settings'];
 
@@ -17,6 +19,9 @@ const addQuestion = () => {
 };
 
 const FFQEditor = () => {
+  const { path, url, params } = useRouteMatch();
+  const history = useHistory();
+
   const [questions, setQuestions] = useState([]);
 
   useEffect(async () => {
@@ -29,6 +34,17 @@ const FFQEditor = () => {
     setQuestions(
       questions.filter((question) => question.questionId !== response.data.data.questionId)
     );
+  };
+
+  const editQuestion = (id) => {
+    console.log(id);
+    console.log(url);
+    console.log(params);
+    history.push('/dashboard/');
+
+    // <Link to={`${url}/movies/update/${id}`} className="btn btn-outline-warning btn-sm">
+    // Update
+    // </Link>
   };
 
   const columns = React.useMemo(
@@ -70,7 +86,7 @@ const FFQEditor = () => {
         Header: 'Edit',
         accessor: 'update',
         Cell: ({ row: { original } }) => (
-          <OutlineButton title="Edit" onClick={() => console.log('Editing')} />
+          <OutlineButton title="Edit" onClick={() => editQuestion(original.questionId)} />
         )
       },
       {
@@ -78,7 +94,7 @@ const FFQEditor = () => {
         accessor: 'delete',
         Cell: ({ row: { original } }) => (
           <div className="d-flex justify-content-center my-auto">
-            <DeleteButton isTrashCan onClick={() => deleteQuestion(original.id)} />
+            <DeleteButton isTrashCan onClick={() => deleteQuestion(original._id)} />
           </div>
         )
       }
@@ -86,17 +102,58 @@ const FFQEditor = () => {
     []
   );
 
+  const parseAnswerOptions = (answerOptions) => {
+    if (answerOptions.type === AnswerType.Frequency) {
+      return (
+        <>
+          <strong>{'Left: '}</strong>
+          {answerOptions.options.left.map((option, index) => {
+            if (index === 0) {
+              return `${option.title}`;
+            }
+            return `, ${option.title} `;
+          })}
+          <br />
+          <strong>{'Right: '}</strong>
+          {answerOptions.options.right.map((option, index) => {
+            if (index === 0) {
+              return `${option.title}`;
+            }
+            return `, ${option.title} `;
+          })}
+        </>
+      );
+    }
+    return (
+      <>
+        {answerOptions.options.map((option, index) => {
+          if (option.imageURL) {
+            if (index === 0) {
+              return <i>Image </i>;
+            }
+            return <i>, Image </i>;
+          }
+          if (index === 0) {
+            return `${option.title}`;
+          }
+          return `, ${option.title} `;
+        })}
+      </>
+    );
+  };
+
   const data = React.useMemo(() => {
     const questionRow = questions.map((question) => {
       return {
-        id: question._id,
+        _id: question._id,
+        questionId: question.questionId,
         index: question.index,
         title: question.title,
         subtitle1: question.subtitle1,
         subtitle2: question.subtitle2,
         help: question.help,
         answerType: question.answerOptions.type,
-        answerOptions: JSON.stringify(question.answerOptions.options, null, 0)
+        answerOptions: parseAnswerOptions(question.answerOptions)
       };
     });
     return questionRow;
@@ -110,7 +167,7 @@ const FFQEditor = () => {
         <div className="row no-gutters overflow-auto flex-row flex-nowrap my-3">
           <Table columns={columns} data={data} />
         </div>
-        {JSON.stringify(questions, null, 2)}
+        {/* JSON.stringify(questions, null, 2) */}
       </div>
     </div>
   );

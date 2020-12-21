@@ -1,7 +1,7 @@
 import React from 'react';
-import { arrayOf, string } from 'prop-types';
+import { arrayOf, func, string } from 'prop-types';
 
-const CardNavTabs = ({ cardId, tabNames }) => {
+const CardNavTabs = ({ cardId, tabNames, selectedTab, setSelectedTab }) => {
   return (
     <>
       <ul
@@ -14,13 +14,14 @@ const CardNavTabs = ({ cardId, tabNames }) => {
           return (
             <li key={tabName + cardId} className="nav-item">
               <a
-                className={tabIndex === 0 ? 'nav-link active' : 'nav-link'}
+                className={tabNameLowerCase === selectedTab ? 'nav-link active' : 'nav-link'}
                 id={`${tabNameLowerCase}-tab${cardId}`}
                 data-toggle="tab"
                 href={`#${tabNameLowerCase}${cardId}`}
                 role="tab"
                 aria-controls={`${tabNameLowerCase}${cardId}`}
                 aria-selected={tabIndex === 0 ? 'true' : 'false'}
+                onClick={() => setSelectedTab(tabNameLowerCase)}
               >
                 {tabName}
               </a>
@@ -32,6 +33,11 @@ const CardNavTabs = ({ cardId, tabNames }) => {
   );
 };
 
-CardNavTabs.propTypes = { cardId: string.isRequired, tabNames: arrayOf(string).isRequired };
+CardNavTabs.propTypes = {
+  cardId: string.isRequired,
+  tabNames: arrayOf(string).isRequired,
+  selectedTab: string.isRequired,
+  setSelectedTab: func.isRequired
+};
 
 export default CardNavTabs;
