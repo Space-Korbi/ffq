@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 /**
  * * Question Schema
- * @param questionID
+ * @param _id
  * @param index - Place in FFQ
  * @param title
  * @param subtitle1
@@ -17,7 +17,7 @@ const { Schema } = mongoose;
 
 const Question = new Schema(
   {
-    questionId: { type: String, required: true },
+    _id: { type: String, required: true },
     index: { type: Number, required: true },
     title: { type: String },
     subtitle1: { type: String },
