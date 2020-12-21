@@ -1,188 +1,135 @@
-/* eslint-disable no-underscore-dangle */
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react';
-import PropTypes, { func } from 'prop-types';
-import { Link, useHistory, useRouteMatch } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+
+import BootstrapTable from 'react-bootstrap-table-next';
+
+import { DeleteButton } from '../Button';
 
 import { questionService } from '../../services';
 
-import { NavTabs, NavContents } from '../Navigation';
-import { OutlineButton, DeleteButton } from '../Button';
-import { Table } from '../Table';
-import AnswerType from '../../types';
-
-const tabNames = ['Edit', 'Settings'];
-
-const addQuestion = () => {
-  console.log('addQuestion');
-};
-
-const FFQEditor = () => {
-  const { path, url, params } = useRouteMatch();
-  const history = useHistory();
-
+function FFQEditor(props) {
   const [questions, setQuestions] = useState([]);
+  const [data, setData] = useState([]);
 
-  useEffect(async () => {
-    const fetchedQuestions = await questionService.fetchAllQuestions();
-    setQuestions(fetchedQuestions);
+  useEffect(() => {
+    console.log('----------------------------------------------');
+    const fetchData = async () => {
+      const result = await questionService.fetchAllQuestions();
+      setQuestions(result);
+    };
+    fetchData();
   }, []);
 
-  const deleteQuestion = async (id) => {
-    const response = await questionService.deleteQuestion(id);
-    setQuestions(
-      questions.filter((question) => question.questionId !== response.data.data.questionId)
-    );
-  };
-
-  const editQuestion = (id) => {
-    console.log(id);
-    console.log(url);
-    console.log(params);
-    history.push('/dashboard/');
-
-    // <Link to={`${url}/movies/update/${id}`} className="btn btn-outline-warning btn-sm">
-    // Update
-    // </Link>
-  };
-
-  const columns = React.useMemo(
-    () => [
-      /* {
-        Header: 'ID',
-        accessor: 'id' // accessor is the "key" in the data
-      }, */
-      {
-        Header: 'Index',
-        accessor: 'index'
-      },
-      {
-        Header: 'Title',
-        accessor: 'title'
-      },
-      {
-        Header: 'Subtitle1',
-        accessor: 'subtitle1'
-      },
-      {
-        Header: 'Subtitle2',
-        accessor: 'subtitle2'
-      },
-      {
-        Header: 'Help',
-        accessor: 'help'
-      },
-      {
-        Header: 'Type',
-        accessor: 'answerType'
-      },
-      {
-        Header: 'Answer Options',
-        accessor: 'answerOptions'
-      },
-
-      {
-        Header: 'Edit',
-        accessor: 'update',
-        Cell: ({ row: { original } }) => (
-          <OutlineButton title="Edit" onClick={() => editQuestion(original.questionId)} />
-        )
-      },
-      {
-        Header: 'Delete',
-        accessor: 'delete',
-        Cell: ({ row: { original } }) => (
-          <div className="d-flex justify-content-center my-auto">
-            <DeleteButton isTrashCan onClick={() => deleteQuestion(original._id)} />
-          </div>
-        )
-      }
-    ],
-    []
-  );
-
-  const parseAnswerOptions = (answerOptions) => {
-    if (answerOptions.type === AnswerType.Frequency) {
-      return (
-        <>
-          <strong>{'Left: '}</strong>
-          {answerOptions.options.left.map((option, index) => {
-            if (index === 0) {
-              return `${option.title}`;
-            }
-            return `, ${option.title} `;
-          })}
-          <br />
-          <strong>{'Right: '}</strong>
-          {answerOptions.options.right.map((option, index) => {
-            if (index === 0) {
-              return `${option.title}`;
-            }
-            return `, ${option.title} `;
-          })}
-        </>
-      );
-    }
-    return (
-      <>
-        {answerOptions.options.map((option, index) => {
-          if (option.imageURL) {
-            if (index === 0) {
-              return <i>Image </i>;
-            }
-            return <i>, Image </i>;
-          }
-          if (index === 0) {
-            return `${option.title}`;
-          }
-          return `, ${option.title} `;
-        })}
-      </>
-    );
-  };
-
-  const data = React.useMemo(() => {
-    const questionRow = questions.map((question) => {
+  const prepareRows = (questionData) => {
+    const rows = questionData.map((question) => {
       return {
         _id: question._id,
-        questionId: question.questionId,
         index: question.index,
         title: question.title,
         subtitle1: question.subtitle1,
         subtitle2: question.subtitle2,
         help: question.help,
-        answerType: question.answerOptions.type,
-        answerOptions: parseAnswerOptions(question.answerOptions)
+        answerType: question.answerOptions.type
       };
     });
-    return questionRow;
-  });
+    return rows;
+  };
 
-  const editor = (
-    <div className=" my-5">
-      <div className="col-lg text-center">
-        <OutlineButton title="Add Question" onClick={() => addQuestion()} />
+  useEffect(() => {
+    const rowData = prepareRows(questions);
+    setData(rowData);
+  }, [questions]);
 
-        <div className="row no-gutters overflow-auto flex-row flex-nowrap my-3">
-          <Table columns={columns} data={data} />
-        </div>
-        {/* JSON.stringify(questions, null, 2) */}
+  const deleteQuestion = async (_id) => {
+    const response = await questionService.deleteQuestion(_id);
+
+    const responseId = await response.data.data._id;
+    setQuestions((state) => {
+      const filteredQuestions = state.filter((question) => question._id !== responseId);
+      return filteredQuestions;
+    });
+  };
+
+  const columns = [
+    {
+      text: 'ID',
+      dataField: '_id' // dataField is the "key" in the data
+    },
+    {
+      text: 'Index',
+      dataField: 'index'
+    },
+    {
+      text: 'Title',
+      dataField: 'title'
+    },
+    {
+      text: 'Subtitle1',
+      dataField: 'subtitle1'
+    },
+    {
+      text: 'Subtitle2',
+      dataField: 'subtitle2'
+    },
+    {
+      text: 'Help',
+      dataField: 'help'
+    },
+    {
+      text: 'Type',
+      dataField: 'answerType'
+    },
+    {
+      text: 'Answer Options',
+      dataField: 'answerOptions'
+    }
+  ];
+
+  const deleteButton = (cell, row) => {
+    return (
+      <div className="d-flex justify-content-center">
+        <DeleteButton isTrashCan onClick={() => deleteQuestion(row._id)} />
       </div>
-    </div>
-  );
+    );
+  };
+
+  const enhancedColumns = [
+    ...columns,
+    {
+      dataField: 'delete',
+      text: 'Delete',
+      editable: false,
+      align: 'center',
+      headerStyle: { width: 120 },
+      formatter: deleteButton
+    }
+  ];
 
   return (
     <div>
-      <div className="m-3">
-        <NavTabs tabNames={tabNames} />
-      </div>
-      <div>
-        <NavContents tabNames={tabNames} tabContents={[editor]} />
+      {/* <ul>
+        {questions.map((item) => (
+          <li key={item._id}>
+            <div className="d-flex justify-content-start my-auto">
+              {item._id} || {item.answerOptions.type} ||
+              <DeleteButton isTrashCan onClick={() => deleteQuestion(item._id)} />
+            </div>
+          </li>
+        ))}
+      </ul> */}
+      <div className="m-5">
+        <div className="row no-gutters overflow-auto flex-row flex-nowrap my-3">
+          <BootstrapTable keyField="_id" data={data} columns={enhancedColumns} />
+        </div>
       </div>
     </div>
   );
-};
+}
 
 FFQEditor.propTypes = {};
 
