@@ -1,4 +1,5 @@
 /* eslint-disable no-underscore-dangle */
+const fs = require('fs');
 const Question = require('../models/question-model');
 
 /**
@@ -40,9 +41,17 @@ const createQuestion = (req, res) => {
     });
 };
 
+const deleteImages = (imagePaths) => {
+  imagePaths.forEach((url) => {
+    fs.unlink(url, (err) => {
+      if (err) throw err;
+      console.log(`${url} was deleted`);
+    });
+  });
+};
+
 const deleteQuestion = async (req, res) => {
   await Question.findById({ _id: req.params.id }, (err, question) => {
-    console.log('ID:', req.params.id);
     if (err) {
       return res.status(400).json({ success: false, error: err });
     }
@@ -51,6 +60,16 @@ const deleteQuestion = async (req, res) => {
       return res.status(404).json({ success: false, error: `Question not found` });
     }
 
+    if (question.answerOptions.type === 'Amount') {
+      const imagePaths = question.answerOptions.options.reduce((filtered, option) => {
+        if (option.imageURL) {
+          const { imageURL } = option;
+          filtered.push(imageURL);
+        }
+        return filtered;
+      }, []);
+      deleteImages(imagePaths);
+    }
     return res.status(200).json({ success: true, data: question });
   }).catch((err) => console.log(err));
 
