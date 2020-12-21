@@ -1,3 +1,5 @@
+require('dotenv').config();
+const cors = require('cors');
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -5,7 +7,6 @@ const bodyParser = require('body-parser');
  * CORS is a node.js package for providing a Connect/Express middleware
  * that can be used to enable 'CROSS ORIGIN RESOURCE SHARING' with various options.
  */
-const cors = require('cors');
 
 /**
  * * Database
@@ -20,7 +21,6 @@ const imageRouter = require('./routes/image-router');
 
 // * Create express app
 const app = express();
-const apiPort = 3000;
 
 // * Set Cors options
 const corsOptions = {
@@ -52,4 +52,4 @@ app.get('/', (req, res) => {
  */
 app.use('/api', [questionRouter, ffqRouter, imageRouter]);
 
-app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`));
+app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));
