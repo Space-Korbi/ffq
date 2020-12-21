@@ -23,16 +23,12 @@ const imageRouter = require('./routes/image-router');
 const app = express();
 
 // * Set Cors options
-const corsOptions = {
-  origin: 'http://localhost:8000',
-  optionsSuccessStatus: 200
-};
 
 /**
  * A middleware function with no mount path.
  * The function is executed every time the app receives a request.
  */
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(bodyParser.json());
@@ -42,8 +38,21 @@ app.use(express.static('uploads'));
  * This example shows a route and its handler function (middleware system).
  * The function handles GET requests to the '/' path.
  */
+
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  return res.send('Received a GET HTTP method');
+});
+
+app.post('/', (req, res) => {
+  return res.send('Received a POST HTTP method');
+});
+
+app.put('/', (req, res) => {
+  return res.send('Received a PUT HTTP method');
+});
+
+app.delete('/', (req, res) => {
+  return res.send('Received a DELETE HTTP method');
 });
 
 /**
