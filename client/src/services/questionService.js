@@ -57,6 +57,7 @@ const fetchAllQuestions = async () => {
 };
 
 const deleteQuestion = async (id) => {
+  console.log('id', id);
   const deletedQuestion = await deleteQuestionById(id);
   return deletedQuestion;
 };

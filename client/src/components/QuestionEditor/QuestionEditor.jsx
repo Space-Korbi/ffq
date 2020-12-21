@@ -48,7 +48,7 @@ const QuestionEditor = ({ question }) => {
             className="btn btn-outline-primary"
             onClick={() =>
               questionService.saveQuestion(
-                { questionId: nanoid(), title, index: 2, subtitle1, subtitle2, help },
+                { _id: nanoid(), title, index: 2, subtitle1, subtitle2, help },
                 answerOptions
               )
             }
@@ -88,7 +88,7 @@ const QuestionEditor = ({ question }) => {
 
 QuestionEditor.propTypes = {
   question: shape({
-    questionId: string,
+    _id: string,
     index: number.isRequired,
     title: string,
     subtitle1: string,
@@ -127,7 +127,7 @@ QuestionEditor.propTypes = {
 // TODO index needs to be passed down from parent component
 QuestionEditor.defaultProps = {
   question: {
-    questionId: nanoid(),
+    _id: nanoid(),
     index: 2,
     title: '',
     subtitle1: '',
