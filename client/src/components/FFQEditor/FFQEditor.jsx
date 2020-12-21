@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 
 import BootstrapTable from 'react-bootstrap-table-next';
 
-import { DeleteButton } from '../Button';
+import { DeleteButton, OutlineButton } from '../Button';
 
 import { questionService } from '../../services';
 
@@ -98,14 +98,28 @@ function FFQEditor(props) {
     );
   };
 
+  const editButton = (cell, row) => {
+    return (
+      <div>
+        <OutlineButton title="Edit" onClick={() => console.log('editing')} />
+      </div>
+    );
+  };
+
   const enhancedColumns = [
     ...columns,
+    {
+      dataField: 'edit',
+      text: 'Edit',
+      editable: false,
+      align: 'center',
+      formatter: editButton
+    },
     {
       dataField: 'delete',
       text: 'Delete',
       editable: false,
       align: 'center',
-      headerStyle: { width: 120 },
       formatter: deleteButton
     }
   ];
