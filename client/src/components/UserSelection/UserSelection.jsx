@@ -3,7 +3,7 @@ import { InfoIcon } from '@primer/octicons-react';
 import SelectionCriteria from './SelectionCriteria';
 import AddRule from './AddRule';
 import SelectionRules from './SelectionRules';
-import { NavTabs } from '../Navigation';
+import { NavTabs, NavContents } from '../Navigation';
 import { addValidString } from '../../helpers';
 
 const rule1 = {
@@ -26,6 +26,7 @@ const mockRules = [rule1, rule2];
 const UserSelection = () => {
   const [selectionCriteria, setSelectionCriteria] = useState(mockSelectionCriteria);
   const [selectionRules, setSelectionRules] = useState(mockRules);
+  const tabNames = ['Criteria', 'Rules'];
 
   /**
    * TODO
@@ -61,53 +62,51 @@ const UserSelection = () => {
     }
   };
 
+  const criteriaContent = (
+    <div className="row">
+      <div className="col-sm-7 mb-3">
+        <h6>
+          <sup className="text-info mr-1">
+            <InfoIcon />
+          </sup>
+          Selection Criteria
+        </h6>
+        <SelectionCriteria
+          selectionCriteria={selectionCriteria}
+          addSelectionCriteria={saveSelectionCriteria}
+          removeSelectionCriteria={removeFromSelectionCriteria}
+        />
+      </div>
+    </div>
+  );
+
+  const rulesContent = (
+    <div className="row">
+      <div className="col mb-3">
+        <h6>
+          <sup className="text-info mr-1">
+            <InfoIcon />
+          </sup>
+          Rules
+        </h6>
+        <AddRule selectionCriteria={selectionCriteria} saveRule={saveRule} />
+      </div>
+      <div className="col mb-3">
+        <SelectionRules rules={selectionRules} removeRule={removeRule} />
+      </div>
+    </div>
+  );
+
   return (
     <div>
       <div className="container-fluid">
         <div className="row mb-3 mt-4">
           <div className="col">
-            <NavTabs tabs={['Criteria', 'Rules']} />
+            <NavTabs tabNames={tabNames} />
           </div>
         </div>
         <div className="tab-content" id="userSelectionContent">
-          <div
-            className="tab-pane fade show active"
-            id="Criteria"
-            role="tabpanel"
-            aria-labelledby="Criteria-tab"
-          >
-            <div className="row">
-              <div className="col-sm-7 mb-3">
-                <h6>
-                  <sup className="text-info mr-1">
-                    <InfoIcon />
-                  </sup>
-                  Selection Criteria
-                </h6>
-                <SelectionCriteria
-                  selectionCriteria={selectionCriteria}
-                  addSelectionCriteria={saveSelectionCriteria}
-                  removeSelectionCriteria={removeFromSelectionCriteria}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="tab-pane fade" id="Rules" role="tabpanel" aria-labelledby="Rules-tab">
-            <div className="row">
-              <div className="col mb-3">
-                <h6>
-                  <sup className="text-info mr-1">
-                    <InfoIcon />
-                  </sup>
-                  Rules
-                </h6>
-                <AddRule selectionCriteria={selectionCriteria} saveRule={saveRule} />
-              </div>
-              <div className="col mb-3">
-                <SelectionRules rules={selectionRules} removeRule={removeRule} />
-              </div>
-            </div>
-          </div>
+          <NavContents tabNames={tabNames} tabContents={[criteriaContent, rulesContent]} />
         </div>
       </div>
     </div>
