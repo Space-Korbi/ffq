@@ -10,8 +10,7 @@ const mongoose = require('mongoose');
 mongoose
   .connect('mongodb://127.0.0.1:27017/ffq', {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true
+    useUnifiedTopology: true
   })
   .catch((e) => {
     console.error('Connection error', e.message);

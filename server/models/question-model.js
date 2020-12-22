@@ -16,7 +16,7 @@ const { Schema } = mongoose;
 
 const Question = new Schema(
   {
-    _id: { type: String, required: true, index: true },
+    _id: { type: String, required: true },
     title: { type: String },
     subtitle1: { type: String },
     subtitle2: { type: String },
