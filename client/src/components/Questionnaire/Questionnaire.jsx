@@ -82,7 +82,7 @@ function Questionnaire() {
     return false;
   };
 
-  const isValidFFQElement = (ffqElementIndex) => {
+  const isValidQuestionnaireElement = (ffqElementIndex) => {
     if (ffqElementIndex >= 0 && ffqElementIndex < ffqElements.length) {
       return true;
     }
@@ -120,7 +120,7 @@ function Questionnaire() {
   };
 
   const transitionTo = (ffqElementIndex) => {
-    if (!isValidFFQElement(ffqElementIndex)) {
+    if (!isValidQuestionnaireElement(ffqElementIndex)) {
       return;
     }
     checkForLastElement(ffqElementIndex);

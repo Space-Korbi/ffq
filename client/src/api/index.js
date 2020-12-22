@@ -25,7 +25,7 @@ export const getAllImages = () => api.get(`/images`);
 export const deleteImageById = (id) => api.delete(`/image/${id}`);
 export const getImageById = (id) => api.get(`/image/${id}`);
 
-export const insertFFQ = (payload) => api.post(`/ffq`, payload);
+export const insertQuestionnaire = (payload) => api.post(`/questionnaire`, payload);
 
 const apis = {
   insertMovie,
@@ -35,7 +35,7 @@ const apis = {
   getMovieById,
   insertQuestion,
   getAllQuestions,
-  insertFFQ,
+  insertQuestionnaire,
   uploadImage
 };
 

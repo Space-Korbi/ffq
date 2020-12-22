@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+import { nanoid } from 'nanoid';
 import { insertQuestion, uploadImage, getAllQuestions, deleteQuestionById } from '../api';
 import AnswerType from '../types';
 
@@ -37,6 +39,12 @@ const updateAmountOptions = async (amountOptions) => {
 
 const saveQuestion = async (questionData, answerOptions) => {
   const payload = questionData;
+
+  if (!payload._id) {
+    console.log('id creation');
+    payload._id = nanoid();
+  }
+
   payload.answerOptions = answerOptions;
 
   if (answerOptions.type === AnswerType.Amount) {

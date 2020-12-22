@@ -5,14 +5,14 @@ import PropTypes from 'prop-types';
 import { Route, Switch, useRouteMatch, NavLink, Link } from 'react-router-dom';
 import PrivateRoute from '../PrivateRoute';
 import { MoviesList, MoviesInsert, MoviesUpdate } from '../../pages';
-import FFQPresentation from '../FFQ';
+import QuestionnairePresentation from '../Questionnaire';
 import AdminPage from '../../pages/AdminPage';
 import ParticipantPage from '../../pages/ParticipantPage';
 import AccountPage from '../../pages/AccountPage';
 import WelcomePage from '../../pages/WelcomePage';
 import UserSelection from '../UserSelection';
 import QuestionEditor from '../QuestionEditor';
-import FFQEditor from '../FFQEditor';
+import QuestionnaireEditor from '../QuestionnaireEditor';
 import { Role } from '../../helpers';
 import { authenticationService } from '../../services';
 
@@ -26,7 +26,7 @@ const Dashboard = ({ isAdmin }) => {
    * Map nav items according to admin and participant
    * highlight active nav link
    */
-  const adminLinksFFQs = [
+  const adminLinksQuestionnaires = [
     {
       name: 'Admin Panel',
       to: '/admin',
@@ -52,8 +52,8 @@ const Dashboard = ({ isAdmin }) => {
       activeClassName: 'nav-link active'
     },
     {
-      name: 'FFQ Editor',
-      to: '/FFQEditor',
+      name: 'Questionnaire Editor',
+      to: '/QuestionnaireEditor',
       className: 'nav-link',
       activeClassName: 'nav-link active'
     }
@@ -141,10 +141,10 @@ const Dashboard = ({ isAdmin }) => {
                         aria-haspopup="true"
                         aria-expanded="false"
                       >
-                        FFQ
+                        Questionnaire
                       </a>
                       <div className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        {adminLinksFFQs.map((link) => (
+                        {adminLinksQuestionnaires.map((link) => (
                           <a className="dropdown-item" href={`${url}${link.to}`} key={link.name}>
                             {link.name}
                           </a>
@@ -236,15 +236,15 @@ const Dashboard = ({ isAdmin }) => {
                 component={QuestionEditor}
               />
               <PrivateRoute
-                path={`${path}/FFQEditor`}
+                path={`${path}/QuestionnaireEditor`}
                 roles={[Role.Admin]}
                 isAdmin={isAdmin}
-                component={FFQEditor}
+                component={QuestionnaireEditor}
               />
               <Route path={`${path}/movies/list/movies/update/:id`} component={MoviesUpdate} />
               <Route path={`${path}/movies/list`} component={MoviesList} />
               <Route path={`${path}/movies/create`} component={MoviesInsert} />
-              <Route path={`${path}/questionnaire`} component={FFQPresentation} />
+              <Route path={`${path}/questionnaire`} component={QuestionnairePresentation} />
 
               <Route path={`${path}/account`} component={AccountPage} />
               <Route path={`${path}/`} exact component={WelcomePage} />

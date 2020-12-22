@@ -12,12 +12,11 @@ import { DeleteButton, OutlineButton } from '../Button';
 
 import { questionService } from '../../services';
 
-function FFQEditor(props) {
+function QuestionnaireEditor(props) {
   const [questions, setQuestions] = useState([]);
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    console.log('----------------------------------------------');
     const fetchData = async () => {
       const result = await questionService.fetchAllQuestions();
       setQuestions(result);
@@ -26,10 +25,9 @@ function FFQEditor(props) {
   }, []);
 
   const prepareRows = (questionData) => {
-    const rows = questionData.map((question) => {
+    const rows = questionData.map((question, index) => {
       return {
         _id: question._id,
-        index: question.index,
         title: question.title,
         subtitle1: question.subtitle1,
         subtitle2: question.subtitle2,
@@ -59,10 +57,6 @@ function FFQEditor(props) {
     {
       text: 'ID',
       dataField: '_id' // dataField is the "key" in the data
-    },
-    {
-      text: 'Index',
-      dataField: 'index'
     },
     {
       text: 'Title',
@@ -145,6 +139,6 @@ function FFQEditor(props) {
   );
 }
 
-FFQEditor.propTypes = {};
+QuestionnaireEditor.propTypes = {};
 
-export default FFQEditor;
+export default QuestionnaireEditor;

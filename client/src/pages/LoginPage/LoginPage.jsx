@@ -39,7 +39,7 @@ const LoginPage = () => {
                   (user) => {
                     /**
                      * TODO redirect
-                     * redirect to first unanswered question of ffq if possible
+                     * redirect to first unanswered question of questionnaire if possible
                      */
                     history.push(`/dashboard/${user.id}`);
                   },

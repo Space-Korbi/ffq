@@ -3,15 +3,15 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 /**
- * * FFQ Schema
+ * * Questionnaire
  * @param id
  * @param name
- * @param startDate - Date when the FFQ is accesible
- * @param endDate - Date when the FFQ is no longer accesible
- * @param questions - questions in the ffq
+ * @param startDate - Date when the Questionnaire is accesible
+ * @param endDate - Date when the Questionnaire is no longer accesible
+ * @param questions - Array of questions
  */
 
-const FFQ = new Schema(
+const Questionnaire = new Schema(
   {
     id: { type: String, required: true, unique: true },
     name: { type: String, required: true },
@@ -22,4 +22,4 @@ const FFQ = new Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model('ffq', FFQ);
+module.exports = mongoose.model('questionnaire', Questionnaire);

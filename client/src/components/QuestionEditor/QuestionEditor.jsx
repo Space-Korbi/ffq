@@ -1,7 +1,7 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-restricted-syntax */
 import React, { useState, useReducer } from 'react';
 import { string, shape, arrayOf, number, bool, exact, oneOfType } from 'prop-types';
-import { nanoid } from 'nanoid';
 
 import { NavTabs, NavContents } from '../Navigation';
 import JumbotronInputs from './JumbotronInputs';
@@ -47,10 +47,7 @@ const QuestionEditor = ({ question }) => {
             type="button"
             className="btn btn-outline-primary"
             onClick={() =>
-              questionService.saveQuestion(
-                { _id: nanoid(), title, index: 2, subtitle1, subtitle2, help },
-                answerOptions
-              )
+              questionService.saveQuestion({ title, subtitle1, subtitle2, help }, answerOptions)
             }
           >
             Save Question
@@ -127,8 +124,6 @@ QuestionEditor.propTypes = {
 // TODO index needs to be passed down from parent component
 QuestionEditor.defaultProps = {
   question: {
-    _id: nanoid(),
-    index: 2,
     title: '',
     subtitle1: '',
     subtitle2: '',

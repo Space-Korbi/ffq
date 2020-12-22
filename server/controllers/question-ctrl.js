@@ -8,7 +8,7 @@ const Question = require('../models/question-model');
  * create, update, delete and get question entries
  */
 
-const createQuestion = (req, res) => {
+const createQuestion = async (req, res) => {
   const { body } = req;
 
   if (!body) {
@@ -16,6 +16,11 @@ const createQuestion = (req, res) => {
       success: false,
       error: 'You must provide a question'
     });
+  }
+
+  if (!body.index) {
+    const count = await Question.countDocuments();
+    body.index = count + 1;
   }
 
   const question = new Question(body);

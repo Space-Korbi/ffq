@@ -15,14 +15,12 @@ const bodyParser = require('body-parser');
 require('./db');
 
 // const movieRouter = require('./routes/movie-router');
-const ffqRouter = require('./routes/ffq-router');
+const questionnaireRouter = require('./routes/questionnaire-router');
 const questionRouter = require('./routes/question-router');
 const imageRouter = require('./routes/image-router');
 
 // * Create express app
 const app = express();
-
-// * Set Cors options
 
 /**
  * A middleware function with no mount path.
@@ -35,30 +33,9 @@ app.use(bodyParser.json());
 app.use(express.static('uploads'));
 
 /**
- * This example shows a route and its handler function (middleware system).
- * The function handles GET requests to the '/' path.
- */
-
-app.get('/', (req, res) => {
-  return res.send('Received a GET HTTP method');
-});
-
-app.post('/', (req, res) => {
-  return res.send('Received a POST HTTP method');
-});
-
-app.put('/', (req, res) => {
-  return res.send('Received a PUT HTTP method');
-});
-
-app.delete('/', (req, res) => {
-  return res.send('Received a DELETE HTTP method');
-});
-
-/**
  * Mount the routes on the '/api' path.
  * An array with a middleware sub-stacks that handle HTTP requests on the '/api' path.
  */
-app.use('/api', [questionRouter, ffqRouter, imageRouter]);
+app.use('/api', [questionRouter, questionnaireRouter, imageRouter]);
 
 app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));
