@@ -26,6 +26,8 @@ const app = express();
  * A middleware function with no mount path.
  * The function is executed every time the app receives a request.
  */
+
+app.options('*', cors());
 app.use(cors());
 
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
