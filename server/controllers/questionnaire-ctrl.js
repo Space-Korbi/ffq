@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 const async = require('async');
 const Questionnaire = require('../models/questionnaire-model');
+const QuestionCtrl = require('./question-ctrl');
 const Question = require('../models/question-model');
 
 /**
@@ -87,13 +88,6 @@ const updateQuestionnaire = async (req, res) => {
       case updateAction.removeById: {
         console.log('removing by id');
         questionnaire.questions.pull({ _id: body.questionId });
-        Question.findByIdAndDelete(body.questionId, (err, docs) => {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log('Deleted : ', docs);
-          }
-        });
         break;
       }
       case updateAction.moveUp: {

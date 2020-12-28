@@ -6,7 +6,8 @@ import {
   insertQuestionnaire,
   getAllQuestionnaires,
   updateQuestionnaire,
-  deleteQuestionnaireById
+  deleteQuestionnaireById,
+  deleteQuestionById
 } from '../api';
 
 const updateAction = {
@@ -60,12 +61,17 @@ const createQuestionAt = async (questionnaireId, index) => {
 };
 
 const removeQuestionById = (questionnaireId, questionId) => {
-  const questionnairePayload = {
-    action: updateAction.removeById,
-    questionId
-  };
-  return updateQuestionnaire(questionnaireId, questionnairePayload).then((res) => {
-    return res.data;
+  console.log('id', questionId);
+
+  return deleteQuestionById(questionnaireId, questionId).then((response) => {
+    console.log('response', response);
+    const questionnairePayload = {
+      action: updateAction.removeById,
+      questionId
+    };
+    return updateQuestionnaire(questionnaireId, questionnairePayload).then((res) => {
+      return res.data;
+    });
   });
 };
 
