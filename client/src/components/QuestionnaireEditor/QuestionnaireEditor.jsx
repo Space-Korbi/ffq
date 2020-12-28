@@ -209,7 +209,7 @@ const QuestionsList = ({ questionnaireId, removeFromList, deleteQuestionnaire })
             <DeleteButton isTrashCan onClick={() => deleteQuestionnaire(questionnaireId)} />
           </div>
           <ul className="list-group">
-            {questions.length &&
+            {questions && questions.length ? (
               questions.map((question) => {
                 return (
                   <div key={question._id} className="row p-2 ">
@@ -241,7 +241,10 @@ const QuestionsList = ({ questionnaireId, removeFromList, deleteQuestionnaire })
                     </div>
                   </div>
                 );
-              })}
+              })
+            ) : (
+              <div> No Questions </div>
+            )}
           </ul>
         </div>
       ) : (
