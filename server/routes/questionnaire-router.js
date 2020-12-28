@@ -13,5 +13,6 @@ router.post('/questionnaire', QuestionnaireCtrl.createQuestionnaire);
 router.put('/questionnaire/:id', QuestionnaireCtrl.updateQuestionnaire);
 router.delete('/questionnaire/:id', QuestionnaireCtrl.deleteQuestionnaire);
 router.get('/questionnaire/:id', QuestionnaireCtrl.getQuestionnaireById);
+router.get('/questionnaires', QuestionnaireCtrl.getQuestionnaires);
 
 module.exports = router;
