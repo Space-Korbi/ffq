@@ -15,7 +15,7 @@ import AnswerEditor from '../AnswerEditor/AnswerEditor';
 
 const tabNames = ['Edit', 'Arrange'];
 
-const QuestionEditor = ({ question }) => {
+const QuestionEditor = ({ question, questionnaireId }) => {
   const [title, setTitle] = useState(question.title);
   const [subtitle1, setSubtitle1] = useState(question.subtitle1);
   const [subtitle2, setSubtitle2] = useState(question.subtitle2);
@@ -47,7 +47,11 @@ const QuestionEditor = ({ question }) => {
             type="button"
             className="btn btn-outline-primary"
             onClick={() =>
-              questionService.saveQuestion({ title, subtitle1, subtitle2, help }, answerOptions)
+              questionService.saveQuestion(
+                questionnaireId,
+                { title, subtitle1, subtitle2, help },
+                answerOptions
+              )
             }
           >
             Save Question
@@ -71,21 +75,34 @@ const QuestionEditor = ({ question }) => {
     </div>
   );
 
+  console.log(questionnaireId);
   return (
-    <div>
-      <div className="m-3">
-        <NavTabs tabNames={tabNames} />
-      </div>
-      <div>
-        <NavContents tabNames={tabNames} tabContents={[editor, arrange]} />
-      </div>
-    </div>
+    <>
+      {questionnaireId ? (
+        <div>
+          <div className="m-3">
+            <NavTabs tabNames={tabNames} />
+          </div>
+          <div>
+            <NavContents tabNames={tabNames} tabContents={[editor, arrange]} />
+          </div>
+        </div>
+      ) : (
+        <div className="m-5 text-center">
+          <div className="alert alert-info" role="alert">
+            You need to create a questionnaire before you can add questions
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
 QuestionEditor.propTypes = {
+  questionnaireId: string.isRequired,
   question: shape({
     _id: string,
+    questionnaireId: string.isRequired,
     index: number.isRequired,
     title: string,
     subtitle1: string,
@@ -121,7 +138,6 @@ QuestionEditor.propTypes = {
   })
 };
 
-// TODO index needs to be passed down from parent component
 QuestionEditor.defaultProps = {
   question: {
     title: '',
