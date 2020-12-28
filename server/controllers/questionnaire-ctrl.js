@@ -1,12 +1,23 @@
 /* eslint-disable no-underscore-dangle */
+const async = require('async');
 const Questionnaire = require('../models/questionnaire-model');
+const Question = require('../models/question-model');
 
 /**
  * * Questionnaire controller
  * This class contains the functions to
  * create, update, delete and get questionnaire entries
  */
-const createQuestionnaire = (req, res) => {
+
+const updateAction = {
+  insert: 'insert',
+  insertAt: 'insertAt',
+  removeById: 'removeById',
+  moveUp: 'moveUp',
+  moveDown: 'moveDown'
+};
+
+const createQuestionnaire = async (req, res) => {
   const { body } = req;
 
   if (!body) {
@@ -27,7 +38,7 @@ const createQuestionnaire = (req, res) => {
     .then(() => {
       return res.status(201).json({
         success: true,
-        id: questionnaire._id,
+        data: questionnaire,
         message: 'Questionnaire created!'
       });
     })
@@ -49,23 +60,65 @@ const updateQuestionnaire = async (req, res) => {
     });
   }
 
-  Questionnaire.findOne({ _id: req.params.id }, (err, questionnaire) => {
+  Questionnaire.findOne({ _id: req.params.id }, async (err, questionnaire) => {
     if (err) {
       return res.status(404).json({
         err,
         message: 'Questionnaire not found!'
       });
     }
+
     const questionnaireUpdate = questionnaire;
-    questionnaireUpdate.name = body.name;
-    questionnaireUpdate.time = body.time;
-    questionnaireUpdate.rating = body.rating;
+
+    switch (body.action) {
+      case updateAction.insert: {
+        console.log('inserting');
+        questionnaireUpdate.questions.push(body.questionId);
+        break;
+      }
+      case updateAction.insertAt: {
+        console.log('inserting at');
+        questionnaireUpdate.questions.push({
+          $each: [body.questionId],
+          $position: body.index
+        });
+        break;
+      }
+      case updateAction.removeById: {
+        console.log('removing by id');
+        questionnaire.questions.pull({ _id: body.questionId });
+        Question.findByIdAndDelete(body.questionId, (err, docs) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log('Deleted : ', docs);
+          }
+        });
+        break;
+      }
+      case updateAction.moveUp: {
+        console.log('moving up');
+        break;
+      }
+      case updateAction.moveDown: {
+        console.log('moving down');
+        break;
+      }
+      default:
+        break;
+    }
+
+    const question = await Question.findById(body.questionId);
+    console.log('Found question:', question);
+
     questionnaireUpdate
       .save()
       .then(() => {
         return res.status(200).json({
           success: true,
           id: questionnaire._id,
+          question,
+          index: body.index,
           message: 'Questionnaire updated!'
         });
       })
@@ -79,7 +132,8 @@ const updateQuestionnaire = async (req, res) => {
 };
 
 const deleteQuestionnaire = async (req, res) => {
-  await Questionnaire.findOneAndDelete({ _id: req.params.id }, (err, questionnaire) => {
+  console.log('deleting +++++++++', req.params);
+  await Questionnaire.findById({ _id: req.params.id }, (err, questionnaire) => {
     if (err) {
       return res.status(400).json({ success: false, error: err });
     }
@@ -88,8 +142,30 @@ const deleteQuestionnaire = async (req, res) => {
       return res.status(404).json({ success: false, error: `Questionnaire not found` });
     }
 
+    const removeQuestionCalls = [];
+
+    questionnaire.questions.forEach((questionId) => {
+      removeQuestionCalls.push((callback) => {
+        Question.findByIdAndDelete(questionId).then((result) => {
+          console.log('Result', result);
+
+          callback(null, result);
+        });
+      });
+    });
+
+    async.parallel(removeQuestionCalls, (err, results) => {
+      console.log('Removed questions: ', results);
+    });
+
+    console.log('must delete questionnaire questions here');
+
     return res.status(200).json({ success: true, data: questionnaire });
   }).catch((err) => console.log(err));
+
+  await Questionnaire.findByIdAndDelete({ _id: req.params.id }, (err, questionnaire) =>
+    console.log('Deleted', questionnaire)
+  );
 };
 
 const getQuestionnaireById = async (req, res) => {
@@ -105,9 +181,22 @@ const getQuestionnaireById = async (req, res) => {
   }).catch((err) => console.log(err));
 };
 
+const getQuestionnaires = async (req, res) => {
+  await Questionnaire.find({}, null, { sort: 'createdAt' }, (err, questionnaires) => {
+    if (err) {
+      return res.status(400).json({ success: false, error: err });
+    }
+    if (!questionnaires.length) {
+      return res.status(404).json({ success: false, error: `Questionnaire not found` });
+    }
+    return res.status(200).json({ success: true, data: questionnaires });
+  }).catch((err) => console.log(err));
+};
+
 module.exports = {
   createQuestionnaire,
   updateQuestionnaire,
   deleteQuestionnaire,
-  getQuestionnaireById
+  getQuestionnaireById,
+  getQuestionnaires
 };
