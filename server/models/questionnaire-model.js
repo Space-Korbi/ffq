@@ -1,10 +1,11 @@
+const nanoid = require('nanoid');
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
 /**
  * * Questionnaire
- * @param id
+ * @param _id
  * @param name
  * @param startDate - Date when the Questionnaire is accesible
  * @param endDate - Date when the Questionnaire is no longer accesible
@@ -13,13 +14,17 @@ const { Schema } = mongoose;
 
 const Questionnaire = new Schema(
   {
-    id: { type: String, required: true, unique: true },
-    name: { type: String, required: true },
-    startDate: { type: Date, required: true },
-    endDate: { type: Date, required: true },
-    questions: { type: [String], required: true }
+    _id: {
+      type: String,
+      default: nanoid.nanoid(),
+      required: true
+    },
+    name: { type: String },
+    startDate: { type: Date },
+    endDate: { type: Date },
+    questions: { type: [String] }
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model('questionnaire', Questionnaire);
+module.exports = mongoose.model('questionnaires', Questionnaire);
