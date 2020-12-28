@@ -1,6 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 const fs = require('fs');
+const async = require('async');
 const Question = require('../models/question-model');
+const Questionnaire = require('../models/questionnaire-model');
 
 /**
  * * Question controller
@@ -16,11 +18,6 @@ const createQuestion = async (req, res) => {
       success: false,
       error: 'You must provide a question'
     });
-  }
-
-  if (!body.index) {
-    const count = await Question.countDocuments();
-    body.index = count + 1;
   }
 
   const question = new Question(body);
@@ -95,8 +92,45 @@ const getQuestions = async (req, res) => {
   }).catch((err) => console.log(err));
 };
 
+const getQuestionsOfQuestionnaire = async (req, res) => {
+  await Questionnaire.findById(req.params.questionnaireId).then((questionnaire) => {
+    const findQuestionCalls = [];
+
+    questionnaire.questions.forEach((questionId) => {
+      findQuestionCalls.push((callback) => {
+        Question.findById(questionId).then((result) => {
+          console.log('Result', result);
+          if (result === null) {
+            const placeholder = {
+              _id: 'Undefined'
+            };
+            callback(null, placeholder);
+          } else {
+            callback(null, result);
+          }
+        });
+      });
+    });
+
+    async.parallel(findQuestionCalls, (err, results) => {
+      return res.status(200).json({ success: true, data: results });
+    });
+
+    /*
+    await Promise.all(
+      questionnaire.questions.map(async (questionId) => {
+        console.log('Im a questionId', questionId);
+        await Question.findById(questionId).then((question) => {
+          console.log('Question', question);
+        });
+      })
+    ); */
+  });
+};
+
 module.exports = {
   createQuestion,
   deleteQuestion,
-  getQuestions
+  getQuestions,
+  getQuestionsOfQuestionnaire
 };

@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 /* eslint-disable no-underscore-dangle */
 import { nanoid } from 'nanoid';
 import { insertQuestion, uploadImage, getAllQuestions, deleteQuestionById } from '../api';
@@ -8,6 +9,20 @@ import AnswerType from '../types';
  * Sending a request to the surver to upload the images
  * and return the filename in the DB as well as the path
  */
+
+const createQuestion = async (questionnaireId) => {
+  const questionId = nanoid();
+
+  const payload = {
+    _id: questionId
+  };
+
+  await insertQuestion(questionnaireId, payload).then((res) => {
+    window.alert(`Question created successfully`);
+    console.log(res.data.id);
+    return res.data.id;
+  });
+};
 
 const updateAmountOption = (dbResponse, amountOption) => {
   const updatedAmountOption = amountOption;
@@ -37,8 +52,14 @@ const updateAmountOptions = async (amountOptions) => {
   return updatedAmountOptions;
 };
 
-const saveQuestion = async (questionData, answerOptions) => {
+const saveQuestion = async (questionnaireId, questionData, answerOptions) => {
+  console.log('QID', questionnaireId);
   const payload = questionData;
+
+  if (!questionnaireId) {
+    window.alert(`Question could not be inserted. A containing questionnaire must be provided.`);
+    return;
+  }
 
   if (!payload._id) {
     console.log('id creation');
@@ -53,8 +74,7 @@ const saveQuestion = async (questionData, answerOptions) => {
   }
 
   console.log('Payload', payload);
-  await insertQuestion(payload).then(() => {
-    // eslint-disable-next-line
+  await insertQuestion(questionnaireId, payload).then(() => {
     window.alert(`Question inserted successfully`);
   });
 };
@@ -70,6 +90,6 @@ const deleteQuestion = async (id) => {
   return deletedQuestion;
 };
 
-const questionService = { saveQuestion, fetchAllQuestions, deleteQuestion };
+const questionService = { createQuestion, saveQuestion, fetchAllQuestions, deleteQuestion };
 
 export default questionService;
