@@ -14,8 +14,7 @@ const updateAction = {
   insert: 'insert',
   insertAt: 'insertAt',
   removeById: 'removeById',
-  moveUp: 'moveUp',
-  moveDown: 'moveDown'
+  move: 'move'
 };
 
 const createQuestionnaire = async () => {
@@ -75,7 +74,17 @@ const removeQuestionById = (questionnaireId, questionId) => {
   });
 };
 
-// const moveQuestionTo = async (questionnaireId, questionId, index) => {};
+const moveQuestionFromTo = async (questionnaireId, questionId, fromIndex, toIndex) => {
+  const questionnairePayload = {
+    action: updateAction.move,
+    questionId,
+    fromIndex,
+    toIndex
+  };
+  return updateQuestionnaire(questionnaireId, questionnairePayload).then((res) => {
+    return res.data;
+  });
+};
 
 const fetchAllQuestionsOfQuestionnaire = async (questionnaireId) => {
   if (!questionnaireId) {
@@ -96,7 +105,8 @@ const questionnaireService = {
   fetchAllQuestionnaires,
   fetchAllQuestionsOfQuestionnaire,
   removeQuestionById,
-  deleteQuestionnaire
+  deleteQuestionnaire,
+  moveQuestionFromTo
 };
 
 export default questionnaireService;

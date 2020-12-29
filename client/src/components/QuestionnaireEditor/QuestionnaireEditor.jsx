@@ -185,6 +185,29 @@ const QuestionsList = ({ questionnaireId, removeFromList, deleteQuestionnaire })
       });
   };
 
+  const handleMoveQuestionFromTo = async (question, fromIndex, toIndex) => {
+    if (toIndex >= 0 && toIndex < questions.length) {
+      await questionnaireService
+        .moveQuestionFromTo(questionnaireId, question._id, fromIndex, toIndex)
+        .then((response) => {
+          if (response.success) {
+            const questionsCopy = [...questions];
+
+            if (toIndex > fromIndex) {
+              questionsCopy.splice(fromIndex, 1);
+              questionsCopy.splice(toIndex, 0, question);
+            } else if (toIndex < fromIndex) {
+              questionsCopy.splice(toIndex, 0, question);
+              questionsCopy.splice(fromIndex + 1, 1);
+            }
+
+            console.log('moving ', question._id, ' from ', fromIndex, ' to index', toIndex);
+            setQuestions(questionsCopy);
+          }
+        });
+    }
+  };
+
   return (
     <div>
       {questionnaireId ? (
@@ -210,7 +233,7 @@ const QuestionsList = ({ questionnaireId, removeFromList, deleteQuestionnaire })
           </div>
           <ul className="list-group">
             {questions && questions.length ? (
-              questions.map((question) => {
+              questions.map((question, index) => {
                 return (
                   <div key={question._id} className="row p-2 ">
                     <div className="col">
@@ -235,9 +258,14 @@ const QuestionsList = ({ questionnaireId, removeFromList, deleteQuestionnaire })
                       />
                     </div>
                     <div className="col-1 d-inline">
-                      <MoveButton up onClick={() => console.log('up')} />
+                      <MoveButton
+                        up
+                        onClick={() => handleMoveQuestionFromTo(question, index, index - 1)}
+                      />
 
-                      <MoveButton onClick={() => console.log('down')} />
+                      <MoveButton
+                        onClick={() => handleMoveQuestionFromTo(question, index, index + 1)}
+                      />
                     </div>
                   </div>
                 );
@@ -306,7 +334,7 @@ const QuestionnaireEditor = (props) => {
     <div>
       <div className="m-5">
         <OutlineButton title="Create Questionnaire" onClick={() => handleCreateQuestionnaire()} />
-        {questionnaires &&
+        {questionnaires && questionnaires.length ? (
           questionnaires.map((questionnaire) => {
             return (
               <div key={questionnaire._id} className="my-3">
@@ -318,7 +346,10 @@ const QuestionnaireEditor = (props) => {
                 />
               </div>
             );
-          })}
+          })
+        ) : (
+          <div>No questionnaires </div>
+        )}
       </div>
       <div className="px-2">
         <QuestionTable onSelectQuestion={handleOnChange} />

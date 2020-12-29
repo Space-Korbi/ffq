@@ -1,7 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 const async = require('async');
 const Questionnaire = require('../models/questionnaire-model');
-const QuestionCtrl = require('./question-ctrl');
 const Question = require('../models/question-model');
 
 /**
@@ -14,8 +13,7 @@ const updateAction = {
   insert: 'insert',
   insertAt: 'insertAt',
   removeById: 'removeById',
-  moveUp: 'moveUp',
-  moveDown: 'moveDown'
+  move: 'move'
 };
 
 const createQuestionnaire = async (req, res) => {
@@ -90,12 +88,15 @@ const updateQuestionnaire = async (req, res) => {
         questionnaire.questions.pull({ _id: body.questionId });
         break;
       }
-      case updateAction.moveUp: {
-        console.log('moving up');
-        break;
-      }
-      case updateAction.moveDown: {
-        console.log('moving down');
+      case updateAction.move: {
+        console.log('moving');
+        if (body.toIndex > body.fromIndex) {
+          questionnaire.questions.splice(body.fromIndex, 1);
+          questionnaire.questions.splice(body.toIndex, 0, body.questionId);
+        } else if (body.toIndex < body.fromIndex) {
+          questionnaire.questions.splice(body.toIndex, 0, body.questionId);
+          questionnaire.questions.splice(body.fromIndex + 1, 1);
+        }
         break;
       }
       default:
