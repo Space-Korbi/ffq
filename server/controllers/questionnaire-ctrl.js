@@ -76,11 +76,12 @@ const updateQuestionnaire = async (req, res) => {
         break;
       }
       case updateAction.insertAt: {
-        console.log('inserting at');
+        console.log('inserting at', body.index);
         questionnaireUpdate.questions.push({
           $each: [body.questionId],
           $position: body.index
         });
+        console.log('updated questionnaire', questionnaireUpdate);
         break;
       }
       case updateAction.removeById: {

@@ -48,7 +48,7 @@ const createQuestionAt = async (questionnaireId, index) => {
       action: updateAction.insert,
       questionId: question.data.id
     };
-    if (index) {
+    if (index >= 0) {
       questionnairePayload.action = updateAction.insertAt;
       questionnairePayload.index = index;
     }

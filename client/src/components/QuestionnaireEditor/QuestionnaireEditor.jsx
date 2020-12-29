@@ -146,6 +146,7 @@ const QuestionTable = ({ onSelectQuestion }) => {
 
 const QuestionsList = ({ questionnaireId, removeFromList, deleteQuestionnaire }) => {
   const [questions, setQuestions] = useState([]);
+  const [insertIndex, setInsertIndex] = useState();
 
   useEffect(() => {
     const fetchQuestion = async () => {
@@ -161,10 +162,10 @@ const QuestionsList = ({ questionnaireId, removeFromList, deleteQuestionnaire })
   const handleCreateQuestionAt = async (index) => {
     await questionnaireService.createQuestionAt(questionnaireId, index).then((response) => {
       const questionsCopy = [...questions];
-      if (!index) {
-        questionsCopy.push(response.question);
-      } else {
+      if (index >= 0) {
         questionsCopy.splice(index, 0, response.question);
+      } else {
+        questionsCopy.push(response.question);
       }
       setQuestions(questionsCopy);
     });
@@ -223,10 +224,18 @@ const QuestionsList = ({ questionnaireId, removeFromList, deleteQuestionnaire })
                 handleCreateQuestionAt();
               }}
             />
+            <input
+              type="number"
+              className="form-control"
+              placeholder="Index"
+              min="1"
+              max={questions.length}
+              onChange={(e) => setInsertIndex(Number(e.target.value))}
+            />
             <OutlineButton
-              title="Create Question At 2"
+              title="Create Question At"
               onClick={() => {
-                handleCreateQuestionAt(2);
+                handleCreateQuestionAt(insertIndex - 1);
               }}
             />
             <DeleteButton isTrashCan onClick={() => deleteQuestionnaire(questionnaireId)} />
