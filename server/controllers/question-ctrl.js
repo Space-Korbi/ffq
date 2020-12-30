@@ -81,9 +81,7 @@ const deleteQuestion = async (req, res) => {
     return res.status(200).json({ success: true, data: question });
   }).catch((err) => console.log(err));
 
-  await Question.findByIdAndDelete({ _id: req.params.id }, (err, question) =>
-    console.log('Deleted', question)
-  );
+  await Question.findByIdAndDelete({ _id: req.params.id }, (err, question) => {});
 };
 
 const getQuestions = async (req, res) => {

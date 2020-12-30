@@ -147,17 +147,15 @@ const deleteQuestionnaire = async (req, res) => {
     });
 
     async.parallel(removeQuestionCalls, (err, results) => {
-      console.log('Removed questions: ', results);
+      console.log(err);
     });
-
-    console.log('must delete questionnaire questions here');
 
     return res.status(200).json({ success: true, data: questionnaire });
   }).catch((err) => console.log(err));
 
-  await Questionnaire.findByIdAndDelete({ _id: req.params.id }, (err, questionnaire) =>
-    console.log('Deleted', questionnaire)
-  );
+  await Questionnaire.findByIdAndDelete({ _id: req.params.id }, (err, questionnaire) => {
+    console.log(err);
+  });
 };
 
 const getQuestionnaireById = async (req, res) => {
