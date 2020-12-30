@@ -10,7 +10,6 @@ import { authenticationService } from '../../services';
  * screen if you're not yet authenticated.
  */
 const PrivateRoute = ({ location, roles, isAdmin, component: Component, ...rest }) => {
-  console.log(location);
   return (
     <Route
       {...rest}

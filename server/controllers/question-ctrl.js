@@ -44,12 +44,9 @@ const createQuestion = async (req, res) => {
 };
 
 const deleteImages = (imageNames) => {
-  console.log('Deleting imageNames ...', imageNames);
-
   imageNames.forEach((imageName) => {
     fs.unlink(`uploads/${imageName}`, (err) => {
       if (err) throw err;
-      console.log(`${imageName} was deleted`);
     });
   });
 };
@@ -59,14 +56,12 @@ const deleteImagesOfQuestion = (options) => {
     return;
   }
   const imageNames = options.reduce((filtered, option) => {
-    console.log('Option', option);
     if (option.imageName) {
       const { imageName } = option;
       filtered.push(imageName);
     }
     return filtered;
   }, []);
-  console.log('++++++++++', imageNames);
   deleteImages(imageNames);
 };
 
@@ -110,7 +105,6 @@ const getQuestionsOfQuestionnaire = async (req, res) => {
     questionnaire.questions.forEach((questionId) => {
       findQuestionCalls.push((callback) => {
         Question.findById(questionId).then((result) => {
-          console.log('Result', result);
           if (result === null) {
             const placeholder = {
               _id: 'Undefined'
@@ -158,18 +152,14 @@ const updateQuestionById = async (req, res) => {
 
     if (body.answerOptions.type === 'Amount') {
       const removedImages = question.answerOptions.options.filter((prevOption) => {
-        console.log('PrevOption', prevOption);
         let found = false;
         body.answerOptions.options.forEach((updatedOption) => {
-          console.log('UpdatedOption', updatedOption);
-
           if (prevOption.imageName === updatedOption.imageName) {
             found = true;
           }
         });
         return !found;
       });
-      console.log('images to remove ====== ', removedImages);
       deleteImagesOfQuestion(removedImages);
     }
 

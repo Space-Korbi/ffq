@@ -16,7 +16,7 @@ export const updateMovieById = (id, payload) => api.put(`/movie/${id}`, payload)
 export const deleteMovieById = (id) => api.delete(`/movie/${id}`);
 export const getMovieById = (id) => api.get(`/movie/${id}`);
 
-export const insertQuestion = (questionnaireId, payload) =>
+export const insertQuestionAt = (questionnaireId, payload) =>
   api.post(`/questionnaire/${questionnaireId}/question`, payload);
 export const getAllQuestions = () => api.get(`/questions`);
 export const updateQuestionById = (id, payload) => api.put(`/question/${id}`, payload);
@@ -45,7 +45,7 @@ const apis = {
   updateMovieById,
   deleteMovieById,
   getMovieById,
-  insertQuestion,
+  insertQuestionAt,
   getAllQuestions,
   getAllQuestionsOfQuestionnaire,
   insertQuestionnaire,

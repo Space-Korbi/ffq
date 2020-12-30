@@ -1,7 +1,7 @@
 /* eslint-disable no-alert */
 import { nanoid } from 'nanoid';
 import {
-  insertQuestion,
+  insertQuestionAt,
   getAllQuestionsOfQuestionnaire,
   insertQuestionnaire,
   getAllQuestionnaires,
@@ -29,10 +29,7 @@ const createQuestionnaire = async () => {
 };
 
 const fetchAllQuestionnaires = async () => {
-  console.log('fetching questionnaires');
-
   const questionnaires = await getAllQuestionnaires();
-  console.log('fetching questionnaires', questionnaires);
   return questionnaires.data.data;
 };
 
@@ -51,7 +48,7 @@ const createQuestionAt = async (questionnaireId, index) => {
     }
   };
 
-  return insertQuestion(questionnaireId, questionPayload).then(async (question) => {
+  return insertQuestionAt(questionnaireId, questionPayload).then(async (question) => {
     const questionnairePayload = {
       action: updateAction.insert,
       questionId: question.data.id
@@ -68,10 +65,7 @@ const createQuestionAt = async (questionnaireId, index) => {
 };
 
 const removeQuestionById = (questionnaireId, questionId) => {
-  console.log('id', questionId);
-
-  return deleteQuestionById(questionnaireId, questionId).then((response) => {
-    console.log('response', response);
+  return deleteQuestionById(questionnaireId, questionId).then(() => {
     const questionnairePayload = {
       action: updateAction.removeById,
       questionId

@@ -5,7 +5,6 @@ import { func, string } from 'prop-types';
 
 function AnswerCard({ title, imageURL, imageName, onClick }) {
   const [currentURL, setCurrentURL] = useState(`http://localhost:3000/${imageName}`);
-  console.log('-------', currentURL);
   /**
    * TODO
    * change hardcoded URL path value and make url global constant

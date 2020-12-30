@@ -65,6 +65,7 @@ const QuestionTable = ({ onSelectQuestion }) => {
   const editButton = (cell, row) => {
     return (
       <div>
+        {/* eslint-disable-next-line no-console */}
         <OutlineButton title="Edit" onClick={() => console.log('editing')} />
       </div>
     );
@@ -147,13 +148,10 @@ const QuestionTable = ({ onSelectQuestion }) => {
 
 const QuestionsList = ({ questionnaireId, deleteQuestionnaire }) => {
   const [questions, setQuestions] = useState([]);
-  const [insertIndex, setInsertIndex] = useState();
   const history = useHistory();
   const { userId } = useParams();
 
   function handleClickEdit(question) {
-    console.log('ID', userId);
-
     history.push({
       pathname: `/dashboard/${userId}/QuestionEditor`,
       state: { question, questionnaireId }
@@ -165,7 +163,6 @@ const QuestionsList = ({ questionnaireId, deleteQuestionnaire }) => {
       const fetchedQuestions = await questionnaireService.fetchAllQuestionsOfQuestionnaire(
         questionnaireId
       );
-      console.log('Fetched Questions', fetchedQuestions);
       setQuestions(fetchedQuestions);
     };
     fetchQuestion();
@@ -213,8 +210,6 @@ const QuestionsList = ({ questionnaireId, deleteQuestionnaire }) => {
               questionsCopy.splice(toIndex, 0, question);
               questionsCopy.splice(fromIndex + 1, 1);
             }
-
-            console.log('moving ', question._id, ' from ', fromIndex, ' to index', toIndex);
             setQuestions(questionsCopy);
           }
         });
@@ -256,6 +251,7 @@ const QuestionsList = ({ questionnaireId, deleteQuestionnaire }) => {
                       <div className="col-1 ">
                         <CopyButton
                           onClick={() => {
+                            // eslint-disable-next-line no-console
                             console.log('copying');
                           }}
                         />
@@ -330,17 +326,13 @@ const QuestionnaireEditor = (props) => {
   };
 
   const handleDeleteQuestionnaire = async (id) => {
-    console.log('delet Questionnaire with ID', id);
-
     const deletedQuestionnaire = await questionnaireService.deleteQuestionnaire(id);
-    console.log('deletedQuestionnaire', deletedQuestionnaire);
     setQuestionnaires(
       questionnaires.filter((questionnaire) => questionnaire._id !== deletedQuestionnaire._id)
     );
   };
 
   const removeQuestion = (id) => {
-    console.log(id);
     setSelectedQuestions((state) => {
       const filtered = state.filter((selectedQuestion) => selectedQuestion !== id);
       return filtered;
@@ -348,8 +340,6 @@ const QuestionnaireEditor = (props) => {
   };
 
   const handleOnChange = (e, id) => {
-    console.log(e.target.checked);
-    console.log(id);
     if (e.target.checked) {
       setSelectedQuestions((state) => [...state, id]);
     }

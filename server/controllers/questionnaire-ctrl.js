@@ -72,26 +72,21 @@ const updateQuestionnaire = async (req, res) => {
 
     switch (body.action) {
       case updateAction.insert: {
-        console.log('inserting');
         questionnaireUpdate.questions.push(body.questionId);
         break;
       }
       case updateAction.insertAt: {
-        console.log('inserting at', body.index);
         questionnaireUpdate.questions.push({
           $each: [body.questionId],
           $position: body.index
         });
-        console.log('updated questionnaire', questionnaireUpdate);
         break;
       }
       case updateAction.removeById: {
-        console.log('removing by id');
         questionnaire.questions.pull({ _id: body.questionId });
         break;
       }
       case updateAction.move: {
-        console.log('moving');
         if (body.toIndex > body.fromIndex) {
           questionnaire.questions.splice(body.fromIndex, 1);
           questionnaire.questions.splice(body.toIndex, 0, body.questionId);
@@ -106,8 +101,6 @@ const updateQuestionnaire = async (req, res) => {
     }
 
     const question = await Question.findById(body.questionId);
-    console.log('Found question:', question);
-
     questionnaireUpdate
       .save()
       .then(() => {
@@ -129,7 +122,6 @@ const updateQuestionnaire = async (req, res) => {
 };
 
 const deleteQuestionnaire = async (req, res) => {
-  console.log('deleting +++++++++', req.params);
   await Questionnaire.findById({ _id: req.params.id }, (err, questionnaire) => {
     if (err) {
       return res.status(400).json({ success: false, error: err });
@@ -148,7 +140,6 @@ const deleteQuestionnaire = async (req, res) => {
             deleteImagesOfQuestion(question.answerOptions.options);
           }
           Question.findByIdAndDelete(questionId).then((result) => {
-            console.log('Result', result);
             callback(null, result);
           });
         });
