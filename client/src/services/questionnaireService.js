@@ -40,7 +40,15 @@ const createQuestionAt = async (questionnaireId, index) => {
   const questionId = nanoid();
 
   const questionPayload = {
-    _id: questionId
+    _id: questionId,
+    title: `New Question`,
+    subtitle1: '',
+    subtitle2: '',
+    help: '',
+    answerOptions: {
+      type: '',
+      options: []
+    }
   };
 
   return insertQuestion(questionnaireId, questionPayload).then(async (question) => {

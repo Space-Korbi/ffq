@@ -2,8 +2,9 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { useHistory, useParams } from 'react-router-dom';
 
+import PropTypes from 'prop-types';
 import BootstrapTable from 'react-bootstrap-table-next';
 
 import { DeleteButton, EditButton, CopyButton, MoveButton, OutlineButton } from '../Button';
@@ -144,9 +145,20 @@ const QuestionTable = ({ onSelectQuestion }) => {
   );
 };
 
-const QuestionsList = ({ questionnaireId, removeFromList, deleteQuestionnaire }) => {
+const QuestionsList = ({ questionnaireId, deleteQuestionnaire }) => {
   const [questions, setQuestions] = useState([]);
   const [insertIndex, setInsertIndex] = useState();
+  const history = useHistory();
+  const { userId } = useParams();
+
+  function handleClickEdit(question) {
+    console.log('ID', userId);
+
+    history.push({
+      pathname: `/dashboard/${userId}/QuestionEditor`,
+      state: { question, questionnaireId }
+    });
+  }
 
   useEffect(() => {
     const fetchQuestion = async () => {
@@ -212,84 +224,92 @@ const QuestionsList = ({ questionnaireId, removeFromList, deleteQuestionnaire })
   return (
     <div>
       {questionnaireId ? (
-        <div className="border border-warning">
-          <div
-            className="alert alert-primary text-center d-flex justify-content-between"
-            style={{ maxWidth: '500px' }}
-            role="alert"
-          >
-            <OutlineButton
-              title="Create Question"
-              onClick={() => {
-                handleCreateQuestionAt();
-              }}
-            />
-            <input
-              type="number"
-              className="form-control"
-              placeholder="Index"
-              min="1"
-              max={questions.length}
-              onChange={(e) => setInsertIndex(Number(e.target.value))}
-            />
-            <OutlineButton
-              title="Create Question At"
-              onClick={() => {
-                handleCreateQuestionAt(insertIndex - 1);
-              }}
-            />
-            <DeleteButton isTrashCan onClick={() => deleteQuestionnaire(questionnaireId)} />
-          </div>
-          <ul className="list-group">
-            {questions && questions.length ? (
-              questions.map((question, index) => {
-                return (
-                  <div key={question._id} className="row p-2 ">
-                    <div className="col">
+        <>
+          <div className="card" style={{ minWidth: '23rem' }}>
+            <div className="card-header">
+              {questionnaireId}
+              <div className="d-flex justify-content-between">
+                <OutlineButton
+                  title="Add Question"
+                  onClick={() => {
+                    handleCreateQuestionAt();
+                  }}
+                />
+
+                <DeleteButton isTrashCan onClick={() => deleteQuestionnaire(questionnaireId)} />
+              </div>
+            </div>
+            <ul className="list-group">
+              {questions && questions.length ? (
+                questions.map((question, index) => {
+                  const content = (
+                    <div key={question._id} className="row p-2 ">
+                      {question.title}
+                      {question.answerType}
+                      <div className="col-1 ">
+                        <EditButton
+                          onClick={() => {
+                            handleClickEdit(question);
+                          }}
+                        />
+                      </div>
+                      <div className="col-1 ">
+                        <CopyButton
+                          onClick={() => {
+                            console.log('copying');
+                          }}
+                        />
+                      </div>
+                      <div className="col-1 d-inline">
+                        <MoveButton
+                          up
+                          onClick={() => handleMoveQuestionFromTo(question, index, index - 1)}
+                        />
+
+                        <MoveButton
+                          onClick={() => handleMoveQuestionFromTo(question, index, index + 1)}
+                        />
+                      </div>
+                    </div>
+                  );
+                  return (
+                    <div key={question._id}>
                       <RemovableListItem
-                        content={question._id}
+                        content={content}
                         onClick={() => handleRemoveQuestion(question)}
                       />
                     </div>
-
-                    <div className="col-1 ">
-                      <EditButton
-                        onClick={() => {
-                          console.log('editing');
-                        }}
-                      />
-                    </div>
-                    <div className="col-1 ">
-                      <CopyButton
-                        onClick={() => {
-                          console.log('copying');
-                        }}
-                      />
-                    </div>
-                    <div className="col-1 d-inline">
-                      <MoveButton
-                        up
-                        onClick={() => handleMoveQuestionFromTo(question, index, index - 1)}
-                      />
-
-                      <MoveButton
-                        onClick={() => handleMoveQuestionFromTo(question, index, index + 1)}
-                      />
-                    </div>
-                  </div>
-                );
-              })
-            ) : (
-              <div> No Questions </div>
-            )}
-          </ul>
-        </div>
+                  );
+                })
+              ) : (
+                <div> No Questions </div>
+              )}
+            </ul>
+          </div>
+        </>
       ) : (
         <div> No Questionnaire </div>
       )}
     </div>
   );
 };
+
+/* 
+   <input
+                  type="number"
+                  className="form-control"
+                  placeholder="Index"
+                  min="1"
+                  max={questions.length}
+                  onChange={(e) => setInsertIndex(Number(e.target.value))}
+                />
+                <OutlineButton
+                  title="Create Question At"
+                  onClick={() => {
+                    handleCreateQuestionAt(insertIndex - 1);
+                  }}
+                />
+*/
 
 const QuestionnaireEditor = (props) => {
   const [selectedQuestions, setSelectedQuestions] = useState([]);
@@ -347,11 +367,9 @@ const QuestionnaireEditor = (props) => {
           questionnaires.map((questionnaire) => {
             return (
               <div key={questionnaire._id} className="my-3">
-                {questionnaire._id}
                 <QuestionsList
                   questionnaireId={questionnaire._id}
                   deleteQuestionnaire={handleDeleteQuestionnaire}
-                  removeFromList={removeQuestion}
                 />
               </div>
             );
@@ -360,9 +378,9 @@ const QuestionnaireEditor = (props) => {
           <div>No questionnaires </div>
         )}
       </div>
-      <div className="px-2">
+      {/* <div className="px-2">
         <QuestionTable onSelectQuestion={handleOnChange} />
-      </div>
+      </div> */}
     </div>
   );
 };
