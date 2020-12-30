@@ -10,6 +10,7 @@ const ButtonEditor = ({ dispatch, position, answerOption, index }) => {
   const textTabContent = (
     <TextEditor
       placeholder="Button Title"
+      value={answerOption.title}
       onChange={(value) => {
         dispatch({
           type: 'changeButtonTitle',

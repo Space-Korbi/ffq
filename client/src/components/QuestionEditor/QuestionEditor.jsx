@@ -1,7 +1,9 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-restricted-syntax */
 import React, { useState, useReducer } from 'react';
-import { string, shape, arrayOf, number, bool, exact, oneOfType } from 'prop-types';
+import { string, shape, arrayOf, bool, exact, oneOfType } from 'prop-types';
 
 import { NavTabs, NavContents } from '../Navigation';
 import JumbotronInputs from './JumbotronInputs';
@@ -21,7 +23,7 @@ const QuestionEditor = ({ question, questionnaireId }) => {
   const [subtitle2, setSubtitle2] = useState(question.subtitle2);
   const [help, setHelp] = useState(question.help);
 
-  const [answerType, setAnswerType] = useState('');
+  const [answerType, setAnswerType] = useState(question.answerOptions.type);
   const [answerOptions, dispatch] = useReducer(answerReducer, question.answerOptions);
 
   const editor = (
@@ -32,15 +34,22 @@ const QuestionEditor = ({ question, questionnaireId }) => {
         </div>
         <div className="my-4">
           <JumbotronInputs
+            title={title}
+            subtitle1={subtitle1}
+            subtitle2={subtitle2}
             onChangeTitle={setTitle}
             onChangeSubtitle={setSubtitle1}
             onChangeComment={setSubtitle2}
           />
-          <HelpTextInput onChange={setHelp} />
+          <HelpTextInput help={help} onChange={setHelp} />
         </div>
         <AnswerEditor answerOptions={answerOptions} answerType={answerType} dispatch={dispatch} />
       </div>
 
+      {/**
+       * TODO
+       * onSave leave componentn, go to next question or reload with new props so that a reload doesnt call old props
+       */}
       <div className="col col-lg-5 px-0 mx-lg-3">
         <div className="text-center my-2">
           <button
@@ -48,7 +57,7 @@ const QuestionEditor = ({ question, questionnaireId }) => {
             className="btn btn-outline-primary"
             onClick={() =>
               questionService.saveQuestion(
-                questionnaireId,
+                question._id,
                 { title, subtitle1, subtitle2, help },
                 answerOptions
               )
@@ -75,7 +84,6 @@ const QuestionEditor = ({ question, questionnaireId }) => {
     </div>
   );
 
-  console.log(questionnaireId);
   return (
     <>
       {questionnaireId ? (
@@ -102,14 +110,10 @@ QuestionEditor.propTypes = {
   questionnaireId: string.isRequired,
   question: shape({
     _id: string,
-    questionnaireId: string.isRequired,
-    index: number.isRequired,
     title: string,
     subtitle1: string,
     subtitle2: string,
     help: string,
-    parentQuestion: string,
-    childQuestion: arrayOf(string),
     answerOptions: shape({
       type: string.isRequired,
       options: oneOfType([
@@ -134,23 +138,8 @@ QuestionEditor.propTypes = {
           })
         )
       ])
-    }).isRequired
-  })
-};
-
-QuestionEditor.defaultProps = {
-  question: {
-    title: '',
-    subtitle1: '',
-    subtitle2: '',
-    help: '',
-    parentQuestion: '',
-    childQuestion: [''],
-    answerOptions: {
-      type: '',
-      options: []
-    }
-  }
+    })
+  }).isRequired
 };
 
 export default QuestionEditor;
