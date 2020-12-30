@@ -10,8 +10,6 @@ const { Schema } = mongoose;
  * @param subtitle1
  * @param subtitle2
  * @param help - Message displayed when clicking help icon
- * @param parenQuestion - ID of parent Question
- * @param childQuestion - IDs of child Questions
  * @param answerOptions - All Answers the user can select
  */
 
@@ -26,8 +24,6 @@ const Question = new Schema(
     subtitle1: { type: String },
     subtitle2: { type: String },
     help: { type: String },
-    parentQuestion: { type: String },
-    childQuestion: [{ type: String }],
     answerOptions: {
       type: { type: String },
       options: { type: Schema.Types.Mixed }
