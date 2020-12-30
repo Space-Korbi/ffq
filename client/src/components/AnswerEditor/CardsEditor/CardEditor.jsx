@@ -6,8 +6,10 @@ import TextEditor from '../../TextEditor';
 
 import { EditorCard } from '../../Cards';
 
-const ImageUpload = ({ onChange, answerId, disabled }) => {
-  const [imageUploadLabel, setImageUploadLabel] = useState('Select Image');
+const ImageUpload = ({ answerId, imageName, onChange, disabled }) => {
+  const [imageUploadLabel, setImageUploadLabel] = useState(
+    imageName.substr(imageName.indexOf('-') + 1)
+  );
 
   return (
     <div>
@@ -65,9 +67,14 @@ const ImageUpload = ({ onChange, answerId, disabled }) => {
 };
 
 ImageUpload.propTypes = {
-  onChange: func.isRequired,
   answerId: string.isRequired,
+  imageName: string,
+  onChange: func.isRequired,
   disabled: bool.isRequired
+};
+
+ImageUpload.defaultProps = {
+  imageName: '...'
 };
 
 const CardEditor = ({ id, answerOption, dispatch }) => {
@@ -76,6 +83,7 @@ const CardEditor = ({ id, answerOption, dispatch }) => {
   const textTabContent = (
     <TextEditor
       placeholder="Card Title"
+      value={answerOption.title}
       onChange={(value) => {
         dispatch({
           type: 'changeCardTitle',
@@ -88,6 +96,7 @@ const CardEditor = ({ id, answerOption, dispatch }) => {
   const imageTabContent = (
     <ImageUpload
       answerId={answerOption.id}
+      imageName={answerOption.imageName}
       onChange={dispatch}
       disabled={answerOption.imageURL === ''}
     />

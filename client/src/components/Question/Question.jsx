@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { string, shape, arrayOf, exact, bool } from 'prop-types';
+import { string, shape, arrayOf, exact, bool, oneOfType } from 'prop-types';
 
 import Jumbotron from '../Jumbotron';
 import Help from '../Help';
@@ -23,8 +23,8 @@ function Question({ title, subtitle1, subtitle2, help, answerType, answerOptions
           <div className="row no-gutters d-flex align-items-stretch">
             <div className="col">
               <AnswerButtons
-                leftAnswerOptions={answerOptions.frequencyOptions.left}
-                rightAnswerOptions={answerOptions.frequencyOptions.right}
+                leftAnswerOptions={answerOptions.options.left}
+                rightAnswerOptions={answerOptions.options.right}
                 saveAnswer={saveAnswer}
               />
             </div>
@@ -34,7 +34,7 @@ function Question({ title, subtitle1, subtitle2, help, answerType, answerOptions
       case AnswerType.Amount:
         setAnswerContainer(
           <div>
-            <AmountAnswer answerOptions={answerOptions.amountOptions} />
+            <AmountAnswer answerOptions={answerOptions.options} />
           </div>
         );
         break;
@@ -42,7 +42,7 @@ function Question({ title, subtitle1, subtitle2, help, answerType, answerOptions
         setAnswerContainer(
           <div className="row no-gutters d-flex align-items-stretch">
             <div className="col">
-              <UserInputAnswer answerOptions={answerOptions.userInputOptions} />
+              <UserInputAnswer answerOptions={answerOptions.options} />
             </div>
           </div>
         );
@@ -74,25 +74,28 @@ Question.propTypes = {
   answerType: string.isRequired,
   answerOptions: shape({
     type: string.isRequired,
-    frequencyOptions: exact({
-      left: arrayOf(exact({ id: string.isRequired, title: string })),
-      right: arrayOf(exact({ id: string.isRequired, title: string }))
-    }),
-    amountOptions: arrayOf(
-      shape({
-        id: string.isRequired,
-        title: string,
-        imageName: string
-      })
-    ),
-    userInputOptions: arrayOf(
-      shape({
-        id: string.isRequired,
-        title: string,
-        hasNumberInput: bool,
-        numberInputTitle: string
-      })
-    )
+    options: oneOfType([
+      exact({
+        left: arrayOf(exact({ id: string.isRequired, title: string })),
+        right: arrayOf(exact({ id: string.isRequired, title: string }))
+      }),
+      arrayOf(
+        shape({
+          id: string.isRequired,
+          title: string,
+          imageName: string,
+          imageURL: string
+        })
+      ),
+      arrayOf(
+        shape({
+          id: string.isRequired,
+          title: string,
+          hasNumberInput: bool,
+          numberInputTitle: string
+        })
+      )
+    ]).isRequired
   }).isRequired
 };
 

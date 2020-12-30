@@ -33,9 +33,9 @@ const upload = multer({
 }).single('imageData');
 
 const getImageName = (req, res) => {
-  console.log('HOOOOO', req.file);
   /**
-   * Returns the image name in the filesystem in order to save bind it to a question instance.
+   * Returns the image name in the filesystem
+   * in order to save it in the corresponding question document.
    */
   return res.status(200).json({ success: true, filename: req.file.filename, path: req.file.path });
 };

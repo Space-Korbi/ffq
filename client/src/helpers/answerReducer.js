@@ -8,67 +8,64 @@ const reducerHelper = {
    * Then dispatch is called with one of the following action types.
    * Each function either adds, removes or changes a value of the answer object.
    * The answer object only contains one type of answer option. All other keys will be omitted.
-   * i.e. addButton() returns only frequencyOptions.
-   * The other keys for amountOptions and userInputOptions are omitted.
+   * i.e. addButton() returns only left and right button arrays.
    */
 
   setDefaultState: (action) => {
+    let options = [];
+    if (action.payload.answerType === AnswerType.Frequency) {
+      options = { left: [], right: [] };
+    }
     return {
       type: action.payload.answerType,
-      frequencyOptions: { left: [], right: [] },
-      amountOptions: [],
-      userInputOptions: []
+      options
     };
   },
   addButton: (state, action) => {
     const newButton = { id: action.payload.id, title: action.payload.title };
     if (action.payload.position === 'left') {
-      const buttonsLeft = state.frequencyOptions.left.concat(newButton);
+      const buttonsLeft = state.options.left.concat(newButton);
       return {
         type: AnswerType.Frequency,
-        frequencyOptions: { left: buttonsLeft, right: state.frequencyOptions.right }
+        options: { left: buttonsLeft, right: state.options.right }
       };
     }
-    const buttonsRight = state.frequencyOptions.right.concat(newButton);
+    const buttonsRight = state.options.right.concat(newButton);
     return {
       type: AnswerType.Frequency,
-      frequencyOptions: { left: state.frequencyOptions.left, right: buttonsRight }
+      options: { left: state.options.left, right: buttonsRight }
     };
   },
   removeButton: (state, action) => {
     if (action.payload.position === 'left') {
-      const buttonsLeft = state.frequencyOptions.left.filter(
-        (button) => button.id !== action.payload.id
-      );
+      const buttonsLeft = state.options.left.filter((button) => button.id !== action.payload.id);
       return {
         type: AnswerType.Frequency,
-        frequencyOptions: { left: buttonsLeft, right: state.frequencyOptions.right }
+        options: { left: buttonsLeft, right: state.options.right }
       };
     }
-    const buttonsRight = state.frequencyOptions.right.filter(
-      (button) => button.id !== action.payload.id
-    );
+    const buttonsRight = state.options.right.filter((button) => button.id !== action.payload.id);
     return {
       type: AnswerType.Frequency,
-      frequencyOptions: { left: state.frequencyOptions.left, right: buttonsRight }
+      options: { left: state.options.left, right: buttonsRight }
     };
   },
   changeButtonTitle: (state, action) => {
     if (action.payload.position === 'left') {
-      const newState = state.frequencyOptions.left.map((el) =>
+      const newState = state.options.left.map((el) =>
         el.id === action.payload.id ? { ...el, title: action.payload.title } : el
       );
       return {
         type: AnswerType.Frequency,
-        frequencyOptions: { left: newState, right: state.frequencyOptions.right }
+        options: { left: newState, right: state.options.right }
       };
     }
-    const newState = state.frequencyOptions.right.map((el) =>
+    const newState = state.options.right.map((el) =>
       el.id === action.payload.id ? { ...el, title: action.payload.title } : el
     );
     return {
       type: AnswerType.Frequency,
-      frequencyOptions: { left: state.frequencyOptions.left, right: newState }
+      options: { left: state.options.left, right: newState }
     };
   },
 
@@ -78,46 +75,46 @@ const reducerHelper = {
       title: '',
       imageURL: ''
     };
-    const cards = state.amountOptions.concat(newCard);
+    const cards = state.options.concat(newCard);
     return {
       type: AnswerType.Amount,
-      amountOptions: cards
+      options: cards
     };
   },
   removeCard: (state, action) => {
-    const cards = state.amountOptions.filter((card) => card.id !== action.payload.id);
+    const cards = state.options.filter((card) => card.id !== action.payload.id);
     return {
       type: AnswerType.Amount,
-      amountOptions: cards
+      options: cards
     };
   },
   changeCardTitle: (state, action) => {
-    const newState = state.amountOptions.map((el) =>
+    const newState = state.options.map((el) =>
       el.id === action.payload.id ? { ...el, title: action.payload.title } : el
     );
     return {
       type: AnswerType.Amount,
-      amountOptions: newState
+      options: newState
     };
   },
   changeCardImage: (state, action) => {
-    const newState = state.amountOptions.map((el) => {
+    const newState = state.options.map((el) => {
       return el.id === action.payload.id
         ? { ...el, imageURL: action.payload.imageURL, imageData: action.payload.imageData }
         : el;
     });
     return {
       type: AnswerType.Amount,
-      amountOptions: newState
+      options: newState
     };
   },
   removeCardImage: (state, action) => {
-    const newState = state.amountOptions.map((el) => {
+    const newState = state.options.map((el) => {
       return el.id === action.payload.id ? { ...el, imageURL: '', imageData: undefined } : el;
     });
     return {
       type: AnswerType.Amount,
-      amountOptions: newState
+      options: newState
     };
   },
   addTextInput: (state, action) => {
@@ -126,59 +123,57 @@ const reducerHelper = {
       title: 'Title',
       hasNumberInput: false
     };
-    const textInputs = state.userInputOptions.concat(newTextInput);
+    const textInputs = state.options.concat(newTextInput);
     return {
       type: AnswerType.UserInput,
-      userInputOptions: textInputs
+      options: textInputs
     };
   },
   removeTextInput: (state, action) => {
-    const textInputs = state.userInputOptions.filter(
-      (textInput) => textInput.id !== action.payload.id
-    );
+    const textInputs = state.options.filter((textInput) => textInput.id !== action.payload.id);
     return {
       type: AnswerType.UserInput,
-      userInputOptions: textInputs
+      options: textInputs
     };
   },
   changeTextInputTitle: (state, action) => {
-    const newState = state.userInputOptions.map((el) =>
+    const newState = state.options.map((el) =>
       el.id === action.payload.id ? { ...el, title: action.payload.title } : el
     );
     return {
       type: AnswerType.UserInput,
-      userInputOptions: newState
+      options: newState
     };
   },
   addNumberInput: (state, action) => {
-    const newState = state.userInputOptions.map((el) =>
+    const newState = state.options.map((el) =>
       el.id === action.payload.id
         ? { ...el, hasNumberInput: true, numberInputTitle: action.payload.numberInputTitle }
         : el
     );
     return {
       type: AnswerType.UserInput,
-      userInputOptions: newState
+      options: newState
     };
   },
   removeNumberInput: (state, action) => {
-    const newState = state.userInputOptions.map((el) =>
+    const newState = state.options.map((el) =>
       el.id === action.payload.id ? { ...el, hasNumberInput: false } : el
     );
     return {
       type: AnswerType.UserInput,
-      userInputOptions: newState
+      options: newState
     };
   },
   changeNumberInputTitle: (state, action) => {
-    const newState = state.userInputOptions.map((el) =>
+    const newState = state.options.map((el) =>
       el.id === action.payload.id
         ? { ...el, numberInputTitle: action.payload.numberInputTitle }
         : el
     );
     return {
       type: AnswerType.UserInput,
-      userInputOptions: newState
+      options: newState
     };
   }
 };

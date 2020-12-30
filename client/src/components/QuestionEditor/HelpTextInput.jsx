@@ -1,7 +1,7 @@
-import { func } from 'prop-types';
 import React from 'react';
+import { func, string } from 'prop-types';
 
-const HelpTextInput = ({ onChange }) => {
+const HelpTextInput = ({ help, onChange }) => {
   return (
     <div className="input-group my-2">
       <div className="input-group-prepend">
@@ -11,6 +11,7 @@ const HelpTextInput = ({ onChange }) => {
       </div>
       <input
         type="text"
+        value={help}
         className="form-control"
         aria-label="Help text input"
         aria-describedby="help-text"
@@ -21,6 +22,7 @@ const HelpTextInput = ({ onChange }) => {
 };
 
 HelpTextInput.propTypes = {
+  help: string.isRequired,
   onChange: func.isRequired
 };
 

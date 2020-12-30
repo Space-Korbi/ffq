@@ -11,9 +11,5 @@ const router = express.Router();
  */
 
 router.post('/upload', ImageCtrl.upload, ImageCtrl.getImageName);
-/* {
-  console.log('----------', req.file);
-  console.log('----------', res.file);
-} */
 
 module.exports = router;

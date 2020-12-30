@@ -11,6 +11,7 @@ const InputEditor = ({ index, answerOption, dispatch }) => {
   const mainTabContent = (
     <TextEditor
       placeholder="Text Input Title"
+      value={answerOption.title}
       onChange={(value) => {
         dispatch({
           type: 'changeTextInputTitle',
@@ -26,6 +27,7 @@ const InputEditor = ({ index, answerOption, dispatch }) => {
         <div className="d-flex">
           <TextEditor
             placeholder="Number Input Title"
+            value={answerOption.numberInputTitle}
             onChange={(value) => {
               dispatch({
                 type: 'changeNumberInputTitle',

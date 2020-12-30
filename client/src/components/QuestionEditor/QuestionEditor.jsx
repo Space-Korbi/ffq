@@ -1,7 +1,9 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-restricted-syntax */
 import React, { useState, useReducer } from 'react';
-import { string, shape, arrayOf, number, exact } from 'prop-types';
-import { nanoid } from 'nanoid';
+import { string, shape, arrayOf, bool, exact, oneOfType } from 'prop-types';
 
 import { NavTabs, NavContents } from '../Navigation';
 import JumbotronInputs from './JumbotronInputs';
@@ -15,13 +17,13 @@ import AnswerEditor from '../AnswerEditor/AnswerEditor';
 
 const tabNames = ['Edit', 'Arrange'];
 
-const QuestionEditor = ({ question }) => {
+const QuestionEditor = ({ question, questionnaireId }) => {
   const [title, setTitle] = useState(question.title);
   const [subtitle1, setSubtitle1] = useState(question.subtitle1);
   const [subtitle2, setSubtitle2] = useState(question.subtitle2);
   const [help, setHelp] = useState(question.help);
 
-  const [answerType, setAnswerType] = useState('');
+  const [answerType, setAnswerType] = useState(question.answerOptions.type);
   const [answerOptions, dispatch] = useReducer(answerReducer, question.answerOptions);
 
   const editor = (
@@ -32,15 +34,22 @@ const QuestionEditor = ({ question }) => {
         </div>
         <div className="my-4">
           <JumbotronInputs
+            title={title}
+            subtitle1={subtitle1}
+            subtitle2={subtitle2}
             onChangeTitle={setTitle}
             onChangeSubtitle={setSubtitle1}
             onChangeComment={setSubtitle2}
           />
-          <HelpTextInput onChange={setHelp} />
+          <HelpTextInput help={help} onChange={setHelp} />
         </div>
         <AnswerEditor answerOptions={answerOptions} answerType={answerType} dispatch={dispatch} />
       </div>
 
+      {/**
+       * TODO
+       * onSave leave componentn, go to next question or reload with new props so that a reload doesnt call old props
+       */}
       <div className="col col-lg-5 px-0 mx-lg-3">
         <div className="text-center my-2">
           <button
@@ -48,7 +57,8 @@ const QuestionEditor = ({ question }) => {
             className="btn btn-outline-primary"
             onClick={() =>
               questionService.saveQuestion(
-                { questionId: nanoid(), title, index: 2, subtitle1, subtitle2, help },
+                question._id,
+                { title, subtitle1, subtitle2, help },
                 answerOptions
               )
             }
@@ -75,70 +85,61 @@ const QuestionEditor = ({ question }) => {
   );
 
   return (
-    <div>
-      <div className="m-3">
-        <NavTabs tabNames={tabNames} />
-      </div>
-      <div>
-        <NavContents tabNames={tabNames} tabContents={[editor, arrange]} />
-      </div>
-    </div>
+    <>
+      {questionnaireId ? (
+        <div>
+          <div className="m-3">
+            <NavTabs tabNames={tabNames} />
+          </div>
+          <div>
+            <NavContents tabNames={tabNames} tabContents={[editor, arrange]} />
+          </div>
+        </div>
+      ) : (
+        <div className="m-5 text-center">
+          <div className="alert alert-info" role="alert">
+            You need to create a questionnaire before you can add questions
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
 QuestionEditor.propTypes = {
+  questionnaireId: string.isRequired,
   question: shape({
-    questionId: string,
-    index: number.isRequired,
+    _id: string,
     title: string,
     subtitle1: string,
     subtitle2: string,
     help: string,
-    parentQuestion: string,
-    childQuestion: arrayOf(string),
     answerOptions: shape({
       type: string.isRequired,
-      frequencyAnswers: exact({
-        left: arrayOf(exact({ id: string.isRequired, title: string })),
-        right: arrayOf(exact({ id: string.isRequired, title: string }))
-      }),
-      amountAnswers: arrayOf(
-        shape({
-          id: string.isRequired,
-          title: string,
-          imageName: string,
-          imageURLs: string
-        })
-      ),
-      userInputAnswers: arrayOf(
-        shape({
-          id: string.isRequired,
-          type: string,
-          title: string
-        })
-      )
-    }).isRequired
-  })
-};
-
-// TODO index needs to be passed down from parent component
-QuestionEditor.defaultProps = {
-  question: {
-    questionId: nanoid(),
-    index: 2,
-    title: '',
-    subtitle1: '',
-    subtitle2: '',
-    help: '',
-    parentQuestion: '',
-    childQuestion: [''],
-    answerOptions: {
-      type: '',
-      frequencyOptions: { left: [], right: [] },
-      amountOptions: [],
-      userInputOptions: []
-    }
-  }
+      options: oneOfType([
+        exact({
+          left: arrayOf(exact({ id: string.isRequired, title: string })),
+          right: arrayOf(exact({ id: string.isRequired, title: string }))
+        }),
+        arrayOf(
+          shape({
+            id: string.isRequired,
+            title: string,
+            imageName: string,
+            imageURL: string
+          })
+        ),
+        arrayOf(
+          shape({
+            id: string.isRequired,
+            title: string,
+            hasNumberInput: bool,
+            numberInputTitle: string
+          })
+        )
+      ])
+    })
+  }).isRequired
 };
 
 export default QuestionEditor;

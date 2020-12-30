@@ -17,7 +17,10 @@ const router = express.Router();
  * This middleware function is mounted on the '/question' path.
  * This code is executed for every POST request on the '/api/question' path
  */
-router.post('/question', QuestionCtrl.createQuestion);
+router.post('/questionnaire/:questionnaireId/question', QuestionCtrl.createQuestion);
+router.put('/question/:id', QuestionCtrl.updateQuestionById);
+router.delete('/questionnaire/:questionnaireId/question/:id', QuestionCtrl.deleteQuestion);
+router.get('/questionnaire/:questionnaireId/questions', QuestionCtrl.getQuestionsOfQuestionnaire);
 router.get('/questions', QuestionCtrl.getQuestions);
 
 module.exports = router;
