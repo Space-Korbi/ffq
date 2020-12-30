@@ -19,6 +19,7 @@ export const getMovieById = (id) => api.get(`/movie/${id}`);
 export const insertQuestion = (questionnaireId, payload) =>
   api.post(`/questionnaire/${questionnaireId}/question`, payload);
 export const getAllQuestions = () => api.get(`/questions`);
+export const updateQuestionById = (id, payload) => api.put(`/question/${id}`, payload);
 export const getAllQuestionsOfQuestionnaire = (questionnaireId) =>
   api.get(`/questionnaire/${questionnaireId}/questions`);
 export const deleteQuestionById = (questionnaireId, questionId) =>

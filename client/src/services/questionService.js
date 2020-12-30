@@ -1,7 +1,13 @@
 /* eslint-disable no-alert */
 /* eslint-disable no-underscore-dangle */
 import { nanoid } from 'nanoid';
-import { insertQuestion, uploadImage, getAllQuestions, deleteQuestionById } from '../api';
+import {
+  insertQuestion,
+  updateQuestionById,
+  uploadImage,
+  getAllQuestions,
+  deleteQuestionById
+} from '../api';
 import AnswerType from '../types';
 
 /**
@@ -25,18 +31,25 @@ const createQuestion = async (questionnaireId) => {
 };
 
 const updateAmountOption = (dbResponse, amountOption) => {
-  const updatedAmountOption = amountOption;
-  updatedAmountOption.imageName = dbResponse.data.filename;
-  updatedAmountOption.imageURL = dbResponse.data.path;
+  const updatedAmountOption = {
+    id: amountOption.id,
+    title: amountOption.title,
+    imageName: dbResponse.data.filename
+  };
   return updatedAmountOption;
 };
 
-const fetchDBImagData = async (amountOption) => {
+const saveImageInDB = async (amountOption) => {
   const data = new FormData();
   data.append('imageData', amountOption.imageData);
   const dbImageNameAndPath = await uploadImage(data);
   return dbImageNameAndPath;
 };
+
+/**
+ * TODO
+ * when changin images, delete the old image that is being replaced from uploads
+ */
 
 const updateAmountOptions = async (amountOptions) => {
   const updatedAmountOptions = await Promise.all(
@@ -44,7 +57,7 @@ const updateAmountOptions = async (amountOptions) => {
       if (!amountOption.imageData) {
         return Promise.resolve(amountOption);
       }
-      const dbImageData = await fetchDBImagData(amountOption);
+      const dbImageData = await saveImageInDB(amountOption);
       const updatedAmountOption = updateAmountOption(dbImageData, amountOption);
       return Promise.resolve(updatedAmountOption);
     })
@@ -52,18 +65,15 @@ const updateAmountOptions = async (amountOptions) => {
   return updatedAmountOptions;
 };
 
-const saveQuestion = async (questionnaireId, questionData, answerOptions) => {
-  console.log('QID', questionnaireId);
-  const payload = questionData;
+const saveQuestion = async (questionId, questionData, answerOptions) => {
+  const payload = {
+    questionId,
+    questionData
+  };
 
-  if (!questionnaireId) {
-    window.alert(`Question could not be inserted. A containing questionnaire must be provided.`);
+  if (!questionId) {
+    window.alert(`Question could not be inserted. A valid question ID was not provided.`);
     return;
-  }
-
-  if (!payload._id) {
-    console.log('id creation');
-    payload._id = nanoid();
   }
 
   payload.answerOptions = answerOptions;
@@ -74,8 +84,8 @@ const saveQuestion = async (questionnaireId, questionData, answerOptions) => {
   }
 
   console.log('Payload', payload);
-  await insertQuestion(questionnaireId, payload).then(() => {
-    window.alert(`Question inserted successfully`);
+  await updateQuestionById(questionId, payload).then(() => {
+    window.alert(`Question updated successfully`);
   });
 };
 

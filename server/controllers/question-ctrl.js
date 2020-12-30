@@ -43,6 +43,53 @@ const createQuestion = async (req, res) => {
     });
 };
 
+const updateQuestionById = async (req, res) => {
+  const { body } = req;
+
+  if (!body) {
+    return res.status(400).json({
+      success: false,
+      error: 'You must provide a body to update'
+    });
+  }
+
+  Question.findOne({ _id: req.params.id }, async (err, question) => {
+    if (err) {
+      return res.status(404).json({
+        err
+      });
+    }
+
+    console.log('body ====== ', body);
+    console.log('question ====== ', question);
+
+    const questionUpdate = question;
+
+    questionUpdate.title = body.questionData.title;
+    questionUpdate.subtitle1 = body.questionData.subtitle1;
+    questionUpdate.subtitle2 = body.questionData.subtitle2;
+    questionUpdate.help = body.questionData.help;
+    questionUpdate.answerOptions = body.answerOptions;
+
+    console.log('questionUpdate ====== ', questionUpdate);
+
+    questionUpdate
+      .save()
+      .then(() => {
+        return res.status(200).json({
+          success: true,
+          message: 'Question updated!'
+        });
+      })
+      .catch((error) => {
+        return res.status(404).json({
+          error,
+          message: 'Question not updated!'
+        });
+      });
+  });
+};
+
 const deleteImages = (imagePaths) => {
   imagePaths.forEach((url) => {
     fs.unlink(url, (err) => {
@@ -130,6 +177,7 @@ const getQuestionsOfQuestionnaire = async (req, res) => {
 
 module.exports = {
   createQuestion,
+  updateQuestionById,
   deleteQuestion,
   getQuestions,
   getQuestionsOfQuestionnaire
