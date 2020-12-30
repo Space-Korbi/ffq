@@ -3,11 +3,8 @@ import Question from './Question';
 import NavigationButton from './Navigation';
 import ProgressIndicator from './ProgressIndicator';
 import Submit from './Submit';
-import pizzaWhole from '../../images/pizza-whole-example.jpg';
-import pizzaHalf from '../../images/pizza-half-example.jpg';
-import pizzaQuarter from '../../images/pizza-quarter-example.jpg';
 
-const images = { small: pizzaQuarter, medium: pizzaHalf, large: pizzaWhole };
+const images = { small: 'pizzaQuarter', medium: 'pizzaHalf', large: 'pizzaWhole' };
 
 const questionData = [
   {
@@ -85,7 +82,7 @@ function Questionnaire() {
     return false;
   };
 
-  const isValidFFQElement = (ffqElementIndex) => {
+  const isValidQuestionnaireElement = (ffqElementIndex) => {
     if (ffqElementIndex >= 0 && ffqElementIndex < ffqElements.length) {
       return true;
     }
@@ -123,7 +120,7 @@ function Questionnaire() {
   };
 
   const transitionTo = (ffqElementIndex) => {
-    if (!isValidFFQElement(ffqElementIndex)) {
+    if (!isValidQuestionnaireElement(ffqElementIndex)) {
       return;
     }
     checkForLastElement(ffqElementIndex);

@@ -4,30 +4,10 @@ import React from 'react';
 import { useTable } from 'react-table';
 import BTable from 'react-bootstrap/Table';
 
-const NormalCell = ({
-  value: initialValue,
-  row,
-  checkMyData // This is a custom function that we supplied to our table instance
-}) => {
-  // We'll only update the external data when the input is blurred
-  const onBlur = () => {
-    checkMyData(row);
-  };
-  // eslint-disable-next-line react/button-has-type
-  return <button onClick={onBlur}>{initialValue}</button>;
-};
-
-function StandardTable({ columns, data, checkMyData }) {
-  // Set our editable cell renderer as the default Cell renderer
-  const defaultColumn = {
-    Cell: NormalCell
-  };
-
+function StandardTable({ columns, data }) {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,
-    data,
-    defaultColumn,
-    checkMyData
+    data
   });
 
   return (

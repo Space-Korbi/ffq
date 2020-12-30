@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
-import authenticationService from '../../services';
+import { authenticationService } from '../../services';
 
 const LoginPage = () => {
   const history = useHistory();
@@ -39,7 +39,7 @@ const LoginPage = () => {
                   (user) => {
                     /**
                      * TODO redirect
-                     * redirect to first unanswered question of ffq if possible
+                     * redirect to first unanswered question of questionnaire if possible
                      */
                     history.push(`/dashboard/${user.id}`);
                   },

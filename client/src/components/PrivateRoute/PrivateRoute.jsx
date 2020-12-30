@@ -1,8 +1,8 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import PropTypes, { string } from 'prop-types';
-import authenticationService from '../services';
+import PropTypes, { shape, string } from 'prop-types';
+import { authenticationService } from '../../services';
 
 /**
  * * PrivateRoute
@@ -16,8 +16,6 @@ const PrivateRoute = ({ location, roles, isAdmin, component: Component, ...rest 
       render={() => {
         const currentUser = authenticationService.currentUserValue;
         if (!currentUser) {
-          console.log('redirecting');
-
           return (
             <Redirect
               to={{
@@ -34,7 +32,13 @@ const PrivateRoute = ({ location, roles, isAdmin, component: Component, ...rest 
           return <Redirect to={{ pathname: `/dashboard/${currentUser.id}` }} />;
         }
 
-        // authorised so return dashboard as admin
+        // authorised so return component
+        if (location.state && location.state.question) {
+          const { questionnaireId, question } = location.state;
+          return (
+            <Component isAdmin={isAdmin} question={question} questionnaireId={questionnaireId} />
+          );
+        }
         return <Component isAdmin={isAdmin} />;
       }}
     />
@@ -46,10 +50,11 @@ PrivateRoute.propTypes = {
   isAdmin: PropTypes.bool,
   roles: PropTypes.arrayOf(PropTypes.string),
   location: PropTypes.shape({
-    key: string,
+    id: string,
     pathname: string,
     search: string,
-    hash: string
+    hash: string,
+    state: shape({})
   })
 };
 
@@ -57,7 +62,7 @@ PrivateRoute.defaultProps = {
   roles: null,
   isAdmin: false,
   location: {
-    key: '',
+    id: '',
     pathname: '/',
     search: '',
     hash: ''

@@ -1,45 +1,43 @@
-/**
- * * Why I dont use ES6 but CommonJS in server files
- * * 'import' vs 'require'
- * You can't selectively load only the pieces you need with 'require'
- * but with 'imports', you can selectively load only the pieces you need.
- * That can save memory.
- * Loading is synchronous(step by step) for 'require'
- * on the other hand 'import' can be asynchronous(without waiting for previous import)
- * so it can perform a little better than 'require'.
- * "Node.js fully supports ECMAScript modules as they are currently specified
- * and provides limited interoperability
- * between them and the existing module format, CommonJS."
- * "Expect major changes in the implementation
- * including interoperability support, specifier resolution, and default behavior."
- * Therefore we stick with commonJS.
- */
-
+require('dotenv').config();
+const cors = require('cors');
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors');
+
+/**
+ * CORS is a node.js package for providing a Connect/Express middleware
+ * that can be used to enable 'CROSS ORIGIN RESOURCE SHARING' with various options.
+ */
 
 /**
  * * Database
  * ./db is required to establish a DB connection
- * but it is not saved in a constant
  */
 require('./db');
 
-const movieRouter = require('./routes/movie-router');
+// const movieRouter = require('./routes/movie-router');
+const questionnaireRouter = require('./routes/questionnaire-router');
+const questionRouter = require('./routes/question-router');
+const imageRouter = require('./routes/image-router');
 
 // * Create express app
 const app = express();
-const apiPort = 3000;
 
-app.use(bodyParser.urlencoded({ extended: true }));
+/**
+ * A middleware function with no mount path.
+ * The function is executed every time the app receives a request.
+ */
+
+app.options('*', cors());
 app.use(cors());
+
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(bodyParser.json());
+app.use(express.static('uploads'));
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+/**
+ * Mount the routes on the '/api' path.
+ * An array with a middleware sub-stacks that handle HTTP requests on the '/api' path.
+ */
+app.use('/api', [questionRouter, questionnaireRouter, imageRouter]);
 
-app.use('/api', movieRouter);
-
-app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`));
+app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));

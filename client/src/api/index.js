@@ -16,12 +16,40 @@ export const updateMovieById = (id, payload) => api.put(`/movie/${id}`, payload)
 export const deleteMovieById = (id) => api.delete(`/movie/${id}`);
 export const getMovieById = (id) => api.get(`/movie/${id}`);
 
+export const insertQuestionAt = (questionnaireId, payload) =>
+  api.post(`/questionnaire/${questionnaireId}/question`, payload);
+export const getAllQuestions = () => api.get(`/questions`);
+export const updateQuestionById = (id, payload) => api.put(`/question/${id}`, payload);
+export const getAllQuestionsOfQuestionnaire = (questionnaireId) =>
+  api.get(`/questionnaire/${questionnaireId}/questions`);
+export const deleteQuestionById = (questionnaireId, questionId) =>
+  api.delete(`/questionnaire/${questionnaireId}/question/${questionId}`);
+
+export const uploadImage = (payload) => api.post(`/upload`, payload);
+export const getAllImages = () => api.get(`/images`);
+export const deleteImageById = (id) => api.delete(`/image/${id}`);
+export const getImageById = (id) => api.get(`/image/${id}`);
+
+export const insertQuestionnaire = (payload) => api.post(`/questionnaire`, payload);
+export const getAllQuestionnaires = () => api.get(`/questionnaires`);
+export const updateQuestionnaire = (questionnaireId, payload) =>
+  api.put(`/questionnaire/${questionnaireId}`, payload);
+export const deleteQuestionnaireById = (questionnaireId) =>
+  api.delete(`/questionnaire/${questionnaireId}`);
+export const getQuestionnaireById = (questionnaireId) =>
+  api.get(`/questionnaire/${questionnaireId}`);
+
 const apis = {
   insertMovie,
   getAllMovies,
   updateMovieById,
   deleteMovieById,
-  getMovieById
+  getMovieById,
+  insertQuestionAt,
+  getAllQuestions,
+  getAllQuestionsOfQuestionnaire,
+  insertQuestionnaire,
+  uploadImage
 };
 
 export default apis;
