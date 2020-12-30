@@ -58,7 +58,6 @@ const createQuestionAt = async (questionnaireId, index) => {
       questionnairePayload.index = index;
     }
     return updateQuestionnaire(questionnaireId, questionnairePayload).then((res) => {
-      window.alert(`Question added successfully at ${index}`);
       return res.data;
     });
   });
