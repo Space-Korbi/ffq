@@ -43,60 +43,31 @@ const createQuestion = async (req, res) => {
     });
 };
 
-const updateQuestionById = async (req, res) => {
-  const { body } = req;
+const deleteImages = (imageNames) => {
+  console.log('Deleting imageNames ...', imageNames);
 
-  if (!body) {
-    return res.status(400).json({
-      success: false,
-      error: 'You must provide a body to update'
+  imageNames.forEach((imageName) => {
+    fs.unlink(`uploads/${imageName}`, (err) => {
+      if (err) throw err;
+      console.log(`${imageName} was deleted`);
     });
-  }
-
-  Question.findOne({ _id: req.params.id }, async (err, question) => {
-    if (err) {
-      return res.status(404).json({
-        err
-      });
-    }
-
-    console.log('body ====== ', body);
-    console.log('question ====== ', question);
-
-    const questionUpdate = question;
-
-    questionUpdate.title = body.questionData.title;
-    questionUpdate.subtitle1 = body.questionData.subtitle1;
-    questionUpdate.subtitle2 = body.questionData.subtitle2;
-    questionUpdate.help = body.questionData.help;
-    questionUpdate.answerOptions = body.answerOptions;
-
-    console.log('questionUpdate ====== ', questionUpdate);
-
-    questionUpdate
-      .save()
-      .then(() => {
-        return res.status(200).json({
-          success: true,
-          message: 'Question updated!'
-        });
-      })
-      .catch((error) => {
-        return res.status(404).json({
-          error,
-          message: 'Question not updated!'
-        });
-      });
   });
 };
 
-const deleteImages = (imagePaths) => {
-  imagePaths.forEach((url) => {
-    fs.unlink(url, (err) => {
-      if (err) throw err;
-      console.log(`${url} was deleted`);
-    });
-  });
+const deleteImagesOfQuestion = (options) => {
+  if (!options || !options.length) {
+    return;
+  }
+  const imageNames = options.reduce((filtered, option) => {
+    console.log('Option', option);
+    if (option.imageName) {
+      const { imageName } = option;
+      filtered.push(imageName);
+    }
+    return filtered;
+  }, []);
+  console.log('++++++++++', imageNames);
+  deleteImages(imageNames);
 };
 
 const deleteQuestion = async (req, res) => {
@@ -110,14 +81,7 @@ const deleteQuestion = async (req, res) => {
     }
 
     if (question.answerOptions.type === 'Amount') {
-      const imagePaths = question.answerOptions.options.reduce((filtered, option) => {
-        if (option.imageURL) {
-          const { imageURL } = option;
-          filtered.push(imageURL);
-        }
-        return filtered;
-      }, []);
-      deleteImages(imagePaths);
+      deleteImagesOfQuestion(question.answerOptions.options);
     }
     return res.status(200).json({ success: true, data: question });
   }).catch((err) => console.log(err));
@@ -175,10 +139,70 @@ const getQuestionsOfQuestionnaire = async (req, res) => {
   });
 };
 
+const updateQuestionById = async (req, res) => {
+  const { body } = req;
+
+  if (!body) {
+    return res.status(400).json({
+      success: false,
+      error: 'You must provide a body to update'
+    });
+  }
+
+  Question.findOne({ _id: req.params.id }, async (err, question) => {
+    if (err) {
+      return res.status(404).json({
+        err
+      });
+    }
+
+    if (body.answerOptions.type === 'Amount') {
+      const removedImages = question.answerOptions.options.filter((prevOption) => {
+        console.log('PrevOption', prevOption);
+        let found = false;
+        body.answerOptions.options.forEach((updatedOption) => {
+          console.log('UpdatedOption', updatedOption);
+
+          if (prevOption.imageName === updatedOption.imageName) {
+            found = true;
+          }
+        });
+        return !found;
+      });
+      console.log('images to remove ====== ', removedImages);
+      deleteImagesOfQuestion(removedImages);
+    }
+
+    const questionUpdate = question;
+
+    questionUpdate.title = body.questionData.title;
+    questionUpdate.subtitle1 = body.questionData.subtitle1;
+    questionUpdate.subtitle2 = body.questionData.subtitle2;
+    questionUpdate.help = body.questionData.help;
+    questionUpdate.answerOptions = body.answerOptions;
+
+    questionUpdate
+      .save()
+      .then(() => {
+        return res.status(200).json({
+          success: true,
+          message: 'Question updated!'
+        });
+      })
+      .catch((error) => {
+        return res.status(404).json({
+          error,
+          message: 'Question not updated!'
+        });
+      });
+  });
+};
+
 module.exports = {
   createQuestion,
   updateQuestionById,
   deleteQuestion,
+  deleteImagesOfQuestion,
   getQuestions,
   getQuestionsOfQuestionnaire
 };

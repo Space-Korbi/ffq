@@ -2,6 +2,7 @@
 const async = require('async');
 const Questionnaire = require('../models/questionnaire-model');
 const Question = require('../models/question-model');
+const { deleteImagesOfQuestion } = require('./question-ctrl');
 
 /**
  * * Questionnaire controller
@@ -142,10 +143,14 @@ const deleteQuestionnaire = async (req, res) => {
 
     questionnaire.questions.forEach((questionId) => {
       removeQuestionCalls.push((callback) => {
-        Question.findByIdAndDelete(questionId).then((result) => {
-          console.log('Result', result);
-
-          callback(null, result);
+        Question.findById(questionId).then((question) => {
+          if (question.answerOptions.type === 'Amount') {
+            deleteImagesOfQuestion(question.answerOptions.options);
+          }
+          Question.findByIdAndDelete(questionId).then((result) => {
+            console.log('Result', result);
+            callback(null, result);
+          });
         });
       });
     });
