@@ -222,9 +222,9 @@ const Dashboard = ({ isAdmin }) => {
                       </a>
                       <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         {adminLinks.map((link) => (
-                          <a className="dropdown-item" href={`${url}${link.to}`} key={link.name}>
+                          <Link className="dropdown-item" to={`${url}${link.to}`} key={link.name}>
                             {link.name}
-                          </a>
+                          </Link>
                         ))}
                       </div>
                     </div>
