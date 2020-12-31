@@ -6,7 +6,7 @@ import LoginPage from './LoginPage';
 import HomePage from './HomePage';
 import AccountPage from './AccountPage';
 import QuestionnaireEditorPage from './QuestionnaireEditorPage';
-import QuestionnairePresenterPager from './QuestionnairePresenterPage';
+import QuestionnairePresenterPage from './QuestionnairePresenterPage';
 import ParticipantsManagementPage from './ParticipantsManagementPage';
 
 /**
@@ -23,6 +23,6 @@ export {
   HomePage,
   AccountPage,
   QuestionnaireEditorPage,
-  QuestionnairePresenterPager,
+  QuestionnairePresenterPage,
   ParticipantsManagementPage
 };
