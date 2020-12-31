@@ -3,7 +3,7 @@ import { arrayOf, bool, exact, oneOfType, shape, string } from 'prop-types';
 
 import { Question } from '../Question';
 
-const QuestionPreview = ({ title, subtitle1, subtitle2, help, answerOptions, answerType }) => {
+const QuestionPreview = ({ title, subtitle1, subtitle2, help, answerOptions }) => {
   return (
     <>
       <div
@@ -16,7 +16,6 @@ const QuestionPreview = ({ title, subtitle1, subtitle2, help, answerOptions, ans
           subtitle2={subtitle2}
           help={help}
           answerOptions={answerOptions}
-          answerType={answerType}
         />
       </div>
     </>
@@ -28,7 +27,6 @@ QuestionPreview.propTypes = {
   subtitle1: string.isRequired,
   subtitle2: string.isRequired,
   help: string.isRequired,
-  answerType: string.isRequired,
   answerOptions: shape({
     type: string.isRequired,
     options: oneOfType([
