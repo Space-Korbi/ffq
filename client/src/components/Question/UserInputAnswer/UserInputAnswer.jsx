@@ -1,19 +1,22 @@
 import React from 'react';
-import { shape, arrayOf, string, bool } from 'prop-types';
-import { nanoid } from 'nanoid';
-
+import { shape, arrayOf, string, bool, func } from 'prop-types';
 /**
  * TODO
  * only allow integers to be entered in number input
  */
 
-function UserInputAnswer({ answerOptions }) {
+function UserInputAnswer({ answerOptions, onSubmit }) {
   return (
     <div>
-      {answerOptions.map((answerOption) => {
-        return (
-          <div key={answerOption.id} className="m-4">
-            <form>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSubmit(e);
+        }}
+      >
+        {answerOptions.map((answerOption) => {
+          return (
+            <div key={answerOption.id} className="m-4">
               <div className="row">
                 <div className="col">
                   <div className="input-group input-group-lg">
@@ -43,10 +46,15 @@ function UserInputAnswer({ answerOptions }) {
                   </div>
                 )}
               </div>
-            </form>
-          </div>
-        );
-      })}
+            </div>
+          );
+        })}
+        <div className="d-flex justify-content-center mb-3">
+          <button type="submit" className="btn btn-outline-primary">
+            Weiter
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
@@ -59,15 +67,8 @@ UserInputAnswer.propTypes = {
       hasNumberInput: bool,
       numberInputTitle: string
     })
-  )
-};
-
-UserInputAnswer.defaultProps = {
-  answerOptions: [
-    { key: nanoid(), type: 'textInput', title: 'Lebensmittel' },
-    { key: nanoid(), type: 'textInput', title: 'Lebensmittel' },
-    { key: nanoid(), type: 'textInput', title: 'Lebensmittel' }
-  ]
+  ).isRequired,
+  onSubmit: func.isRequired
 };
 
 export default UserInputAnswer;

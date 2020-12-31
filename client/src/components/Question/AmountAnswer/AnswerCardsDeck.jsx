@@ -8,7 +8,7 @@ import AnswerCard from './AnswerCard';
  * @param answers - Array of answers data
  * @returns [<Amount Card/>] - Amount cards wrapped in a div to apply extra spacing to the first and last card
  */
-const AnswerCardsDeck = ({ answerOptions, saveAnswer }) => {
+const AnswerCardsDeck = ({ answerOptions, onClick }) => {
   return answerOptions.map((answerOption, index) => {
     if (!answerOption.id) {
       return <div />;
@@ -22,7 +22,7 @@ const AnswerCardsDeck = ({ answerOptions, saveAnswer }) => {
               title={answerOption.title}
               imageName={answerOption.imageName}
               imageURL={answerOption.imageURL}
-              onClick={saveAnswer}
+              onClick={onClick}
             />
           </div>
         );
@@ -32,7 +32,7 @@ const AnswerCardsDeck = ({ answerOptions, saveAnswer }) => {
             <AnswerCard
               title={answerOption.title}
               imageName={answerOption.imageName}
-              onClick={saveAnswer}
+              onClick={onClick}
               imageURL={answerOption.imageURL}
             />
           </div>
@@ -43,7 +43,7 @@ const AnswerCardsDeck = ({ answerOptions, saveAnswer }) => {
             <AnswerCard
               title={answerOption.title}
               imageName={answerOption.imageName}
-              onClick={saveAnswer}
+              onClick={onClick}
               imageURL={answerOption.imageURL}
             />
           </div>
@@ -60,6 +60,6 @@ AnswerCardsDeck.propTypes = {
       imageName: string
     })
   ).isRequired,
-  saveAnswer: func.isRequired
+  onClick: func.isRequired
 };
 export default AnswerCardsDeck;

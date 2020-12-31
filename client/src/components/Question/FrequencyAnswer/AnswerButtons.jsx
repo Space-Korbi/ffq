@@ -3,13 +3,13 @@ import { arrayOf, shape, func, string } from 'prop-types';
 
 import AnswerButton from './AnswerButton';
 
-const AnswerButtons = ({ leftAnswerOptions, rightAnswerOptions, saveAnswer }) => {
+const AnswerButtons = ({ leftAnswerOptions, rightAnswerOptions, onClick }) => {
   return (
     <div className="row mx-3">
       <div className="col-6">
         {leftAnswerOptions.map((answerOption) => (
           <div key={answerOption.id}>
-            <AnswerButton title={answerOption.title} onClick={saveAnswer} />
+            <AnswerButton title={answerOption.title} onClick={onClick} />
           </div>
         ))}
       </div>
@@ -17,7 +17,7 @@ const AnswerButtons = ({ leftAnswerOptions, rightAnswerOptions, saveAnswer }) =>
       <div className="col-6">
         {rightAnswerOptions.map((answerOption) => (
           <div key={answerOption.id}>
-            <AnswerButton title={answerOption.title} onClick={saveAnswer} />
+            <AnswerButton title={answerOption.title} onClick={onClick} />
           </div>
         ))}
       </div>
@@ -28,7 +28,7 @@ const AnswerButtons = ({ leftAnswerOptions, rightAnswerOptions, saveAnswer }) =>
 AnswerButtons.propTypes = {
   leftAnswerOptions: arrayOf(shape({ id: string.isRequired, title: string })).isRequired,
   rightAnswerOptions: arrayOf(shape({ id: string.isRequired, title: string })).isRequired,
-  saveAnswer: func.isRequired
+  onClick: func.isRequired
 };
 
 export default AnswerButtons;

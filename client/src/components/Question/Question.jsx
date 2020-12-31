@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { string, shape, arrayOf, exact, bool, oneOfType } from 'prop-types';
+import { useParams } from 'react-router-dom';
+
+// hooks
+import { useSaveAnswer } from '../../hooks';
 
 import Jumbotron from '../Jumbotron';
 import Help from '../Help';
@@ -8,16 +12,16 @@ import AmountAnswer from './AmountAnswer/AmountAnswer';
 import UserInputAnswer from './UserInputAnswer/UserInputAnswer';
 import AnswerType from '../../types';
 
-const saveAnswer = () => {
-  // eslint-disable-next-line
-  console.log('answer');
-};
-
-function Question({ title, subtitle1, subtitle2, help, answerType, answerOptions }) {
+function Question({ id, title, subtitle1, subtitle2, help, answerOptions }) {
+  const { userId } = useParams();
   const [answerContainer, setAnswerContainer] = useState();
+  const [{ answer, isLoading, isError }, setAnswer] = useSaveAnswer(userId, id);
+
+  console.log('ANSWER: ', answer);
+  console.log('Other: ', isLoading, isError);
 
   useEffect(() => {
-    switch (answerType) {
+    switch (answerOptions.type) {
       case AnswerType.Frequency:
         setAnswerContainer(
           <div className="row no-gutters d-flex align-items-stretch">
@@ -25,7 +29,7 @@ function Question({ title, subtitle1, subtitle2, help, answerType, answerOptions
               <AnswerButtons
                 leftAnswerOptions={answerOptions.options.left}
                 rightAnswerOptions={answerOptions.options.right}
-                saveAnswer={saveAnswer}
+                onClick={setAnswer}
               />
             </div>
           </div>
@@ -34,7 +38,7 @@ function Question({ title, subtitle1, subtitle2, help, answerType, answerOptions
       case AnswerType.Amount:
         setAnswerContainer(
           <div>
-            <AmountAnswer answerOptions={answerOptions.options} />
+            <AmountAnswer answerOptions={answerOptions.options} onClick={setAnswer} />
           </div>
         );
         break;
@@ -42,12 +46,12 @@ function Question({ title, subtitle1, subtitle2, help, answerType, answerOptions
         setAnswerContainer(
           <div className="row no-gutters d-flex align-items-stretch">
             <div className="col">
-              <UserInputAnswer answerOptions={answerOptions.options} />
+              <UserInputAnswer answerOptions={answerOptions.options} onSubmit={setAnswer} />
             </div>
           </div>
         );
     }
-  }, [answerType, answerOptions]);
+  }, [answerOptions]);
 
   return (
     <div>
@@ -67,11 +71,11 @@ function Question({ title, subtitle1, subtitle2, help, answerType, answerOptions
 }
 
 Question.propTypes = {
+  id: string.isRequired,
   title: string,
   subtitle1: string,
   subtitle2: string,
   help: string,
-  answerType: string.isRequired,
   answerOptions: shape({
     type: string.isRequired,
     options: oneOfType([

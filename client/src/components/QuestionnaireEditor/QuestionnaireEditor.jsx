@@ -159,13 +159,13 @@ const QuestionsList = ({ questionnaireId, deleteQuestionnaire }) => {
   }
 
   useEffect(() => {
-    const fetchQuestion = async () => {
+    const fetchQuestions = async () => {
       const fetchedQuestions = await questionnaireService.fetchAllQuestionsOfQuestionnaire(
         questionnaireId
       );
       setQuestions(fetchedQuestions);
     };
-    fetchQuestion();
+    fetchQuestions();
   }, []);
 
   const handleCreateQuestionAt = async (index) => {

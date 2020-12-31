@@ -6,7 +6,7 @@ import { questionnaireService } from '../services';
 const useFetchQuestions = (initialQuestionnaireId) => {
   const [questionnaireId, setQuestionnaireId] = useState(initialQuestionnaireId);
 
-  const questionFetchReducer = (state, action) => {
+  const fetchQuestionReducer = (state, action) => {
     switch (action.type) {
       case 'FETCH_INIT':
         return {
@@ -32,7 +32,7 @@ const useFetchQuestions = (initialQuestionnaireId) => {
     }
   };
 
-  const [state, dispatch] = useReducer(questionFetchReducer, {
+  const [state, dispatch] = useReducer(fetchQuestionReducer, {
     questions: [],
     isLoading: false,
     isError: false
@@ -64,4 +64,68 @@ const useFetchQuestions = (initialQuestionnaireId) => {
   return [state, setQuestionnaireId];
 };
 
-export default useFetchQuestions;
+// Custom answer saving hook
+const useSaveAnswer = (userId, questionId) => {
+  const [answer, setAnswer] = useState('');
+
+  const saveAnswerReducer = (state, action) => {
+    switch (action.type) {
+      case 'SAVE_INIT':
+        return {
+          ...state,
+          isLoading: true,
+          isError: false
+        };
+      case 'SAVE_SUCCESS':
+        return {
+          ...state,
+          isLoading: false,
+          isError: false,
+          answer: action.payload
+        };
+      case 'SAVE_FAILURE':
+        return {
+          ...state,
+          isLoading: false,
+          isError: true
+        };
+      default:
+        throw new Error();
+    }
+  };
+
+  const [state, dispatch] = useReducer(saveAnswerReducer, {
+    answer: [],
+    isLoading: false,
+    isError: false
+  });
+
+  useEffect(() => {
+    let didCancel = false;
+    const saveAnswer = async () => {
+      dispatch({ type: 'SAVE_INIT' });
+      try {
+        if (answer) {
+          // const savedAnswer = await userService.saveAnswer(userId, questionId, answer);
+          console.log('In HOOK', userId, questionId, answer);
+
+          if (!didCancel) {
+            dispatch({ type: 'SAVE_SUCCESS', payload: { answer: 'savedAnswer' } });
+          }
+        }
+      } catch (error) {
+        if (!didCancel) {
+          dispatch({ type: 'SAVE_FAILURE' });
+        }
+      }
+    };
+    saveAnswer();
+    return () => {
+      didCancel = true;
+    };
+  }, [questionId, answer]);
+
+  return [state, setAnswer];
+};
+
+export { useFetchQuestions, useSaveAnswer };

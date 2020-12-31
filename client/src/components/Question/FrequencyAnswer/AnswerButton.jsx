@@ -6,7 +6,7 @@ const AnswerButton = ({ title, onClick }) => {
     <button
       type="button"
       className="btn btn-outline-primary btn-block btn-frequency my-4"
-      onClick={() => onClick()}
+      onClick={() => onClick(title)}
     >
       {title}
     </button>
