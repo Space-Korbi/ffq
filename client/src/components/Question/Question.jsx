@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unused-prop-types */
 import React, { useEffect, useState } from 'react';
 import { string, shape, arrayOf, exact, bool, oneOfType, func } from 'prop-types';
@@ -16,12 +17,22 @@ import UserInputAnswer from './UserInputAnswer/UserInputAnswer';
 // global constants
 import AnswerType from '../../types';
 
-function Question({ id, title, subtitle1, subtitle2, help, answerOptions, onSubmitAnswer }) {
+function Question({
+  id,
+  title,
+  subtitle1,
+  subtitle2,
+  help,
+  answerOptions,
+  selectedAnswer,
+  onSubmitAnswer
+}) {
   const [answerContainer, setAnswerContainer] = useState();
   const { userId } = useParams();
   const [userInput, setUserInput] = useState();
-  const [{ answer, isSaving, isSavingError }, setAnswer] = useSaveAnswer(userId, id);
+  const [{ banswer, isSaving, isSavingError }, setAnswer] = useSaveAnswer(userId, id);
 
+  console.log('=====', selectedAnswer);
   useEffect(() => {
     if (!userInput) {
       return;
@@ -41,7 +52,7 @@ function Question({ id, title, subtitle1, subtitle2, help, answerOptions, onSubm
               <AnswerButtons
                 leftAnswerOptions={answerOptions.options.left}
                 rightAnswerOptions={answerOptions.options.right}
-                answer={answer}
+                selectedAnswer={selectedAnswer}
                 onClick={setUserInput}
               />
             </div>
@@ -53,7 +64,7 @@ function Question({ id, title, subtitle1, subtitle2, help, answerOptions, onSubm
           <div>
             <AmountAnswer
               answerOptions={answerOptions.options}
-              answer={answer}
+              selectedAnswer={selectedAnswer}
               onClick={setUserInput}
             />
           </div>
@@ -65,7 +76,7 @@ function Question({ id, title, subtitle1, subtitle2, help, answerOptions, onSubm
             <div className="col">
               <UserInputAnswer
                 answerOptions={answerOptions.options}
-                answer={answer}
+                selectedAnswer={selectedAnswer}
                 onSubmit={setUserInput}
               />
             </div>
@@ -128,6 +139,7 @@ Question.propTypes = {
       )
     ]).isRequired
   }).isRequired,
+  selectedAnswer: string,
   onSubmitAnswer: func.isRequired
 };
 
@@ -135,7 +147,8 @@ Question.defaultProps = {
   title: '',
   subtitle1: '',
   subtitle2: '',
-  help: ''
+  help: '',
+  selectedAnswer: ''
 };
 
 export default Question;

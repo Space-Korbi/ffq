@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { shape, arrayOf, string, bool, func } from 'prop-types';
 /**
  * TODO
@@ -6,12 +6,14 @@ import { shape, arrayOf, string, bool, func } from 'prop-types';
  */
 
 function UserInputAnswer({ answerOptions, onSubmit }) {
+  const [userInput, setUserInput] = useState({});
+
   return (
     <div>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          onSubmit(e);
+          onSubmit(userInput);
         }}
       >
         {answerOptions.map((answerOption) => {
@@ -27,16 +29,32 @@ function UserInputAnswer({ answerOptions, onSubmit }) {
                     </div>
                     <input
                       type="text"
+                      id={answerOption.id}
                       className="form-control"
                       aria-label="user input"
                       aria-describedby="inputGroup-sizing-lg"
+                      onChange={(e) => {
+                        const newInput = userInput;
+                        newInput[e.target.id] = e.target.value;
+                        setUserInput(newInput);
+                      }}
                     />
                   </div>
                 </div>
                 {answerOption.hasNumberInput && (
                   <div className="col-4">
                     <div className="input-group input-group-lg">
-                      <input type="number" min="0" className="form-control" />
+                      <input
+                        type="number"
+                        id={`${answerOption.id}-numberInput`}
+                        min="0"
+                        className="form-control"
+                        onChange={(e) => {
+                          const newInput = userInput;
+                          newInput[e.target.id] = e.target.value;
+                          setUserInput(newInput);
+                        }}
+                      />
                       <div className="input-group-append">
                         <span className="input-group-text" id="inputGroup-sizing-lg">
                           {answerOption.numberInputTitle}
