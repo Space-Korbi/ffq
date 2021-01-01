@@ -1,12 +1,27 @@
 require('dotenv').config();
-const cors = require('cors');
 const express = require('express');
 const bodyParser = require('body-parser');
-
+const cors = require('cors');
 /**
  * CORS is a node.js package for providing a Connect/Express middleware
  * that can be used to enable 'CROSS ORIGIN RESOURCE SHARING' with various options.
  */
+
+// * Create express app
+const app = express();
+
+const corsOptions = {
+  origin: 'http://localhost:8000'
+};
+
+app.use(cors(corsOptions));
+
+// parse requests of content-type - application/json
+app.use(bodyParser.json());
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+// serve static files such as images
+app.use(express.static('uploads'));
 
 /**
  * * Database
@@ -14,29 +29,14 @@ const bodyParser = require('body-parser');
  */
 require('./db');
 
-// const movieRouter = require('./routes/movie-router');
+// Routes
 const questionnaireRouter = require('./routes/questionnaire-router');
 const questionRouter = require('./routes/question-router');
 const imageRouter = require('./routes/image-router');
 
-// * Create express app
-const app = express();
-
-/**
- * A middleware function with no mount path.
- * The function is executed every time the app receives a request.
- */
-
-app.options('*', cors());
-app.use(cors());
-
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-app.use(bodyParser.json());
-app.use(express.static('uploads'));
-
 /**
  * Mount the routes on the '/api' path.
- * An array with a middleware sub-stacks that handle HTTP requests on the '/api' path.
+ * An array with middleware sub-stacks that handle HTTP requests on the '/api' path.
  */
 app.use('/api', [questionRouter, questionnaireRouter, imageRouter]);
 
