@@ -37,9 +37,9 @@ function AnswerCard({ title, imageURL, imageName, onClick }) {
           </div>
         </div>
       )}
-      <a href="#" className="stretched-link" onClick={onClick}>
+      <button type="button" className="bg-transparent stretched-link" onClick={onClick}>
         {' '}
-      </a>
+      </button>
     </div>
   );
 }
