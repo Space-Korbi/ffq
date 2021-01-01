@@ -5,8 +5,6 @@ import AnswerButton from './AnswerButton';
 
 const AnswerButtons = ({ leftAnswerOptions, rightAnswerOptions, selectedAnswer, onClick }) => {
   const isSelectedAnswer = (answerOptionId) => {
-    console.log('answerOptionId', answerOptionId);
-    console.log('selectedAnswer', selectedAnswer);
     if (answerOptionId === selectedAnswer) {
       return true;
     }
@@ -45,12 +43,8 @@ const AnswerButtons = ({ leftAnswerOptions, rightAnswerOptions, selectedAnswer, 
 AnswerButtons.propTypes = {
   leftAnswerOptions: arrayOf(shape({ id: string.isRequired, title: string })).isRequired,
   rightAnswerOptions: arrayOf(shape({ id: string.isRequired, title: string })).isRequired,
-  selectedAnswer: string,
+  selectedAnswer: string.isRequired,
   onClick: func.isRequired
-};
-
-AnswerButtons.defaultProps = {
-  selectedAnswer: ''
 };
 
 export default AnswerButtons;

@@ -19,6 +19,4 @@ AnswerButton.propTypes = {
   onClick: func.isRequired
 };
 
-// AnswerButton.defaultProps = { isSelectedAnswer: false };
-
 export default AnswerButton;
