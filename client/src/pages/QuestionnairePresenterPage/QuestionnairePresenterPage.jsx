@@ -1,17 +1,22 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-underscore-dangle */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { string } from 'prop-types';
+import { useParams } from 'react-router-dom';
 
 // custom hooks
-import { useFetchQuestions } from '../../hooks';
+import { useFetchQuestions, useFetchAnswers } from '../../hooks';
 
 // components
 import { Question } from '../../components/Question';
 
 const QuestionnairePresenterPage = ({ questionnaireId }) => {
+  const { userId } = useParams();
   const [{ questions, isLoading, isError }] = useFetchQuestions(questionnaireId);
+  const [{ answers, isLoadingAnswers, isErrorAnswers }] = useFetchAnswers(questionnaireId, userId);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  console.log(answers);
 
   return (
     <div>
@@ -29,6 +34,7 @@ const QuestionnairePresenterPage = ({ questionnaireId }) => {
                 subtitle2={questions[currentIndex].subtitle2}
                 help={questions[currentIndex].help}
                 answerOptions={questions[currentIndex].answerOptions}
+                selectedAnswer={answers[currentIndex].answerId}
                 onSubmitAnswer={() => setCurrentIndex(currentIndex + 1)}
               />
               <button type="button" onClick={() => setCurrentIndex(currentIndex - 1)}>
