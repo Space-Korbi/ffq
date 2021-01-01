@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from 'react';
-import { func, string } from 'prop-types';
+import { bool, func, string } from 'prop-types';
 
-function AnswerCard({ title, imageURL, imageName, onClick }) {
+function AnswerCard({ title, imageURL, imageName, isSelectedAnswer, onClick }) {
   const [currentURL, setCurrentURL] = useState(`http://localhost:3000/${imageName}`);
   /**
    * TODO
@@ -16,20 +16,20 @@ function AnswerCard({ title, imageURL, imageName, onClick }) {
     }
   }, [imageURL]);
 
+  let cardStyle = 'card my-5 align-items-center d-flex justify-content-center';
+  if (isSelectedAnswer) {
+    cardStyle = 'card my-5 align-items-center border-success d-flex justify-content-center';
+  }
+
   return (
-    <div
-      className="card my-5 align-items-center d-flex justify-content-center"
-      style={{ minWidth: '270px', maxWidth: '300px', minHeight: '270px', maxHeight: '300px' }}
-    >
+    <div className={cardStyle} style={{ minWidth: '270px', maxWidth: '300px', height: '18rem' }}>
       {imageName || imageURL ? (
-        <div className="row no-gutters">
-          <img
-            src={currentURL}
-            className="card-img-top"
-            alt="..."
-            style={{ objectFit: 'contain', maxWidth: '300px', maxHeight: '300px' }}
-          />
-        </div>
+        <img
+          src={currentURL}
+          className="card-img-top"
+          alt="..."
+          style={{ objectFit: 'contain', maxWidth: '100%', maxHeight: '100%' }}
+        />
       ) : (
         <div className="card-body align-items-center d-flex justify-content-center">
           <div>
@@ -37,9 +37,9 @@ function AnswerCard({ title, imageURL, imageName, onClick }) {
           </div>
         </div>
       )}
-      <a href="#" className="stretched-link" onClick={onClick}>
+      <button type="button" className="stretched-link" onClick={onClick}>
         {' '}
-      </a>
+      </button>
     </div>
   );
 }
@@ -48,6 +48,7 @@ AnswerCard.propTypes = {
   title: string,
   imageURL: string,
   imageName: string,
+  isSelectedAnswer: bool.isRequired,
   onClick: func.isRequired
 };
 

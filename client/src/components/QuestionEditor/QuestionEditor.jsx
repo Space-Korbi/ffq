@@ -72,7 +72,6 @@ const QuestionEditor = ({ question, questionnaireId }) => {
           subtitle2={subtitle2}
           help={help}
           answerOptions={answerOptions}
-          answerType={answerType}
         />
       </div>
     </div>

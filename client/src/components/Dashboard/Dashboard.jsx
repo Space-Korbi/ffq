@@ -4,17 +4,24 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Route, Switch, useRouteMatch, NavLink, Link } from 'react-router-dom';
 import PrivateRoute from '../PrivateRoute';
-import { MoviesList, MoviesInsert, MoviesUpdate } from '../../pages';
 import QuestionnairePresentation from '../Questionnaire';
 import AdminPage from '../../pages/AdminPage';
 import ParticipantPage from '../../pages/ParticipantPage';
-import AccountPage from '../../pages/AccountPage';
 import WelcomePage from '../../pages/WelcomePage';
 import UserSelection from '../UserSelection';
 import QuestionEditor from '../QuestionEditor';
 import QuestionnaireEditor from '../QuestionnaireEditor';
 import { Role } from '../../helpers';
 import { authenticationService } from '../../services';
+
+// Root Pages that can be routed to
+import {
+  HomePage,
+  QuestionnaireEditorPage,
+  QuestionnairePresenterPage,
+  ParticipantsManagementPage,
+  AccountPage
+} from '../../pages';
 
 const Dashboard = ({ isAdmin }) => {
   const { path, url, params } = useRouteMatch();
@@ -26,6 +33,33 @@ const Dashboard = ({ isAdmin }) => {
    * Map nav items according to admin and participant
    * highlight active nav link
    */
+  const adminLinks = [
+    {
+      name: 'Questionnaire Editor',
+      to: '/questionnaireEditor',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    },
+    {
+      name: 'Questionnaire Presentation',
+      to: '/questionnairePresenter',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    },
+    {
+      name: 'Participants Manager',
+      to: '/participantsManager',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    },
+    {
+      name: 'Account',
+      to: '/account',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    }
+  ];
+
   const adminLinksQuestionnaires = [
     {
       name: 'Admin Panel',
@@ -47,13 +81,13 @@ const Dashboard = ({ isAdmin }) => {
     },
     {
       name: 'Question Editor',
-      to: '/QuestionEditor',
+      to: '/questionEditor',
       className: 'nav-link',
       activeClassName: 'nav-link active'
     },
     {
       name: 'Questionnaire Editor',
-      to: '/QuestionnaireEditor',
+      to: '/questionnaireEditor2',
       className: 'nav-link',
       activeClassName: 'nav-link active'
     }
@@ -174,6 +208,27 @@ const Dashboard = ({ isAdmin }) => {
                       </div>
                     </div>
                   </li>
+                  <li className="nav-item dropdown">
+                    <div className="dropdown">
+                      <a
+                        className="nav-link dropdown-toggle"
+                        role="button"
+                        id="dropdownMenuButton"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        ...
+                      </a>
+                      <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        {adminLinks.map((link) => (
+                          <Link className="dropdown-item" to={`${url}${link.to}`} key={link.name}>
+                            {link.name}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </li>
                 </ul>
               </div>
             )}
@@ -212,6 +267,26 @@ const Dashboard = ({ isAdmin }) => {
           <div className="col">
             <Switch>
               <PrivateRoute
+                path={`${path}/questionnaireEditor`}
+                roles={[Role.Admin]}
+                isAdmin={isAdmin}
+                component={QuestionnaireEditorPage}
+              />
+              <PrivateRoute
+                path={`${path}/participantsManager`}
+                roles={[Role.Admin]}
+                isAdmin={isAdmin}
+                component={ParticipantsManagementPage}
+              />
+              <Route
+                path={`${path}/questionnairePresenter`}
+                component={() => (
+                  <QuestionnairePresenterPage questionnaireId="wWOHBJtGAkPYccFyna5OH" />
+                )}
+              />
+              <Route path={`${path}/account`} component={AccountPage} />
+
+              <PrivateRoute
                 path={`${path}/admin`}
                 roles={[Role.Admin]}
                 isAdmin={isAdmin}
@@ -230,23 +305,20 @@ const Dashboard = ({ isAdmin }) => {
                 component={ParticipantPage}
               />
               <PrivateRoute
-                path={`${path}/QuestionEditor`}
+                path={`${path}/questionEditor`}
                 roles={[Role.Admin]}
                 isAdmin={isAdmin}
                 component={QuestionEditor}
               />
               <PrivateRoute
-                path={`${path}/QuestionnaireEditor`}
+                path={`${path}/questionnaireEditor2`}
                 roles={[Role.Admin]}
                 isAdmin={isAdmin}
                 component={QuestionnaireEditor}
               />
-              <Route path={`${path}/movies/list/movies/update/:id`} component={MoviesUpdate} />
-              <Route path={`${path}/movies/list`} component={MoviesList} />
-              <Route path={`${path}/movies/create`} component={MoviesInsert} />
+
               <Route path={`${path}/questionnaire`} component={QuestionnairePresentation} />
 
-              <Route path={`${path}/account`} component={AccountPage} />
               <Route path={`${path}/`} exact component={WelcomePage} />
             </Switch>
           </div>
