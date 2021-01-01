@@ -4,13 +4,13 @@ import PropTypes from 'prop-types';
 const ProgressIndicator = ({ currentPosition, length }) => {
   const percentage = `${Math.round((currentPosition / length) * 100)}%`;
   return (
-    <div className="mt-2">
-      <div className="d-flex justify-content-center">
+    <div className="d-flex flex-grow-1">
+      {/* <div className="d-flex justify-content-center">
         <span className="badge badge-info">
           {currentPosition} of {length} answered
         </span>
-      </div>
-      <div className="progress mt-2">
+      </div> */}
+      <div className="progress d-flex flex-fill">
         <div
           className="progress-bar bg-info"
           role="progressbar"
