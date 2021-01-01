@@ -38,11 +38,11 @@ const QuestionnairePresenterPage = ({ questionnaireId }) => {
               />
             </div>
           )}
-          <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-bottom">
+          <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-bottom questionnaire">
             <div className="d-flex flex-fill align-items-center">
               <button
                 type="button"
-                className="btn btn-sm btn-light"
+                className="btn btn btn-light"
                 onClick={() => setCurrentIndex(currentIndex - 1)}
               >
                 Zurück
@@ -52,7 +52,7 @@ const QuestionnairePresenterPage = ({ questionnaireId }) => {
               <div className="p-1" />
               <button
                 type="button"
-                className="btn btn-sm btn-light"
+                className="btn btn btn-light"
                 onClick={() => setCurrentIndex(currentIndex + 1)}
               >
                 Weiter

@@ -1,5 +1,13 @@
 @import '../../node_modules/bootstrap/scss/bootstrap';
 
+.navbar .fixed-bottom .questionnaire {
+  height: 50px;
+}
+
+main {
+  margin-bottom: 50px;
+}
+
 .jumbotron-question {
   padding-top: 2rem;
   padding-bottom: 2rem;
