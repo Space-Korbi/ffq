@@ -3,12 +3,16 @@ import { arrayOf, string, shape, func } from 'prop-types';
 
 import AnswerCardsDeck from './AnswerCardsDeck';
 
-const AmountAnswer = ({ answerOptions, onClick }) => {
+const AmountAnswer = ({ answerOptions, selectedAnswer, onClick }) => {
   return (
     <div>
       <div className="container-fluid px-0">
         <div className="row no-gutters overflow-auto flex-row flex-nowrap text-center my-3">
-          <AnswerCardsDeck answerOptions={answerOptions} onClick={onClick} />
+          <AnswerCardsDeck
+            answerOptions={answerOptions}
+            selectedAnswer={selectedAnswer}
+            onClick={onClick}
+          />
         </div>
       </div>
     </div>
@@ -23,6 +27,7 @@ AmountAnswer.propTypes = {
       imageName: string
     })
   ).isRequired,
+  selectedAnswer: string.isRequired,
   onClick: func.isRequired
 };
 

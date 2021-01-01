@@ -8,47 +8,47 @@ import AnswerCard from './AnswerCard';
  * @param answers - Array of answers data
  * @returns [<Amount Card/>] - Amount cards wrapped in a div to apply extra spacing to the first and last card
  */
-const AnswerCardsDeck = ({ answerOptions, onClick }) => {
+const AnswerCardsDeck = ({ answerOptions, selectedAnswer, onClick }) => {
   return answerOptions.map((answerOption, index) => {
     if (!answerOption.id) {
       return <div />;
     }
 
+    const isSelectedAnswer = (answerOptionId) => {
+      if (selectedAnswer) {
+        if (answerOptionId === selectedAnswer) {
+          return true;
+        }
+      }
+      return false;
+    };
+
+    let className = 'px-2 mt-5 align-self-center';
+
     switch (index) {
       case 0:
-        return (
-          <div key={answerOption.id} className="pl-5 pr-2 mt-5 align-self-center">
-            <AnswerCard
-              title={answerOption.title}
-              imageName={answerOption.imageName}
-              imageURL={answerOption.imageURL}
-              onClick={onClick}
-            />
-          </div>
-        );
+        className = 'pl-5 pr-2 mt-5 align-self-center';
+        break;
+
       case answerOptions.length - 1:
-        return (
-          <div key={answerOption.id} className="pl-2 pr-5 mt-5 align-self-center">
-            <AnswerCard
-              title={answerOption.title}
-              imageName={answerOption.imageName}
-              onClick={onClick}
-              imageURL={answerOption.imageURL}
-            />
-          </div>
-        );
+        className = 'pl-2 pr-5 mt-5 align-self-center';
+        break;
+
       default:
-        return (
-          <div key={answerOption.id} className="px-2 mt-5 align-self-center">
-            <AnswerCard
-              title={answerOption.title}
-              imageName={answerOption.imageName}
-              onClick={onClick}
-              imageURL={answerOption.imageURL}
-            />
-          </div>
-        );
+        className = 'px-2 mt-5 align-self-center';
     }
+
+    return (
+      <div key={answerOption.id} className={className}>
+        <AnswerCard
+          title={answerOption.title}
+          imageName={answerOption.imageName}
+          imageURL={answerOption.imageURL}
+          isSelectedAnswer={isSelectedAnswer(answerOption.id)}
+          onClick={() => onClick(answerOption.id)}
+        />
+      </div>
+    );
   });
 };
 
