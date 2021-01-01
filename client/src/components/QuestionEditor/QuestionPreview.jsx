@@ -11,11 +11,13 @@ const QuestionPreview = ({ title, subtitle1, subtitle2, help, answerOptions }) =
         style={{ minHeight: '760px', minWidth: '270px', maxWidth: '100%' }}
       >
         <Question
+          id=""
           title={title}
           subtitle1={subtitle1}
           subtitle2={subtitle2}
           help={help}
           answerOptions={answerOptions}
+          onSubmitAnswer={() => console.log('Answer submitted')}
         />
       </div>
     </>
