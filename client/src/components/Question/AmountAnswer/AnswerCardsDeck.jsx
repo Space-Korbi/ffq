@@ -8,15 +8,15 @@ import AnswerCard from './AnswerCard';
  * @param answers - Array of answers data
  * @returns [<Amount Card/>] - Amount cards wrapped in a div to apply extra spacing to the first and last card
  */
-const AnswerCardsDeck = ({ answerOptions, selectedAnswer, onClick }) => {
+const AnswerCardsDeck = ({ answerOptions, submittedAnswer, onClick }) => {
   return answerOptions.map((answerOption, index) => {
     if (!answerOption.id) {
       return <div />;
     }
 
     const isSelectedAnswer = (answerOptionId) => {
-      if (selectedAnswer) {
-        if (answerOptionId === selectedAnswer) {
+      if (submittedAnswer.answer.id) {
+        if (answerOptionId === submittedAnswer.answer.id) {
           return true;
         }
       }
@@ -60,6 +60,7 @@ AnswerCardsDeck.propTypes = {
       imageName: string
     })
   ).isRequired,
+  submittedAnswer: shape({ questionId: string, answer: shape({ id: string, value: string }) }),
   onClick: func.isRequired
 };
 export default AnswerCardsDeck;

@@ -17,22 +17,21 @@ import UserInputAnswer from './UserInputAnswer/UserInputAnswer';
 // global constants
 import AnswerType from '../../types';
 
-function Question({
+const Question = ({
   id,
   title,
   subtitle1,
   subtitle2,
   help,
   answerOptions,
-  selectedAnswer,
+  submittedAnswer,
   onSubmitAnswer
-}) {
+}) => {
   const [answerContainer, setAnswerContainer] = useState();
   const { userId } = useParams();
   const [userInput, setUserInput] = useState();
   const [{ banswer, isSaving, isSavingError }, setAnswer] = useSaveAnswer(userId, id);
 
-  console.log('=====', selectedAnswer);
   useEffect(() => {
     if (!userInput) {
       return;
@@ -52,7 +51,7 @@ function Question({
               <AnswerButtons
                 leftAnswerOptions={answerOptions.options.left}
                 rightAnswerOptions={answerOptions.options.right}
-                selectedAnswer={selectedAnswer}
+                submittedAnswer={submittedAnswer}
                 onClick={setUserInput}
               />
             </div>
@@ -64,7 +63,7 @@ function Question({
           <div>
             <AmountAnswer
               answerOptions={answerOptions.options}
-              selectedAnswer={selectedAnswer}
+              submittedAnswer={submittedAnswer}
               onClick={setUserInput}
             />
           </div>
@@ -76,7 +75,7 @@ function Question({
             <div className="col">
               <UserInputAnswer
                 answerOptions={answerOptions.options}
-                selectedAnswer={selectedAnswer}
+                submittedAnswer={submittedAnswer}
                 onSubmit={setUserInput}
               />
             </div>
@@ -106,7 +105,7 @@ function Question({
       </div>
     </div>
   );
-}
+};
 
 Question.propTypes = {
   id: string.isRequired,
@@ -139,7 +138,10 @@ Question.propTypes = {
       )
     ]).isRequired
   }).isRequired,
-  selectedAnswer: string,
+  submittedAnswer: oneOfType([
+    shape({ questionId: string, answer: shape({ id: string, value: string }) }),
+    shape({ questionId: string, answer: arrayOf(shape({ id: string, value: string })) })
+  ]),
   onSubmitAnswer: func.isRequired
 };
 
@@ -148,7 +150,7 @@ Question.defaultProps = {
   subtitle1: '',
   subtitle2: '',
   help: '',
-  selectedAnswer: ''
+  submittedAnswer: undefined
 };
 
 export default Question;

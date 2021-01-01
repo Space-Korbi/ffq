@@ -16,8 +16,6 @@ const QuestionnairePresenterPage = ({ questionnaireId }) => {
   const [{ answers, isLoadingAnswers, isErrorAnswers }] = useFetchAnswers(questionnaireId, userId);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  console.log(answers);
-
   return (
     <div>
       {isError && <div>Something went wrong ...</div>}
@@ -34,7 +32,7 @@ const QuestionnairePresenterPage = ({ questionnaireId }) => {
                 subtitle2={questions[currentIndex].subtitle2}
                 help={questions[currentIndex].help}
                 answerOptions={questions[currentIndex].answerOptions}
-                selectedAnswer={answers[currentIndex].answerId}
+                submittedAnswer={answers[currentIndex]}
                 onSubmitAnswer={() => setCurrentIndex(currentIndex + 1)}
               />
               <button type="button" onClick={() => setCurrentIndex(currentIndex - 1)}>

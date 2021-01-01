@@ -3,9 +3,9 @@ import { arrayOf, shape, func, string } from 'prop-types';
 
 import AnswerButton from './AnswerButton';
 
-const AnswerButtons = ({ leftAnswerOptions, rightAnswerOptions, selectedAnswer, onClick }) => {
+const AnswerButtons = ({ leftAnswerOptions, rightAnswerOptions, submittedAnswer, onClick }) => {
   const isSelectedAnswer = (answerOptionId) => {
-    if (answerOptionId === selectedAnswer) {
+    if (answerOptionId === submittedAnswer.answer.id) {
       return true;
     }
     return false;
@@ -43,8 +43,12 @@ const AnswerButtons = ({ leftAnswerOptions, rightAnswerOptions, selectedAnswer, 
 AnswerButtons.propTypes = {
   leftAnswerOptions: arrayOf(shape({ id: string.isRequired, title: string })).isRequired,
   rightAnswerOptions: arrayOf(shape({ id: string.isRequired, title: string })).isRequired,
-  selectedAnswer: string.isRequired,
+  submittedAnswer: shape({ questionId: string, answer: shape({ id: string, value: string }) }),
   onClick: func.isRequired
+};
+
+AnswerButtons.defaultProps = {
+  submittedAnswer: { questionId: '', answer: { id: '', value: '' } }
 };
 
 export default AnswerButtons;
