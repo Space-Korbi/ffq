@@ -1,24 +1,36 @@
+/* eslint-disable react/no-unused-prop-types */
 import React, { useEffect, useState } from 'react';
-import { string, shape, arrayOf, exact, bool, oneOfType } from 'prop-types';
+import { string, shape, arrayOf, exact, bool, oneOfType, func } from 'prop-types';
 import { useParams } from 'react-router-dom';
 
 // hooks
 import { useSaveAnswer } from '../../hooks';
 
+// components
 import Jumbotron from '../Jumbotron';
 import Help from '../Help';
 import AnswerButtons from './FrequencyAnswer/AnswerButtons';
 import AmountAnswer from './AmountAnswer/AmountAnswer';
 import UserInputAnswer from './UserInputAnswer/UserInputAnswer';
+
+// global constants
 import AnswerType from '../../types';
 
-function Question({ id, title, subtitle1, subtitle2, help, answerOptions }) {
-  const { userId } = useParams();
+function Question({ id, title, subtitle1, subtitle2, help, answerOptions, onSubmitAnswer }) {
   const [answerContainer, setAnswerContainer] = useState();
-  const [{ answer, isLoading, isError }, setAnswer] = useSaveAnswer(userId, id);
+  const { userId } = useParams();
+  const [userInput, setUserInput] = useState();
+  const [{ answer, isSaving, isSavingError }, setAnswer] = useSaveAnswer(userId, id);
 
-  console.log('ANSWER: ', answer);
-  console.log('Other: ', isLoading, isError);
+  useEffect(() => {
+    if (!userInput) {
+      return;
+    }
+    if (!isSaving && !isSavingError) {
+      setAnswer(userInput);
+      onSubmitAnswer();
+    }
+  }, [userInput]);
 
   useEffect(() => {
     switch (answerOptions.type) {
@@ -29,7 +41,8 @@ function Question({ id, title, subtitle1, subtitle2, help, answerOptions }) {
               <AnswerButtons
                 leftAnswerOptions={answerOptions.options.left}
                 rightAnswerOptions={answerOptions.options.right}
-                onClick={setAnswer}
+                answer={answer}
+                onClick={setUserInput}
               />
             </div>
           </div>
@@ -38,7 +51,11 @@ function Question({ id, title, subtitle1, subtitle2, help, answerOptions }) {
       case AnswerType.Amount:
         setAnswerContainer(
           <div>
-            <AmountAnswer answerOptions={answerOptions.options} onClick={setAnswer} />
+            <AmountAnswer
+              answerOptions={answerOptions.options}
+              answer={answer}
+              onClick={setUserInput}
+            />
           </div>
         );
         break;
@@ -46,7 +63,11 @@ function Question({ id, title, subtitle1, subtitle2, help, answerOptions }) {
         setAnswerContainer(
           <div className="row no-gutters d-flex align-items-stretch">
             <div className="col">
-              <UserInputAnswer answerOptions={answerOptions.options} onSubmit={setAnswer} />
+              <UserInputAnswer
+                answerOptions={answerOptions.options}
+                answer={answer}
+                onSubmit={setUserInput}
+              />
             </div>
           </div>
         );
@@ -65,7 +86,7 @@ function Question({ id, title, subtitle1, subtitle2, help, answerOptions }) {
           </div>
         </div>
       )}
-      <div>{answerContainer}</div>
+      <div>{isSaving ? 'Saving...' : <div>{answerContainer}</div>} </div>
     </div>
   );
 }
@@ -100,7 +121,10 @@ Question.propTypes = {
         })
       )
     ]).isRequired
-  }).isRequired
+  }).isRequired,
+  answer: oneOfType([arrayOf(shape({ id: string.isRequired })), shape({ id: string.isRequired })])
+    .isRequired,
+  onSubmitAnswer: func.isRequired
 };
 
 Question.defaultProps = {

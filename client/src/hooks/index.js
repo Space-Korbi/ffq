@@ -105,12 +105,12 @@ const useSaveAnswer = (userId, questionId) => {
     const saveAnswer = async () => {
       dispatch({ type: 'SAVE_INIT' });
       try {
-        if (answer) {
+        if (answer && questionId) {
           // const savedAnswer = await userService.saveAnswer(userId, questionId, answer);
           console.log('In HOOK', userId, questionId, answer);
 
           if (!didCancel) {
-            dispatch({ type: 'SAVE_SUCCESS', payload: { answer: 'savedAnswer' } });
+            dispatch({ type: 'SAVE_SUCCESS', payload: { answer: 'savedAnswer', id: questionId } });
           }
         }
       } catch (error) {
@@ -123,7 +123,7 @@ const useSaveAnswer = (userId, questionId) => {
     return () => {
       didCancel = true;
     };
-  }, [questionId, answer]);
+  }, [answer]);
 
   return [state, setAnswer];
 };
