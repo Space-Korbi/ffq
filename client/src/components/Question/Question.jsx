@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { string, shape, arrayOf, exact, bool, oneOfType, func } from 'prop-types';
 import { useParams } from 'react-router-dom';
 
-// hooks
+// custom hooks
 import { useSaveAnswer } from '../../hooks';
 
 // components
@@ -86,7 +86,13 @@ function Question({ id, title, subtitle1, subtitle2, help, answerOptions, onSubm
           </div>
         </div>
       )}
-      <div>{isSaving ? 'Saving...' : <div>{answerContainer}</div>} </div>
+      <div>
+        {isSavingError ? (
+          'Something went wrong...'
+        ) : (
+          <>{isSaving ? 'Saving...' : <>{answerContainer}</>} </>
+        )}
+      </div>
     </div>
   );
 }
@@ -122,8 +128,6 @@ Question.propTypes = {
       )
     ]).isRequired
   }).isRequired,
-  answer: oneOfType([arrayOf(shape({ id: string.isRequired })), shape({ id: string.isRequired })])
-    .isRequired,
   onSubmitAnswer: func.isRequired
 };
 
