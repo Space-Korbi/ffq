@@ -87,7 +87,7 @@ const Dashboard = ({ isAdmin }) => {
     },
     {
       name: 'Questionnaire Editor',
-      to: '/questionnaireEditor',
+      to: '/questionnaireEditor2',
       className: 'nav-link',
       activeClassName: 'nav-link active'
     }
@@ -280,7 +280,9 @@ const Dashboard = ({ isAdmin }) => {
               />
               <Route
                 path={`${path}/questionnairePresenter`}
-                component={QuestionnairePresenterPage}
+                component={() => (
+                  <QuestionnairePresenterPage questionnaireId="wWOHBJtGAkPYccFyna5OH" />
+                )}
               />
               <Route path={`${path}/account`} component={AccountPage} />
 
@@ -309,7 +311,7 @@ const Dashboard = ({ isAdmin }) => {
                 component={QuestionEditor}
               />
               <PrivateRoute
-                path={`${path}/questionnaireEditor`}
+                path={`${path}/questionnaireEditor2`}
                 roles={[Role.Admin]}
                 isAdmin={isAdmin}
                 component={QuestionnaireEditor}
