@@ -10,7 +10,6 @@ import ParticipantPage from '../../pages/ParticipantPage';
 import WelcomePage from '../../pages/WelcomePage';
 import UserSelection from '../UserSelection';
 import QuestionEditor from '../QuestionEditor';
-import QuestionnaireEditor from '../QuestionnaireEditor';
 import { Role } from '../../helpers';
 import { authenticationService } from '../../services';
 
@@ -309,12 +308,6 @@ const Dashboard = ({ isAdmin }) => {
                 roles={[Role.Admin]}
                 isAdmin={isAdmin}
                 component={QuestionEditor}
-              />
-              <PrivateRoute
-                path={`${path}/questionnaireEditor2`}
-                roles={[Role.Admin]}
-                isAdmin={isAdmin}
-                component={QuestionnaireEditor}
               />
 
               <Route path={`${path}/questionnaire`} component={QuestionnairePresentation} />

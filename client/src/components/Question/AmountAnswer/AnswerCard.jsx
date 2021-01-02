@@ -37,7 +37,8 @@ function AnswerCard({ title, imageURL, imageName, isSelectedAnswer, onClick }) {
           </div>
         </div>
       )}
-      <button type="button" className="stretched-link" onClick={onClick}>
+      {/* Stretch invisible button over the card to make it clickable */}
+      <button type="button" className="p-0 m-0 border-0 stretched-link" onClick={onClick}>
         {' '}
       </button>
     </div>
