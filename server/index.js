@@ -88,10 +88,10 @@ db.mongoose
 
 // Authentication Routes
 require('./auth/auth.routes')(app);
-require('./users/user.router')(app);
+// require('./users/user.router')(app);
 
 // Content Routes
-// const userRouter = require('./users/users.controller');
+const userRouter = require('./users/user.router');
 const questionnaireRouter = require('./questionnaires/questionnaire.router');
 const questionRouter = require('./questions/question.router');
 const imageRouter = require('./images/image.router');
@@ -100,6 +100,6 @@ const imageRouter = require('./images/image.router');
  * Mount the routes on the '/api' path.
  * An array with middleware sub-stacks that handle HTTP requests on the '/api' path.
  */
-app.use('/api', [questionRouter, questionnaireRouter, imageRouter]);
+app.use('/api', [userRouter, questionRouter, questionnaireRouter, imageRouter]);
 
 app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));
