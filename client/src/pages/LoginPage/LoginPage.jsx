@@ -2,41 +2,42 @@ import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
-import { authenticationService } from '../../services';
+import authService from '../../services/auth.service';
 
 const LoginPage = () => {
   const history = useHistory();
 
   useEffect(() => {
-    const user = authenticationService.currentUserValue;
+    const user = authService.currentUserValue;
     if (user) {
       history.push(`/dashboard/${user.id}`);
     }
-  });
+  }, []);
 
   return (
     <div className="jumbotron">
       <div className="container">
         <div className="row">
-          <div className="col-md-6 offset-md-3">
+          <div className="col-md-8 offset-md-3">
             <div className="alert alert-info">
-              <strong>Paricipant User</strong> - U: part P: part
+              <strong>User</strong> - Email: user@abc.de PW: user
               <br />
-              <strong>Administrator</strong> - U: admin P: admin
+              <strong>Administrator</strong> - Email: admin@abc.de PW: admin
             </div>
             <h2>Login</h2>
             <Formik
               initialValues={{
-                username: '',
-                password: ''
+                email: 'k@b.de',
+                password: '12345'
               }}
               validationSchema={Yup.object().shape({
-                username: Yup.string().required('Username is required'),
+                email: Yup.string().required('Email is required'),
                 password: Yup.string().required('Password is required')
               })}
-              onSubmit={({ username, password }, { setStatus, setSubmitting }) => {
-                authenticationService.login(username, password).then(
+              onSubmit={({ email, password }, { setStatus, setSubmitting }) => {
+                authService.login(email, password).then(
                   (user) => {
+                    console.log(user);
                     /**
                      * TODO redirect
                      * redirect to first unanswered question of questionnaire if possible
@@ -53,16 +54,16 @@ const LoginPage = () => {
               {({ errors, status, touched, isSubmitting }) => (
                 <Form>
                   <div className="form-group">
-                    <label htmlFor="username">Username</label>
+                    <label htmlFor="email">Email</label>
                     <Field
-                      id="username"
-                      name="username"
-                      type="text"
+                      id="email"
+                      name="email"
+                      type="email"
                       className={`form-control${
-                        errors.username && touched.username ? ' is-invalid' : ''
+                        errors.email && touched.email ? ' is-invalid' : ''
                       }`}
                     />
-                    <ErrorMessage name="username" component="div" className="invalid-feedback" />
+                    <ErrorMessage name="email" component="div" className="invalid-feedback" />
                   </div>
                   <div className="form-group">
                     <label htmlFor="password">Password</label>
