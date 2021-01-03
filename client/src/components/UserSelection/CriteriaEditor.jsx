@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { func, string, arrayOf } from 'prop-types';
-import { PlusIcon } from '@primer/octicons-react';
+
+// icons
+import { InfoIcon, PlusIcon } from '@primer/octicons-react';
+
+// components
 import RemovableListItem from '../List';
 
 const SelectionCriteriaInput = ({ onClick }) => {
@@ -65,13 +69,22 @@ const SelectionCriteria = ({
   removeSelectionCriteria
 }) => {
   return (
-    <>
-      <SelectionCriteriaInput onClick={addSelectionCriteria} />
-      <SelectionCriteriaList
-        selectionCriteria={selectionCriteria}
-        onClick={removeSelectionCriteria}
-      />
-    </>
+    <div className="row d-flex justify-content-center">
+      <div className="col">
+        <h6>
+          Selection Criteria
+          <sup className="text-info ml-1">
+            <InfoIcon />
+          </sup>
+        </h6>
+        <SelectionCriteriaInput onClick={addSelectionCriteria} />
+
+        <SelectionCriteriaList
+          selectionCriteria={selectionCriteria}
+          onClick={removeSelectionCriteria}
+        />
+      </div>
+    </div>
   );
 };
 

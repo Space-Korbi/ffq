@@ -1,3 +1,4 @@
-import UserSelection from './UserSelection';
+import CriteriaEditor from './CriteriaEditor';
+import RuleEditor from './RuleEditor';
 
-export default UserSelection;
+export { CriteriaEditor, RuleEditor };
