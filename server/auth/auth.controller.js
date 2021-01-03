@@ -1,14 +1,13 @@
 /* eslint-disable no-underscore-dangle */
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const config = require('../config/auth.config');
+const config = require('./auth.config');
 const db = require('../models');
 
 const User = db.user;
 const Role = db.role;
 
 exports.signup = (req, res) => {
-  console.log('+++++++', req.body);
   const user = new User({
     firstName: req.body.firstName,
     lastName: req.body.lastName,

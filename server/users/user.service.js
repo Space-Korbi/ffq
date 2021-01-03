@@ -1,3 +1,4 @@
+/*
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const db = require('../helpers/db');
@@ -76,3 +77,4 @@ module.exports = {
   update,
   delete: _delete
 };
+*/

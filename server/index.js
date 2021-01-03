@@ -87,8 +87,8 @@ db.mongoose
   });
 
 // Authentication Routes
-require('./routes/auth.routes')(app);
-require('./routes/user.routes')(app);
+require('./auth/auth.routes')(app);
+require('./users/user.router')(app);
 
 // Content Routes
 // const userRouter = require('./users/users.controller');

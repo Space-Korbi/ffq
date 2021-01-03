@@ -1,3 +1,16 @@
+exports.allAccess = (req, res) => {
+  res.status(200).send('Public Content.');
+};
+
+exports.userBoard = (req, res) => {
+  res.status(200).send('User Content.');
+};
+
+exports.adminBoard = (req, res) => {
+  res.status(200).send('Admin Content.');
+};
+
+/*
 const express = require('express');
 
 const router = express.Router();
@@ -64,3 +77,4 @@ router.put('/:id', update);
 router.delete('/:id', _delete);
 
 module.exports = router;
+*/
