@@ -8,6 +8,11 @@ const User = mongoose.model(
       lastName: { type: String, required: true },
       email: { type: String, required: true },
       password: { type: String, required: true },
+      hasAcceptedConsentForm: { type: Boolean, default: false },
+      screeningStatus: { type: Boolean, default: true },
+      personalData: [{ type: String }],
+      screeningData: [{ type: String }],
+      questionnaire: { type: mongoose.Schema.Types.Mixed },
       roles: [
         {
           type: mongoose.Schema.Types.ObjectId,
@@ -16,37 +21,18 @@ const User = mongoose.model(
       ]
     },
     { timestamps: true }
-  )
+  ).set('toJSON', {
+    virtuals: true,
+    versionKey: false,
+    // minimize: true,
+    transform(doc, ret) {
+      const transformed = ret;
+      delete transformed._id;
+      delete transformed.password;
+      delete transformed.roles;
+      return transformed;
+    }
+  })
 );
 
 module.exports = User;
-
-/*
-const mongoose = require('mongoose');
-
-const { Schema } = mongoose;
-
-const schema = new Schema(
-  {
-    username: { type: String, unique: true, required: true },
-    hash: { type: String, required: true },
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true }
-  },
-  { timestamps: true }
-);
-
-schema.set('toJSON', {
-  virtuals: true,
-  versionKey: false,
-  // minimize: true,
-  transform(doc, ret) {
-    const transformed = ret;
-    delete transformed._id;
-    delete transformed.hash;
-    return transformed;
-  }
-});
-
-module.exports = mongoose.model('User', schema);
-*/
