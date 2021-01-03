@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 
 // custom hooks
-import { useFetchUsers } from '../../hooks';
+import { useFetchUsers, useFetchQuestions } from '../../hooks';
 
 // helpers
 import { addValidString } from '../../helpers';
@@ -28,10 +28,67 @@ const rule2 = {
 const mockSelectionCriteria = ['Laktose Intolerant', 'Taking Medication', 'Pregnant', 'Vegan'];
 const mockRules = [rule1, rule2];
 
+const dataColumns = [
+  {
+    dataField: 'email',
+    text: 'Email'
+  },
+  {
+    dataField: 'firstName',
+    text: 'First Name'
+  },
+  {
+    dataField: 'lastName',
+    text: 'Last Name'
+  },
+  {
+    dataField: 'hasAcceptedConsentForm',
+    text: 'Consent Form'
+  },
+  {
+    dataField: 'screeningStatus',
+    text: 'Screening Status'
+  },
+  {
+    dataField: 'personalData',
+    text: 'Personal Data'
+  },
+  {
+    dataField: 'screeningData',
+    text: 'Screening Data'
+  },
+  {
+    dataField: 'startDate',
+    text: 'Started'
+  },
+  {
+    dataField: 'endDate',
+    text: 'Finished'
+  }
+];
+
 const ParticipantsManagementPage = () => {
   const [{ users, isLoading, isError }] = useFetchUsers();
+  const [{ questions, isLoadingQuestions, isErrorQuestions }] = useFetchQuestions(
+    'wWOHBJtGAkPYccFyna5OH'
+  );
   const [selectionCriteria, setSelectionCriteria] = useState(mockSelectionCriteria);
   const [selectionRules, setSelectionRules] = useState(mockRules);
+  const [columns, setColumns] = useState(dataColumns);
+  console.log(questions, isLoadingQuestions, isErrorQuestions);
+
+  useEffect(() => {
+    if (questions && questions.length) {
+      const questionColumns = questions.map((question, index) => {
+        return {
+          dataField: question._id,
+          text: `Question ${index + 1}`
+        };
+      });
+      const allColumns = dataColumns.concat(questionColumns);
+      setColumns(allColumns);
+    }
+  }, [questions]);
 
   /**
    * TODO
@@ -68,29 +125,21 @@ const ParticipantsManagementPage = () => {
     }
   };
 
-  const columns = [
-    {
-      dataField: 'email',
-      text: 'User Email'
-    },
-    {
-      dataField: 'firstName',
-      text: 'First Name'
-    },
-    {
-      dataField: 'lastName',
-      text: 'Last Name'
-    }
-  ];
-
   const tabNames = ['Participants', 'Selection Criteria', 'Selection Rules'];
   const tabContents = [
-    <BootstrapTable
-      keyField="email"
-      data={users}
-      columns={columns}
-      noDataIndication="No participants"
-    />,
+    <div className="row no-gutters overflow-auto flex-row flex-nowrap">
+      <div className="col">
+        <BootstrapTable
+          keyField="email"
+          data={users}
+          columns={columns}
+          bordered={false}
+          striped
+          hover
+          noDataIndication="No participants"
+        />
+      </div>
+    </div>,
     <CriteriaEditor
       selectionCriteria={selectionCriteria}
       addSelectionCriteria={saveSelectionCriteria}
