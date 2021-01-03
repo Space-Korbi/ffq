@@ -43,7 +43,7 @@ const useFetchUsers = () => {
       try {
         const fetchedUsers = await userService.fetchAllUsers();
         if (!didCancel) {
-          dispatch({ type: 'FETCH_SUCCESS', payload: fetchedUsers });
+          dispatch({ type: 'FETCH_SUCCESS', payload: fetchedUsers.data.data });
         }
       } catch (error) {
         if (!didCancel) {

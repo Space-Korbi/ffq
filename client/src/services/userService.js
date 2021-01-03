@@ -1,7 +1,7 @@
 import { authHeader } from '../helpers';
 import { getAllUsers, getAccountInfoById } from '../api';
 
-const getUsers = () => {
+const fetchAllUsers = () => {
   return getAllUsers({ headers: authHeader() });
 };
 
@@ -9,7 +9,7 @@ const getAccountInfo = (userId) => {
   return getAccountInfoById(userId, { headers: authHeader() });
 };
 
-const userService = { getUsers, getAccountInfo };
+const userService = { fetchAllUsers, getAccountInfo };
 
 export default userService;
 
