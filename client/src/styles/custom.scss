@@ -34,6 +34,11 @@ main {
   }
 }
 
-.table td {
+.react-bootstrap-table td {
   vertical-align: middle;
+  white-space: nowrap;
+}
+
+.react-bootstrap-table th {
+  white-space: nowrap;
 }
