@@ -1,6 +1,6 @@
 const Role = {
   Admin: 'ROLE_ADMIN',
-  Participant: 'Participant'
+  Participant: 'ROLE_PARTICIPANT'
 };
 
 export default Role;
