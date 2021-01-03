@@ -1,21 +1,38 @@
+/* eslint-disable no-unused-vars */
 require('dotenv').config();
 const express = require('express');
+// * Create express app
+const app = express();
+
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const jwt = require('./helpers/jwt');
+const errorHandler = require('./helpers/error-handling');
+
 /**
  * CORS is a node.js package for providing a Connect/Express middleware
  * that can be used to enable 'CROSS ORIGIN RESOURCE SHARING' with various options.
  */
 
-// * Create express app
-const app = express();
-
 const corsOptions = {
   origin: 'http://localhost:8000'
 };
-
 app.use(cors(corsOptions));
 
+// *! Json watmore tutorial
+/*
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(cors());
+
+// use JWT auth to secure the api
+app.use(jwt());
+
+// global error handler
+app.use(errorHandler);
+*/
+
+// *! zkoder tutorial
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
@@ -29,7 +46,7 @@ const dbConfig = require('./config/db.config');
 
 const Role = db.role;
 
-function initial() {
+const initial = () => {
   Role.estimatedDocumentCount((err, count) => {
     if (!err && count === 0) {
       new Role({
@@ -53,7 +70,7 @@ function initial() {
       });
     }
   });
-}
+};
 
 db.mongoose
   .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
@@ -69,7 +86,12 @@ db.mongoose
     process.exit();
   });
 
-// Routes
+// Authentication Routes
+require('./routes/auth.routes')(app);
+require('./routes/user.routes')(app);
+
+// Content Routes
+// const userRouter = require('./users/users.controller');
 const questionnaireRouter = require('./routes/questionnaire-router');
 const questionRouter = require('./routes/question-router');
 const imageRouter = require('./routes/image-router');
