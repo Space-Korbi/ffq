@@ -9,10 +9,9 @@ const ParticipantsManagementPage = () => {
 
   // display user data in table
 
-  const tabNames = ['Participants', 'Selection Criteria', 'Selection Rules'];
-
   const participantsTable = <div>Welcome to ParticipantsManagementPage</div>;
 
+  const tabNames = ['Participants', 'Selection Criteria', 'Selection Rules'];
   const tabContents = [participantsTable, <UserSelection />, <div>Rules</div>];
 
   return (
