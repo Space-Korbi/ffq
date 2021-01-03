@@ -1,8 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 const fs = require('fs');
 const async = require('async');
-const Question = require('../models/question-model');
-const Questionnaire = require('../models/questionnaire-model');
+const Question = require('./question.model');
+const Questionnaire = require('../questionnaires/questionnaire.model');
 
 /**
  * * Question controller

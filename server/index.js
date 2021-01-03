@@ -92,8 +92,8 @@ require('./routes/user.routes')(app);
 
 // Content Routes
 // const userRouter = require('./users/users.controller');
-const questionnaireRouter = require('./routes/questionnaire-router');
-const questionRouter = require('./routes/question-router');
+const questionnaireRouter = require('./questionnaires/questionnaire.router');
+const questionRouter = require('./questions/question.router');
 const imageRouter = require('./routes/image-router');
 
 /**

@@ -1,8 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 const async = require('async');
-const Questionnaire = require('../models/questionnaire-model');
-const Question = require('../models/question-model');
-const { deleteImagesOfQuestion } = require('./question-ctrl');
+const Questionnaire = require('./questionnaire.model');
+const Question = require('../questions/question.model');
+const { deleteImagesOfQuestion } = require('../questions/question.controller');
 
 /**
  * * Questionnaire controller

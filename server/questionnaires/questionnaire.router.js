@@ -1,6 +1,6 @@
 const express = require('express');
 
-const QuestionnaireCtrl = require('../controllers/questionnaire-ctrl');
+const QuestionnaireCtrl = require('./questionnaire.controller');
 
 /**
  * * Router

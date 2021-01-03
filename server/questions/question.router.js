@@ -9,7 +9,7 @@
  */
 
 const express = require('express');
-const QuestionCtrl = require('../controllers/question-ctrl');
+const QuestionCtrl = require('./question.controller');
 
 const router = express.Router();
 
