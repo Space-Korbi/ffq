@@ -41,7 +41,7 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static('uploads'));
 
 // * Database
-const db = require('./models');
+const db = require('./helpers/db');
 const dbConfig = require('./config/db.config');
 
 const Role = db.role;
