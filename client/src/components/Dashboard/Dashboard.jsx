@@ -85,6 +85,25 @@ const Dashboard = ({ isAdmin }) => {
           isAdmin ? 'navbar navbar-expand-md navbar-dark bg-dark' : 'navbar navbar-dark bg-dark'
         }
       >
+        <span
+          className="navbar-text mr-3"
+          style={{
+            color: 'beige',
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+            whiteSpace: 'nowrap'
+          }}
+        >
+          <Link
+            style={{
+              color: 'beige',
+              textDecoration: 'none'
+            }}
+            to={`/user/${params.userId}`}
+          >
+            {navigationItem}
+          </Link>
+        </span>
         <button
           className="navbar-toggler"
           type="button"
@@ -98,18 +117,6 @@ const Dashboard = ({ isAdmin }) => {
         </button>
 
         <div className="collapse navbar-collapse" id="navbarToggler">
-          <span
-            className="navbar-text mr-3"
-            style={{
-              color: 'beige',
-              textOverflow: 'ellipsis',
-              overflow: 'hidden',
-              whiteSpace: 'nowrap'
-            }}
-          >
-            {navigationItem}
-          </span>
-
           <div className="flex-grow-1">
             {isAdmin && (
               <div>
