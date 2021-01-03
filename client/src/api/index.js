@@ -13,8 +13,8 @@ const api = axios.create({
 // user
 export const signup = (payload) => api.post(`/auth/signup`, payload);
 export const signin = (payload) => api.post(`/auth/signin`, payload);
-export const getUserData = (headers) => api.get(`/test/all`, headers);
-export const getAdminData = (headers) => api.get(`/test/admin`, headers);
+export const getAccountInfo = (userId, headers) => api.get(`/account/${userId}`, headers);
+export const getAllUsers = (headers) => api.get(`/users`, headers);
 
 // question
 export const insertQuestionAt = (questionnaireId, payload) =>
@@ -45,8 +45,8 @@ export const getImageById = (id) => api.get(`/image/${id}`);
 const apis = {
   signup,
   signin,
-  getUserData,
-  getAdminData,
+  getAccountInfo,
+  getAllUsers,
   insertQuestionAt,
   getAllQuestions,
   getAllQuestionsOfQuestionnaire,
