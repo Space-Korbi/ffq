@@ -159,7 +159,7 @@ const QuestionsList = ({ questionnaireId, deleteQuestionnaire }) => {
 
   function handleClickEdit(question) {
     history.push({
-      pathname: `/dashboard/${userId}/QuestionEditor`,
+      pathname: `/user/${userId}/QuestionEditor`,
       state: { question, questionnaireId }
     });
   }

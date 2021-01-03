@@ -1,4 +1,19 @@
-import { authHeader } from '../helpers';
+import authHeader from '../helpers';
+import { getUserData, getAdminData } from '../api';
+
+const getUserBoard = () => {
+  return getUserData({ headers: authHeader() });
+};
+
+const getAdminBoard = () => {
+  return getAdminData({ headers: authHeader() });
+};
+
+const UserService = { getUserBoard, getAdminBoard };
+
+export default UserService;
+
+/* import { authHeader } from '../helpers';
 import authenticationService from './authenticationService';
 
 const config = JSON.stringify({
@@ -40,3 +55,5 @@ const userService = {
 };
 
 export default userService;
+
+*/

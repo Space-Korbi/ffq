@@ -20,11 +20,9 @@ const LoginPage = () => {
         <div className="row">
           <div className="col-md-8 offset-md-3">
             <div className="alert alert-info">
-              Test Accounts
+              <strong>User</strong> - Email: user@abc.de PW: user
               <br />
               <strong>Administrator</strong> - Email: admin@abc.de PW: admin
-              <br />
-              <strong>User</strong> - Email: user@abc.de PW: user
             </div>
             <h2>Login</h2>
             <Formik
@@ -81,13 +79,6 @@ const LoginPage = () => {
                   <div className="form-group">
                     <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
                       Login
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-link"
-                      onClick={() => history.push(`/signup`)}
-                    >
-                      Sign Up
                     </button>
                     {isSubmitting && (
                       <img

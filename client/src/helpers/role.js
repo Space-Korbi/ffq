@@ -1,5 +1,5 @@
 const Role = {
-  Admin: 'Admin',
+  Admin: 'ROLE_ADMIN',
   Participant: 'Participant'
 };
 

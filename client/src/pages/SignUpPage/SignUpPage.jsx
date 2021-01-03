@@ -1,60 +1,76 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import authService from '../../services/auth.service';
 
-const LoginPage = () => {
+const SignUpPage = () => {
   const history = useHistory();
-
-  useEffect(() => {
-    const user = authService.currentUserValue;
-    if (user) {
-      history.push(`/user/${user.id}`);
-    }
-  }, []);
 
   return (
     <div className="jumbotron">
       <div className="container">
         <div className="row">
-          <div className="col-md-8 offset-md-3">
-            <div className="alert alert-info">
-              Test Accounts
-              <br />
-              <strong>Administrator</strong> - Email: admin@abc.de PW: admin
-              <br />
-              <strong>User</strong> - Email: user@abc.de PW: user
-            </div>
-            <h2>Login</h2>
+          <div className="col-md-6 offset-md-3">
+            <h2>Sign Up</h2>
             <Formik
               initialValues={{
-                email: 'k@b.de',
-                password: '12345'
+                firstName: '',
+                lastName: '',
+                email: '',
+                password: ''
               }}
               validationSchema={Yup.object().shape({
+                firstName: Yup.string().required('First name is required'),
+                lastName: Yup.string().required('Last name is required'),
                 email: Yup.string().required('Email is required'),
                 password: Yup.string().required('Password is required')
               })}
-              onSubmit={({ email, password }, { setStatus, setSubmitting }) => {
-                authService.login(email, password).then(
-                  (user) => {
-                    console.log(user);
-                    /**
-                     * TODO redirect
-                     * redirect to first unanswered question of questionnaire if possible
-                     */
-                    history.push(`/user/${user.id}`);
+              onSubmit={(
+                { firstName, lastName, email, password },
+                { setStatus, setSubmitting }
+              ) => {
+                authService.register(firstName, lastName, email, password).then(
+                  (response) => {
+                    setSubmitting(false);
+                    if (response.status === 200) {
+                      window.alert('Sign Up successful!');
+                      history.push(`/login`);
+                    }
                   },
                   (error) => {
                     setSubmitting(false);
-                    setStatus(error);
+                    setStatus(error.response.data.message);
                   }
                 );
               }}
             >
               {({ errors, status, touched, isSubmitting }) => (
                 <Form>
+                  <div className="form-group">
+                    <label htmlFor="firstName">First Name</label>
+                    <Field
+                      id="firstName"
+                      name="firstName"
+                      type="text"
+                      className={`form-control${
+                        errors.firstName && touched.firstName ? ' is-invalid' : ''
+                      }`}
+                    />
+                    <ErrorMessage name="firstName" component="div" className="invalid-feedback" />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="lastName">Last Name</label>
+                    <Field
+                      id="lastName"
+                      name="lastName"
+                      type="text"
+                      className={`form-control${
+                        errors.lastName && touched.lastName ? ' is-invalid' : ''
+                      }`}
+                    />
+                    <ErrorMessage name="lastName" component="div" className="invalid-feedback" />
+                  </div>
                   <div className="form-group">
                     <label htmlFor="email">Email</label>
                     <Field
@@ -80,14 +96,14 @@ const LoginPage = () => {
                   </div>
                   <div className="form-group">
                     <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-                      Login
+                      Sign Up
                     </button>
                     <button
                       type="button"
                       className="btn btn-link"
-                      onClick={() => history.push(`/signup`)}
+                      onClick={() => history.push(`/login`)}
                     >
-                      Sign Up
+                      Login
                     </button>
                     {isSubmitting && (
                       <img
@@ -107,4 +123,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SignUpPage;
