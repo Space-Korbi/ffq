@@ -10,7 +10,7 @@ const LoginPage = () => {
   useEffect(() => {
     const user = authService.currentUserValue;
     if (user) {
-      history.push(`/dashboard/${user.id}`);
+      history.push(`/user/${user.id}`);
     }
   }, []);
 
@@ -42,7 +42,7 @@ const LoginPage = () => {
                      * TODO redirect
                      * redirect to first unanswered question of questionnaire if possible
                      */
-                    history.push(`/dashboard/${user.id}`);
+                    history.push(`/user/${user.id}`);
                   },
                   (error) => {
                     setSubmitting(false);
