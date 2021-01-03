@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 const express = require('express');
-const ImageCtrl = require('../controllers/image-ctrl');
+const ImageCtrl = require('./image.controller');
 
 const router = express.Router();
 

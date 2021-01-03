@@ -94,7 +94,7 @@ require('./routes/user.routes')(app);
 // const userRouter = require('./users/users.controller');
 const questionnaireRouter = require('./questionnaires/questionnaire.router');
 const questionRouter = require('./questions/question.router');
-const imageRouter = require('./routes/image-router');
+const imageRouter = require('./images/image.router');
 
 /**
  * Mount the routes on the '/api' path.
