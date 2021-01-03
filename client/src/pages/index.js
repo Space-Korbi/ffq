@@ -1,7 +1,3 @@
-import MoviesList from './MoviesList';
-import MoviesInsert from './MoviesInsert';
-import MoviesUpdate from './MoviesUpdate';
-
 import LoginPage from './LoginPage';
 import HomePage from './HomePage';
 import AccountPage from './AccountPage';
@@ -16,9 +12,6 @@ import ParticipantsManagementPage from './ParticipantsManagementPage';
  */
 
 export {
-  MoviesList,
-  MoviesInsert,
-  MoviesUpdate,
   LoginPage,
   HomePage,
   AccountPage,

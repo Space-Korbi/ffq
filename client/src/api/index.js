@@ -16,13 +16,6 @@ export const signin = (payload) => api.post(`/auth/signin`, payload);
 export const getUserData = (headers) => api.get(`/test/all`, headers);
 export const getAdminData = (headers) => api.get(`/test/admin`, headers);
 
-// movies
-export const insertMovie = (payload) => api.post(`/movie`, payload);
-export const getAllMovies = () => api.get(`/movies`);
-export const updateMovieById = (id, payload) => api.put(`/movie/${id}`, payload);
-export const deleteMovieById = (id) => api.delete(`/movie/${id}`);
-export const getMovieById = (id) => api.get(`/movie/${id}`);
-
 // question
 export const insertQuestionAt = (questionnaireId, payload) =>
   api.post(`/questionnaire/${questionnaireId}/question`, payload);
@@ -54,11 +47,6 @@ const apis = {
   signin,
   getUserData,
   getAdminData,
-  insertMovie,
-  getAllMovies,
-  updateMovieById,
-  deleteMovieById,
-  getMovieById,
   insertQuestionAt,
   getAllQuestions,
   getAllQuestionsOfQuestionnaire,
