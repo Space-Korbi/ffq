@@ -1,5 +1,13 @@
 @import '../../node_modules/bootstrap/scss/bootstrap';
 
+.navbar .fixed-bottom .questionnaire {
+  height: 50px;
+}
+
+main {
+  margin-bottom: 50px;
+}
+
 .jumbotron-question {
   padding-top: 2rem;
   padding-bottom: 2rem;
@@ -26,6 +34,18 @@
   }
 }
 
-.table td {
+.react-bootstrap-table td {
   vertical-align: middle;
+  white-space: nowrap;
+}
+
+.react-bootstrap-table th {
+  white-space: nowrap;
+}
+
+.react-bootstrap-table th small {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inline-block;
+  max-width: 150px;
 }

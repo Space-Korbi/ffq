@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const ProgressIndicator = (props) => {
-  const { currentPosition, length } = props;
+const ProgressIndicator = ({ currentPosition, length }) => {
   const percentage = `${Math.round((currentPosition / length) * 100)}%`;
   return (
     <div className="mt-2">

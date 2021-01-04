@@ -1,19 +1,18 @@
 import React from 'react';
-import { arrayOf, string, shape } from 'prop-types';
+import { arrayOf, string, shape, func } from 'prop-types';
 
 import AnswerCardsDeck from './AnswerCardsDeck';
 
-const saveAnswer = () => {
-  // eslint-disable-next-line
-  console.log('answer');
-};
-
-const AmountAnswer = ({ answerOptions }) => {
+const AmountAnswer = ({ answerOptions, submittedAnswer, onClick }) => {
   return (
     <div>
       <div className="container-fluid px-0">
         <div className="row no-gutters overflow-auto flex-row flex-nowrap text-center my-3">
-          <AnswerCardsDeck answerOptions={answerOptions} saveAnswer={saveAnswer} />
+          <AnswerCardsDeck
+            answerOptions={answerOptions}
+            submittedAnswer={submittedAnswer}
+            onClick={onClick}
+          />
         </div>
       </div>
     </div>
@@ -27,7 +26,13 @@ AmountAnswer.propTypes = {
       title: string,
       imageName: string
     })
-  ).isRequired
+  ).isRequired,
+  submittedAnswer: shape({ questionId: string, answer: shape({ id: string, value: string }) }),
+  onClick: func.isRequired
+};
+
+AmountAnswer.defaultProps = {
+  submittedAnswer: { questionId: '', answer: { id: '', value: '' } }
 };
 
 export default AmountAnswer;

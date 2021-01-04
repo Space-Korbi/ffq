@@ -1,6 +1,13 @@
 import React from 'react';
 import { string } from 'prop-types';
 
+/**
+ * * Stateless component
+ * Whenever you don't need state of lifecycle methods,
+ * you should write your component as a stateless function.
+ * Stateless components are in general easier to reason about.
+ */
+
 const Jumbotron = ({ title, subtitle1, subtitle2 }) => {
   return (
     <div className="jumbotron jumbotron-fluid jumbotron-question">

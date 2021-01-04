@@ -2,7 +2,8 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes, { shape, string } from 'prop-types';
-import { authenticationService } from '../../services';
+import { authService } from '../../services';
+// import { authenticationService } from '../../services';
 
 /**
  * * PrivateRoute
@@ -10,13 +11,12 @@ import { authenticationService } from '../../services';
  * screen if you're not yet authenticated.
  */
 const PrivateRoute = ({ location, roles, isAdmin, component: Component, ...rest }) => {
-  console.log(location);
   return (
     <Route
       {...rest}
       render={() => {
-        const currentUser = authenticationService.currentUserValue;
-        if (!currentUser) {
+        const { currentUserValue } = authService;
+        if (!currentUserValue) {
           return (
             <Redirect
               to={{
@@ -28,9 +28,9 @@ const PrivateRoute = ({ location, roles, isAdmin, component: Component, ...rest 
         }
 
         // check if route is restricted by role
-        if (roles && roles.indexOf(currentUser.role) === -1) {
+        if (roles && roles.indexOf(currentUserValue.roles[0]) === -1) {
           // role not authorised so redirect to home page
-          return <Redirect to={{ pathname: `/dashboard/${currentUser.id}` }} />;
+          return <Redirect to={{ pathname: `/user/${currentUserValue.id}` }} />;
         }
 
         // authorised so return component

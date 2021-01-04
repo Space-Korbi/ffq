@@ -2,7 +2,7 @@
 /* eslint-disable no-underscore-dangle */
 import { nanoid } from 'nanoid';
 import {
-  insertQuestion,
+  insertQuestionAt,
   updateQuestionById,
   uploadImage,
   getAllQuestions,
@@ -23,9 +23,7 @@ const createQuestion = async (questionnaireId) => {
     _id: questionId
   };
 
-  await insertQuestion(questionnaireId, payload).then((res) => {
-    window.alert(`Question created successfully`);
-    console.log(res.data.id);
+  await insertQuestionAt(questionnaireId, payload).then((res) => {
     return res.data.id;
   });
 };
@@ -83,10 +81,7 @@ const saveQuestion = async (questionId, questionData, answerOptions) => {
     payload.answerOptions.options = updatedAmountOptions;
   }
 
-  console.log('Payload', payload);
-  await updateQuestionById(questionId, payload).then(() => {
-    window.alert(`Question updated successfully`);
-  });
+  await updateQuestionById(questionId, payload).then(() => {});
 };
 
 const fetchAllQuestions = async () => {
@@ -95,7 +90,6 @@ const fetchAllQuestions = async () => {
 };
 
 const deleteQuestion = async (id) => {
-  console.log('id', id);
   const deletedQuestion = await deleteQuestionById(id);
   return deletedQuestion;
 };

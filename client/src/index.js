@@ -9,12 +9,6 @@ import ReactDOM from 'react-dom';
 
 import App from './app';
 
-// ! Delete before production
-// setup fake backend
-import configureFakeBackend from './helpers/fake-backend';
-
-configureFakeBackend();
-
 /**
  * * Strict Mode
  * StrictMode is a tool for highlighting potential problems

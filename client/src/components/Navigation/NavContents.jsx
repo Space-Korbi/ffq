@@ -5,7 +5,7 @@ const NavContents = ({ tabNames, tabContents }) => {
   return (
     <div className="tab-content" id="questionEditorContent">
       {tabNames.map((tabName, tabIndex) => {
-        const tabNameLowerCase = tabName.toLowerCase();
+        const tabNameLowerCase = tabName.replace(/\s/g, '').toLowerCase();
         return (
           <Fragment key={tabName}>
             <div

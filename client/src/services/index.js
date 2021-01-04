@@ -1,6 +1,6 @@
-import authenticationService from './authenticationService';
+import authService from './authService';
+import userService from './userService';
 import questionService from './questionService';
 import questionnaireService from './questionnaireService';
-import ffqService from './ffqService';
 
-export { authenticationService, questionService, questionnaireService, ffqService };
+export { authService, userService, questionService, questionnaireService };

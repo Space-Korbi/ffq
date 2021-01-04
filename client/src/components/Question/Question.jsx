@@ -1,23 +1,49 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/no-unused-prop-types */
 import React, { useEffect, useState } from 'react';
-import { string, shape, arrayOf, exact, bool, oneOfType } from 'prop-types';
+import { string, shape, arrayOf, exact, bool, oneOfType, func } from 'prop-types';
+import { useParams } from 'react-router-dom';
 
+// custom hooks
+import { useSaveAnswer } from '../../hooks';
+
+// components
 import Jumbotron from '../Jumbotron';
 import Help from '../Help';
 import AnswerButtons from './FrequencyAnswer/AnswerButtons';
 import AmountAnswer from './AmountAnswer/AmountAnswer';
 import UserInputAnswer from './UserInputAnswer/UserInputAnswer';
+
+// global constants
 import AnswerType from '../../types';
 
-const saveAnswer = () => {
-  // eslint-disable-next-line
-  console.log('answer');
-};
-
-function Question({ title, subtitle1, subtitle2, help, answerType, answerOptions }) {
+const Question = ({
+  id,
+  title,
+  subtitle1,
+  subtitle2,
+  help,
+  answerOptions,
+  submittedAnswer,
+  onSubmitAnswer
+}) => {
   const [answerContainer, setAnswerContainer] = useState();
+  const { userId } = useParams();
+  const [userInput, setUserInput] = useState();
+  const [{ banswer, isSaving, isSavingError }, setAnswer] = useSaveAnswer(userId, id);
 
   useEffect(() => {
-    switch (answerType) {
+    if (!userInput) {
+      return;
+    }
+    if (!isSaving && !isSavingError) {
+      setAnswer(userInput);
+      onSubmitAnswer();
+    }
+  }, [userInput]);
+
+  useEffect(() => {
+    switch (answerOptions.type) {
       case AnswerType.Frequency:
         setAnswerContainer(
           <div className="row no-gutters d-flex align-items-stretch">
@@ -25,7 +51,8 @@ function Question({ title, subtitle1, subtitle2, help, answerType, answerOptions
               <AnswerButtons
                 leftAnswerOptions={answerOptions.options.left}
                 rightAnswerOptions={answerOptions.options.right}
-                saveAnswer={saveAnswer}
+                submittedAnswer={submittedAnswer}
+                onClick={setUserInput}
               />
             </div>
           </div>
@@ -34,7 +61,11 @@ function Question({ title, subtitle1, subtitle2, help, answerType, answerOptions
       case AnswerType.Amount:
         setAnswerContainer(
           <div>
-            <AmountAnswer answerOptions={answerOptions.options} />
+            <AmountAnswer
+              answerOptions={answerOptions.options}
+              submittedAnswer={submittedAnswer}
+              onClick={setUserInput}
+            />
           </div>
         );
         break;
@@ -42,12 +73,16 @@ function Question({ title, subtitle1, subtitle2, help, answerType, answerOptions
         setAnswerContainer(
           <div className="row no-gutters d-flex align-items-stretch">
             <div className="col">
-              <UserInputAnswer answerOptions={answerOptions.options} />
+              <UserInputAnswer
+                answerOptions={answerOptions.options}
+                submittedAnswer={submittedAnswer}
+                onSubmit={setUserInput}
+              />
             </div>
           </div>
         );
     }
-  }, [answerType, answerOptions]);
+  }, [answerOptions]);
 
   return (
     <div>
@@ -61,17 +96,23 @@ function Question({ title, subtitle1, subtitle2, help, answerType, answerOptions
           </div>
         </div>
       )}
-      <div>{answerContainer}</div>
+      <div>
+        {isSavingError ? (
+          'Something went wrong...'
+        ) : (
+          <>{isSaving ? 'Saving...' : <>{answerContainer}</>} </>
+        )}
+      </div>
     </div>
   );
-}
+};
 
 Question.propTypes = {
+  id: string.isRequired,
   title: string,
   subtitle1: string,
   subtitle2: string,
   help: string,
-  answerType: string.isRequired,
   answerOptions: shape({
     type: string.isRequired,
     options: oneOfType([
@@ -96,14 +137,20 @@ Question.propTypes = {
         })
       )
     ]).isRequired
-  }).isRequired
+  }).isRequired,
+  submittedAnswer: oneOfType([
+    shape({ questionId: string, answer: shape({ id: string, value: string }) }),
+    shape({ questionId: string, answer: arrayOf(shape({ id: string, value: string })) })
+  ]),
+  onSubmitAnswer: func.isRequired
 };
 
 Question.defaultProps = {
   title: '',
   subtitle1: '',
   subtitle2: '',
-  help: ''
+  help: '',
+  submittedAnswer: undefined
 };
 
 export default Question;

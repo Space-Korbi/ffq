@@ -1,0 +1,4 @@
+{
+  "connectionString": "mongodb://localhost:27017/ffq",
+  "secret": "Super secret key"
+}

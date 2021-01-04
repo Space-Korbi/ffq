@@ -1,13 +1,13 @@
 import React from 'react';
-import { string, func } from 'prop-types';
+import { string, bool, func } from 'prop-types';
 
-const AnswerButton = ({ title, onClick }) => {
+const AnswerButton = ({ title, isSelectedAnswer, onClick }) => {
+  let buttonStyle = 'btn btn-outline-primary btn-block btn-frequency my-4';
+  if (isSelectedAnswer) {
+    buttonStyle = 'btn btn-success btn-block btn-frequency my-4';
+  }
   return (
-    <button
-      type="button"
-      className="btn btn-outline-primary btn-block btn-frequency my-4"
-      onClick={() => onClick()}
-    >
+    <button type="button" className={buttonStyle} onClick={onClick}>
       {title}
     </button>
   );
@@ -15,6 +15,7 @@ const AnswerButton = ({ title, onClick }) => {
 
 AnswerButton.propTypes = {
   title: string.isRequired,
+  isSelectedAnswer: bool.isRequired,
   onClick: func.isRequired
 };
 

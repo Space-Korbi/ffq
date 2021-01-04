@@ -10,13 +10,16 @@ const api = axios.create({
   baseURL: 'http://localhost:3000/api'
 });
 
-export const insertMovie = (payload) => api.post(`/movie`, payload);
-export const getAllMovies = () => api.get(`/movies`);
-export const updateMovieById = (id, payload) => api.put(`/movie/${id}`, payload);
-export const deleteMovieById = (id) => api.delete(`/movie/${id}`);
-export const getMovieById = (id) => api.get(`/movie/${id}`);
+// auth
+export const signup = (payload) => api.post(`/auth/signup`, payload);
+export const signin = (payload) => api.post(`/auth/signin`, payload);
 
-export const insertQuestion = (questionnaireId, payload) =>
+// user
+export const getAccountInfoById = (userId, headers) => api.get(`/account/${userId}`, headers);
+export const getAllUsers = (headers) => api.get(`/users`, headers);
+
+// question
+export const insertQuestionAt = (questionnaireId, payload) =>
   api.post(`/questionnaire/${questionnaireId}/question`, payload);
 export const getAllQuestions = () => api.get(`/questions`);
 export const updateQuestionById = (id, payload) => api.put(`/question/${id}`, payload);
@@ -25,11 +28,7 @@ export const getAllQuestionsOfQuestionnaire = (questionnaireId) =>
 export const deleteQuestionById = (questionnaireId, questionId) =>
   api.delete(`/questionnaire/${questionnaireId}/question/${questionId}`);
 
-export const uploadImage = (payload) => api.post(`/upload`, payload);
-export const getAllImages = () => api.get(`/images`);
-export const deleteImageById = (id) => api.delete(`/image/${id}`);
-export const getImageById = (id) => api.get(`/image/${id}`);
-
+// questionnaire
 export const insertQuestionnaire = (payload) => api.post(`/questionnaire`, payload);
 export const getAllQuestionnaires = () => api.get(`/questionnaires`);
 export const updateQuestionnaire = (questionnaireId, payload) =>
@@ -39,13 +38,18 @@ export const deleteQuestionnaireById = (questionnaireId) =>
 export const getQuestionnaireById = (questionnaireId) =>
   api.get(`/questionnaire/${questionnaireId}`);
 
+// image
+export const uploadImage = (payload) => api.post(`/upload`, payload);
+export const getAllImages = () => api.get(`/images`);
+export const deleteImageById = (id) => api.delete(`/image/${id}`);
+export const getImageById = (id) => api.get(`/image/${id}`);
+
 const apis = {
-  insertMovie,
-  getAllMovies,
-  updateMovieById,
-  deleteMovieById,
-  getMovieById,
-  insertQuestion,
+  signup,
+  signin,
+  getAccountInfoById,
+  getAllUsers,
+  insertQuestionAt,
   getAllQuestions,
   getAllQuestionsOfQuestionnaire,
   insertQuestionnaire,
