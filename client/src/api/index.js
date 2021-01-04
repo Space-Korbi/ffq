@@ -15,45 +15,47 @@ export const signup = (payload) => api.post(`/auth/signup`, payload);
 export const signin = (payload) => api.post(`/auth/signin`, payload);
 
 // user
-export const getAccountInfoById = (userId, headers) => api.get(`/account/${userId}`, headers);
+export const updateAnswerById = (userId, payload) => api.put(`users/${userId}`, payload);
+export const getAccountInfoById = (userId, headers) => api.get(`/accounts/${userId}`, headers);
 export const getAllUsers = (headers) => api.get(`/users`, headers);
-export const updateAnswerById = (userId, payload) => api.put(`user/${userId}`, payload);
+export const getAnswerById = (userId, questionId, headers) =>
+  api.get(`users/${userId}/questions/${questionId}`, headers);
 
 // question
 export const insertQuestionAt = (questionnaireId, payload) =>
-  api.post(`/questionnaire/${questionnaireId}/question`, payload);
+  api.post(`/questionnaires/${questionnaireId}/questions`, payload);
+export const updateQuestionById = (id, payload) => api.put(`/questions/${id}`, payload);
 export const getAllQuestions = () => api.get(`/questions`);
-export const updateQuestionById = (id, payload) => api.put(`/question/${id}`, payload);
 export const getAllQuestionsOfQuestionnaire = (questionnaireId) =>
-  api.get(`/questionnaire/${questionnaireId}/questions`);
+  api.get(`/questionnaires/${questionnaireId}/questions`);
 export const deleteQuestionById = (questionnaireId, questionId) =>
-  api.delete(`/questionnaire/${questionnaireId}/question/${questionId}`);
+  api.delete(`/questionnaires/${questionnaireId}/questions/${questionId}`);
 
 // questionnaire
-export const insertQuestionnaire = (payload) => api.post(`/questionnaire`, payload);
-export const getAllQuestionnaires = () => api.get(`/questionnaires`);
+export const insertQuestionnaire = (payload) => api.post(`/questionnaires`, payload);
 export const updateQuestionnaire = (questionnaireId, payload) =>
-  api.put(`/questionnaire/${questionnaireId}`, payload);
-export const deleteQuestionnaireById = (questionnaireId) =>
-  api.delete(`/questionnaire/${questionnaireId}`);
+  api.put(`/questionnaires/${questionnaireId}`, payload);
+export const getAllQuestionnaires = () => api.get(`/questionnaires`);
 export const getQuestionnaireById = (questionnaireId) =>
-  api.get(`/questionnaire/${questionnaireId}`);
+  api.get(`/questionnaires/${questionnaireId}`);
+export const deleteQuestionnaireById = (questionnaireId) =>
+  api.delete(`/questionnaires/${questionnaireId}`);
 
 // image
 export const uploadImage = (payload) => api.post(`/upload`, payload);
 export const getAllImages = () => api.get(`/images`);
-export const deleteImageById = (id) => api.delete(`/image/${id}`);
 export const getImageById = (id) => api.get(`/image/${id}`);
+export const deleteImageById = (id) => api.delete(`/image/${id}`);
 
 const apis = {
   signup,
   signin,
+  insertQuestionnaire,
+  insertQuestionAt,
   getAccountInfoById,
   getAllUsers,
-  insertQuestionAt,
   getAllQuestions,
   getAllQuestionsOfQuestionnaire,
-  insertQuestionnaire,
   uploadImage
 };
 
