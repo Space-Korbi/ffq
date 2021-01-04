@@ -1,17 +1,17 @@
-import authHeader from '../helpers';
-import { getUserData, getAdminData } from '../api';
+import { authHeader } from '../helpers';
+import { getAllUsers, getAccountInfoById } from '../api';
 
-const getUserBoard = () => {
-  return getUserData({ headers: authHeader() });
+const fetchAllUsers = () => {
+  return getAllUsers({ headers: authHeader() });
 };
 
-const getAdminBoard = () => {
-  return getAdminData({ headers: authHeader() });
+const getAccountInfo = (userId) => {
+  return getAccountInfoById(userId, { headers: authHeader() });
 };
 
-const UserService = { getUserBoard, getAdminBoard };
+const userService = { fetchAllUsers, getAccountInfo };
 
-export default UserService;
+export default userService;
 
 /* import { authHeader } from '../helpers';
 import authenticationService from './authenticationService';

@@ -38,14 +38,20 @@ const NewRuleCard = ({ criteria, removeCriteriaFromCard, onSubmit }) => {
             <div className="row d-flex align-self-center justify-content-center">
               <div className="col flex-grow-1 mb-2">
                 <ul className="list-group">
-                  {criteria.map((criterion) => (
-                    <RemovableListItem
-                      key={nanoid()}
-                      content={criterion}
-                      onClick={() => removeCriteriaFromCard(criterion)}
-                      isTrashCan={false}
-                    />
-                  ))}
+                  {criteria && criteria.length ? (
+                    criteria.map((criterion) => (
+                      <RemovableListItem
+                        key={nanoid()}
+                        content={criterion}
+                        onClick={() => removeCriteriaFromCard(criterion)}
+                        isTrashCan={false}
+                      />
+                    ))
+                  ) : (
+                    <div className="alert alert-light m-0" role="alert">
+                      No criteria selected
+                    </div>
+                  )}
                 </ul>
               </div>
               <div className="col d-flex align-self-center justify-content-center mr-1">
@@ -150,6 +156,7 @@ const AddRule = ({ selectionCriteria, saveRule }) => {
   return (
     <>
       <div className="col mb-3">
+        <h6>Selection Criteria</h6>
         <RuleCriteriaSelect criteria={selectionCriteria} onChange={addCriteriaToCard} />
         <NewRuleCard
           criteria={selectedCriteria}

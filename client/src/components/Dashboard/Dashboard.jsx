@@ -6,7 +6,6 @@ import { Route, Switch, useRouteMatch, NavLink, Link } from 'react-router-dom';
 import PrivateRoute from '../PrivateRoute';
 import QuestionnairePresentation from '../Questionnaire';
 import WelcomePage from '../../pages/WelcomePage';
-import UserSelection from '../UserSelection';
 import QuestionEditor from '../QuestionEditor';
 import { Role } from '../../helpers';
 import { authService } from '../../services';
@@ -193,13 +192,6 @@ const Dashboard = ({ isAdmin }) => {
                 )}
               />
               <Route path={`${path}/account`} component={AccountPage} />
-
-              <PrivateRoute
-                path={`${path}/UserSelection`}
-                roles={[Role.Admin]}
-                isAdmin={isAdmin}
-                component={UserSelection}
-              />
 
               <PrivateRoute
                 path={`${path}/questionEditor`}

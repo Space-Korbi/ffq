@@ -34,6 +34,18 @@ main {
   }
 }
 
-.table td {
+.react-bootstrap-table td {
   vertical-align: middle;
+  white-space: nowrap;
+}
+
+.react-bootstrap-table th {
+  white-space: nowrap;
+}
+
+.react-bootstrap-table th small {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inline-block;
+  max-width: 150px;
 }

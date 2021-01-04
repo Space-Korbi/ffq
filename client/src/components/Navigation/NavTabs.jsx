@@ -5,7 +5,7 @@ const NavTabs = ({ tabNames }) => {
   return (
     <ul className="nav nav-tabs" id="navigation" role="tablist">
       {tabNames.map((tabName, index) => {
-        const tabNameLowerCase = tabName.toLowerCase();
+        const tabNameLowerCase = tabName.replace(/\s/g, '').toLowerCase();
         return (
           <li className="nav-item" key={tabName}>
             <a

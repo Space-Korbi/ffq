@@ -2,7 +2,7 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes, { shape, string } from 'prop-types';
-import authService from '../../services/auth.service';
+import { authService } from '../../services';
 // import { authenticationService } from '../../services';
 
 /**

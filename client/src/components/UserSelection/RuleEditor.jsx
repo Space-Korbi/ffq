@@ -1,5 +1,12 @@
 import React from 'react';
 import { arrayOf, func, number, shape, string } from 'prop-types';
+
+// icons
+import { InfoIcon } from '@primer/octicons-react';
+
+// components
+import AddRule from './AddRule';
+import { CardsGrid } from '../Cards';
 import { DeleteButton } from '../Button';
 
 const checkResult = (result) => {
@@ -62,21 +69,31 @@ RuleCard.propTypes = {
   removeRule: func.isRequired
 };
 
-const SelectionRules = ({ rules, removeRule }) => {
+const RuleEditor = ({ selectionCriteria, rules, saveRule, removeRule }) => {
+  const RuleCards = rules.map((rule, index) => {
+    return <RuleCard key={rule.id} index={index} rule={rule} removeRule={removeRule} />;
+  });
+
   return (
-    <div className="d-flex justify-content-center flex-wrap">
-      {rules.map((rule, index) => {
-        return (
-          <div key={rule.id}>
-            <RuleCard index={index} rule={rule} removeRule={removeRule} />
-          </div>
-        );
-      })}
+    <div className="row">
+      <div className="col-5 col-lg-4 mb-3">
+        <AddRule selectionCriteria={selectionCriteria} saveRule={saveRule} />
+      </div>
+      <div className="col">
+        <h6>
+          Rules
+          <sup className="text-info ml-1">
+            <InfoIcon />
+          </sup>
+        </h6>
+        <CardsGrid Cards={RuleCards} gridColumns="2" />
+      </div>
     </div>
   );
 };
 
-SelectionRules.propTypes = {
+RuleEditor.propTypes = {
+  selectionCriteria: arrayOf(string).isRequired,
   rules: arrayOf(
     shape({
       id: string.isRequired,
@@ -85,7 +102,8 @@ SelectionRules.propTypes = {
       decision: string.isRequired
     })
   ).isRequired,
+  saveRule: func.isRequired,
   removeRule: func.isRequired
 };
 
-export default SelectionRules;
+export default RuleEditor;

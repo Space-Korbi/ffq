@@ -10,11 +10,13 @@ const api = axios.create({
   baseURL: 'http://localhost:3000/api'
 });
 
-// user
+// auth
 export const signup = (payload) => api.post(`/auth/signup`, payload);
 export const signin = (payload) => api.post(`/auth/signin`, payload);
-export const getUserData = (headers) => api.get(`/test/all`, headers);
-export const getAdminData = (headers) => api.get(`/test/admin`, headers);
+
+// user
+export const getAccountInfoById = (userId, headers) => api.get(`/account/${userId}`, headers);
+export const getAllUsers = (headers) => api.get(`/users`, headers);
 
 // question
 export const insertQuestionAt = (questionnaireId, payload) =>
@@ -45,8 +47,8 @@ export const getImageById = (id) => api.get(`/image/${id}`);
 const apis = {
   signup,
   signin,
-  getUserData,
-  getAdminData,
+  getAccountInfoById,
+  getAllUsers,
   insertQuestionAt,
   getAllQuestions,
   getAllQuestionsOfQuestionnaire,
