@@ -19,7 +19,7 @@ const User = mongoose.model(
       email: { type: String, required: true },
       password: { type: String, required: true },
       hasAcceptedConsentForm: { type: Boolean, default: false },
-      screeningStatus: { type: Boolean, default: true },
+      screeningStatus: { type: String, default: 'wait' },
       personalData: [{ type: String, default: [] }],
       screeningData: [{ type: String, default: [] }],
       startDate: { type: Date },
