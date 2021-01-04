@@ -1,5 +1,15 @@
 const mongoose = require('mongoose');
 
+const { Schema } = mongoose;
+
+const Answer = mongoose.Schema(
+  {
+    questionId: { type: String },
+    answerOptionId: { type: String }
+  },
+  { _id: false }
+);
+
 const User = mongoose.model(
   'User',
   new mongoose.Schema(
@@ -10,12 +20,14 @@ const User = mongoose.model(
       password: { type: String, required: true },
       hasAcceptedConsentForm: { type: Boolean, default: false },
       screeningStatus: { type: Boolean, default: true },
-      personalData: [{ type: String }],
-      screeningData: [{ type: String }],
-      questionnaire: { type: mongoose.Schema.Types.Mixed },
+      personalData: [{ type: String, default: [] }],
+      screeningData: [{ type: String, default: [] }],
+      startDate: { type: Date },
+      endDate: { type: Date },
+      answers: [Answer],
       roles: [
         {
-          type: mongoose.Schema.Types.ObjectId,
+          type: Schema.Types.ObjectId,
           ref: 'Role'
         }
       ]

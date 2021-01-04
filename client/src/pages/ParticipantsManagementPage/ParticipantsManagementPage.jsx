@@ -76,12 +76,12 @@ const ParticipantsManagementPage = () => {
   const [selectionCriteria, setSelectionCriteria] = useState(mockSelectionCriteria);
   const [selectionRules, setSelectionRules] = useState(mockRules);
   const [columns, setColumns] = useState(dataColumns);
+  const [data, setData] = useState([]);
 
   const questionHeaderFormatter = (column, colIndex) => {
-    console.log(column, colIndex);
     return (
       <div>
-        {column.title}
+        {column.questionTitle}
         <br />
         {column.subtitle1 ? <small>{column.subtitle1}</small> : <small>-</small>}
         <br />
@@ -96,7 +96,7 @@ const ParticipantsManagementPage = () => {
         return {
           dataField: question._id,
           text: `Question ${index + 1}`,
-          title: question.title,
+          questionTitle: question.title,
           subtitle1: question.subtitle1,
           subtitle2: question.subtitle2,
           headerFormatter: questionHeaderFormatter
@@ -106,6 +106,22 @@ const ParticipantsManagementPage = () => {
       setColumns(allColumns);
     }
   }, [questions]);
+
+  useEffect(() => {
+    if (users && users.length) {
+      const questionData = users.map((user) => {
+        if (!user.answers || !user.answers.length) {
+          return user;
+        }
+        const userWithAnswers = { ...user };
+        user.answers.forEach((answer) => {
+          userWithAnswers[answer.questionId] = answer.answerOptionId;
+        });
+        return userWithAnswers;
+      });
+      setData(questionData);
+    }
+  }, [users]);
 
   /**
    * TODO
@@ -147,7 +163,7 @@ const ParticipantsManagementPage = () => {
       <div className="col">
         <BootstrapTable
           keyField="email"
-          data={users}
+          data={data}
           columns={columns}
           bordered={false}
           striped
