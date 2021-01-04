@@ -197,21 +197,18 @@ const ParticipantsManagementPage = () => {
   const tabContents = [
     <div className="row no-gutters overflow-auto flex-row flex-nowrap">
       <div className="col">
-        <ToolkitProvider
-          keyField="email"
-          data={data}
-          columns={columns}
-          bordered={false}
-          striped
-          hover
-          noDataIndication="No participants data"
-          exportCSV
-        >
+        <ToolkitProvider keyField="email" data={data} columns={columns} exportCSV>
           {(props) => (
             <div>
               <ExportCSVButton {...props.csvProps}>Export CSV</ExportCSVButton>
-              <hr />
-              <BootstrapTable {...props.baseProps} />
+              <br />
+              <BootstrapTable
+                {...props.baseProps}
+                bordered={false}
+                striped
+                hover
+                noDataIndication="No participants data"
+              />
             </div>
           )}
         </ToolkitProvider>
