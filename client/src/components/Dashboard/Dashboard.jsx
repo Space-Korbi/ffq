@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Route, Switch, useRouteMatch, NavLink, Link } from 'react-router-dom';
 import PrivateRoute from '../PrivateRoute';
-import QuestionnairePresentation from '../Questionnaire';
 import WelcomePage from '../../pages/WelcomePage';
 import QuestionEditor from '../QuestionEditor';
 import { Role } from '../../helpers';
@@ -65,7 +64,7 @@ const Dashboard = ({ isAdmin }) => {
     },
     {
       name: 'Questionnaire',
-      to: '/questionnaire',
+      to: '/questionnairePresenter',
       className: 'nav-link',
       activeClassName: 'nav-link active'
     },
@@ -199,8 +198,6 @@ const Dashboard = ({ isAdmin }) => {
                 isAdmin={isAdmin}
                 component={QuestionEditor}
               />
-
-              <Route path={`${path}/questionnaire`} component={QuestionnairePresentation} />
 
               <Route path={`${path}/`} component={WelcomePage} />
             </Switch>
