@@ -48,11 +48,29 @@ const dataColumns = [
   },
   {
     dataField: 'hasAcceptedConsentForm',
-    text: 'Consent Form'
+    text: 'Consent Form',
+    formatter: (cellContent, row) => {
+      if (cellContent) {
+        return <span className="badge badge-success">Accepted</span>;
+      }
+      return <span className="badge badge-danger">Not yet accepted</span>;
+    }
   },
   {
     dataField: 'screeningStatus',
-    text: 'Screening Status'
+    text: 'Screening Status',
+    formatter: (cellContent, row) => {
+      if (cellContent === 'accept') {
+        return <span className="badge badge-success">Accepted</span>;
+      }
+      if (cellContent === 'reject') {
+        return <span className="badge badge-danger">Rejected</span>;
+      }
+      if (cellContent === 'wait') {
+        return <span className="badge badge-warning">Waiting</span>;
+      }
+      return cellContent;
+    }
   },
   {
     dataField: 'personalData',
@@ -162,7 +180,18 @@ const ParticipantsManagementPage = () => {
     }
   };
 
-  const { ExportCSVButton } = CSVExport;
+  const ExportCSVButton = (props) => {
+    const handleClick = () => {
+      props.onExport();
+    };
+    return (
+      <div>
+        <button type="button" className="btn btn-outline-success" onClick={handleClick}>
+          Export to CSV
+        </button>
+      </div>
+    );
+  };
 
   const tabNames = ['Participants', 'Selection Criteria', 'Selection Rules'];
   const tabContents = [
@@ -180,7 +209,7 @@ const ParticipantsManagementPage = () => {
         >
           {(props) => (
             <div>
-              <ExportCSVButton {...props.csvProps}>Export CSV!!</ExportCSVButton>
+              <ExportCSVButton {...props.csvProps}>Export CSV</ExportCSVButton>
               <hr />
               <BootstrapTable {...props.baseProps} />
             </div>
