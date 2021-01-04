@@ -6,6 +6,7 @@ const router = express.Router();
 
 // router.put('/account/:userId', [authJwt.verifyToken], UserCtrl.updateUserById);
 router.get('/users', UserCtrl.getUsers);
+router.put('/user/:userId', UserCtrl.updateUserById);
 
 module.exports = router;
 

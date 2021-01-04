@@ -5,9 +5,9 @@ const { Schema } = mongoose;
 const Answer = mongoose.Schema(
   {
     questionId: { type: String },
-    answerOptionId: { type: String }
+    answerOption: { type: Schema.Types.Mixed }
   },
-  { _id: false }
+  { _id: false, default: [] }
 );
 
 const User = mongoose.model(

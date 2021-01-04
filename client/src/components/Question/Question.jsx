@@ -30,7 +30,7 @@ const Question = ({
   const [answerContainer, setAnswerContainer] = useState();
   const { userId } = useParams();
   const [userInput, setUserInput] = useState();
-  const [{ banswer, isSaving, isSavingError }, setAnswer] = useSaveAnswer(userId, id);
+  const [{ answer, isSaving, isSavingError }, setAnswer] = useSaveAnswer(userId, id);
 
   useEffect(() => {
     if (!userInput) {
@@ -38,9 +38,17 @@ const Question = ({
     }
     if (!isSaving && !isSavingError) {
       setAnswer(userInput);
-      onSubmitAnswer();
     }
   }, [userInput]);
+
+  useEffect(() => {
+    if (!answer || !userInput) {
+      return;
+    }
+    if (!isSaving && !isSavingError) {
+      onSubmitAnswer();
+    }
+  }, [answer]);
 
   useEffect(() => {
     switch (answerOptions.type) {

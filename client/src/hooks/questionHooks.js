@@ -1,6 +1,6 @@
 import { useState, useEffect, useReducer } from 'react';
 // Services
-import { questionnaireService } from '../services';
+import { questionnaireService, userService } from '../services';
 
 // Custom question fetching hook
 const useFetchQuestions = (initialQuestionnaireId) => {
@@ -179,14 +179,12 @@ const useSaveAnswer = (userId, questionId) => {
     const saveAnswer = async () => {
       dispatch({ type: 'SAVE_INIT' });
       try {
-        if (answer && questionId) {
-          // const savedAnswer = await userService.saveAnswer(userId, questionId, answer);
-          console.log('In HOOK', userId, questionId, answer);
-
+        if (answer) {
+          const savedAnswer = await userService.saveAnswer(userId, questionId, answer);
           if (!didCancel) {
             dispatch({
               type: 'SAVE_SUCCESS',
-              payload: { answer: 'savedAnswer', answerId: answer.id }
+              payload: savedAnswer
             });
           }
         }

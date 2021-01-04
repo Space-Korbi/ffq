@@ -19,7 +19,7 @@ const AnswerButtons = ({ leftAnswerOptions, rightAnswerOptions, submittedAnswer,
             <AnswerButton
               title={answerOption.title}
               isSelectedAnswer={isSelectedAnswer(answerOption.id)}
-              onClick={() => onClick(answerOption.id)}
+              onClick={() => onClick(answerOption)}
             />
           </div>
         ))}
@@ -31,7 +31,7 @@ const AnswerButtons = ({ leftAnswerOptions, rightAnswerOptions, submittedAnswer,
             <AnswerButton
               title={answerOption.title}
               isSelectedAnswer={isSelectedAnswer(answerOption.id)}
-              onClick={() => onClick(answerOption.id)}
+              onClick={() => onClick(answerOption)}
             />
           </div>
         ))}

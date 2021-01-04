@@ -1,5 +1,10 @@
 import { authHeader } from '../helpers';
-import { getAllUsers, getAccountInfoById } from '../api';
+import { getAllUsers, getAccountInfoById, updateAnswerById } from '../api';
+
+const updateAction = {
+  updateAnswer: 'updateAnswer',
+  updateData: 'updateData'
+};
 
 const fetchAllUsers = () => {
   return getAllUsers({ headers: authHeader() });
@@ -9,7 +14,12 @@ const getAccountInfo = (userId) => {
   return getAccountInfoById(userId, { headers: authHeader() });
 };
 
-const userService = { fetchAllUsers, getAccountInfo };
+const saveAnswer = (userId, questionId, answer) => {
+  const payload = { action: updateAction.updateAnswer, answer, questionId };
+  return updateAnswerById(userId, payload);
+};
+
+const userService = { fetchAllUsers, getAccountInfo, saveAnswer };
 
 export default userService;
 

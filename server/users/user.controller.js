@@ -1,5 +1,10 @@
 const User = require('./user.model');
 
+const updateAction = {
+  updateAnswer: 'updateAnswer',
+  updateData: 'updateData'
+};
+
 const getUsers = async (req, res) => {
   await User.find({}, (err, users) => {
     if (err) {
@@ -12,8 +17,66 @@ const getUsers = async (req, res) => {
   }).catch((err) => console.log(err));
 };
 
+const updateUserById = async (req, res) => {
+  const { body } = req;
+
+  if (!body) {
+    return res.status(400).json({
+      success: false,
+      error: 'You must provide a body to update'
+    });
+  }
+
+  User.findOne({ _id: req.params.userId }, async (err, user) => {
+    if (err) {
+      return res.status(404).json({
+        err,
+        message: 'User not found!'
+      });
+    }
+
+    const userUpdate = user;
+
+    switch (body.action) {
+      case updateAction.updateAnswer: {
+        const foundIndex = userUpdate.answers.findIndex(
+          (answer) => answer.questionId === body.questionId
+        );
+        console.log('index', foundIndex);
+        if (foundIndex > -1) {
+          userUpdate.answers[foundIndex].answerOption = body.answer;
+        } else {
+          userUpdate.answers.push({ questionId: body.questionId, answerOption: body.answer });
+        }
+
+        break;
+      }
+      default:
+        break;
+    }
+
+    console.log('------ updated answer', userUpdate.answers);
+
+    userUpdate
+      .save()
+      .then(() => {
+        return res.status(200).json({
+          success: true,
+          message: 'User updated!'
+        });
+      })
+      .catch((error) => {
+        return res.status(404).json({
+          error,
+          message: 'User not updated!'
+        });
+      });
+  });
+};
+
 module.exports = {
-  getUsers
+  getUsers,
+  updateUserById
 };
 
 exports.allAccess = (req, res) => {

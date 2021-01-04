@@ -17,6 +17,7 @@ export const signin = (payload) => api.post(`/auth/signin`, payload);
 // user
 export const getAccountInfoById = (userId, headers) => api.get(`/account/${userId}`, headers);
 export const getAllUsers = (headers) => api.get(`/users`, headers);
+export const updateAnswerById = (userId, payload) => api.put(`user/${userId}`, payload);
 
 // question
 export const insertQuestionAt = (questionnaireId, payload) =>

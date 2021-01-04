@@ -45,7 +45,7 @@ const AnswerCardsDeck = ({ answerOptions, submittedAnswer, onClick }) => {
           imageName={answerOption.imageName}
           imageURL={answerOption.imageURL}
           isSelectedAnswer={isSelectedAnswer(answerOption.id)}
-          onClick={() => onClick(answerOption.id)}
+          onClick={() => onClick(answerOption)}
         />
       </div>
     );
