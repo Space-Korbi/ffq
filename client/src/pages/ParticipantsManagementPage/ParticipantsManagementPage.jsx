@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 
@@ -68,21 +69,37 @@ const dataColumns = [
 ];
 
 const ParticipantsManagementPage = () => {
-  const [{ users, isLoading, isError }] = useFetchUsers();
+  const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers();
   const [{ questions, isLoadingQuestions, isErrorQuestions }] = useFetchQuestions(
     'wWOHBJtGAkPYccFyna5OH'
   );
   const [selectionCriteria, setSelectionCriteria] = useState(mockSelectionCriteria);
   const [selectionRules, setSelectionRules] = useState(mockRules);
   const [columns, setColumns] = useState(dataColumns);
-  console.log(questions, isLoadingQuestions, isErrorQuestions);
+
+  const questionHeaderFormatter = (column, colIndex) => {
+    console.log(column, colIndex);
+    return (
+      <div>
+        {column.title}
+        <br />
+        {column.subtitle1 ? <small>{column.subtitle1}</small> : <small>-</small>}
+        <br />
+        {column.subtitle2 ? <small>{column.subtitle2}</small> : <small>-</small>}
+      </div>
+    );
+  };
 
   useEffect(() => {
     if (questions && questions.length) {
       const questionColumns = questions.map((question, index) => {
         return {
           dataField: question._id,
-          text: `Question ${index + 1}`
+          text: `Question ${index + 1}`,
+          title: question.title,
+          subtitle1: question.subtitle1,
+          subtitle2: question.subtitle2,
+          headerFormatter: questionHeaderFormatter
         };
       });
       const allColumns = dataColumns.concat(questionColumns);
@@ -96,7 +113,6 @@ const ParticipantsManagementPage = () => {
    */
 
   const saveSelectionCriteria = (newCriteria) => {
-    console.log(newCriteria);
     addValidString(newCriteria, selectionCriteria, setSelectionCriteria);
   };
 
@@ -136,7 +152,7 @@ const ParticipantsManagementPage = () => {
           bordered={false}
           striped
           hover
-          noDataIndication="No participants"
+          noDataIndication="No participants data"
         />
       </div>
     </div>,
@@ -156,12 +172,12 @@ const ParticipantsManagementPage = () => {
   return (
     <div className="m-4 d-flex justify-content-center">
       <div className="w-100">
-        {isError && (
+        {isErrorUsers && (
           <div className="alert alert-danger d-flex justify-content-center" role="alert">
             Something went wrong
           </div>
         )}
-        {isLoading ? (
+        {isLoadingUsers ? (
           'Loading...'
         ) : (
           <div>
