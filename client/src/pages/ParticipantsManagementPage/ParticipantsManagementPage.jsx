@@ -138,7 +138,7 @@ const ParticipantsManagementPage = () => {
         }
         const userWithAnswers = { ...user };
         user.answers.forEach((answer) => {
-          userWithAnswers[answer.questionId] = answer.answerOptionId;
+          userWithAnswers[answer.questionId] = JSON.stringify(answer.answerOption, null, 1);
         });
         return userWithAnswers;
       });
