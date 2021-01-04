@@ -1,6 +1,10 @@
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
+
 import React, { useEffect, useState } from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
+import ToolkitProvider, { CSVExport } from 'react-bootstrap-table2-toolkit';
 
 // custom hooks
 import { useFetchUsers, useFetchQuestions } from '../../hooks';
@@ -99,6 +103,7 @@ const ParticipantsManagementPage = () => {
           questionTitle: question.title,
           subtitle1: question.subtitle1,
           subtitle2: question.subtitle2,
+          csvText: question.title,
           headerFormatter: questionHeaderFormatter
         };
       });
@@ -157,11 +162,13 @@ const ParticipantsManagementPage = () => {
     }
   };
 
+  const { ExportCSVButton } = CSVExport;
+
   const tabNames = ['Participants', 'Selection Criteria', 'Selection Rules'];
   const tabContents = [
     <div className="row no-gutters overflow-auto flex-row flex-nowrap">
       <div className="col">
-        <BootstrapTable
+        <ToolkitProvider
           keyField="email"
           data={data}
           columns={columns}
@@ -169,7 +176,16 @@ const ParticipantsManagementPage = () => {
           striped
           hover
           noDataIndication="No participants data"
-        />
+          exportCSV
+        >
+          {(props) => (
+            <div>
+              <ExportCSVButton {...props.csvProps}>Export CSV!!</ExportCSVButton>
+              <hr />
+              <BootstrapTable {...props.baseProps} />
+            </div>
+          )}
+        </ToolkitProvider>
       </div>
     </div>,
     <CriteriaEditor
