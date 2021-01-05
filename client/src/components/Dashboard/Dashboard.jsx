@@ -27,7 +27,9 @@ const Dashboard = ({ isAdmin }) => {
       const userMetaData = await userService.getAccountInfo(params.userId);
       setMetaData(userMetaData.data.data);
     };
-    fetchMetaData();
+    if (!isAdmin) {
+      fetchMetaData();
+    }
   }, []);
 
   /**
@@ -99,7 +101,7 @@ const Dashboard = ({ isAdmin }) => {
               color: 'beige',
               textDecoration: 'none'
             }}
-            to={`/user/${params.userId}`}
+            to={`/users/${params.userId}`}
           >
             FFQ
           </Link>

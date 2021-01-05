@@ -39,7 +39,7 @@ class App extends React.Component {
     return (
       <Router>
         <Switch>
-          <PrivateRoute path="/user/:userId" isAdmin={isAdmin} component={Dashboard} />
+          <PrivateRoute path="/users/:userId" isAdmin={isAdmin} component={Dashboard} />
           <Route path="/signup" exact component={SignUpPage} />
           <Route path="/login" exact component={LoginPage} />
           <Route path="/" exact component={LoginPage} />
