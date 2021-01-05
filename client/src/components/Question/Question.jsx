@@ -74,8 +74,6 @@ const Question = ({
   const [{ answer, isSaving, isSavingError }, setAnswer] = useSaveAnswer(userId, id);
   const [latestAnswer, setLatestAnswer] = useState();
 
-  console.log('Submitted answer', submittedAnswer);
-
   useEffect(() => {
     if (!isSaving && !isSavingError) {
       setAnswer({ userInput, currentIndex });

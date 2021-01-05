@@ -12,12 +12,15 @@ import { Question } from '../../components/Question';
 import ProgressIndicator from '../../components/ProgressIndicator';
 
 const QuestionnairePresenterPage = ({ questionnaireId }) => {
+  // set inital values
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [{ questions, isLoadingQuestions, isError }] = useFetchQuestions(questionnaireId);
-  const { userId } = useParams();
-  const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers(userId);
-
+  const [isDisabled, setIsDisabled] = useState(true);
   const [answers, setAnswers] = useState();
+
+  // get data
+  const { userId } = useParams();
+  const [{ questions, isLoadingQuestions, isError }] = useFetchQuestions(questionnaireId);
+  const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers(userId);
 
   useEffect(() => {
     if (get(users, 'answers', false)) {
@@ -27,6 +30,14 @@ const QuestionnairePresenterPage = ({ questionnaireId }) => {
       setAnswers(users.answers);
     }
   }, [users]);
+
+  useEffect(() => {
+    if (currentIndex <= 0) {
+      setIsDisabled(true);
+    } else {
+      setIsDisabled(false);
+    }
+  }, [currentIndex]);
 
   const handleSubmitAnswer = (answer) => {
     setAnswers((prevAnswer) => {
@@ -72,6 +83,7 @@ const QuestionnairePresenterPage = ({ questionnaireId }) => {
               <button
                 type="button"
                 className="btn btn btn-light"
+                disabled={isDisabled}
                 onClick={() => setCurrentIndex(currentIndex - 1)}
               >
                 Zurück
@@ -79,13 +91,13 @@ const QuestionnairePresenterPage = ({ questionnaireId }) => {
               <div className="p-1" />
               <ProgressIndicator currentPosition={currentIndex} length={questions.length} />
               <div className="p-1" />
-              <button
+              {/* <button
                 type="button"
                 className="btn btn btn-light"
                 onClick={() => setCurrentIndex(currentIndex + 1)}
               >
                 Weiter
-              </button>
+              </button> */}
             </div>
           </nav>
         </div>

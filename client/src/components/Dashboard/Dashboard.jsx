@@ -65,12 +65,6 @@ const Dashboard = ({ isAdmin }) => {
 
   const userLinks = [
     {
-      name: 'Paricipant Panel',
-      to: '/participant',
-      className: 'nav-link',
-      activeClassName: 'nav-link active'
-    },
-    {
       name: 'Questionnaire',
       to: '/questionnairePresenter',
       className: 'nav-link',
