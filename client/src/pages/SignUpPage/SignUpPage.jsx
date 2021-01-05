@@ -34,6 +34,7 @@ const SignUpPage = () => {
                   (response) => {
                     setSubmitting(false);
                     if (response.status === 200) {
+                      // eslint-disable-next-line no-alert
                       window.alert('Sign Up successful!');
                       history.push(`/login`);
                     }

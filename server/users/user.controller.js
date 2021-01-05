@@ -17,6 +17,21 @@ const getUsers = async (req, res) => {
   }).catch((err) => console.log(err));
 };
 
+const getUserById = async (req, res) => {
+  console.log('HEYYY');
+  console.log(req.params.userId);
+  await User.findOne({ _id: req.params.userId }, (err, user) => {
+    if (err) {
+      return res.status(400).json({ success: false, error: err });
+    }
+    if (!user) {
+      return res.status(404).json({ success: false, error: `No user found` });
+    }
+    console.log(user);
+    return res.status(200).json({ success: true, data: user });
+  }).catch((err) => console.log(err));
+};
+
 const getAnswerById = async (req, res) => {
   await User.findOne({ _id: req.params.userId }, (err, user) => {
     if (err) {
@@ -45,6 +60,8 @@ const getAnswerById = async (req, res) => {
 const updateUserById = async (req, res) => {
   const { body } = req;
 
+  console.log('---', body);
+
   if (!body) {
     return res.status(400).json({
       success: false,
@@ -67,13 +84,13 @@ const updateUserById = async (req, res) => {
         const foundIndex = userUpdate.answers.findIndex(
           (answer) => answer.questionId === body.questionId
         );
-        console.log('index', foundIndex);
         if (foundIndex > -1) {
           userUpdate.answers[foundIndex].answerOption = body.answer;
         } else {
+          console.log(body.questionIndex);
           userUpdate.answers.push({ questionId: body.questionId, answerOption: body.answer });
+          userUpdate.stoppedAtIndex = body.questionIndex;
         }
-
         break;
       }
       default:
@@ -87,6 +104,9 @@ const updateUserById = async (req, res) => {
       .then(() => {
         return res.status(200).json({
           success: true,
+          questionId: body.questionId,
+          answer: body.answer,
+          index: body.questionIndex,
           message: 'User updated!'
         });
       })
@@ -101,6 +121,7 @@ const updateUserById = async (req, res) => {
 
 module.exports = {
   getUsers,
+  getUserById,
   getAnswerById,
   updateUserById
 };
