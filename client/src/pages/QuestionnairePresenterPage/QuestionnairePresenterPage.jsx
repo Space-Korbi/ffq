@@ -1,26 +1,45 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-underscore-dangle */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { string } from 'prop-types';
 import { useParams } from 'react-router-dom';
 
 // custom hooks
-import { useFetchQuestions, useFetchAnswers } from '../../hooks';
+import { useFetchQuestions, useFetchAnswer } from '../../hooks';
 
 // components
 import { Question } from '../../components/Question';
 import ProgressIndicator from '../../components/ProgressIndicator';
 
 const QuestionnairePresenterPage = ({ questionnaireId }) => {
-  const { userId } = useParams();
-  const [{ questions, isLoading, isError }] = useFetchQuestions(questionnaireId);
-  const [{ answers, isLoadingAnswers, isErrorAnswers }] = useFetchAnswers(questionnaireId, userId);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [newIndex, setNewIndex] = useState(0);
+  const [{ questions, isLoadingQuestions, isError }] = useFetchQuestions(questionnaireId);
+  const { userId } = useParams();
+  // const [{user, isLoadingUser, isErrorUser}] = useFetchUser(userId)
+  // if user last given answer index > current index -> load submitted answer
+  // if current index > als last given answer -> nichts laden
+  const [{ submittedAnswer, isLoadingAnswers, isErrorAnswers }, setQuestionId] = useFetchAnswer(
+    userId
+  );
+
+  const lastAnsweredQuestionIndex = 12;
+  useEffect(() => {
+    if (questions && questions.length && currentIndex <= lastAnsweredQuestionIndex) {
+      setQuestionId(questions[newIndex]._id);
+    }
+  }, [questions, newIndex]);
+
+  useEffect(() => {
+    if (!isLoadingAnswers && submittedAnswer) {
+      setCurrentIndex(newIndex);
+    }
+  }, [submittedAnswer, isLoadingAnswers]);
 
   return (
     <div>
       {isError && <div>Something went wrong ...</div>}
-      {isLoading ? (
+      {isLoadingQuestions || isLoadingAnswers ? (
         'Loading...'
       ) : (
         <div>
@@ -33,8 +52,8 @@ const QuestionnairePresenterPage = ({ questionnaireId }) => {
                 subtitle2={questions[currentIndex].subtitle2}
                 help={questions[currentIndex].help}
                 answerOptions={questions[currentIndex].answerOptions}
-                submittedAnswer={answers[currentIndex]}
-                onSubmitAnswer={() => setCurrentIndex(currentIndex + 1)}
+                submittedAnswer={submittedAnswer}
+                onSubmitAnswer={() => setNewIndex(currentIndex + 1)}
               />
             </div>
           )}
@@ -43,7 +62,7 @@ const QuestionnairePresenterPage = ({ questionnaireId }) => {
               <button
                 type="button"
                 className="btn btn btn-light"
-                onClick={() => setCurrentIndex(currentIndex - 1)}
+                onClick={() => setNewIndex(currentIndex - 1)}
               >
                 Zurück
               </button>
@@ -53,7 +72,7 @@ const QuestionnairePresenterPage = ({ questionnaireId }) => {
               <button
                 type="button"
                 className="btn btn btn-light"
-                onClick={() => setCurrentIndex(currentIndex + 1)}
+                onClick={() => setNewIndex(currentIndex + 1)}
               >
                 Weiter
               </button>
