@@ -16,7 +16,8 @@ export const signin = (payload) => api.post(`/auth/signin`, payload);
 
 // user
 export const updateAnswerById = (userId, payload) => api.put(`users/${userId}`, payload);
-export const getAccountInfoById = (userId, headers) => api.get(`/accounts/${userId}`, headers);
+export const getUsersMetadata = (userId, headers) =>
+  api.get(`/users/${userId}/?resource=metaData`, headers);
 export const getAllUsers = (headers) => api.get(`/users`, headers);
 export const getUserById = (userId, headers) => api.get(`/users/${userId}`, headers);
 export const getAnswerById = (userId, questionId, headers) =>
@@ -53,7 +54,7 @@ const apis = {
   signin,
   insertQuestionnaire,
   insertQuestionAt,
-  getAccountInfoById,
+  getUsersMetadata,
   getAllUsers,
   getAllQuestions,
   getAllQuestionsOfQuestionnaire,

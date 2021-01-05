@@ -108,7 +108,7 @@ const useFetchAnswer = (userId) => {
       dispatch({ type: 'FETCH_INIT' });
       try {
         if (userId && questionId) {
-          const fetchedAnswer = await userService.fetchAnswerById(userId, questionId);
+          const fetchedAnswer = await userService.fetchAnswersById(userId, questionId);
           if (!didCancel) {
             dispatch({ type: 'FETCH_SUCCESS', payload: fetchedAnswer.data.data });
           }

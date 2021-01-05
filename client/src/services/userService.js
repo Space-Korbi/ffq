@@ -2,7 +2,7 @@ import { authHeader } from '../helpers';
 import {
   getAllUsers,
   getUserById,
-  getAccountInfoById,
+  getUsersMetadata,
   getAnswerById,
   updateAnswerById
 } from '../api';
@@ -21,10 +21,10 @@ const fetchUserById = (userId) => {
 };
 
 const getAccountInfo = (userId) => {
-  return getAccountInfoById(userId, { headers: authHeader() });
+  return getUsersMetadata(userId, { headers: authHeader() });
 };
 
-const fetchAnswerById = (userId, questionId) => {
+const fetchAnswersById = (userId, questionId) => {
   return getAnswerById(userId, questionId, { headers: authHeader() });
 };
 
@@ -33,7 +33,7 @@ const saveAnswer = (userId, questionId, answer, questionIndex) => {
   return updateAnswerById(userId, payload);
 };
 
-const userService = { fetchAllUsers, fetchUserById, getAccountInfo, fetchAnswerById, saveAnswer };
+const userService = { fetchAllUsers, fetchUserById, getAccountInfo, fetchAnswersById, saveAnswer };
 
 export default userService;
 

@@ -1,13 +1,14 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Route, Switch, useRouteMatch, NavLink, Link } from 'react-router-dom';
 import PrivateRoute from '../PrivateRoute';
-import WelcomePage from '../../pages/WelcomePage';
 import QuestionEditor from '../QuestionEditor';
 import { Role } from '../../helpers';
-import { authService } from '../../services';
+
+import { authService, userService } from '../../services';
+
 // Root Pages that can be routed to
 import {
   HomePage,
@@ -19,7 +20,15 @@ import {
 
 const Dashboard = ({ isAdmin }) => {
   const { path, url, params } = useRouteMatch();
-  const [navigationItem, setNavigationItem] = useState('FFQ');
+  const [metaData, setMetaData] = useState();
+
+  useEffect(() => {
+    const fetchMetaData = async () => {
+      const userMetaData = await userService.getAccountInfo(params.userId);
+      setMetaData(userMetaData.data.data);
+    };
+    fetchMetaData();
+  }, []);
 
   /**
    * * TODO
@@ -98,7 +107,7 @@ const Dashboard = ({ isAdmin }) => {
             }}
             to={`/user/${params.userId}`}
           >
-            {navigationItem}
+            FFQ
           </Link>
         </span>
         <button
@@ -198,7 +207,10 @@ const Dashboard = ({ isAdmin }) => {
                 component={QuestionEditor}
               />
 
-              <Route path={`${path}/`} component={WelcomePage} />
+              <Route
+                path={`${path}/`}
+                component={() => <HomePage stoppedAtIndex={metaData && metaData.stoppedAtIndex} />}
+              />
             </Switch>
           </div>
         </div>

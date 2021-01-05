@@ -18,8 +18,6 @@ const getUsers = async (req, res) => {
 };
 
 const getUserById = async (req, res) => {
-  console.log('HEYYY');
-  console.log(req.params.userId);
   await User.findOne({ _id: req.params.userId }, (err, user) => {
     if (err) {
       return res.status(400).json({ success: false, error: err });
@@ -27,8 +25,27 @@ const getUserById = async (req, res) => {
     if (!user) {
       return res.status(404).json({ success: false, error: `No user found` });
     }
-    console.log(user);
-    return res.status(200).json({ success: true, data: user });
+
+    let returnData;
+
+    if (!req.query) {
+      returnData = user;
+    } else {
+      switch (req.query.resource) {
+        case 'metaData':
+          returnData = {
+            startData: user.startDate,
+            endDate: user.endDate,
+            stoppedAtIndex: user.stoppedAtIndex
+          };
+          break;
+        default:
+          returnData = user;
+      }
+    }
+    console.log(returnData);
+
+    return res.status(200).json({ success: true, data: returnData });
   }).catch((err) => console.log(err));
 };
 
