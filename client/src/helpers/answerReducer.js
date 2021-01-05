@@ -69,6 +69,11 @@ const reducerHelper = {
     };
   },
 
+  addSkippingTargets: (state, action) => {
+    console.log('skipping...');
+    console.log(state, action);
+  },
+
   addCard: (state, action) => {
     const newCard = {
       id: action.payload.id,
@@ -188,6 +193,8 @@ const answerReducer = (state, action) => {
       return reducerHelper.removeButton(state, action);
     case 'changeButtonTitle':
       return reducerHelper.changeButtonTitle(state, action);
+    case 'addSkippingTargets':
+      return reducerHelper.addSkippingTargets(state, action);
     case 'addCard':
       return reducerHelper.addCard(state, action);
     case 'removeCard':
