@@ -7,7 +7,6 @@ const Role = db.role;
 
 const verifyToken = (req, res, next) => {
   const token = req.headers['x-access-token'];
-
   if (!token) {
     return res.status(403).send({ message: 'No token provided!' });
   }

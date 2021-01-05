@@ -11,20 +11,20 @@ const useFetchQuestions = (initialQuestionnaireId) => {
       case 'FETCH_INIT':
         return {
           ...state,
-          isLoading: true,
+          isLoadingQuestions: true,
           isError: false
         };
       case 'FETCH_SUCCESS':
         return {
           ...state,
-          isLoading: false,
+          isLoadingQuestions: false,
           isError: false,
           questions: action.payload
         };
       case 'FETCH_FAILURE':
         return {
           ...state,
-          isLoading: false,
+          isLoadingQuestions: false,
           isError: true
         };
       default:
@@ -34,7 +34,7 @@ const useFetchQuestions = (initialQuestionnaireId) => {
 
   const [state, dispatch] = useReducer(fetchQuestionReducer, {
     questions: [],
-    isLoading: false,
+    isLoadingQuestions: false,
     isError: false
   });
 
@@ -65,28 +65,28 @@ const useFetchQuestions = (initialQuestionnaireId) => {
 };
 
 // Custom answer fetching hook
-const useFetchAnswers = (initialQuestionnaireId, userId) => {
-  const [questionnaireId, setQuestionnaireId] = useState(initialQuestionnaireId);
+const useFetchAnswer = (userId) => {
+  const [questionId, setQuestionId] = useState();
 
   const fetchAnswerReducer = (state, action) => {
     switch (action.type) {
       case 'FETCH_INIT':
         return {
           ...state,
-          isLoading: true,
+          isLoadingAnswer: true,
           isError: false
         };
       case 'FETCH_SUCCESS':
         return {
           ...state,
-          isLoading: false,
+          isLoadingAnswer: false,
           isError: false,
-          questions: action.payload
+          submittedAnswer: action.payload
         };
       case 'FETCH_FAILURE':
         return {
           ...state,
-          isLoading: false,
+          isLoadingAnswer: false,
           isError: true
         };
       default:
@@ -95,19 +95,8 @@ const useFetchAnswers = (initialQuestionnaireId, userId) => {
   };
 
   const [state, dispatch] = useReducer(fetchAnswerReducer, {
-    answers: [
-      { questionId: '8PvmWG7k2gSRpgcqZKqqc', answer: { id: 'dFspcp9612x8zmFAFpn7o', value: '4' } },
-      { questionId: 'QEqP2bUcGAPWdie05BtH_', answer: { id: 'dOqmYRzFabGWf0rKfH7n8', value: '3' } },
-      {
-        questionId: 'Abd_YOHjKI6Uj_eW17k_j',
-        answers: [
-          { id: 't9cns7UD8__LcLZqJ8_Yo', value: 'Hello' },
-          { id: '9eyY2SOF1L2scypJ3NoKm', value: 'World' },
-          { id: 'GfdGAPliW3Htu6XeGXYlw', value: 'Of Numbers', numberValue: 22 }
-        ]
-      }
-    ],
-    isLoading: false,
+    submittedAnswer: {},
+    isLoadingAnswer: false,
     isError: false
   });
 
@@ -116,12 +105,9 @@ const useFetchAnswers = (initialQuestionnaireId, userId) => {
     const fetchQuestions = async () => {
       dispatch({ type: 'FETCH_INIT' });
       try {
-        console.log(userId);
-        // const fetchedAnswers = await questionnaireService.fetchAllQuestionsOfQuestionnaire(
-        // questionnaireId
-        // );
+        const fetchedAnswer = await userService.fetchAnswerById(userId, questionId);
         if (!didCancel) {
-          dispatch({ type: 'FETCH_SUCCESS', payload: 'fetchedAnswers' });
+          dispatch({ type: 'FETCH_SUCCESS', payload: fetchedAnswer.data.data });
         }
       } catch (error) {
         if (!didCancel) {
@@ -133,9 +119,9 @@ const useFetchAnswers = (initialQuestionnaireId, userId) => {
     return () => {
       didCancel = true;
     };
-  }, [questionnaireId]);
+  }, [questionId]);
 
-  return [state, setQuestionnaireId];
+  return [state, setQuestionId];
 };
 
 // Custom answer saving hook
@@ -147,20 +133,20 @@ const useSaveAnswer = (userId, questionId) => {
       case 'SAVE_INIT':
         return {
           ...state,
-          isLoading: true,
+          isLoadingAnswer: true,
           isError: false
         };
       case 'SAVE_SUCCESS':
         return {
           ...state,
-          isLoading: false,
+          isLoadingAnswer: false,
           isError: false,
           answer: action.payload
         };
       case 'SAVE_FAILURE':
         return {
           ...state,
-          isLoading: false,
+          isLoadingAnswer: false,
           isError: true
         };
       default:
@@ -170,7 +156,7 @@ const useSaveAnswer = (userId, questionId) => {
 
   const [state, dispatch] = useReducer(saveAnswerReducer, {
     answer: {},
-    isLoading: false,
+    isLoadingAnswer: false,
     isError: false
   });
 
@@ -203,4 +189,4 @@ const useSaveAnswer = (userId, questionId) => {
   return [state, setAnswer];
 };
 
-export { useFetchQuestions, useFetchAnswers, useSaveAnswer };
+export { useFetchQuestions, useFetchAnswer, useSaveAnswer };

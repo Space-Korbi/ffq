@@ -17,6 +17,31 @@ const getUsers = async (req, res) => {
   }).catch((err) => console.log(err));
 };
 
+const getAnswerById = async (req, res) => {
+  await User.findOne({ _id: req.params.userId }, (err, user) => {
+    if (err) {
+      return res.status(404).json({
+        err,
+        message: 'User not found!'
+      });
+    }
+
+    if (!user || !user.answers.length) {
+      return res.status(404).json({ success: false, error: 'No answers found' });
+    }
+
+    const submittedAnswer = user.answers.find(
+      ({ questionId }) => questionId === req.params.questionId
+    );
+
+    if (!submittedAnswer) {
+      return res.status(404).json({ success: false, error: 'No answer found' });
+    }
+
+    return res.status(200).json({ success: true, data: submittedAnswer });
+  }).catch((err) => console.log(err));
+};
+
 const updateUserById = async (req, res) => {
   const { body } = req;
 
@@ -76,6 +101,7 @@ const updateUserById = async (req, res) => {
 
 module.exports = {
   getUsers,
+  getAnswerById,
   updateUserById
 };
 
