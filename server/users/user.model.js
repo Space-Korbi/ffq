@@ -24,6 +24,7 @@ const User = mongoose.model(
       screeningData: [{ type: String, default: [] }],
       startDate: { type: Date },
       endDate: { type: Date },
+      stoppedAtIndex: { type: Number, default: -1 },
       answers: [Answer],
       roles: [
         {
