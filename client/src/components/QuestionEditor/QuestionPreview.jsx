@@ -17,6 +17,7 @@ const QuestionPreview = ({ title, subtitle1, subtitle2, help, answerOptions }) =
           subtitle2={subtitle2}
           help={help}
           answerOptions={answerOptions}
+          // eslint-disable-next-line no-console
           onSubmitAnswer={() => console.log('Answer submitted')}
         />
       </div>

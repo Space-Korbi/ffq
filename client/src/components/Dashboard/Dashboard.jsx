@@ -21,7 +21,6 @@ const Dashboard = ({ isAdmin }) => {
   const { path, url, params } = useRouteMatch();
   const [navigationItem, setNavigationItem] = useState('FFQ');
 
-  console.log(path, url, params);
   /**
    * * TODO
    * Move navigation into its own component
