@@ -3,27 +3,27 @@ import { useEffect, useReducer } from 'react';
 import { userService } from '../services';
 
 // Custom question fetching hook
-const useFetchUsers = () => {
+const useFetchUsers = (userId) => {
   const fetchUserReducer = (state, action) => {
     switch (action.type) {
       case 'FETCH_INIT':
         return {
           ...state,
-          isLoading: true,
-          isError: false
+          isLoadingUsers: true,
+          isErrorUsers: false
         };
       case 'FETCH_SUCCESS':
         return {
           ...state,
-          isLoading: false,
-          isError: false,
+          isLoadingUsers: false,
+          isErrorUsers: false,
           users: action.payload
         };
       case 'FETCH_FAILURE':
         return {
           ...state,
-          isLoading: false,
-          isError: true
+          isLoadingUsers: false,
+          isErrorUsers: true
         };
       default:
         throw new Error();
@@ -32,8 +32,8 @@ const useFetchUsers = () => {
 
   const [state, dispatch] = useReducer(fetchUserReducer, {
     users: [],
-    isLoading: false,
-    isError: false
+    isLoadingUsers: false,
+    isErrorUsers: false
   });
 
   useEffect(() => {
@@ -41,7 +41,12 @@ const useFetchUsers = () => {
     const fetchUsers = async () => {
       dispatch({ type: 'FETCH_INIT' });
       try {
-        const fetchedUsers = await userService.fetchAllUsers();
+        let fetchedUsers;
+        if (userId) {
+          fetchedUsers = await userService.fetchUserById(userId);
+        } else {
+          fetchedUsers = await userService.fetchAllUsers();
+        }
         if (!didCancel) {
           dispatch({ type: 'FETCH_SUCCESS', payload: fetchedUsers.data.data });
         }

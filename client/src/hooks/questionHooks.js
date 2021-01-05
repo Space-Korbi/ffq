@@ -1,4 +1,6 @@
 import { useState, useEffect, useReducer } from 'react';
+import { get } from 'lodash';
+
 // Services
 import { questionnaireService, userService } from '../services';
 
@@ -105,9 +107,11 @@ const useFetchAnswer = (userId) => {
     const fetchQuestions = async () => {
       dispatch({ type: 'FETCH_INIT' });
       try {
-        const fetchedAnswer = await userService.fetchAnswerById(userId, questionId);
-        if (!didCancel) {
-          dispatch({ type: 'FETCH_SUCCESS', payload: fetchedAnswer.data.data });
+        if (userId && questionId) {
+          const fetchedAnswer = await userService.fetchAnswerById(userId, questionId);
+          if (!didCancel) {
+            dispatch({ type: 'FETCH_SUCCESS', payload: fetchedAnswer.data.data });
+          }
         }
       } catch (error) {
         if (!didCancel) {
@@ -126,7 +130,7 @@ const useFetchAnswer = (userId) => {
 
 // Custom answer saving hook
 const useSaveAnswer = (userId, questionId) => {
-  const [answer, setAnswer] = useState('');
+  const [answer, setAnswer] = useState();
 
   const saveAnswerReducer = (state, action) => {
     switch (action.type) {
@@ -165,8 +169,13 @@ const useSaveAnswer = (userId, questionId) => {
     const saveAnswer = async () => {
       dispatch({ type: 'SAVE_INIT' });
       try {
-        if (answer) {
-          const savedAnswer = await userService.saveAnswer(userId, questionId, answer);
+        if (get(answer, 'userInput.id', false) || get(answer, ['userInput', '0', 'id'], false)) {
+          const savedAnswer = await userService.saveAnswer(
+            userId,
+            questionId,
+            answer.userInput,
+            answer.currentIndex
+          );
           if (!didCancel) {
             dispatch({
               type: 'SAVE_SUCCESS',
