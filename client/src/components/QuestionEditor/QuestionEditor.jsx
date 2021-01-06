@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/destructuring-assignment */
-/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-restricted-syntax */
 import React, { useState, useReducer } from 'react';
 import { string, shape, arrayOf, bool, exact, oneOfType } from 'prop-types';

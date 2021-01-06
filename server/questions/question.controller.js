@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 const fs = require('fs');
 const async = require('async');
 const Question = require('./question.model');
