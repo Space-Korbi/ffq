@@ -1,14 +1,13 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Route, Switch, useRouteMatch, NavLink, Link } from 'react-router-dom';
 import PrivateRoute from '../PrivateRoute';
-import QuestionnairePresentation from '../Questionnaire';
-import WelcomePage from '../../pages/WelcomePage';
-import QuestionEditor from '../QuestionEditor';
 import { Role } from '../../helpers';
-import { authService } from '../../services';
+
+import { authService, userService } from '../../services';
+
 // Root Pages that can be routed to
 import {
   HomePage,
@@ -20,9 +19,19 @@ import {
 
 const Dashboard = ({ isAdmin }) => {
   const { path, url, params } = useRouteMatch();
-  const [navigationItem, setNavigationItem] = useState('FFQ');
+  const [metaData, setMetaData] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
-  console.log(path, url, params);
+  useEffect(() => {
+    const fetchMetaData = async () => {
+      const userMetaData = await userService.getMetaData(params.userId);
+      setMetaData(userMetaData.data.data);
+      setIsLoading(false);
+    };
+
+    fetchMetaData();
+  }, []);
+
   /**
    * * TODO
    * Move navigation into its own component
@@ -58,14 +67,8 @@ const Dashboard = ({ isAdmin }) => {
 
   const userLinks = [
     {
-      name: 'Paricipant Panel',
-      to: '/participant',
-      className: 'nav-link',
-      activeClassName: 'nav-link active'
-    },
-    {
       name: 'Questionnaire',
-      to: '/questionnaire',
+      to: '/questionnairePresenter',
       className: 'nav-link',
       activeClassName: 'nav-link active'
     },
@@ -98,9 +101,9 @@ const Dashboard = ({ isAdmin }) => {
               color: 'beige',
               textDecoration: 'none'
             }}
-            to={`/user/${params.userId}`}
+            to={`/users/${params.userId}`}
           >
-            {navigationItem}
+            FFQ
           </Link>
         </span>
         <button
@@ -170,42 +173,48 @@ const Dashboard = ({ isAdmin }) => {
         </div>
       </nav>
       <main role="main" className="col p-0">
-        <div className="row no-gutters">
-          <div className="col">
-            <Switch>
-              <PrivateRoute
-                path={`${path}/questionnaireEditor`}
-                roles={[Role.Admin]}
-                isAdmin={isAdmin}
-                component={QuestionnaireEditorPage}
-              />
-              <PrivateRoute
-                path={`${path}/participantsManager`}
-                roles={[Role.Admin]}
-                isAdmin={isAdmin}
-                component={ParticipantsManagementPage}
-              />
-              <Route
-                path={`${path}/questionnairePresenter`}
-                component={() => (
-                  <QuestionnairePresenterPage questionnaireId="wWOHBJtGAkPYccFyna5OH" />
-                )}
-              />
-              <Route path={`${path}/account`} component={AccountPage} />
+        {isLoading ? (
+          'Loading...'
+        ) : (
+          <div className="row no-gutters">
+            <div className="col">
+              <Switch>
+                <PrivateRoute
+                  path={`${path}/questionnaireEditor`}
+                  roles={[Role.Admin]}
+                  isAdmin={isAdmin}
+                  component={QuestionnaireEditorPage}
+                />
+                <PrivateRoute
+                  path={`${path}/participantsManager`}
+                  roles={[Role.Admin]}
+                  isAdmin={isAdmin}
+                  component={ParticipantsManagementPage}
+                />
+                <Route
+                  path={`${path}/questionnairePresenter`}
+                  component={() => (
+                    <QuestionnairePresenterPage questionnaireId="BcbBv_SPeUJjCWx6KTGYG" />
+                  )}
+                />
 
-              <PrivateRoute
-                path={`${path}/questionEditor`}
-                roles={[Role.Admin]}
-                isAdmin={isAdmin}
-                component={QuestionEditor}
-              />
-
-              <Route path={`${path}/questionnaire`} component={QuestionnairePresentation} />
-
-              <Route path={`${path}/`} component={WelcomePage} />
-            </Switch>
+                <Route
+                  path={`${path}/account`}
+                  component={() => <AccountPage accountData={metaData} />}
+                />
+                <Route
+                  path={`${path}/`}
+                  component={() => (
+                    <HomePage
+                      isAdmin={isAdmin}
+                      stoppedAtIndex={metaData && metaData.stoppedAtIndex}
+                    />
+                  )}
+                />
+              </Switch>
+            </div>
           </div>
-        </div>
+        )}
       </main>
     </div>
   );

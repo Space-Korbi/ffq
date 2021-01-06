@@ -10,7 +10,7 @@ const LoginPage = () => {
   useEffect(() => {
     const user = authService.currentUserValue;
     if (user) {
-      history.push(`/user/${user.id}`);
+      history.push(`/users/${user.id}`);
     }
   }, []);
 
@@ -29,7 +29,7 @@ const LoginPage = () => {
             <h2>Login</h2>
             <Formik
               initialValues={{
-                email: 'k@b.de',
+                email: 'u@3',
                 password: '12345'
               }}
               validationSchema={Yup.object().shape({
@@ -39,16 +39,13 @@ const LoginPage = () => {
               onSubmit={({ email, password }, { setStatus, setSubmitting }) => {
                 authService.login(email, password).then(
                   (user) => {
-                    console.log(user);
-                    /**
-                     * TODO redirect
-                     * redirect to first unanswered question of questionnaire if possible
-                     */
-                    history.push(`/user/${user.id}`);
+                    history.push(`/users/${user.id}`);
+                    console.log('++++++', user);
                   },
                   (error) => {
                     setSubmitting(false);
-                    setStatus(error);
+                    console.log('-------', error);
+                    setStatus(error.body);
                   }
                 );
               }}

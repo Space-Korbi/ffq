@@ -1,15 +1,51 @@
 import { authHeader } from '../helpers';
-import { getAllUsers, getAccountInfoById } from '../api';
+import {
+  getAllUsers,
+  getUserById,
+  getUsersMetadata,
+  // getUsersAccountData,
+  getAnswerById,
+  updateAnswerById
+} from '../api';
+
+const updateAction = {
+  updateAnswer: 'updateAnswer',
+  updateData: 'updateData'
+};
 
 const fetchAllUsers = () => {
   return getAllUsers({ headers: authHeader() });
 };
 
-const getAccountInfo = (userId) => {
-  return getAccountInfoById(userId, { headers: authHeader() });
+const fetchUserById = (userId) => {
+  return getUserById(userId, { headers: authHeader() });
 };
 
-const userService = { fetchAllUsers, getAccountInfo };
+const getMetaData = (userId) => {
+  return getUsersMetadata(userId, { headers: authHeader() });
+};
+
+/* const getAccountData = (userId) => {
+  return getUsersAccountData(userId, { headers: authHeader() });
+}; */
+
+const fetchAnswersById = (userId, questionId) => {
+  return getAnswerById(userId, questionId, { headers: authHeader() });
+};
+
+const saveAnswer = (userId, questionId, answer, questionIndex) => {
+  const payload = { action: updateAction.updateAnswer, answer, questionIndex, questionId };
+  return updateAnswerById(userId, payload);
+};
+
+const userService = {
+  fetchAllUsers,
+  fetchUserById,
+  getMetaData,
+  // getAccountData,
+  fetchAnswersById,
+  saveAnswer
+};
 
 export default userService;
 

@@ -1,6 +1,8 @@
 import React from 'react';
 import { arrayOf, string, shape, func } from 'prop-types';
+import { get } from 'lodash';
 
+// components
 import AnswerCard from './AnswerCard';
 
 /**
@@ -15,10 +17,8 @@ const AnswerCardsDeck = ({ answerOptions, submittedAnswer, onClick }) => {
     }
 
     const isSelectedAnswer = (answerOptionId) => {
-      if (submittedAnswer.answer.id) {
-        if (answerOptionId === submittedAnswer.answer.id) {
-          return true;
-        }
+      if (answerOptionId === get(submittedAnswer, 'answerOption.id', '')) {
+        return true;
       }
       return false;
     };
@@ -45,7 +45,7 @@ const AnswerCardsDeck = ({ answerOptions, submittedAnswer, onClick }) => {
           imageName={answerOption.imageName}
           imageURL={answerOption.imageURL}
           isSelectedAnswer={isSelectedAnswer(answerOption.id)}
-          onClick={() => onClick(answerOption.id)}
+          onClick={() => onClick(answerOption)}
         />
       </div>
     );
@@ -60,7 +60,10 @@ AnswerCardsDeck.propTypes = {
       imageName: string
     })
   ).isRequired,
-  submittedAnswer: shape({ questionId: string, answer: shape({ id: string, value: string }) }),
+  submittedAnswer: shape({
+    questionId: string,
+    answerOption: shape({ id: string, title: string })
+  }),
   onClick: func.isRequired
 };
 export default AnswerCardsDeck;

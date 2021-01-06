@@ -1,82 +1,88 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { shape, arrayOf, string, bool, func } from 'prop-types';
+import { get, findIndex, endsWith, trimEnd, differenceBy } from 'lodash';
 /**
  * TODO
  * only allow integers to be entered in number input
  */
 
 function UserInputAnswer({ answerOptions, submittedAnswer, onSubmit }) {
-  const [userInput, setUserInput] = useState({});
+  const [userInputs, setUserInputs] = useState(answerOptions);
+
+  useEffect(() => {
+    if (get(submittedAnswer, ['answerOption', '0', 'answer'])) {
+      const difference = differenceBy(submittedAnswer.answerOption, answerOptions, 'id');
+      const allInputFields = submittedAnswer.answerOption.concat(difference);
+      setUserInputs(allInputFields);
+    }
+  }, [submittedAnswer]);
+
+  function updateAnswer(e) {
+    const updatedUserInputs = [...userInputs];
+    let index;
+    let answeredInputField;
+    if (endsWith(e.target.id, 'numberInput')) {
+      const trimmed = trimEnd(e.target.id, '-numberInput');
+      index = findIndex(userInputs, { id: trimmed });
+      answeredInputField = userInputs[index];
+      answeredInputField.numberAnswer = e.target.value;
+    } else {
+      index = findIndex(userInputs, { id: e.target.id });
+      answeredInputField = userInputs[index];
+      answeredInputField.answer = e.target.value;
+    }
+    updatedUserInputs.splice(index, 1, answeredInputField);
+    setUserInputs(updatedUserInputs);
+  }
 
   return (
     <div>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          onSubmit(userInput);
+          onSubmit(userInputs);
         }}
       >
-        {answerOptions.map((answerOption) => {
-          let inputValue = '';
-          let numberInputValue = '';
-
-          submittedAnswer.answers.forEach((answer) => {
-            if (answer.id === answerOption.id) {
-              inputValue = answer.value;
-            }
-          });
-
-          if (answerOption.hasNumberInput) {
-            submittedAnswer.answers.forEach((answer) => {
-              if (answer.id === answerOption.id) {
-                numberInputValue = answer.numberValue;
-              }
-            });
-          }
-
+        {userInputs.map((userInput) => {
           return (
-            <div key={answerOption.id} className="m-4">
+            <div key={userInput.id} className="m-4">
               <div className="row">
                 <div className="col">
                   <div className="input-group input-group-lg">
                     <div className="input-group-prepend">
                       <span className="input-group-text" id="inputGroup-sizing-lg">
-                        {answerOption.title}
+                        {userInput.title}
                       </span>
                     </div>
                     <input
                       type="text"
-                      id={answerOption.id}
+                      id={userInput.id}
                       className="form-control"
                       aria-label="user input"
                       aria-describedby="inputGroup-sizing-lg"
-                      placeholder={inputValue}
+                      placeholder={userInput.answer}
                       onChange={(e) => {
-                        const newInput = userInput;
-                        newInput[e.target.id] = e.target.value;
-                        setUserInput(newInput);
+                        updateAnswer(e);
                       }}
                     />
                   </div>
                 </div>
-                {answerOption.hasNumberInput && (
+                {userInput.hasNumberInput && (
                   <div className="col-4">
                     <div className="input-group input-group-lg">
                       <input
                         type="number"
-                        id={`${answerOption.id}-numberInput`}
+                        id={`${userInput.id}-numberInput`}
                         min="0"
                         className="form-control"
-                        placeholder={numberInputValue}
+                        placeholder={userInput.numberAnswer}
                         onChange={(e) => {
-                          const newInput = userInput;
-                          newInput[e.target.id] = e.target.value;
-                          setUserInput(newInput);
+                          updateAnswer(e);
                         }}
                       />
                       <div className="input-group-append">
                         <span className="input-group-text" id="inputGroup-sizing-lg">
-                          {answerOption.numberInputTitle}
+                          {userInput.numberInputTitle}
                         </span>
                       </div>
                     </div>
@@ -107,7 +113,7 @@ UserInputAnswer.propTypes = {
   ).isRequired,
   submittedAnswer: shape({
     questionId: string,
-    answer: arrayOf(shape({ id: string, value: string }))
+    answerOption: arrayOf(shape({ id: string, title: string }))
   }),
   onSubmit: func.isRequired
 };

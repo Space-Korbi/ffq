@@ -1,9 +1,10 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unused-prop-types */
 import React, { useEffect, useState } from 'react';
 import { string, shape, arrayOf, exact, bool, oneOfType, func } from 'prop-types';
 import { useParams } from 'react-router-dom';
-
+import { get } from 'lodash';
 // custom hooks
 import { useSaveAnswer } from '../../hooks';
 
@@ -17,6 +18,46 @@ import UserInputAnswer from './UserInputAnswer/UserInputAnswer';
 // global constants
 import AnswerType from '../../types';
 
+function Answers({ answerOptions, setUserInput, submittedAnswer }) {
+  switch (answerOptions.type) {
+    case AnswerType.Frequency:
+      return (
+        <div className="row no-gutters d-flex align-items-stretch">
+          <div className="col">
+            <AnswerButtons
+              leftAnswerOptions={answerOptions.options.left}
+              rightAnswerOptions={answerOptions.options.right}
+              submittedAnswer={submittedAnswer}
+              onClick={setUserInput}
+            />
+          </div>
+        </div>
+      );
+    case AnswerType.Amount:
+      return (
+        <div>
+          <AmountAnswer
+            answerOptions={answerOptions.options}
+            submittedAnswer={submittedAnswer}
+            onClick={setUserInput}
+          />
+        </div>
+      );
+    default:
+      return (
+        <div className="row no-gutters d-flex align-items-stretch">
+          <div className="col">
+            <UserInputAnswer
+              answerOptions={answerOptions.options}
+              submittedAnswer={submittedAnswer}
+              onSubmit={setUserInput}
+            />
+          </div>
+        </div>
+      );
+  }
+}
+
 const Question = ({
   id,
   title,
@@ -25,64 +66,33 @@ const Question = ({
   help,
   answerOptions,
   submittedAnswer,
-  onSubmitAnswer
+  onSubmitAnswer,
+  currentIndex
 }) => {
-  const [answerContainer, setAnswerContainer] = useState();
   const { userId } = useParams();
   const [userInput, setUserInput] = useState();
-  const [{ banswer, isSaving, isSavingError }, setAnswer] = useSaveAnswer(userId, id);
+  const [{ answer, isSaving, isSavingError }, setAnswer] = useSaveAnswer(userId, id);
+  const [latestAnswer, setLatestAnswer] = useState();
 
   useEffect(() => {
-    if (!userInput) {
-      return;
-    }
     if (!isSaving && !isSavingError) {
-      setAnswer(userInput);
-      onSubmitAnswer();
+      setAnswer({ userInput, currentIndex });
     }
   }, [userInput]);
 
   useEffect(() => {
-    switch (answerOptions.type) {
-      case AnswerType.Frequency:
-        setAnswerContainer(
-          <div className="row no-gutters d-flex align-items-stretch">
-            <div className="col">
-              <AnswerButtons
-                leftAnswerOptions={answerOptions.options.left}
-                rightAnswerOptions={answerOptions.options.right}
-                submittedAnswer={submittedAnswer}
-                onClick={setUserInput}
-              />
-            </div>
-          </div>
-        );
-        break;
-      case AnswerType.Amount:
-        setAnswerContainer(
-          <div>
-            <AmountAnswer
-              answerOptions={answerOptions.options}
-              submittedAnswer={submittedAnswer}
-              onClick={setUserInput}
-            />
-          </div>
-        );
-        break;
-      default:
-        setAnswerContainer(
-          <div className="row no-gutters d-flex align-items-stretch">
-            <div className="col">
-              <UserInputAnswer
-                answerOptions={answerOptions.options}
-                submittedAnswer={submittedAnswer}
-                onSubmit={setUserInput}
-              />
-            </div>
-          </div>
-        );
+    if (!answer || !userInput) {
+      return;
     }
-  }, [answerOptions]);
+    if (!isSaving && !isSavingError) {
+      setLatestAnswer(answer);
+      onSubmitAnswer(answer);
+    }
+  }, [answer]);
+
+  useEffect(() => {
+    setLatestAnswer(submittedAnswer);
+  }, [submittedAnswer]);
 
   return (
     <div>
@@ -100,7 +110,17 @@ const Question = ({
         {isSavingError ? (
           'Something went wrong...'
         ) : (
-          <>{isSaving ? 'Saving...' : <>{answerContainer}</>} </>
+          <>
+            {isSaving ? (
+              'Saving...'
+            ) : (
+              <Answers
+                answerOptions={answerOptions}
+                setUserInput={setUserInput}
+                submittedAnswer={latestAnswer}
+              />
+            )}
+          </>
         )}
       </div>
     </div>

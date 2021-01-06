@@ -9,10 +9,10 @@ const QuestionnaireCtrl = require('./questionnaire.controller');
  */
 const router = express.Router();
 
-router.post('/questionnaire', QuestionnaireCtrl.createQuestionnaire);
-router.put('/questionnaire/:id', QuestionnaireCtrl.updateQuestionnaire);
-router.delete('/questionnaire/:id', QuestionnaireCtrl.deleteQuestionnaire);
-router.get('/questionnaire/:id', QuestionnaireCtrl.getQuestionnaireById);
+router.post('/questionnaires', QuestionnaireCtrl.createQuestionnaire);
+router.put('/questionnaires/:id', QuestionnaireCtrl.updateQuestionnaire);
+router.delete('/questionnaires/:id', QuestionnaireCtrl.deleteQuestionnaire);
+router.get('/questionnaires/:id', QuestionnaireCtrl.getQuestionnaireById);
 router.get('/questionnaires', QuestionnaireCtrl.getQuestionnaires);
 
 module.exports = router;

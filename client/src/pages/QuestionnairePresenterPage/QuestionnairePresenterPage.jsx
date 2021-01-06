@@ -1,48 +1,89 @@
 /* eslint-disable no-unused-vars */
-/* eslint-disable no-underscore-dangle */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { string } from 'prop-types';
 import { useParams } from 'react-router-dom';
+import { get, findIndex } from 'lodash';
 
 // custom hooks
-import { useFetchQuestions, useFetchAnswers } from '../../hooks';
+import { useFetchQuestions, useFetchUsers } from '../../hooks';
 
 // components
 import { Question } from '../../components/Question';
 import ProgressIndicator from '../../components/ProgressIndicator';
 
 const QuestionnairePresenterPage = ({ questionnaireId }) => {
-  const { userId } = useParams();
-  const [{ questions, isLoading, isError }] = useFetchQuestions(questionnaireId);
-  const [{ answers, isLoadingAnswers, isErrorAnswers }] = useFetchAnswers(questionnaireId, userId);
+  // set inital values
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [answers, setAnswers] = useState();
+
+  // get data
+  const { userId } = useParams();
+  const [{ questions, isLoadingQuestions, isError }] = useFetchQuestions(questionnaireId);
+  const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers(userId);
+
+  useEffect(() => {
+    if (get(users, 'answers', false)) {
+      if (currentIndex < users.stoppedAtIndex) {
+        setCurrentIndex(users.stoppedAtIndex + 1);
+      }
+      setAnswers(users.answers);
+    }
+  }, [users]);
+
+  useEffect(() => {
+    if (currentIndex <= 0) {
+      setIsDisabled(true);
+    } else {
+      setIsDisabled(false);
+    }
+  }, [currentIndex]);
+
+  const handleSubmitAnswer = (answer) => {
+    setAnswers((prevAnswer) => {
+      const newAnswers = prevAnswer;
+      const index = findIndex(newAnswers, { questionId: answer.data.questionId });
+      if (index > -1) {
+        newAnswers[index].answerOption = answer.data.answer;
+      } else {
+        newAnswers.push({ questionId: answer.data.questionId, answerOption: answer.data.answer });
+      }
+      return newAnswers;
+    });
+
+    setCurrentIndex(currentIndex + 1);
+  };
 
   return (
     <div>
       {isError && <div>Something went wrong ...</div>}
-      {isLoading ? (
+      {!answers || isLoadingQuestions || isLoadingUsers ? (
         'Loading...'
       ) : (
         <div>
-          {questions.length && (
-            <div>
-              <Question
-                id={questions[currentIndex]._id}
-                title={questions[currentIndex].title}
-                subtitle1={questions[currentIndex].subtitle1}
-                subtitle2={questions[currentIndex].subtitle2}
-                help={questions[currentIndex].help}
-                answerOptions={questions[currentIndex].answerOptions}
-                submittedAnswer={answers[currentIndex]}
-                onSubmitAnswer={() => setCurrentIndex(currentIndex + 1)}
-              />
-            </div>
-          )}
+          <div>
+            {questions.length && (
+              <div>
+                <Question
+                  id={questions[currentIndex]._id}
+                  title={questions[currentIndex].title}
+                  subtitle1={questions[currentIndex].subtitle1}
+                  subtitle2={questions[currentIndex].subtitle2}
+                  help={questions[currentIndex].help}
+                  submittedAnswer={answers[currentIndex]}
+                  answerOptions={questions[currentIndex].answerOptions}
+                  onSubmitAnswer={(answer) => handleSubmitAnswer(answer)}
+                  currentIndex={currentIndex}
+                />
+              </div>
+            )}
+          </div>
           <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-bottom questionnaire">
             <div className="d-flex flex-fill align-items-center">
               <button
                 type="button"
                 className="btn btn btn-light"
+                disabled={isDisabled}
                 onClick={() => setCurrentIndex(currentIndex - 1)}
               >
                 Zurück
@@ -50,13 +91,13 @@ const QuestionnairePresenterPage = ({ questionnaireId }) => {
               <div className="p-1" />
               <ProgressIndicator currentPosition={currentIndex} length={questions.length} />
               <div className="p-1" />
-              <button
+              {/* <button
                 type="button"
                 className="btn btn btn-light"
                 onClick={() => setCurrentIndex(currentIndex + 1)}
               >
                 Weiter
-              </button>
+              </button> */}
             </div>
           </nav>
         </div>

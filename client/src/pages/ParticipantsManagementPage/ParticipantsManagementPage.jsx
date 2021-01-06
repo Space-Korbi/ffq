@@ -93,7 +93,7 @@ const dataColumns = [
 const ParticipantsManagementPage = () => {
   const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers();
   const [{ questions, isLoadingQuestions, isErrorQuestions }] = useFetchQuestions(
-    'wWOHBJtGAkPYccFyna5OH'
+    'BcbBv_SPeUJjCWx6KTGYG'
   );
   const [selectionCriteria, setSelectionCriteria] = useState(mockSelectionCriteria);
   const [selectionRules, setSelectionRules] = useState(mockRules);
@@ -138,7 +138,7 @@ const ParticipantsManagementPage = () => {
         }
         const userWithAnswers = { ...user };
         user.answers.forEach((answer) => {
-          userWithAnswers[answer.questionId] = answer.answerOptionId;
+          userWithAnswers[answer.questionId] = JSON.stringify(answer.answerOption, null, 1);
         });
         return userWithAnswers;
       });

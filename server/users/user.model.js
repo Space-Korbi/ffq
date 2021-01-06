@@ -5,9 +5,9 @@ const { Schema } = mongoose;
 const Answer = mongoose.Schema(
   {
     questionId: { type: String },
-    answerOptionId: { type: String }
+    answerOption: { type: Schema.Types.Mixed }
   },
-  { _id: false }
+  { _id: false, default: [] }
 );
 
 const User = mongoose.model(
@@ -24,6 +24,7 @@ const User = mongoose.model(
       screeningData: [{ type: String, default: [] }],
       startDate: { type: Date },
       endDate: { type: Date },
+      stoppedAtIndex: { type: Number, default: -1 },
       answers: [Answer],
       roles: [
         {
