@@ -34,6 +34,10 @@ const getUserById = async (req, res) => {
       switch (req.query.resource) {
         case 'metaData':
           returnData = {
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            hasAcceptedConsentForm: user.hasAcceptedConsentForm,
             startData: user.startDate,
             endDate: user.endDate,
             stoppedAtIndex: user.stoppedAtIndex
@@ -141,18 +145,6 @@ module.exports = {
   getUserById,
   getAnswerById,
   updateUserById
-};
-
-exports.allAccess = (req, res) => {
-  res.status(200).send('Public Content.');
-};
-
-exports.userBoard = (req, res) => {
-  res.status(200).send('User Content.');
-};
-
-exports.adminBoard = (req, res) => {
-  res.status(200).send('Admin Content.');
 };
 
 /*

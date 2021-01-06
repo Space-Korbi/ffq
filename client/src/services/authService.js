@@ -10,14 +10,14 @@ function logout() {
 }
 
 function handleResponse(response) {
-  // console.log(response);
   if ([401, 403].indexOf(response.status) !== -1) {
     // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
     logout();
     // eslint-disable-next-line no-restricted-globals
     location.reload();
 
-    const error = response.message || response.error;
+    const error = { message: response.message, error: response.error };
+    console.log(error);
     return Promise.reject(error);
   }
 
@@ -33,7 +33,6 @@ const login = (email, password) => {
         localStorage.setItem('user', JSON.stringify(user));
         currentUserSubject.next(user);
       }
-
       return user;
     });
 };

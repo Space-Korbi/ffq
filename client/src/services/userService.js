@@ -3,6 +3,7 @@ import {
   getAllUsers,
   getUserById,
   getUsersMetadata,
+  // getUsersAccountData,
   getAnswerById,
   updateAnswerById
 } from '../api';
@@ -20,9 +21,13 @@ const fetchUserById = (userId) => {
   return getUserById(userId, { headers: authHeader() });
 };
 
-const getAccountInfo = (userId) => {
+const getMetaData = (userId) => {
   return getUsersMetadata(userId, { headers: authHeader() });
 };
+
+/* const getAccountData = (userId) => {
+  return getUsersAccountData(userId, { headers: authHeader() });
+}; */
 
 const fetchAnswersById = (userId, questionId) => {
   return getAnswerById(userId, questionId, { headers: authHeader() });
@@ -33,7 +38,14 @@ const saveAnswer = (userId, questionId, answer, questionIndex) => {
   return updateAnswerById(userId, payload);
 };
 
-const userService = { fetchAllUsers, fetchUserById, getAccountInfo, fetchAnswersById, saveAnswer };
+const userService = {
+  fetchAllUsers,
+  fetchUserById,
+  getMetaData,
+  // getAccountData,
+  fetchAnswersById,
+  saveAnswer
+};
 
 export default userService;
 
