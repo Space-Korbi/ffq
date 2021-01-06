@@ -4,10 +4,17 @@
  * It is similar to the Fetch API and is used to perform HTTP requests.
  */
 import axios from 'axios';
+import { authHeader } from '../helpers';
 
 // Creating a new instance of axios with a custom config.
 const api = axios.create({
   baseURL: 'http://localhost:3000/api'
+});
+
+// Attach access token to every request header
+api.interceptors.request.use((request) => {
+  request.headers = authHeader();
+  return request;
 });
 
 // auth
@@ -16,16 +23,16 @@ export const login = (payload) => api.post(`/auth/login`, payload);
 
 // user
 export const updateAnswerById = (userId, payload) => api.put(`users/${userId}`, payload);
-export const getUsersMetadata = (userId, headers) =>
-  api.get(`/users/${userId}/?resource=metaData`, headers);
+export const getUsersMetadata = (userId) =>
+  api.get(`/users/${userId}/?resource=metaData`, authHeader());
 
-/* export const getUsersAccountData = (userId, headers) =>
-api.get(`/users/${userId}/?resource=accountData`, headers); */
+/* export const getUsersAccountData = (userId) =>
+api.get(`/users/${userId}/?resource=accountData`); */
 
-export const getAllUsers = (headers) => api.get(`/users`, headers);
-export const getUserById = (userId, headers) => api.get(`/users/${userId}`, headers);
-export const getAnswerById = (userId, questionId, headers) =>
-  api.get(`users/${userId}/questions/${questionId}`, headers);
+export const getAllUsers = () => api.get(`/users`);
+export const getUserById = (userId) => api.get(`/users/${userId}`);
+export const getAnswerById = (userId, questionId) =>
+  api.get(`users/${userId}/questions/${questionId}`);
 
 // question
 export const insertQuestionAt = (questionnaireId, payload) =>

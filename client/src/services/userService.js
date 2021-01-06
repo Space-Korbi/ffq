@@ -1,4 +1,3 @@
-import { authHeader } from '../helpers';
 import {
   getAllUsers,
   getUserById,
@@ -14,15 +13,15 @@ const updateAction = {
 };
 
 const fetchAllUsers = () => {
-  return getAllUsers({ headers: authHeader() });
+  return getAllUsers();
 };
 
 const fetchUserById = (userId) => {
-  return getUserById(userId, { headers: authHeader() });
+  return getUserById(userId);
 };
 
 const getMetaData = (userId) => {
-  return getUsersMetadata(userId, { headers: authHeader() });
+  return getUsersMetadata(userId);
 };
 
 /* const getAccountData = (userId) => {
@@ -30,7 +29,7 @@ const getMetaData = (userId) => {
 }; */
 
 const fetchAnswersById = (userId, questionId) => {
-  return getAnswerById(userId, questionId, { headers: authHeader() });
+  return getAnswerById(userId, questionId);
 };
 
 const saveAnswer = (userId, questionId, answer, questionIndex) => {
