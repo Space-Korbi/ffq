@@ -14,7 +14,7 @@ module.exports = function (app) {
     controller.signup
   );
 
-  app.post('/api/auth/signin', controller.signin);
+  app.post('/api/auth/login', controller.login);
 };
 /* const router = express.Router();
 
@@ -24,6 +24,6 @@ router.post(
   AuthCtrl.signup
 );
 
-router.post('/api/auth/signin', AuthCtrl.signin);
+router.post('/api/auth/login', AuthCtrl.login);
 
 module.exports = router; */

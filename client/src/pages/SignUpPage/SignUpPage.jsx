@@ -27,7 +27,7 @@ const SignUpPage = () => {
               password: Yup.string().required('Password is required')
             })}
             onSubmit={({ firstName, lastName, email, password }, { setStatus, setSubmitting }) => {
-              authService.register(firstName, lastName, email, password).then(
+              authService.registerUser(firstName, lastName, email, password).then(
                 (response) => {
                   setSubmitting(false);
                   if (response.status === 200) {

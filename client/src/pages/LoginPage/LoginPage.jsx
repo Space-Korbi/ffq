@@ -25,7 +25,7 @@ const LoginPage = () => {
             <br />
             <strong>User</strong> - Email: user@abc.de PW: user
           </div>
-          <h2>Sign in</h2>
+          <h2>Login</h2>
           <br />
           <Formik
             initialValues={{
@@ -37,7 +37,7 @@ const LoginPage = () => {
               password: Yup.string().required('Password is required')
             })}
             onSubmit={({ email, password }, { setStatus, setSubmitting }) => {
-              authService.login(email, password).then(
+              authService.loginUser(email, password).then(
                 (user) => {
                   history.push(`/users/${user.id}`);
                 },
