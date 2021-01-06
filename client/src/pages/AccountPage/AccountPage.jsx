@@ -5,9 +5,9 @@ import { useParams } from 'react-router-dom';
 // services
 import { userService } from '../../services';
 
-const AccountPage = ({ accountData }) => {
+const AccountPage = () => {
   const { userId } = useParams();
-  const [accountInfo, setAccountInfo] = useState(accountData);
+  const [accountInfo, setAccountInfo] = useState();
 
   useEffect(() => {
     let mounted = true;
