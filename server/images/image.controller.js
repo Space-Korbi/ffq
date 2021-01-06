@@ -1,4 +1,5 @@
 const multer = require('multer');
+const fs = require('fs');
 
 /**
  * * Image controller
@@ -39,7 +40,30 @@ const getImageName = (req, res) => {
   return res.status(200).json({ success: true, filename: req.file.filename, path: req.file.path });
 };
 
+const deleteImages = (imageNames) => {
+  imageNames.forEach((imageName) => {
+    fs.unlink(`uploads/${imageName}`, (err) => {
+      if (err) throw err;
+    });
+  });
+};
+
+const deleteImagesOfQuestion = (options) => {
+  if (!options || !options.length) {
+    return;
+  }
+  const imageNames = options.reduce((filtered, option) => {
+    if (option.imageName) {
+      const { imageName } = option;
+      filtered.push(imageName);
+    }
+    return filtered;
+  }, []);
+  deleteImages(imageNames);
+};
+
 module.exports = {
   upload,
-  getImageName
+  getImageName,
+  deleteImagesOfQuestion
 };

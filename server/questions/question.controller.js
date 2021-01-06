@@ -1,7 +1,7 @@
-const fs = require('fs');
 const async = require('async');
 const Question = require('./question.model');
 const Questionnaire = require('../questionnaires/questionnaire.model');
+const Images = require('../images/image.controller');
 
 /**
  * * Question controller
@@ -40,47 +40,6 @@ const createQuestion = async (req, res) => {
         message: 'Question not created!'
       });
     });
-};
-
-const deleteImages = (imageNames) => {
-  imageNames.forEach((imageName) => {
-    fs.unlink(`uploads/${imageName}`, (err) => {
-      if (err) throw err;
-    });
-  });
-};
-
-const deleteImagesOfQuestion = (options) => {
-  if (!options || !options.length) {
-    return;
-  }
-  const imageNames = options.reduce((filtered, option) => {
-    if (option.imageName) {
-      const { imageName } = option;
-      filtered.push(imageName);
-    }
-    return filtered;
-  }, []);
-  deleteImages(imageNames);
-};
-
-const deleteQuestion = async (req, res) => {
-  await Question.findById({ _id: req.params.id }, (err, question) => {
-    if (err) {
-      return res.status(400).json({ success: false, error: err });
-    }
-
-    if (!question) {
-      return res.status(404).json({ success: false, error: `Question not found` });
-    }
-
-    if (question.answerOptions.type === 'Amount') {
-      deleteImagesOfQuestion(question.answerOptions.options);
-    }
-    return res.status(200).json({ success: true, data: question });
-  }).catch((err) => console.log(err));
-
-  await Question.findByIdAndDelete({ _id: req.params.id }, (err, question) => {});
 };
 
 const getQuestions = async (req, res) => {
@@ -157,7 +116,7 @@ const updateQuestionById = async (req, res) => {
         });
         return !found;
       });
-      deleteImagesOfQuestion(removedImages);
+      Images.deleteImagesOfQuestion(removedImages);
     }
 
     const questionUpdate = question;
@@ -185,11 +144,29 @@ const updateQuestionById = async (req, res) => {
   });
 };
 
+const deleteQuestion = async (req, res) => {
+  await Question.findById({ _id: req.params.id }, (err, question) => {
+    if (err) {
+      return res.status(400).json({ success: false, error: err });
+    }
+
+    if (!question) {
+      return res.status(404).json({ success: false, error: `Question not found` });
+    }
+
+    if (question.answerOptions.type === 'Amount') {
+      Images.deleteImagesOfQuestion(question.answerOptions.options);
+    }
+    return res.status(200).json({ success: true, data: question });
+  }).catch((err) => console.log(err));
+
+  await Question.findByIdAndDelete({ _id: req.params.id }, (err, question) => {});
+};
+
 module.exports = {
   createQuestion,
   updateQuestionById,
   deleteQuestion,
-  deleteImagesOfQuestion,
   getQuestions,
   getQuestionsOfQuestionnaire
 };
