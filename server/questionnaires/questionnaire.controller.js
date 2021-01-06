@@ -13,7 +13,8 @@ const updateAction = {
   insert: 'insert',
   insertAt: 'insertAt',
   removeById: 'removeById',
-  move: 'move'
+  move: 'move',
+  changeSettings: 'changeSettings'
 };
 
 const createQuestionnaire = async (req, res) => {
@@ -93,6 +94,12 @@ const updateQuestionnaire = async (req, res) => {
           questionnaire.questions.splice(body.toIndex, 0, body.questionId);
           questionnaire.questions.splice(body.fromIndex + 1, 1);
         }
+        break;
+      }
+      case updateAction.changeSettings: {
+        questionnaireUpdate.name = body.name;
+        questionnaireUpdate.startDate = body.startDate;
+        questionnaireUpdate.endDate = body.endDate;
         break;
       }
       default:
