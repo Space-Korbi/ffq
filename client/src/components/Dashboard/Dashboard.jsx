@@ -123,27 +123,18 @@ const Dashboard = ({ isAdmin }) => {
             {isAdmin && (
               <div>
                 <ul className="navbar-nav mr-auto">
-                  <li className="nav-item dropdown">
-                    <div className="dropdown">
-                      <a
-                        className="nav-link dropdown-toggle"
-                        role="button"
-                        id="dropdownMenuButton"
-                        data-toggle="dropdown"
-                        aria-haspopup="true"
-                        aria-expanded="false"
+                  {adminLinks.map((link) => (
+                    <li className="nav-item" key={link.name}>
+                      <NavLink
+                        to={`${url}${link.to}`}
+                        className={link.className}
+                        activeClassName={link.activeClassName}
+                        key={link.name}
                       >
-                        Links
-                      </a>
-                      <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        {adminLinks.map((link) => (
-                          <Link className="dropdown-item" to={`${url}${link.to}`} key={link.name}>
-                            {link.name}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  </li>
+                        {link.name}
+                      </NavLink>
+                    </li>
+                  ))}
                 </ul>
               </div>
             )}
