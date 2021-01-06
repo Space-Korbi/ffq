@@ -97,9 +97,9 @@ const updateQuestionnaire = async (req, res) => {
         break;
       }
       case updateAction.changeSettings: {
-        questionnaireUpdate.name = body.name;
-        questionnaireUpdate.startDate = body.startDate;
-        questionnaireUpdate.endDate = body.endDate;
+        questionnaireUpdate.name = body.settings.name;
+        questionnaireUpdate.startDate = body.settings.startDate;
+        questionnaireUpdate.endDate = body.settings.endDate;
         break;
       }
       default:

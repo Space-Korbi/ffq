@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import DatePicker from 'react-date-picker';
 
 import PropTypes from 'prop-types';
 import BootstrapTable from 'react-bootstrap-table-next';
@@ -155,6 +156,9 @@ const QuestionsList = ({ questionnaireId, deleteQuestionnaire }) => {
   const [questions, setQuestions] = useState([]);
   const history = useHistory();
   const { userId } = useParams();
+  const [questionnaireName, setQuestionnnaireName] = useState('New Quesionnaire');
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
 
   function handleClickEdit(question) {
     history.push({
@@ -164,6 +168,8 @@ const QuestionsList = ({ questionnaireId, deleteQuestionnaire }) => {
   }
 
   useEffect(() => {
+    // fetch all metaData of questionnaire too
+
     const fetchQuestions = async () => {
       const fetchedQuestions = await questionnaireService.fetchAllQuestionsOfQuestionnaire(
         questionnaireId
@@ -221,23 +227,81 @@ const QuestionsList = ({ questionnaireId, deleteQuestionnaire }) => {
     }
   };
 
+  const handleChangeSettings = async () => {
+    console.log('saving');
+    const settings = { name: questionnaireName, startDate, endDate };
+    console.log(settings);
+    await questionnaireService
+      .updateQuestionnaireSettings(questionnaireId, settings)
+      .then((response) => {
+        console.log(response);
+      });
+  };
+
   return (
     <div>
       {questionnaireId ? (
         <>
           <div className="card" style={{ minWidth: '23rem' }}>
             <div className="card-header">
-              {questionnaireId}
-              <div className="d-flex justify-content-between">
-                <OutlineButton
-                  title="Add Question"
-                  onClick={() => {
-                    handleCreateQuestionAt();
-                  }}
-                />
-
-                <DeleteButton isTrashCan onClick={() => deleteQuestionnaire(questionnaireId)} />
+              <div className="row d-flex justify-content-between mb-2">
+                <div className="col">
+                  <div className="input-group input-group">
+                    <div className="input-group-prepend">
+                      <span className="input-group-text" id="inputGroup-sizing">
+                        Name
+                      </span>
+                    </div>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={questionnaireName}
+                      onChange={(e) => setQuestionnnaireName(e.target.value)}
+                      aria-describedby="inputGroup-sizing"
+                    />
+                  </div>
+                </div>
+                <div className="col">
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary"
+                    onClick={() => {
+                      handleCreateQuestionAt();
+                    }}
+                  >
+                    Add Question
+                  </button>
+                </div>
+                <div className="col-1">
+                  <DeleteButton isTrashCan onClick={() => deleteQuestionnaire(questionnaireId)} />
+                </div>
               </div>
+              <div className="row justify-content-between">
+                <div className="col d-inline-flex">
+                  <div className="mr-3">
+                    <label className="form-check-label" htmlFor="inlineFormCheck">
+                      Start Date
+                    </label>
+                    <DatePicker onChange={setStartDate} value={startDate} />
+                  </div>
+                  <div>
+                    <label className="form-check-label" htmlFor="inlineFormCheck">
+                      End Date
+                    </label>
+                    <DatePicker onChange={setEndDate} value={endDate} />
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  className="btn btn-outline-primary"
+                  onClick={() => {
+                    handleChangeSettings();
+                  }}
+                >
+                  Save Settings
+                </button>
+              </div>
+              <form className="form-inline mt-2" />
             </div>
             <ul className="list-group">
               {questions && questions.length ? (
