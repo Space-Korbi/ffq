@@ -197,11 +197,7 @@ const Dashboard = ({ isAdmin }) => {
                     <QuestionnairePresenterPage questionnaireId="BcbBv_SPeUJjCWx6KTGYG" />
                   )}
                 />
-
-                <Route
-                  path={`${path}/account`}
-                  component={() => <AccountPage accountData={metaData} />}
-                />
+                <Route path={`${path}/account`} component={() => <AccountPage />} />
                 <Route
                   path={`${path}/`}
                   component={() => (
