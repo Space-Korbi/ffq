@@ -21,8 +21,7 @@ exports.signup = (req, res) => {
 
   user.save((err, user) => {
     if (err) {
-      res.status(500).send({ message: err });
-      return;
+      return res.status(500).json({ err, message: 'User was not saved' });
     }
 
     if (req.body.roles) {
@@ -32,36 +31,32 @@ exports.signup = (req, res) => {
         },
         (err, roles) => {
           if (err) {
-            res.status(500).send({ message: err });
-            return;
+            return res.status(500).json({ err, message: 'Role not found' });
           }
 
           user.roles = roles.map((role) => role._id);
           user.save((err) => {
             if (err) {
-              res.status(500).send({ message: err });
-              return;
+              return res.status(500).json({ err, message: 'User was not saved' });
             }
 
-            res.send({ message: 'User was registered successfully!' });
+            return res.status(201).json({ success: true, message: 'User registered successfully' });
           });
         }
       );
     } else {
       Role.findOne({ name: 'user' }, (err, role) => {
         if (err) {
-          res.status(500).send({ message: err });
-          return;
+          return res.status(404).json({ err, message: 'Role not found' });
         }
 
         user.roles = [role._id];
         user.save((err) => {
           if (err) {
-            res.status(500).send({ message: err });
-            return;
+            return res.status(500).json({ err, message: 'User was not saved' });
           }
 
-          res.send({ message: 'User was registered successfully!' });
+          return res.json({ success: true, message: 'User was registered successfully!' });
         });
       });
     }
@@ -77,20 +72,23 @@ exports.signin = (req, res) => {
     .populate('roles', '-__v')
     .exec((err, user) => {
       if (err) {
-        res.status(500).send({ message: err });
-        return;
+        return res.status(500).json({
+          err,
+          message: 'Something went wrong'
+        });
       }
 
       if (!user) {
-        return res.status(404).send({ message: 'User Not found.' });
+        return res.status(404).json({ message: 'User not found' });
       }
 
       const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
 
       if (!passwordIsValid) {
-        return res.status(401).send({
+        return res.status(401).json({
           accessToken: null,
-          message: 'Invalid Password!'
+          success: false,
+          message: 'Invalid Username or Password '
         });
       }
 
@@ -103,12 +101,13 @@ exports.signin = (req, res) => {
       for (let i = 0; i < user.roles.length; i += 1) {
         authorities.push(`ROLE_${user.roles[i].name.toUpperCase()}`);
       }
-      res.status(200).send({
+      return res.status(200).json({
         id: user._id,
         name: user.name,
         email: user.email,
         roles: authorities,
-        accessToken: token
+        accessToken: token,
+        success: true
       });
     });
 };

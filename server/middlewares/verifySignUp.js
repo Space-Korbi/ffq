@@ -8,13 +8,11 @@ const checkDuplicateEmail = (req, res, next) => {
     email: req.body.email
   }).exec((err, user) => {
     if (err) {
-      res.status(500).send({ message: err });
-      return;
+      return res.status(500).json({ err, message: 'User not found' });
     }
 
     if (user) {
-      res.status(400).send({ message: 'Failed! Email is already in use!' });
-      return;
+      return res.status(400).json({ success: false, message: 'This email is already in use' });
     }
 
     next();
@@ -25,10 +23,10 @@ const checkRolesExisted = (req, res, next) => {
   if (req.body.roles) {
     for (let i = 0; i < req.body.roles.length; i += 1) {
       if (!ROLES.includes(req.body.roles[i])) {
-        res.status(400).send({
-          message: `Failed! Role ${req.body.roles[i]} does not exist!`
+        return res.status(400).json({
+          success: false,
+          message: `Role ${req.body.roles[i]} does not exist!`
         });
-        return;
       }
     }
   }
