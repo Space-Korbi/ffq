@@ -16,7 +16,7 @@ const LoginPage = () => {
 
   return (
     <div className="d-flex h-100 align-self-stretch justify-content-center bg-light">
-      <div className="d-flex col-sm-8 col-md-6 col-lg-4 mt-5">
+      <div className="d-flex col-sm-8 col-md-6 col-lg-5 mt-5">
         <div className="col">
           <div className="alert alert-info">
             Test Accounts
