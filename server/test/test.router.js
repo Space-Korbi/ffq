@@ -3,7 +3,7 @@ const TestCtrl = require('./test.controller');
 
 const router = express.Router();
 
-router.post('/tests/:testId', TestCtrl.createTest);
+router.post('/tests', TestCtrl.createTest);
 router.get('/tests', TestCtrl.getTests);
 router.get('/test/:testId', TestCtrl.getTestById);
 router.put('/test/:testId', TestCtrl.updateTestById);
