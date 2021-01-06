@@ -19,9 +19,9 @@ const Questionnaire = new Schema(
       default: nanoid.nanoid(),
       required: true
     },
-    name: { type: String },
-    startDate: { type: Date },
-    endDate: { type: Date },
+    name: { type: String, default: '' },
+    startDate: { type: Date, default: Date.UTC(2020, 1, 1, 0, 0, 0, 0) },
+    endDate: { type: Date, default: Date.UTC(2020, 1, 2, 0, 0, 0, 0) },
     questions: { type: [String] }
   },
   { timestamps: true }

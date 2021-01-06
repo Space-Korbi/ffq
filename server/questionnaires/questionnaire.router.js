@@ -1,6 +1,7 @@
 const express = require('express');
 
 const QuestionnaireCtrl = require('./questionnaire.controller');
+const { authJwt } = require('../middlewares');
 
 /**
  * * Router
@@ -9,9 +10,21 @@ const QuestionnaireCtrl = require('./questionnaire.controller');
  */
 const router = express.Router();
 
-router.post('/questionnaires', QuestionnaireCtrl.createQuestionnaire);
-router.put('/questionnaires/:id', QuestionnaireCtrl.updateQuestionnaire);
-router.delete('/questionnaires/:id', QuestionnaireCtrl.deleteQuestionnaire);
+router.post(
+  '/questionnaires',
+  [authJwt.verifyToken, authJwt.isAdmin],
+  QuestionnaireCtrl.createQuestionnaire
+);
+router.put(
+  '/questionnaires/:id',
+  [authJwt.verifyToken, authJwt.isAdmin],
+  QuestionnaireCtrl.updateQuestionnaire
+);
+router.delete(
+  '/questionnaires/:id',
+  [authJwt.verifyToken, authJwt.isAdmin],
+  QuestionnaireCtrl.deleteQuestionnaire
+);
 router.get('/questionnaires/:id', QuestionnaireCtrl.getQuestionnaireById);
 router.get('/questionnaires', QuestionnaireCtrl.getQuestionnaires);
 

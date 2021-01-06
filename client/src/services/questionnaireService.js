@@ -14,7 +14,8 @@ const updateAction = {
   insert: 'insert',
   insertAt: 'insertAt',
   removeById: 'removeById',
-  move: 'move'
+  move: 'move',
+  changeSettings: 'changeSettings'
 };
 
 const createQuestionnaire = async () => {
@@ -31,6 +32,15 @@ const createQuestionnaire = async () => {
 const fetchAllQuestionnaires = async () => {
   const questionnaires = await getAllQuestionnaires();
   return questionnaires.data.data;
+};
+
+const fetchAllQuestionsOfQuestionnaire = async (questionnaireId) => {
+  if (!questionnaireId) {
+    return [];
+  }
+
+  const questions = await getAllQuestionsOfQuestionnaire(questionnaireId);
+  return questions.data.data;
 };
 
 const createQuestionAt = async (questionnaireId, index) => {
@@ -87,13 +97,15 @@ const moveQuestionFromTo = async (questionnaireId, questionId, fromIndex, toInde
   });
 };
 
-const fetchAllQuestionsOfQuestionnaire = async (questionnaireId) => {
-  if (!questionnaireId) {
-    return [];
-  }
-
-  const questions = await getAllQuestionsOfQuestionnaire(questionnaireId);
-  return questions.data.data;
+const updateQuestionnaireSettings = (questionnaireId, settings) => {
+  console.log('----', settings);
+  const questionnairePayload = {
+    action: updateAction.changeSettings,
+    settings
+  };
+  return updateQuestionnaire(questionnaireId, questionnairePayload).then((res) => {
+    return res.data;
+  });
 };
 
 const deleteQuestionnaire = async (id) => {
@@ -102,12 +114,13 @@ const deleteQuestionnaire = async (id) => {
 };
 const questionnaireService = {
   createQuestionnaire,
-  createQuestionAt,
   fetchAllQuestionnaires,
   fetchAllQuestionsOfQuestionnaire,
+  createQuestionAt,
+  moveQuestionFromTo,
+  updateQuestionnaireSettings,
   removeQuestionById,
-  deleteQuestionnaire,
-  moveQuestionFromTo
+  deleteQuestionnaire
 };
 
 export default questionnaireService;

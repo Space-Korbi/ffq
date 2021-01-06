@@ -4,11 +4,13 @@ const { authJwt } = require('../middlewares');
 
 const router = express.Router();
 
-// router.put('/account/:userId', [authJwt.verifyToken], UserCtrl.updateUserById);
-router.put('/users/:userId', UserCtrl.updateUserById);
 router.get('/users', [authJwt.verifyToken, authJwt.isAdmin], UserCtrl.getUsers);
-router.get('/users/:userId', [authJwt.verifyToken], UserCtrl.getUserById);
-
-router.get('/users/:userId/questions/:questionId', [authJwt.verifyToken], UserCtrl.getAnswerById);
+router.get('/users/:userId', [authJwt.verifyToken, authJwt.authoriseUser], UserCtrl.getUserById);
+router.get(
+  '/users/:userId/questions/:questionId',
+  [authJwt.verifyToken, authJwt.authoriseUser],
+  UserCtrl.getAnswerById
+);
+router.put('/users/:userId', [authJwt.verifyToken, authJwt.authoriseUser], UserCtrl.updateUserById);
 
 module.exports = router;

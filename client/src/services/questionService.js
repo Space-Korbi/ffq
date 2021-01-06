@@ -1,5 +1,4 @@
 /* eslint-disable no-alert */
-/* eslint-disable no-underscore-dangle */
 import { nanoid } from 'nanoid';
 import {
   insertQuestionAt,

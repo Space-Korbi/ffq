@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 const async = require('async');
 const Questionnaire = require('./questionnaire.model');
 const Question = require('../questions/question.model');
@@ -14,7 +13,8 @@ const updateAction = {
   insert: 'insert',
   insertAt: 'insertAt',
   removeById: 'removeById',
-  move: 'move'
+  move: 'move',
+  changeSettings: 'changeSettings'
 };
 
 const createQuestionnaire = async (req, res) => {
@@ -94,6 +94,12 @@ const updateQuestionnaire = async (req, res) => {
           questionnaire.questions.splice(body.toIndex, 0, body.questionId);
           questionnaire.questions.splice(body.fromIndex + 1, 1);
         }
+        break;
+      }
+      case updateAction.changeSettings: {
+        questionnaireUpdate.name = body.settings.name;
+        questionnaireUpdate.startDate = body.settings.startDate;
+        questionnaireUpdate.endDate = body.settings.endDate;
         break;
       }
       default:

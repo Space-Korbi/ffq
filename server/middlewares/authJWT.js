@@ -15,9 +15,17 @@ const verifyToken = (req, res, next) => {
     if (err) {
       return res.status(401).send({ message: 'Unauthorized!' });
     }
+
     req.userId = decoded.id;
     next();
   });
+};
+
+const authoriseUser = (req, res, next) => {
+  if (req.userId !== req.params.userId) {
+    return res.status(401).send({ message: 'Unauthorized!' });
+  }
+  next();
 };
 
 const isAdmin = (req, res, next) => {
@@ -37,7 +45,7 @@ const isAdmin = (req, res, next) => {
           return;
         }
 
-        for (let i = 0; i < roles.length; i += i) {
+        for (let i = 0; i < roles.length; i += 1) {
           if (roles[i].name === 'admin') {
             next();
             return;
@@ -52,6 +60,7 @@ const isAdmin = (req, res, next) => {
 
 const authJwt = {
   verifyToken,
+  authoriseUser,
   isAdmin
 };
 module.exports = authJwt;
