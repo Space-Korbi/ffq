@@ -1,4 +1,9 @@
-function errorHandler(err, req, res, next) {
+const logErrors = (err, req, res, next) => {
+  console.error(err.stack);
+  next(err);
+};
+
+const errorHandler = (err, req, res, next) => {
   if (typeof err === 'string') {
     // custom application error
     return res.status(400).json({ message: err });
@@ -16,6 +21,6 @@ function errorHandler(err, req, res, next) {
 
   // default to 500 server error
   return res.status(500).json({ message: err.message });
-}
+};
 
-module.exports = errorHandler;
+module.exports = { logErrors, errorHandler };
