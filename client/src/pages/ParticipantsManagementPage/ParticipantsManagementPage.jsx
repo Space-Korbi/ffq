@@ -195,24 +195,26 @@ const ParticipantsManagementPage = () => {
 
   const tabNames = ['Participants', 'Selection Criteria', 'Selection Rules'];
   const tabContents = [
-    <div className="row no-gutters overflow-auto flex-row flex-nowrap">
-      <div className="col">
-        <ToolkitProvider keyField="email" data={data} columns={columns} exportCSV>
-          {(props) => (
-            <div>
-              <ExportCSVButton {...props.csvProps}>Export CSV</ExportCSVButton>
-              <br />
-              <BootstrapTable
-                {...props.baseProps}
-                bordered={false}
-                striped
-                hover
-                noDataIndication="No participants data"
-              />
+    <div>
+      <ToolkitProvider keyField="email" data={data} columns={columns} exportCSV>
+        {(props) => (
+          <div>
+            <ExportCSVButton {...props.csvProps}>Export CSV</ExportCSVButton>
+            <br />
+            <div className="row no-gutters overflow-auto flex-row flex-nowrap">
+              <div className="col">
+                <BootstrapTable
+                  {...props.baseProps}
+                  bordered={false}
+                  striped
+                  hover
+                  noDataIndication="No participants data"
+                />
+              </div>
             </div>
-          )}
-        </ToolkitProvider>
-      </div>
+          </div>
+        )}
+      </ToolkitProvider>
     </div>,
     <CriteriaEditor
       selectionCriteria={selectionCriteria}

@@ -16,9 +16,9 @@ function AnswerCard({ title, imageURL, imageName, isSelectedAnswer, onClick }) {
     }
   }, [imageURL]);
 
-  let cardStyle = 'card my-5 align-items-center d-flex justify-content-center';
+  let cardStyle = 'card my-3 align-items-center d-flex justify-content-center';
   if (isSelectedAnswer) {
-    cardStyle = 'card my-5 align-items-center border-success d-flex justify-content-center';
+    cardStyle = 'card my-3 align-items-center border-success d-flex justify-content-center';
   }
 
   return (

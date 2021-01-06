@@ -1,5 +1,5 @@
 import { BehaviorSubject } from 'rxjs';
-import { signin, signup } from '../api';
+import { login, signup } from '../api';
 
 const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('user')));
 
@@ -24,9 +24,9 @@ function handleResponse(response) {
   return response.data;
 }
 
-const login = (email, password) => {
+const loginUser = (email, password) => {
   const payload = { email, password };
-  return signin(payload)
+  return login(payload)
     .then(handleResponse)
     .then((user) => {
       if (user.accessToken) {
@@ -37,15 +37,15 @@ const login = (email, password) => {
     });
 };
 
-const register = (firstName, lastName, email, password) => {
+const registerUser = (firstName, lastName, email, password) => {
   const payload = { firstName, lastName, email, password };
   return signup(payload);
 };
 
 const authService = {
-  login,
+  loginUser,
   logout,
-  register,
+  registerUser,
   currentUser: currentUserSubject.asObservable(),
   get currentUserValue() {
     return currentUserSubject.value;

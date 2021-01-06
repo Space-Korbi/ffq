@@ -63,7 +63,7 @@ exports.signup = (req, res) => {
   });
 };
 
-exports.signin = (req, res) => {
+exports.login = (req, res) => {
   console.log('+++++++', req.body);
 
   User.findOne({

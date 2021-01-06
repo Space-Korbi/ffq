@@ -23,19 +23,19 @@ const AnswerCardsDeck = ({ answerOptions, submittedAnswer, onClick }) => {
       return false;
     };
 
-    let className = 'px-2 mt-5 align-self-center';
+    let className = 'px-2 align-self-center';
 
     switch (index) {
       case 0:
-        className = 'pl-5 pr-2 mt-5 align-self-center';
+        className = 'pl-5 pr-2 align-self-center';
         break;
 
       case answerOptions.length - 1:
-        className = 'pl-2 pr-5 mt-5 align-self-center';
+        className = 'pl-2 pr-5 align-self-center';
         break;
 
       default:
-        className = 'px-2 mt-5 align-self-center';
+        className = 'px-2 align-self-center';
     }
 
     return (

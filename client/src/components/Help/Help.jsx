@@ -11,7 +11,7 @@ const Help = ({ infoText }) => {
   }, []);
 
   return (
-    <div className="text-info mx-4">
+    <div className="text-info mx-4 my-1">
       <a
         className="btn text-info p-0"
         tabIndex="0"

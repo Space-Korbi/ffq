@@ -12,7 +12,7 @@ const api = axios.create({
 
 // auth
 export const signup = (payload) => api.post(`/auth/signup`, payload);
-export const signin = (payload) => api.post(`/auth/signin`, payload);
+export const login = (payload) => api.post(`/auth/login`, payload);
 
 // user
 export const updateAnswerById = (userId, payload) => api.put(`users/${userId}`, payload);
@@ -55,7 +55,7 @@ export const deleteImageById = (id) => api.delete(`/image/${id}`);
 
 const apis = {
   signup,
-  signin,
+  login,
   insertQuestionnaire,
   insertQuestionAt,
   getUsersMetadata,
