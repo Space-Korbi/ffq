@@ -1,8 +1,8 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
+import { number } from 'prop-types';
 import { useRouteMatch, Link } from 'react-router-dom';
 
-const HomePage = ({ stoppedAtIndex }) => {
+const ParticipantPage = ({ stoppedAtIndex }) => {
   const { url } = useRouteMatch();
 
   let header = 'Willkommen!';
@@ -30,4 +30,8 @@ const HomePage = ({ stoppedAtIndex }) => {
   );
 };
 
-export default HomePage;
+ParticipantPage.propTypes = {
+  stoppedAtIndex: number.isRequired
+};
+
+export default ParticipantPage;

@@ -1,5 +1,5 @@
-import { bool, number } from 'prop-types';
 import React from 'react';
+import { bool, number } from 'prop-types';
 
 // subpages
 import AdminPage from './AdminPage';
@@ -15,7 +15,11 @@ const HomePage = ({ isAdmin, stoppedAtIndex }) => {
 
 HomePage.propTypes = {
   isAdmin: bool.isRequired,
-  stoppedAtIndex: number.isRequired
+  stoppedAtIndex: number
+};
+
+HomePage.defaultProps = {
+  stoppedAtIndex: -1
 };
 
 export default HomePage;
