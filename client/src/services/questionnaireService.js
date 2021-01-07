@@ -97,7 +97,6 @@ const moveQuestionFromTo = async (questionnaireId, questionId, fromIndex, toInde
 };
 
 const updateQuestionnaireSettings = (questionnaireId, settings) => {
-  console.log('----', settings);
   const questionnairePayload = {
     action: updateAction.changeSettings,
     settings

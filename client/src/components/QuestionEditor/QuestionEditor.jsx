@@ -15,7 +15,6 @@ import { questionService } from '../../services';
 import AnswerEditor from '../AnswerEditor/AnswerEditor';
 
 const QuestionEditor = ({ question, onExit }) => {
-  console.log(question);
   const [title, setTitle] = useState(question.title);
   const [subtitle1, setSubtitle1] = useState(question.subtitle1);
   const [subtitle2, setSubtitle2] = useState(question.subtitle2);
@@ -58,13 +57,17 @@ const QuestionEditor = ({ question, onExit }) => {
                 questionService
                   .saveQuestion(question._id, { title, subtitle1, subtitle2, help }, answerOptions)
                   .then((res) => {
-                    onExit();
+                    onExit(res.data.question);
                   })
               }
             >
               Save and Exit
             </button>
-            <button type="button" className="btn btn-outline-primary" onClick={() => onExit()}>
+            <button
+              type="button"
+              className="btn btn-outline-primary"
+              onClick={() => onExit(question)}
+            >
               Exit without Save
             </button>
           </div>

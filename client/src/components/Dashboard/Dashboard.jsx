@@ -40,19 +40,19 @@ const Dashboard = ({ isAdmin }) => {
    */
   const adminLinks = [
     {
-      name: 'Questionnaire Editor',
+      name: 'Editor',
       to: '/questionnaireEditor',
       className: 'nav-link',
       activeClassName: 'nav-link active'
     },
     {
-      name: 'Questionnaire Presentation',
+      name: 'Preview',
       to: '/questionnairePresenter',
       className: 'nav-link',
       activeClassName: 'nav-link active'
     },
     {
-      name: 'Participants Manager',
+      name: 'User Manager',
       to: '/participantsManager',
       className: 'nav-link',
       activeClassName: 'nav-link active'
@@ -187,7 +187,7 @@ const Dashboard = ({ isAdmin }) => {
                   component={() => (
                     <QuestionnairePresenterPage
                       isAdmin={isAdmin}
-                      questionnaireId="yjSPwQZfvtSXP-N4njTQM"
+                      questionnaireId="kAOW7MPbGnNtqwQQvg3MY"
                     />
                   )}
                 />

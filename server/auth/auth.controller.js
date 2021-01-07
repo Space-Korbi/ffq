@@ -63,8 +63,6 @@ exports.signup = (req, res) => {
 };
 
 exports.login = (req, res) => {
-  console.log('+++++++', req.body);
-
   User.findOne({
     email: req.body.email
   })
