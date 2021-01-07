@@ -24,7 +24,6 @@ const createQuestionnaire = async () => {
   };
 
   return insertQuestionnaire(payload).then((res) => {
-    window.alert(`Questionnaire created successfully`);
     return res.data;
   });
 };
