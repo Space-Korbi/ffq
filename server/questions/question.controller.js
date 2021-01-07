@@ -55,7 +55,15 @@ const getQuestions = async (req, res) => {
 };
 
 const getQuestionsOfQuestionnaire = async (req, res) => {
-  await Questionnaire.findById(req.params.questionnaireId).then((questionnaire) => {
+  await Questionnaire.findById(req.params.questionnaireId, (err, questionnaire) => {
+    if (err) {
+      return res.status(404).json({ success: false, error: err });
+    }
+
+    if (!questionnaire || !questionnaire.questions) {
+      return res.status(404).json({ success: false, error: `No questions found` });
+    }
+
     const findQuestionCalls = [];
 
     questionnaire.questions.forEach((questionId) => {
@@ -132,6 +140,7 @@ const updateQuestionById = async (req, res) => {
       .then(() => {
         return res.status(200).json({
           success: true,
+          question: questionUpdate,
           message: 'Question updated!'
         });
       })

@@ -15,7 +15,7 @@ exports.signup = (req, res) => {
     answers: req.body.answers,
     hasAcceptedConsentForm: req.body.hasAcceptedConsentForm,
     screeningStatus: req.body.screeningStatus,
-    stoppedAtIndex: req.body.screeningStatus
+    stoppedAtIndex: req.body.stoppedAtIndex
   });
 
   user.save((err, user) => {
@@ -63,8 +63,6 @@ exports.signup = (req, res) => {
 };
 
 exports.login = (req, res) => {
-  console.log('+++++++', req.body);
-
   User.findOne({
     email: req.body.email
   })

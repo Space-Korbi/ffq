@@ -1,8 +1,10 @@
+const { update } = require('lodash');
 const User = require('./user.model');
 
 const updateAction = {
   updateAnswer: 'updateAnswer',
-  updateData: 'updateData'
+  updateData: 'updateData',
+  resetAnswers: 'resetAnswers'
 };
 
 const getUsers = async (req, res) => {
@@ -114,11 +116,17 @@ const updateUserById = async (req, res) => {
         }
         break;
       }
+      case updateAction.resetAnswers: {
+        userUpdate.answers = [];
+        userUpdate.stoppedAtIndex = 0;
+        break;
+      }
+
       default:
         break;
     }
 
-    console.log('------ updated answer', userUpdate.answers);
+    console.log('------ updated answer', userUpdate);
 
     userUpdate
       .save()

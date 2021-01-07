@@ -9,7 +9,8 @@ import {
 
 const updateAction = {
   updateAnswer: 'updateAnswer',
-  updateData: 'updateData'
+  updateData: 'updateData',
+  resetAnswers: 'resetAnswers'
 };
 
 const fetchAllUsers = () => {
@@ -37,13 +38,19 @@ const saveAnswer = (userId, questionId, answer, questionIndex) => {
   return updateAnswerById(userId, payload);
 };
 
+const resetAnswers = (userId) => {
+  const payload = { action: updateAction.resetAnswers };
+  return updateAnswerById(userId, payload);
+};
+
 const userService = {
   fetchAllUsers,
   fetchUserById,
   getMetaData,
   // getAccountData,
   fetchAnswersById,
-  saveAnswer
+  saveAnswer,
+  resetAnswers
 };
 
 export default userService;

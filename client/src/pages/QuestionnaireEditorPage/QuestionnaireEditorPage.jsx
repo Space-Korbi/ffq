@@ -1,11 +1,12 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import DatePicker from 'react-date-picker';
 
 import PropTypes from 'prop-types';
 import BootstrapTable from 'react-bootstrap-table-next';
+import QuestionEditor from '../../components/QuestionEditor';
 
 import {
   DeleteButton,
@@ -18,170 +19,62 @@ import RemovableListItem from '../../components/List';
 
 import { questionService, questionnaireService } from '../../services';
 
-const QuestionTable = ({ onSelectQuestion }) => {
+const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
   const [questions, setQuestions] = useState([]);
   const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedQuestion, setSelectedQuestion] = useState();
+
+  const [questionnaireName, setQuestionnnaireName] = useState(questionnaire.name);
+  const [startDate, setStartDate] = useState(new Date(questionnaire.startDate));
+  const [endDate, setEndDate] = useState(new Date(questionnaire.endDate));
+
+  const questionsRef = useRef(questions);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const result = await questionService.fetchAllQuestions();
-      setQuestions(result);
+    setIsLoading(true);
+    const fetchQuestions = async () => {
+      const fetchedQuestions = await questionnaireService.fetchAllQuestionsOfQuestionnaire(
+        questionnaire._id
+      );
+      setQuestions(fetchedQuestions);
     };
-    fetchData();
+    fetchQuestions();
+    setIsLoading(false);
   }, []);
+
+  useEffect(() => {
+    if (selectedQuestion) {
+      setIsEditing(true);
+    } else {
+      setIsEditing(false);
+    }
+  }, [selectedQuestion]);
 
   const prepareRows = (questionData) => {
     const rows = questionData.map((question, index) => {
       return {
-        _id: question._id,
-        createdAt: question.createdAt,
-        title: question.title,
-        subtitle1: question.subtitle1,
-        subtitle2: question.subtitle2,
-        help: question.help
-        // answerType: question.answerOptions.type
+        question,
+        index
       };
     });
     return rows;
   };
 
   useEffect(() => {
+    questionsRef.current = questions;
+    if (isEditing) {
+      return;
+    }
     const rowData = prepareRows(questions);
     setData(rowData);
-  }, [questions]);
-
-  const deleteQuestion = async (_id) => {
-    const response = await questionService.deleteQuestion(_id);
-
-    const responseId = await response.data.data._id;
-    setQuestions((state) => {
-      const filteredQuestions = state.filter((question) => question._id !== responseId);
-      return filteredQuestions;
-    });
-  };
-
-  const deleteButton = (cell, row) => {
-    return (
-      <div className="d-flex justify-content-center">
-        <DeleteButton isTrashCan onClick={() => deleteQuestion(row._id)} />
-      </div>
-    );
-  };
-
-  const editButton = (cell, row) => {
-    return (
-      <div>
-        {/* eslint-disable-next-line no-console */}
-        <OutlineButton title="Edit" onClick={() => console.log('editing')} />
-      </div>
-    );
-  };
-
-  const checkBox = (cell, row) => {
-    return (
-      <div>
-        <input
-          type="checkbox"
-          aria-label="Checkbox for following text input"
-          onChange={(e) => onSelectQuestion(e, row._id)}
-        />
-      </div>
-    );
-  };
-
-  const columns = [
-    {
-      text: 'ID',
-      dataField: '_id' // dataField is the "key" in the data
-    },
-    {
-      text: 'Created At',
-      dataField: 'createdAt' // dataField is the "key" in the data
-    },
-    {
-      text: 'Title',
-      dataField: 'title'
-    },
-    {
-      text: 'Subtitle1',
-      dataField: 'subtitle1'
-    },
-    {
-      text: 'Subtitle2',
-      dataField: 'subtitle2'
-    },
-    {
-      text: 'Help',
-      dataField: 'help'
-    },
-    {
-      text: 'Type',
-      dataField: 'answerType'
-    },
-    {
-      text: 'Answer Options',
-      dataField: 'answerOptions'
-    },
-    {
-      dataField: 'done',
-      text: 'Include in Questionnaire',
-      formatter: checkBox
-    },
-    {
-      dataField: 'edit',
-      text: 'Edit',
-      editable: false,
-      align: 'center',
-      formatter: editButton
-    },
-    {
-      dataField: 'delete',
-      text: 'Delete',
-      editable: false,
-      align: 'center',
-      formatter: deleteButton
-    }
-  ];
-
-  return (
-    <div>
-      <div className="row no-gutters overflow-auto flex-row flex-nowrap my-3">
-        <BootstrapTable keyField="_id" data={data} columns={columns} />
-      </div>
-    </div>
-  );
-};
-
-const QuestionsList = ({ questionnaireId, deleteQuestionnaire }) => {
-  const [questions, setQuestions] = useState([]);
-  const history = useHistory();
-  const { userId } = useParams();
-  const [questionnaireName, setQuestionnnaireName] = useState('New Quesionnaire');
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
-
-  function handleClickEdit(question) {
-    history.push({
-      pathname: `/users/${userId}/QuestionEditor`,
-      state: { question, questionnaireId }
-    });
-  }
-
-  useEffect(() => {
-    // fetch all metaData of questionnaire too
-
-    const fetchQuestions = async () => {
-      const fetchedQuestions = await questionnaireService.fetchAllQuestionsOfQuestionnaire(
-        questionnaireId
-      );
-      setQuestions(fetchedQuestions);
-    };
-    fetchQuestions();
-  }, []);
+  }, [questions, isEditing]);
 
   const handleCreateQuestionAt = async (index) => {
-    await questionnaireService.createQuestionAt(questionnaireId, index).then((response) => {
-      const questionsCopy = [...questions];
+    await questionnaireService.createQuestionAt(questionnaire._id, index).then((response) => {
+      const questionsCopy = [...questionsRef.current];
       if (index >= 0) {
         questionsCopy.splice(index, 0, response.question);
       } else {
@@ -191,29 +84,13 @@ const QuestionsList = ({ questionnaireId, deleteQuestionnaire }) => {
     });
   };
 
-  const handleRemoveQuestion = async (question) => {
-    await questionnaireService
-      .removeQuestionById(questionnaireId, question._id)
-      .then((response) => {
-        if (response.success) {
-          const questionsCopy = [...questions];
-          const index = questionsCopy.indexOf(question);
-          if (index > -1) {
-            questionsCopy.splice(index, 1);
-          }
-          setQuestions(questionsCopy);
-        }
-      });
-  };
-
   const handleMoveQuestionFromTo = async (question, fromIndex, toIndex) => {
-    if (toIndex >= 0 && toIndex < questions.length) {
+    if (toIndex >= 0 && toIndex < questionsRef.current.length) {
       await questionnaireService
-        .moveQuestionFromTo(questionnaireId, question._id, fromIndex, toIndex)
+        .moveQuestionFromTo(questionnaire._id, question, fromIndex, toIndex)
         .then((response) => {
           if (response.success) {
-            const questionsCopy = [...questions];
-
+            const questionsCopy = [...questionsRef.current];
             if (toIndex > fromIndex) {
               questionsCopy.splice(fromIndex, 1);
               questionsCopy.splice(toIndex, 0, question);
@@ -227,41 +104,177 @@ const QuestionsList = ({ questionnaireId, deleteQuestionnaire }) => {
     }
   };
 
-  const handleChangeSettings = async () => {
-    console.log('saving');
-    const settings = { name: questionnaireName, startDate, endDate };
-    console.log(settings);
+  const handleRemoveQuestion = async (question, index) => {
     await questionnaireService
-      .updateQuestionnaireSettings(questionnaireId, settings)
+      .removeQuestionById(questionnaire._id, question._id)
       .then((response) => {
-        console.log(response);
+        if (response.success) {
+          const questionsCopy = [...questionsRef.current];
+          if (index > -1) {
+            questionsCopy.splice(index, 1);
+          }
+          setQuestions(questionsCopy);
+        }
       });
+  };
+
+  const handleChangeSettings = async () => {
+    const settings = { name: questionnaireName, startDate, endDate };
+    await questionnaireService
+      .updateQuestionnaireSettings(questionnaire._id, settings)
+      .then((response) => {
+        setQuestionnnaireName(response.name);
+        setStartDate(new Date(response.startDate));
+        setEndDate(new Date(response.endDate));
+      });
+  };
+
+  const deleteButton = (cell, row) => {
+    return (
+      <div className="d-flex justify-content-center">
+        <DeleteButton
+          isTrashCan
+          isDeleting={isDeleting}
+          onClick={() => handleRemoveQuestion(row.question, row.index)}
+        />
+      </div>
+    );
+  };
+
+  const moveButtons = (cell, row) => {
+    const { index } = row;
+    return (
+      <div className="d-flex">
+        <MoveButton up onClick={() => handleMoveQuestionFromTo(row.question, index, index - 1)} />
+
+        <MoveButton onClick={() => handleMoveQuestionFromTo(row.question, index, index + 1)} />
+      </div>
+    );
+  };
+
+  const editButton = (cell, row) => {
+    return (
+      <div>
+        <EditButton
+          onClick={() => setSelectedQuestion({ question: row.question, index: row.index })}
+        />
+      </div>
+    );
+  };
+
+  const columns = [
+    {
+      text: '',
+      dataField: 'index',
+      align: 'center',
+      style: { width: '8px' }
+    },
+    {
+      dataField: 'edit',
+      text: 'Edit',
+      editable: false,
+      align: 'center',
+      formatter: editButton,
+      style: { width: '45px' }
+    },
+    {
+      text: 'Title',
+      dataField: 'question.title'
+    },
+    {
+      text: 'Subtitle1',
+      dataField: 'question.subtitle1'
+    },
+    {
+      text: 'Subtitle2',
+      dataField: 'question.subtitle2'
+    },
+    {
+      text: 'Help',
+      dataField: 'question.help'
+    },
+    {
+      dataField: 'move',
+      text: '',
+      editable: false,
+      align: 'center',
+      style: { width: '12px' },
+      formatter: moveButtons
+    },
+    {
+      dataField: 'delete',
+      text: '',
+      editable: false,
+      align: 'center',
+      style: { width: '12px' },
+      formatter: deleteButton
+    }
+  ];
+
+  const updateQuestions = (editedQuestion) => {
+    const questionsCopy = questionsRef.current;
+    questionsCopy.splice(selectedQuestion.index, 1, editedQuestion);
+    setQuestions(questionsCopy);
+    setIsEditing(false);
   };
 
   return (
     <div>
-      {questionnaireId ? (
+      {isEditing ? (
+        <QuestionEditor question={selectedQuestion.question} onExit={updateQuestions} />
+      ) : (
         <>
-          <div className="card" style={{ minWidth: '23rem' }}>
-            <div className="card-header">
-              <div className="row d-flex justify-content-between mb-2">
-                <div className="col">
-                  <div className="input-group input-group">
-                    <div className="input-group-prepend">
-                      <span className="input-group-text" id="inputGroup-sizing">
-                        Name
-                      </span>
+          {isLoading ? (
+            'Loading...'
+          ) : (
+            <>
+              <div className="row d-flex no-gutters">
+                <div className="col align-items-center">
+                  {/* <div className="mb-4 d-flex justify-content-end">
+                    <DeleteButton isTrashCan onClick={() => deleteQuestionnaire(questionnaireId)} />
+                  </div> */}
+                  <div className="my-1 d-inline-flex">
+                    <div className="input-group">
+                      <div className="input-group-prepend">
+                        <span className="input-group-text" id="inputGroup-name">
+                          Name
+                        </span>
+                      </div>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={questionnaireName}
+                        onChange={(e) => setQuestionnnaireName(e.target.value)}
+                        aria-describedby="inputGroup-name"
+                      />
                     </div>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={questionnaireName}
-                      onChange={(e) => setQuestionnnaireName(e.target.value)}
-                      aria-describedby="inputGroup-sizing"
-                    />
+                  </div>
+                  <div className="my-1 d-flex">
+                    <label className="form-check-label mx-1" htmlFor="inlineFormCheck">
+                      Start Date
+                    </label>
+                    <DatePicker onChange={setStartDate} value={startDate} />
+                  </div>
+                  <div className="my-1 d-flex">
+                    <label className="form-check-label mx-1" htmlFor="inlineFormCheck">
+                      End Date
+                    </label>
+                    <DatePicker onChange={setEndDate} value={endDate} />
                   </div>
                 </div>
-                <div className="col">
+              </div>
+              <div className="row d-flex no-gutters mt-3">
+                <div className="col d-flex justify-content-between align-items-center">
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary"
+                    onClick={() => {
+                      handleChangeSettings();
+                    }}
+                  >
+                    Save Settings
+                  </button>
+
                   <button
                     type="button"
                     className="btn btn-outline-primary"
@@ -272,109 +285,24 @@ const QuestionsList = ({ questionnaireId, deleteQuestionnaire }) => {
                     Add Question
                   </button>
                 </div>
-                <div className="col-1">
-                  <DeleteButton isTrashCan onClick={() => deleteQuestionnaire(questionnaireId)} />
-                </div>
               </div>
-              <div className="row justify-content-between">
-                <div className="col d-inline-flex">
-                  <div className="mr-3">
-                    <label className="form-check-label" htmlFor="inlineFormCheck">
-                      Start Date
-                    </label>
-                    <DatePicker onChange={setStartDate} value={startDate} />
-                  </div>
-                  <div>
-                    <label className="form-check-label" htmlFor="inlineFormCheck">
-                      End Date
-                    </label>
-                    <DatePicker onChange={setEndDate} value={endDate} />
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  className="btn btn-outline-primary"
-                  onClick={() => {
-                    handleChangeSettings();
-                  }}
-                >
-                  Save Settings
-                </button>
+              <div className="row no-gutters overflow-auto flex-row flex-nowrap my-3">
+                <BootstrapTable
+                  keyField="index"
+                  data={data}
+                  columns={columns}
+                  bordered={false}
+                  hover
+                  noDataIndication="No Data"
+                />
               </div>
-              <form className="form-inline mt-2" />
-            </div>
-            <ul className="list-group">
-              {questions && questions.length ? (
-                questions.map((question, index) => {
-                  const content = (
-                    <div key={question._id} className="row p-2 ">
-                      {question.title}
-                      {question.answerType}
-                      <div className="col-1 ">
-                        <EditButton
-                          onClick={() => {
-                            handleClickEdit(question);
-                          }}
-                        />
-                      </div>
-                      <div className="col-1 ">
-                        <CopyButton
-                          onClick={() => {
-                            // eslint-disable-next-line no-console
-                            console.log('copying');
-                          }}
-                        />
-                      </div>
-                      <div className="col-1 d-inline">
-                        <MoveButton
-                          up
-                          onClick={() => handleMoveQuestionFromTo(question, index, index - 1)}
-                        />
-
-                        <MoveButton
-                          onClick={() => handleMoveQuestionFromTo(question, index, index + 1)}
-                        />
-                      </div>
-                    </div>
-                  );
-                  return (
-                    <div key={question._id}>
-                      <RemovableListItem
-                        content={content}
-                        onClick={() => handleRemoveQuestion(question)}
-                      />
-                    </div>
-                  );
-                })
-              ) : (
-                <div> No Questions </div>
-              )}
-            </ul>
-          </div>
+            </>
+          )}
         </>
-      ) : (
-        <div> No Questionnaire </div>
       )}
     </div>
   );
 };
-
-/* 
-   <input
-                  type="number"
-                  className="form-control"
-                  placeholder="Index"
-                  min="1"
-                  max={questions.length}
-                  onChange={(e) => setInsertIndex(Number(e.target.value))}
-                />
-                <OutlineButton
-                  title="Create Question At"
-                  onClick={() => {
-                    handleCreateQuestionAt(insertIndex - 1);
-                  }}
-                />
-*/
 
 const QuestionnaireEditorPage = (props) => {
   const [selectedQuestions, setSelectedQuestions] = useState([]);
@@ -420,26 +348,29 @@ const QuestionnaireEditorPage = (props) => {
 
   return (
     <div>
-      <div className="m-5">
-        <OutlineButton title="Create Questionnaire" onClick={() => handleCreateQuestionnaire()} />
+      <div className="m-lg-5">
         {questionnaires && questionnaires.length ? (
           questionnaires.map((questionnaire) => {
             return (
               <div key={questionnaire._id} className="my-3">
-                <QuestionsList
-                  questionnaireId={questionnaire._id}
-                  deleteQuestionnaire={handleDeleteQuestionnaire}
-                />
+                <div className="px-2">
+                  <QuestionnaireEditor
+                    questionnaire={questionnaire}
+                    deleteQuestionnaire={() => handleDeleteQuestionnaire}
+                  />
+                </div>
               </div>
             );
           })
         ) : (
-          <div>No questionnaires </div>
+          <div className="my-5 d-flex justify-content-center">
+            <OutlineButton
+              title="Create Questionnaire"
+              onClick={() => handleCreateQuestionnaire()}
+            />
+          </div>
         )}
       </div>
-      {/* <div className="px-2">
-        <QuestionTable onSelectQuestion={handleOnChange} />
-      </div> */}
     </div>
   );
 };

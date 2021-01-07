@@ -69,8 +69,8 @@ const saveQuestion = async (questionId, questionData, answerOptions) => {
   };
 
   if (!questionId) {
-    window.alert(`Question could not be inserted. A valid question ID was not provided.`);
-    return;
+    window.alert(`Question could not be saved. A valid question ID was not provided.`);
+    return undefined;
   }
 
   payload.answerOptions = answerOptions;
@@ -80,7 +80,7 @@ const saveQuestion = async (questionId, questionData, answerOptions) => {
     payload.answerOptions.options = updatedAmountOptions;
   }
 
-  await updateQuestionById(questionId, payload).then(() => {});
+  return updateQuestionById(questionId, payload);
 };
 
 const fetchAllQuestions = async () => {

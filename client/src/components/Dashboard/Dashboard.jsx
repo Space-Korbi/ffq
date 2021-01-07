@@ -40,19 +40,19 @@ const Dashboard = ({ isAdmin }) => {
    */
   const adminLinks = [
     {
-      name: 'Questionnaire Editor',
+      name: 'Editor',
       to: '/questionnaireEditor',
       className: 'nav-link',
       activeClassName: 'nav-link active'
     },
     {
-      name: 'Questionnaire Presentation',
+      name: 'Preview',
       to: '/questionnairePresenter',
       className: 'nav-link',
       activeClassName: 'nav-link active'
     },
     {
-      name: 'Participants Manager',
+      name: 'User Manager',
       to: '/participantsManager',
       className: 'nav-link',
       activeClassName: 'nav-link active'
@@ -185,7 +185,10 @@ const Dashboard = ({ isAdmin }) => {
                 <Route
                   path={`${path}/questionnairePresenter`}
                   component={() => (
-                    <QuestionnairePresenterPage questionnaireId="BcbBv_SPeUJjCWx6KTGYG" />
+                    <QuestionnairePresenterPage
+                      isAdmin={isAdmin}
+                      questionnaireId="kAOW7MPbGnNtqwQQvg3MY"
+                    />
                   )}
                 />
                 <Route path={`${path}/account`} component={() => <AccountPage />} />

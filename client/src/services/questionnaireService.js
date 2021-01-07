@@ -24,7 +24,6 @@ const createQuestionnaire = async () => {
   };
 
   return insertQuestionnaire(payload).then((res) => {
-    window.alert(`Questionnaire created successfully`);
     return res.data;
   });
 };
@@ -98,7 +97,6 @@ const moveQuestionFromTo = async (questionnaireId, questionId, fromIndex, toInde
 };
 
 const updateQuestionnaireSettings = (questionnaireId, settings) => {
-  console.log('----', settings);
   const questionnairePayload = {
     action: updateAction.changeSettings,
     settings

@@ -1,8 +1,10 @@
+/* eslint-disable react/no-unused-prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import { string } from 'prop-types';
+import { bool, string } from 'prop-types';
 import { useParams } from 'react-router-dom';
 import { get, findIndex } from 'lodash';
+import { userService } from '../../services';
 
 // custom hooks
 import { useFetchQuestions, useFetchUsers } from '../../hooks';
@@ -11,7 +13,7 @@ import { useFetchQuestions, useFetchUsers } from '../../hooks';
 import { Question } from '../../components/Question';
 import ProgressIndicator from '../../components/ProgressIndicator';
 
-const QuestionnairePresenterPage = ({ questionnaireId }) => {
+const QuestionnairePresenterPage = ({ questionnaireId, isAdmin }) => {
   // set inital values
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
@@ -57,7 +59,7 @@ const QuestionnairePresenterPage = ({ questionnaireId }) => {
   return (
     <div>
       {isError && <div>Something went wrong ...</div>}
-      {!answers || isLoadingQuestions || isLoadingUsers ? (
+      {!answers || !questions || isLoadingQuestions || isLoadingUsers ? (
         'Loading...'
       ) : (
         <div>
@@ -74,6 +76,7 @@ const QuestionnairePresenterPage = ({ questionnaireId }) => {
                   answerOptions={questions[currentIndex].answerOptions}
                   onSubmitAnswer={(answer) => handleSubmitAnswer(answer)}
                   currentIndex={currentIndex}
+                  isPreview={isAdmin}
                 />
               </div>
             )}
@@ -91,6 +94,18 @@ const QuestionnairePresenterPage = ({ questionnaireId }) => {
               <div className="p-1" />
               <ProgressIndicator currentPosition={currentIndex} length={questions.length} />
               <div className="p-1" />
+              {isAdmin && (
+                <button
+                  type="button"
+                  className="btn btn-sm btn-outline-warning m-2"
+                  onClick={() => {
+                    userService.resetAnswers(userId).then(setAnswers([]));
+                    setCurrentIndex(0);
+                  }}
+                >
+                  Reset answers
+                </button>
+              )}
               {/* <button
                 type="button"
                 className="btn btn btn-light"
@@ -107,7 +122,11 @@ const QuestionnairePresenterPage = ({ questionnaireId }) => {
 };
 
 QuestionnairePresenterPage.propTypes = {
-  questionnaireId: string.isRequired
+  questionnaireId: string.isRequired,
+  isAdmin: bool
 };
 
+QuestionnairePresenterPage.defaultProps = {
+  isAdmin: false
+};
 export default QuestionnairePresenterPage;
