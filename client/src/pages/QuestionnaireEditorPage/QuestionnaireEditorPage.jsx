@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import DatePicker from 'react-date-picker';
 
@@ -31,6 +31,8 @@ const QuestionnaireEditor = ({ questionnaireId, deleteQuestionnaire }) => {
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
 
+  const questionsRef = useRef(questions);
+
   useEffect(() => {
     setIsLoading(true);
     // fetch all metaData of questionnaire too
@@ -56,25 +58,21 @@ const QuestionnaireEditor = ({ questionnaireId, deleteQuestionnaire }) => {
     const rows = questionData.map((question, index) => {
       return {
         question,
-        index,
-        createdAt: question.createdAt,
-        subtitle2: <small>{question.subtitle2}</small>,
-        help: <small>{question.help}</small>
+        index
       };
     });
     return rows;
   };
 
-  console.log(questions);
   useEffect(() => {
+    questionsRef.current = questions;
     const rowData = prepareRows(questions);
-    console.log('new row data', rowData);
     setData(rowData);
   }, [questions]);
 
   const handleCreateQuestionAt = async (index) => {
     await questionnaireService.createQuestionAt(questionnaireId, index).then((response) => {
-      const questionsCopy = [...questions];
+      const questionsCopy = [...questionsRef.current];
       if (index >= 0) {
         questionsCopy.splice(index, 0, response.question);
       } else {
@@ -85,13 +83,12 @@ const QuestionnaireEditor = ({ questionnaireId, deleteQuestionnaire }) => {
   };
 
   const handleMoveQuestionFromTo = async (question, fromIndex, toIndex) => {
-    if (toIndex >= 0 && toIndex < questions.length) {
+    if (toIndex >= 0 && toIndex < questionsRef.current.length) {
       await questionnaireService
         .moveQuestionFromTo(questionnaireId, question, fromIndex, toIndex)
         .then((response) => {
           if (response.success) {
-            const questionsCopy = [...questions];
-
+            const questionsCopy = [...questionsRef.current];
             if (toIndex > fromIndex) {
               questionsCopy.splice(fromIndex, 1);
               questionsCopy.splice(toIndex, 0, question);
@@ -105,17 +102,13 @@ const QuestionnaireEditor = ({ questionnaireId, deleteQuestionnaire }) => {
     }
   };
 
-  const handleRemoveQuestion = async (question) => {
-    console.log('question', question);
-    const questionsCopy = [...questions];
+  const handleRemoveQuestion = async (question, index) => {
     await questionnaireService
       .removeQuestionById(questionnaireId, question._id)
       .then((response) => {
-        console.log('responnse', response);
         if (response.success) {
-          const index = questionsCopy.indexOf(question);
+          const questionsCopy = [...questionsRef.current];
           if (index > -1) {
-            console.log('Index', index);
             questionsCopy.splice(index, 1);
           }
           setQuestions(questionsCopy);
@@ -126,7 +119,6 @@ const QuestionnaireEditor = ({ questionnaireId, deleteQuestionnaire }) => {
   const handleChangeSettings = async () => {
     console.log('saving');
     const settings = { name: questionnaireName, startDate, endDate };
-    console.log(settings);
     await questionnaireService
       .updateQuestionnaireSettings(questionnaireId, settings)
       .then((response) => {
@@ -140,13 +132,13 @@ const QuestionnaireEditor = ({ questionnaireId, deleteQuestionnaire }) => {
         <DeleteButton
           isTrashCan
           isDeleting={isDeleting}
-          onClick={() => handleRemoveQuestion(row.question)}
+          onClick={() => handleRemoveQuestion(row.question, row.index)}
         />
       </div>
     );
   };
 
-  const moveButton = (cell, row) => {
+  const moveButtons = (cell, row) => {
     const { index } = row;
     return (
       <div className="d-flex">
@@ -202,7 +194,7 @@ const QuestionnaireEditor = ({ questionnaireId, deleteQuestionnaire }) => {
       editable: false,
       align: 'center',
       style: { width: '12px' },
-      formatter: moveButton
+      formatter: moveButtons
     },
     {
       dataField: 'delete',
@@ -284,13 +276,11 @@ const QuestionnaireEditor = ({ questionnaireId, deleteQuestionnaire }) => {
               </div>
               <div className="row no-gutters overflow-auto flex-row flex-nowrap my-3">
                 <BootstrapTable
-                  headerStyle={() => {
-                    return { backgroundColor: 'green' };
-                  }}
                   keyField="index"
                   data={data}
                   columns={columns}
                   bordered={false}
+                  hover
                   noDataIndication="No Data"
                 />
               </div>
