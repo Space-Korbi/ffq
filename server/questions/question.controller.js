@@ -55,7 +55,15 @@ const getQuestions = async (req, res) => {
 };
 
 const getQuestionsOfQuestionnaire = async (req, res) => {
-  await Questionnaire.findById(req.params.questionnaireId).then((questionnaire) => {
+  await Questionnaire.findById(req.params.questionnaireId, (err, questionnaire) => {
+    if (err) {
+      return res.status(404).json({ success: false, error: err });
+    }
+
+    if (!questionnaire.questions && questionnaire.questions.length) {
+      return res.status(404).json({ success: false, error: `No questions found` });
+    }
+
     const findQuestionCalls = [];
 
     questionnaire.questions.forEach((questionId) => {
