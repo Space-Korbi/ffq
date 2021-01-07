@@ -185,7 +185,10 @@ const Dashboard = ({ isAdmin }) => {
                 <Route
                   path={`${path}/questionnairePresenter`}
                   component={() => (
-                    <QuestionnairePresenterPage questionnaireId="BcbBv_SPeUJjCWx6KTGYG" />
+                    <QuestionnairePresenterPage
+                      isAdmin={isAdmin}
+                      questionnaireId="yjSPwQZfvtSXP-N4njTQM"
+                    />
                   )}
                 />
                 <Route path={`${path}/account`} component={() => <AccountPage />} />

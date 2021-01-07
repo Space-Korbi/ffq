@@ -60,7 +60,7 @@ const getQuestionsOfQuestionnaire = async (req, res) => {
       return res.status(404).json({ success: false, error: err });
     }
 
-    if (!questionnaire.questions && questionnaire.questions.length) {
+    if (!questionnaire || !questionnaire.questions) {
       return res.status(404).json({ success: false, error: `No questions found` });
     }
 
