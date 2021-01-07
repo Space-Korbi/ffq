@@ -19,7 +19,7 @@ import RemovableListItem from '../../components/List';
 
 import { questionService, questionnaireService } from '../../services';
 
-const QuestionnaireEditor = ({ questionnaireId, deleteQuestionnaire }) => {
+const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
   const [questions, setQuestions] = useState([]);
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -27,23 +27,22 @@ const QuestionnaireEditor = ({ questionnaireId, deleteQuestionnaire }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState();
 
-  const [questionnaireName, setQuestionnnaireName] = useState('New Quesionnaire');
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
+  const [questionnaireName, setQuestionnnaireName] = useState(questionnaire.name);
+  const [startDate, setStartDate] = useState(new Date(questionnaire.startDate));
+  const [endDate, setEndDate] = useState(new Date(questionnaire.endDate));
 
   const questionsRef = useRef(questions);
 
   useEffect(() => {
     setIsLoading(true);
-    // fetch all metaData of questionnaire too
     const fetchQuestions = async () => {
       const fetchedQuestions = await questionnaireService.fetchAllQuestionsOfQuestionnaire(
-        questionnaireId
+        questionnaire._id
       );
       setQuestions(fetchedQuestions);
-      setIsLoading(false);
     };
     fetchQuestions();
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
@@ -66,12 +65,15 @@ const QuestionnaireEditor = ({ questionnaireId, deleteQuestionnaire }) => {
 
   useEffect(() => {
     questionsRef.current = questions;
+    if (isEditing) {
+      return;
+    }
     const rowData = prepareRows(questions);
     setData(rowData);
-  }, [questions]);
+  }, [questions, isEditing]);
 
   const handleCreateQuestionAt = async (index) => {
-    await questionnaireService.createQuestionAt(questionnaireId, index).then((response) => {
+    await questionnaireService.createQuestionAt(questionnaire._id, index).then((response) => {
       const questionsCopy = [...questionsRef.current];
       if (index >= 0) {
         questionsCopy.splice(index, 0, response.question);
@@ -85,7 +87,7 @@ const QuestionnaireEditor = ({ questionnaireId, deleteQuestionnaire }) => {
   const handleMoveQuestionFromTo = async (question, fromIndex, toIndex) => {
     if (toIndex >= 0 && toIndex < questionsRef.current.length) {
       await questionnaireService
-        .moveQuestionFromTo(questionnaireId, question, fromIndex, toIndex)
+        .moveQuestionFromTo(questionnaire._id, question, fromIndex, toIndex)
         .then((response) => {
           if (response.success) {
             const questionsCopy = [...questionsRef.current];
@@ -104,7 +106,7 @@ const QuestionnaireEditor = ({ questionnaireId, deleteQuestionnaire }) => {
 
   const handleRemoveQuestion = async (question, index) => {
     await questionnaireService
-      .removeQuestionById(questionnaireId, question._id)
+      .removeQuestionById(questionnaire._id, question._id)
       .then((response) => {
         if (response.success) {
           const questionsCopy = [...questionsRef.current];
@@ -117,12 +119,13 @@ const QuestionnaireEditor = ({ questionnaireId, deleteQuestionnaire }) => {
   };
 
   const handleChangeSettings = async () => {
-    console.log('saving');
     const settings = { name: questionnaireName, startDate, endDate };
     await questionnaireService
-      .updateQuestionnaireSettings(questionnaireId, settings)
+      .updateQuestionnaireSettings(questionnaire._id, settings)
       .then((response) => {
-        console.log(response);
+        setQuestionnnaireName(response.name);
+        setStartDate(new Date(response.startDate));
+        setEndDate(new Date(response.endDate));
       });
   };
 
@@ -152,7 +155,9 @@ const QuestionnaireEditor = ({ questionnaireId, deleteQuestionnaire }) => {
   const editButton = (cell, row) => {
     return (
       <div>
-        <EditButton onClick={() => setSelectedQuestion(row.question)} />
+        <EditButton
+          onClick={() => setSelectedQuestion({ question: row.question, index: row.index })}
+        />
       </div>
     );
   };
@@ -206,10 +211,17 @@ const QuestionnaireEditor = ({ questionnaireId, deleteQuestionnaire }) => {
     }
   ];
 
+  const updateQuestions = (editedQuestion) => {
+    const questionsCopy = questionsRef.current;
+    questionsCopy.splice(selectedQuestion.index, 1, editedQuestion);
+    setQuestions(questionsCopy);
+    setIsEditing(false);
+  };
+
   return (
     <div>
       {isEditing ? (
-        <QuestionEditor question={selectedQuestion} onExit={() => setIsEditing(false)} />
+        <QuestionEditor question={selectedQuestion.question} onExit={updateQuestions} />
       ) : (
         <>
           {isLoading ? (
@@ -343,7 +355,7 @@ const QuestionnaireEditorPage = (props) => {
               <div key={questionnaire._id} className="my-3">
                 <div className="px-2">
                   <QuestionnaireEditor
-                    questionnaireId={questionnaire._id}
+                    questionnaire={questionnaire}
                     deleteQuestionnaire={() => handleDeleteQuestionnaire}
                   />
                 </div>

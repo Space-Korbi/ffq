@@ -140,6 +140,7 @@ const updateQuestionById = async (req, res) => {
       .then(() => {
         return res.status(200).json({
           success: true,
+          question: questionUpdate,
           message: 'Question updated!'
         });
       })

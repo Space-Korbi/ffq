@@ -114,6 +114,9 @@ const updateQuestionnaire = async (req, res) => {
           success: true,
           id: questionnaire._id,
           question,
+          name: questionnaireUpdate.name,
+          startDate: questionnaireUpdate.startDate,
+          endDate: questionnaireUpdate.endDate,
           index: body.index,
           message: 'Questionnaire updated!'
         });

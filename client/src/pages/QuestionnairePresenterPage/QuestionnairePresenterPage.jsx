@@ -63,18 +63,6 @@ const QuestionnairePresenterPage = ({ questionnaireId, isAdmin }) => {
         'Loading...'
       ) : (
         <div>
-          {isAdmin && (
-            <button
-              type="button"
-              className="btn btn-sm btn-outline-warning m-2"
-              onClick={() => {
-                userService.resetAnswers(userId).then(setAnswers([]));
-                setCurrentIndex(0);
-              }}
-            >
-              Reset answers
-            </button>
-          )}
           <div>
             {questions.length && (
               <div>
@@ -106,6 +94,18 @@ const QuestionnairePresenterPage = ({ questionnaireId, isAdmin }) => {
               <div className="p-1" />
               <ProgressIndicator currentPosition={currentIndex} length={questions.length} />
               <div className="p-1" />
+              {isAdmin && (
+                <button
+                  type="button"
+                  className="btn btn-sm btn-outline-warning m-2"
+                  onClick={() => {
+                    userService.resetAnswers(userId).then(setAnswers([]));
+                    setCurrentIndex(0);
+                  }}
+                >
+                  Reset answers
+                </button>
+              )}
               {/* <button
                 type="button"
                 className="btn btn btn-light"
