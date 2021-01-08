@@ -187,22 +187,24 @@ const getQuestionnaires = async (req, res) => {
     if (err) {
       return res.status(400).json({
         error: err,
-        message: 'Bad request',
-        details: 'No questionnaires could fe found'
+        title: 'Bad request.',
+        detail: 'No questionnaires could fe found.'
       });
     }
 
     if (questionnaires && !questionnaires.length) {
       return res.status(404).json({
-        message: 'No Questionnaires',
-        details: 'No questionnaires have been created yet',
+        title: 'No Questionnaires.',
+        detail: 'No questionnaires have been created yet.',
         data: questionnaires
       });
     }
 
-    return res
-      .status(200)
-      .json({ message: 'Questionnaires', details: 'All questionnaires', data: questionnaires });
+    return res.status(200).json({
+      title: 'All questionnaires.',
+      detail: 'Data of all questionnaires.',
+      data: questionnaires
+    });
   }).catch((err) => console.log(err));
 };
 

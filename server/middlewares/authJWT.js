@@ -9,8 +9,8 @@ const verifyToken = (req, res, next) => {
   const token = req.headers['x-access-token'];
   if (!token) {
     return res.status(403).json({
-      message: 'No token provided!',
-      details: 'Ensure that a valid access token is inlcuded in the request header'
+      title: 'No token provided.',
+      detail: 'Ensure that a valid access token is inlcuded in the request header.'
     });
   }
 
@@ -18,8 +18,8 @@ const verifyToken = (req, res, next) => {
     if (err) {
       return res.status(401).json({
         err,
-        message: 'Token could not be verified',
-        details: 'Ensure that the access token is valid'
+        title: 'Token could not be verified.',
+        detail: 'Ensure that the access token is valid.'
       });
     }
 
@@ -31,8 +31,8 @@ const verifyToken = (req, res, next) => {
 const authoriseUser = (req, res, next) => {
   if (req.userId !== req.params.userId) {
     return res.status(401).send({
-      message: 'Unauthorized',
-      details: 'You are not authorized to access this resource'
+      title: 'User unauthorized.',
+      detail: 'You are not authorized to access this resource.'
     });
   }
   next();
