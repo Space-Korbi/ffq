@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-vars */
 require('dotenv').config();
 const express = require('express');
+const swaggerUi = require('swagger-ui-express');
+
 // * Create express app
 const app = express();
 
@@ -105,5 +107,9 @@ const testRouter = require('./test/test.router');
 app.use('/api', [userRouter, questionRouter, questionnaireRouter, imageRouter, testRouter]);
 
 app.use([errorHandler.errorHandler]);
+
+const swaggerDocument = require('./Questionnaire.v1.json');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));
