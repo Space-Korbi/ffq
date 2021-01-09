@@ -1,25 +1,23 @@
 import React from 'react';
-import { bool, number } from 'prop-types';
+import { bool, shape } from 'prop-types';
 
 // subpages
 import AdminPage from './AdminPage';
 import ParticipantPage from './ParticipantPage';
 
-const HomePage = ({ isAdmin, stoppedAtIndex }) => {
+const HomePage = ({ isAdmin, user }) => {
   return (
     <div className="d-flex justify-content-center mt-5">
-      {isAdmin ? <AdminPage /> : <ParticipantPage stoppedAtIndex={stoppedAtIndex} />}
+      {user && (
+        <>{isAdmin ? <AdminPage /> : <ParticipantPage stoppedAtIndex={user.stoppedAtIndex} />}</>
+      )}
     </div>
   );
 };
 
 HomePage.propTypes = {
   isAdmin: bool.isRequired,
-  stoppedAtIndex: number
-};
-
-HomePage.defaultProps = {
-  stoppedAtIndex: -1
+  user: shape({}).isRequired
 };
 
 export default HomePage;

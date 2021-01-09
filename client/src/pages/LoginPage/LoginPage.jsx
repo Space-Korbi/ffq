@@ -29,7 +29,7 @@ const LoginPage = () => {
           <br />
           <Formik
             initialValues={{
-              email: 'admin@abc.de',
+              email: 'a@1.de',
               password: '12345'
             }}
             validationSchema={Yup.object().shape({
