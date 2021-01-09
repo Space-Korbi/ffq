@@ -19,17 +19,11 @@ import {
 
 const Dashboard = ({ isAdmin }) => {
   const { path, url, params } = useRouteMatch();
-  const [metaData, setMetaData] = useState();
+  const [user, setUser] = useState();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const fetchMetaData = async () => {
-      const userMetaData = await userService.getMetaData(params.userId);
-      setMetaData(userMetaData.data.data);
-      setIsLoading(false);
-    };
-
-    fetchMetaData();
+    setUser(JSON.parse(localStorage.getItem('user')));
   }, []);
 
   /**
@@ -164,7 +158,7 @@ const Dashboard = ({ isAdmin }) => {
         </div>
       </nav>
       <main role="main" className="col p-0">
-        {isLoading ? (
+        {isLoading || !user ? (
           'Loading...'
         ) : (
           <div className="row no-gutters">
@@ -191,15 +185,13 @@ const Dashboard = ({ isAdmin }) => {
                     />
                   )}
                 />
-                <Route path={`${path}/account`} component={() => <AccountPage />} />
+                <Route
+                  path={`${path}/account`}
+                  component={() => <AccountPage user={user.user} />}
+                />
                 <Route
                   path={`${path}/`}
-                  component={() => (
-                    <HomePage
-                      isAdmin={isAdmin}
-                      stoppedAtIndex={metaData && metaData.stoppedAtIndex}
-                    />
-                  )}
+                  component={() => <HomePage isAdmin={isAdmin} user={user.user} />}
                 />
               </Switch>
             </div>
