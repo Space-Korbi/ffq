@@ -15,17 +15,21 @@ const User = mongoose.model(
   new mongoose.Schema(
     {
       email: { type: String, unique: true, required: true },
-      firstName: { type: String, required: true },
-      lastName: { type: String, required: true },
       password: { type: String, required: true },
-      hasAcceptedConsentForm: { type: Boolean, default: false },
-      screeningStatus: { type: String, default: '' },
-      personalData: [{ type: String, default: [] }],
-      screeningData: [{ type: String, default: [] }],
-      startDate: { type: Date },
-      endDate: { type: Date },
+      accountData: {
+        firstName: { type: String, default: '' },
+        lastName: { type: String, default: '' },
+        hasAcceptedConsentForm: { type: Boolean, default: false }
+      },
+      personalData: { type: Schema.Types.Mixed, default: {} },
+      screeningData: { type: Schema.Types.Mixed, default: {} },
+      isAccepted: { type: Boolean, default: true },
+
+      startedOn: { type: Date },
+      finishedOn: { type: Date },
       stoppedAtIndex: { type: Number, default: -1 },
       answers: [Answer],
+
       roles: [
         {
           type: Schema.Types.ObjectId,
@@ -43,6 +47,8 @@ const User = mongoose.model(
       delete transformed._id;
       delete transformed.password;
       delete transformed.roles;
+      delete transformed.createdAt;
+      delete transformed.updatedAt;
       return transformed;
     }
   })

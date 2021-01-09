@@ -45,6 +45,13 @@ const isAdmin = (req, res, next) => {
       return;
     }
 
+    if (!user) {
+      res
+        .status(404)
+        .json({ title: 'Not found.', detail: `No user found for provided access-token.` });
+      return;
+    }
+
     Role.find(
       {
         _id: { $in: user.roles }

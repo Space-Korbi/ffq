@@ -106,7 +106,7 @@ const testRouter = require('./test/test.router');
  */
 app.use('/api', [userRouter, questionRouter, questionnaireRouter, imageRouter, testRouter]);
 
-app.use([errorHandler.errorHandler]);
+// app.use([errorHandler.errorHandler]);
 
 const swaggerDocument = require('./Questionnaire.v1.json');
 
