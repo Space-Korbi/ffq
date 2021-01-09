@@ -40,21 +40,23 @@ const LoginPage = () => {
             })}
             onSubmit={({ email, password }, { setStatus, setSubmitting }) => {
               authService.loginUser(email, password).then(
-                (user) => {
-                  history.push(`/users/${user.id}`);
+                (response) => {
+                  history.push(`/users/${response.user.id}`);
                 },
                 (error) => {
                   setSubmitting(false);
-
+                  const errorList = (listElement) => (
+                    <ul className="list-unstyled content-align-center mb-0">{listElement}</ul>
+                  );
                   if ([401, 403].indexOf(error.status) !== -1) {
-                    setStatus('Invalid password.');
+                    setStatus(errorList(<li>Password is incorrect.</li>));
                   } else if ([404].indexOf(error.status) !== -1) {
-                    setStatus('Invalid email.');
+                    setStatus(errorList(<li>Email is incorrect.</li>));
                   } else if (error.data.errors) {
-                    const errorList = error.data.errors.map((err) => {
-                      return <li className="mx-2">{err.msg}</li>;
+                    const errorListElements = error.data.errors.map((err) => {
+                      return <li>{err.msg}</li>;
                     });
-                    setStatus(errorList);
+                    setStatus(errorList(errorListElements));
                   }
                 }
               );
