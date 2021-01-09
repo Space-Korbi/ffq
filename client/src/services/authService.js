@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { BehaviorSubject } from 'rxjs';
 import { login, signup } from '../api';
 
@@ -9,31 +10,19 @@ function logout() {
   currentUserSubject.next(null);
 }
 
-function handleResponse(response) {
-  if ([401, 403].indexOf(response.status) !== -1) {
-    // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
-    logout();
-    // eslint-disable-next-line no-restricted-globals
-    location.reload();
-
-    const error = { message: response.message, error: response.error };
-    console.log(error);
-    return Promise.reject(error);
-  }
-
-  return response.data;
-}
-
 const loginUser = (email, password) => {
   const payload = { email, password };
   return login(payload)
-    .then(handleResponse)
-    .then((user) => {
+    .then((response) => {
+      const user = response.data;
       if (user.accessToken) {
         localStorage.setItem('user', JSON.stringify(user));
         currentUserSubject.next(user);
       }
       return user;
+    })
+    .catch((error) => {
+      return Promise.reject(error.response);
     });
 };
 

@@ -17,9 +17,9 @@ api.interceptors.request.use((request) => {
   return request;
 });
 
-// auth
-export const signup = (payload) => api.post(`/auth/signup`, payload);
-export const login = (payload) => api.post(`/auth/login`, payload);
+// login/signup
+export const signup = (payload) => axios.post(`http://localhost:3000/api/users/signup`, payload);
+export const login = (payload) => axios.post(`http://localhost:3000/api/users/login`, payload);
 
 // user
 export const updateAnswerById = (userId, payload) => api.put(`users/${userId}`, payload);
