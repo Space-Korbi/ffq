@@ -21,20 +21,22 @@ const LoginPage = () => {
           <div className="alert alert-info">
             Test Accounts
             <br />
-            <strong>Administrator</strong> - Email: admin@abc.de PW: admin
+            <strong>Administrator</strong> - Email: admin@abc.de PW: 12345
             <br />
-            <strong>User</strong> - Email: user@abc.de PW: user
+            <strong>User</strong> - Email: user@abc.de PW: 54321
           </div>
           <h2>Login</h2>
           <br />
           <Formik
             initialValues={{
-              email: 'u@5',
+              email: 'admin@abc.de',
               password: '12345'
             }}
             validationSchema={Yup.object().shape({
               email: Yup.string().required('Email is required'),
-              password: Yup.string().required('Password is required')
+              password: Yup.string()
+                .required('Password is required')
+                .min(5, 'Password must be at least 5 characters')
             })}
             onSubmit={({ email, password }, { setStatus, setSubmitting }) => {
               authService.loginUser(email, password).then(
@@ -43,7 +45,17 @@ const LoginPage = () => {
                 },
                 (error) => {
                   setSubmitting(false);
-                  setStatus(error.body);
+
+                  if ([401, 403].indexOf(error.status) !== -1) {
+                    setStatus('Invalid password.');
+                  } else if ([404].indexOf(error.status) !== -1) {
+                    setStatus('Invalid email.');
+                  } else if (error.data.errors) {
+                    const errorList = error.data.errors.map((err) => {
+                      return <li className="mx-2">{err.msg}</li>;
+                    });
+                    setStatus(errorList);
+                  }
                 }
               );
             }}
