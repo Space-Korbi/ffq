@@ -23,7 +23,7 @@ const User = mongoose.model(
       },
       personalData: { type: Schema.Types.Mixed, default: {} },
       screeningData: { type: Schema.Types.Mixed, default: {} },
-      isAccepted: { type: Boolean, default: true },
+      screeningStatus: { type: String, default: 'wait' },
 
       startedOn: { type: Date },
       finishedOn: { type: Date },

@@ -23,15 +23,7 @@ const createUser = (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  if (!req.body) {
-    return res.status(400).json({
-      title: 'No request body',
-      details: 'You must provide a body with firstName, lastName, email and password.'
-    });
-  }
-
   const { email, password, firstName, lastName } = req.body;
-  console.log(req.body);
 
   const newUser = new User({
     email,
@@ -153,39 +145,39 @@ const getUsers = async (req, res) => {
   }).catch((err) => console.log(err));
 };
 
-const getUserById = async (req, res) => {
-  await User.findOne({ _id: req.params.userId }, (err, user) => {
+const getUsersById = async (req, res) => {
+  await User.find({ _id: req.params.userId }, (err, users) => {
     if (err) {
       return res.status(400).json({ success: false, error: err });
     }
-    if (!user) {
+    if (!users) {
       return res.status(404).json({ success: false, error: `No user found` });
     }
 
     let returnData;
 
     if (!req.query) {
-      returnData = user;
+      returnData = users;
     } else {
       switch (req.query.resource) {
         case 'metaData':
           returnData = {
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            hasAcceptedConsentForm: user.hasAcceptedConsentForm,
-            startData: user.startDate,
-            endDate: user.endDate,
-            stoppedAtIndex: user.stoppedAtIndex
+            email: users.email,
+            firstName: users.firstName,
+            lastName: users.lastName,
+            hasAcceptedConsentForm: users.hasAcceptedConsentForm,
+            startData: users.startDate,
+            endDate: users.endDate,
+            stoppedAtIndex: users.stoppedAtIndex
           };
           break;
         default:
-          returnData = user;
+          returnData = users;
       }
     }
     console.log(returnData);
 
-    return res.status(200).json({ success: true, data: returnData });
+    return res.status(200).json({ users });
   }).catch((err) => console.log(err));
 };
 
@@ -286,7 +278,7 @@ module.exports = {
   loginUser,
   createUser,
   getUsers,
-  getUserById,
+  getUsersById,
   getAnswerById,
   updateUserById
 };

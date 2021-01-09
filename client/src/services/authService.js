@@ -26,7 +26,7 @@ const loginUser = (email, password) => {
     });
 };
 
-const registerUser = (firstName, lastName, email, password) => {
+const signupUser = (firstName, lastName, email, password) => {
   const payload = { firstName, lastName, email, password };
   return signup(payload).catch((error) => {
     return Promise.reject(error.response);
@@ -36,7 +36,7 @@ const registerUser = (firstName, lastName, email, password) => {
 const authService = {
   loginUser,
   logout,
-  registerUser,
+  signupUser,
   currentUser: currentUserSubject.asObservable(),
   get currentUserValue() {
     return currentUserSubject.value;

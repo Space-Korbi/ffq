@@ -30,7 +30,7 @@ export const getUsersMetadata = (userId) =>
 api.get(`/users/${userId}/?resource=accountData`); */
 
 export const getAllUsers = () => api.get(`/users`);
-export const getUserById = (userId) => api.get(`/users/${userId}`);
+export const getUsersById = (userId) => api.get(`/users/${userId}`);
 export const getAnswerById = (userId, questionId) =>
   api.get(`users/${userId}/questions/${questionId}`);
 
@@ -66,7 +66,7 @@ const apis = {
   insertQuestionnaire,
   insertQuestionAt,
   getUsersMetadata,
-  // getUsersAccountData,
+  getUsersById,
   getAllUsers,
   getAllQuestions,
   getAllQuestionsOfQuestionnaire,

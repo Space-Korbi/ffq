@@ -36,7 +36,7 @@ const SignUpPage = () => {
                 })
             })}
             onSubmit={({ firstName, lastName, email, password }, { setStatus, setSubmitting }) => {
-              authService.registerUser(firstName, lastName, email, password).then(
+              authService.signupUser(firstName, lastName, email, password).then(
                 (response) => {
                   setSubmitting(false);
                   if (response.status === 200) {

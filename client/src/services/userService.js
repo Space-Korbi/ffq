@@ -1,6 +1,6 @@
 import {
   getAllUsers,
-  getUserById,
+  getUsersById,
   getUsersMetadata,
   // getUsersAccountData,
   getAnswerById,
@@ -17,8 +17,8 @@ const fetchAllUsers = () => {
   return getAllUsers();
 };
 
-const fetchUserById = (userId) => {
-  return getUserById(userId);
+const fetchUsersById = (userId) => {
+  return getUsersById(userId);
 };
 
 const getMetaData = (userId) => {
@@ -45,7 +45,7 @@ const resetAnswers = (userId) => {
 
 const userService = {
   fetchAllUsers,
-  fetchUserById,
+  fetchUsersById,
   getMetaData,
   // getAccountData,
   fetchAnswersById,

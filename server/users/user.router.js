@@ -11,7 +11,7 @@ router.post('/users/signup', validate.signup, UserCtrl.createUser);
 router.post('/users/login', validate.login, UserCtrl.loginUser);
 
 router.get('/users', [authJwt.verifyToken, authJwt.isAdmin], UserCtrl.getUsers);
-router.get('/users/:userId', [authJwt.verifyToken, authJwt.authoriseUser], UserCtrl.getUserById);
+router.get('/users/:userId', [authJwt.verifyToken, authJwt.authoriseUser], UserCtrl.getUsersById);
 router.get(
   '/users/:userId/questions/:questionId',
   [authJwt.verifyToken, authJwt.authoriseUser],
