@@ -98,7 +98,7 @@ function UserInputAnswer({ answerOptions, submittedAnswer, onSubmit }) {
         })}
         <div className="d-flex justify-content-center mb-3">
           <button type="submit" className="btn btn-outline-primary">
-            Weiter
+            Continue
           </button>
         </div>
       </form>

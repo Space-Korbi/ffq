@@ -11,6 +11,7 @@ import { useFetchQuestions, useFetchUsers } from '../../hooks';
 
 // components
 import { Question } from '../../components/Question';
+import Submit from '../../components/DefaultSegments';
 import ProgressIndicator from '../../components/ProgressIndicator';
 
 const QuestionnairePresenterPage = ({ questionnaireId, isAdmin }) => {
@@ -65,20 +66,28 @@ const QuestionnairePresenterPage = ({ questionnaireId, isAdmin }) => {
         <div>
           <div>
             {questions.length && (
-              <div>
-                <Question
-                  id={questions[currentIndex]._id}
-                  title={questions[currentIndex].title}
-                  subtitle1={questions[currentIndex].subtitle1}
-                  subtitle2={questions[currentIndex].subtitle2}
-                  help={questions[currentIndex].help}
-                  submittedAnswer={answers[currentIndex]}
-                  answerOptions={questions[currentIndex].answerOptions}
-                  onSubmitAnswer={(answer) => handleSubmitAnswer(answer)}
-                  currentIndex={currentIndex}
-                  isPreview={isAdmin}
-                />
-              </div>
+              <>
+                {currentIndex >= questions.length ? (
+                  <Submit />
+                ) : (
+                  <>
+                    <div>
+                      <Question
+                        id={questions[currentIndex]._id}
+                        title={questions[currentIndex].title}
+                        subtitle1={questions[currentIndex].subtitle1}
+                        subtitle2={questions[currentIndex].subtitle2}
+                        help={questions[currentIndex].help}
+                        submittedAnswer={answers[currentIndex]}
+                        answerOptions={questions[currentIndex].answerOptions}
+                        onSubmitAnswer={(answer) => handleSubmitAnswer(answer)}
+                        currentIndex={currentIndex}
+                        isPreview={isAdmin}
+                      />
+                    </div>
+                  </>
+                )}
+              </>
             )}
           </div>
           <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-bottom questionnaire">
@@ -89,7 +98,7 @@ const QuestionnairePresenterPage = ({ questionnaireId, isAdmin }) => {
                 disabled={isDisabled}
                 onClick={() => setCurrentIndex(currentIndex - 1)}
               >
-                Zurück
+                Back
               </button>
               <div className="p-1" />
               <ProgressIndicator currentPosition={currentIndex} length={questions.length} />
@@ -97,7 +106,7 @@ const QuestionnairePresenterPage = ({ questionnaireId, isAdmin }) => {
               {isAdmin && (
                 <button
                   type="button"
-                  className="btn btn-sm btn-outline-warning m-2"
+                  className="btn btn-sm btn-outline-warning"
                   onClick={() => {
                     userService.resetAnswers(userId).then(setAnswers([]));
                     setCurrentIndex(0);
