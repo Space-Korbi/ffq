@@ -1,4 +1,6 @@
-const { body, validationResult } = require('express-validator');
+/* eslint-disable prefer-promise-reject-errors */
+const { body, check, validationResult } = require('express-validator');
+const User = require('../users/user.model');
 
 // Maybe body should be escaped
 
@@ -11,6 +13,13 @@ const signup = [
     .bail()
     .isEmail()
     .withMessage('Please enter a valid email address.'),
+  check('email').custom((value) => {
+    return User.findOne({ email: value }).then((user) => {
+      if (user) {
+        return Promise.reject('E-mail already in use.');
+      }
+    });
+  }),
   body('password')
     .notEmpty()
     .withMessage('Password cannot be empty.')

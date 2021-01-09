@@ -41,13 +41,21 @@ const SignUpPage = () => {
                   setSubmitting(false);
                   if (response.status === 200) {
                     // eslint-disable-next-line no-alert
-                    window.alert('Sign Up successful!');
+                    window.alert('Sign up successful!');
                     history.push(`/login`);
                   }
                 },
                 (error) => {
                   setSubmitting(false);
-                  setStatus(error.errors);
+                  const errorList = (listElement) => (
+                    <ul className="list-unstyled content-align-center mb-0">{listElement}</ul>
+                  );
+                  if (error.data.errors) {
+                    const errorListElements = error.data.errors.map((err) => {
+                      return <li key={err.value}>{err.msg}</li>;
+                    });
+                    setStatus(errorList(errorListElements));
+                  }
                 }
               );
             }}
@@ -132,9 +140,7 @@ const SignUpPage = () => {
                     />
                   )}
                 </div>
-                {status && (
-                  <div className="alert alert-danger">{JSON.stringify(status, null, 2)}</div>
-                )}
+                {status && <div className="alert alert-danger">{status}</div>}
               </Form>
             )}
           </Formik>

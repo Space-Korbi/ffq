@@ -28,7 +28,9 @@ const loginUser = (email, password) => {
 
 const registerUser = (firstName, lastName, email, password) => {
   const payload = { firstName, lastName, email, password };
-  return signup(payload);
+  return signup(payload).catch((error) => {
+    return Promise.reject(error.response);
+  });
 };
 
 const authService = {

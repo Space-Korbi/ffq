@@ -54,7 +54,7 @@ const LoginPage = () => {
                     setStatus(errorList(<li>Email is incorrect.</li>));
                   } else if (error.data.errors) {
                     const errorListElements = error.data.errors.map((err) => {
-                      return <li>{err.msg}</li>;
+                      return <li key={err.value}>{err.msg}</li>;
                     });
                     setStatus(errorList(errorListElements));
                   }
