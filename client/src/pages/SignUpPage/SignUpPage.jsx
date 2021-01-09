@@ -44,11 +44,8 @@ const SignUpPage = () => {
                     window.alert('Sign Up successful!');
                     history.push(`/login`);
                   }
-                  console.log(response);
                 },
                 (error) => {
-                  console.log('Heyyy', error);
-
                   setSubmitting(false);
                   setStatus(error.errors);
                 }
@@ -135,7 +132,6 @@ const SignUpPage = () => {
                     />
                   )}
                 </div>
-                {console.log('Heyyy', status)}
                 {status && (
                   <div className="alert alert-danger">{JSON.stringify(status, null, 2)}</div>
                 )}
