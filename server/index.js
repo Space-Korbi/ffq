@@ -15,6 +15,7 @@ const errorHandler = require('./helpers/error-handling');
  * CORS is a node.js package for providing a Connect/Express middleware
  * that can be used to enable 'CROSS ORIGIN RESOURCE SHARING' with various options.
  */
+app.disable('x-powered-by');
 
 const corsOptions = {
   origin: 'http://localhost:8000'
