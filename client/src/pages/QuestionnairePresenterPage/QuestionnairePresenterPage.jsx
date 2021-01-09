@@ -17,7 +17,7 @@ const QuestionnairePresenterPage = ({ questionnaireId, isAdmin }) => {
   // set inital values
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
-  const [answers, setAnswers] = useState();
+  const [answers, setAnswers] = useState([]);
 
   // get data
   const { userId } = useParams();
@@ -25,11 +25,12 @@ const QuestionnairePresenterPage = ({ questionnaireId, isAdmin }) => {
   const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers(userId);
 
   useEffect(() => {
-    if (get(users, 'answers', false)) {
-      if (currentIndex < users.stoppedAtIndex) {
-        setCurrentIndex(users.stoppedAtIndex + 1);
+    if (get(users, ['0', 'answers'], false)) {
+      const user = users[0];
+      if (currentIndex < user.stoppedAtIndex) {
+        setCurrentIndex(user.stoppedAtIndex + 1);
       }
-      setAnswers(users.answers);
+      setAnswers(user.answers);
     }
   }, [users]);
 
@@ -58,8 +59,7 @@ const QuestionnairePresenterPage = ({ questionnaireId, isAdmin }) => {
 
   return (
     <div>
-      {isError && <div>Something went wrong ...</div>}
-      {!answers || !questions || isLoadingQuestions || isLoadingUsers ? (
+      {isLoadingQuestions || isLoadingUsers ? (
         'Loading...'
       ) : (
         <div>
@@ -117,6 +117,7 @@ const QuestionnairePresenterPage = ({ questionnaireId, isAdmin }) => {
           </nav>
         </div>
       )}
+      {!answers || !questions || (isError && <div>Something went wrong ...</div>)}
     </div>
   );
 };

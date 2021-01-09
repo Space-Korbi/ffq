@@ -17,6 +17,10 @@ function UserInputAnswer({ answerOptions, submittedAnswer, onSubmit }) {
     }
   }, [submittedAnswer]);
 
+  useEffect(() => {
+    setUserInputs(answerOptions);
+  }, [answerOptions]);
+
   function updateAnswer(e) {
     const updatedUserInputs = [...userInputs];
     let index;

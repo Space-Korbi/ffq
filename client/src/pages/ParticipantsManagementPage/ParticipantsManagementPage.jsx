@@ -39,15 +39,15 @@ const dataColumns = [
     text: 'Email'
   },
   {
-    dataField: 'firstName',
+    dataField: 'accountData.firstName',
     text: 'First Name'
   },
   {
-    dataField: 'lastName',
+    dataField: 'accountData.lastName',
     text: 'Last Name'
   },
   {
-    dataField: 'hasAcceptedConsentForm',
+    dataField: 'accountData.hasAcceptedConsentForm',
     text: 'Consent Form',
     formatter: (cellContent, row) => {
       if (cellContent) {
@@ -73,12 +73,12 @@ const dataColumns = [
     }
   },
   {
-    dataField: 'personalData',
-    text: 'Personal Data'
-  },
-  {
     dataField: 'screeningData',
     text: 'Screening Data'
+  },
+  {
+    dataField: 'personalData',
+    text: 'Personal Data'
   },
   {
     dataField: 'startDate',
@@ -93,7 +93,7 @@ const dataColumns = [
 const ParticipantsManagementPage = () => {
   const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers();
   const [{ questions, isLoadingQuestions, isErrorQuestions }] = useFetchQuestions(
-    'kAOW7MPbGnNtqwQQvg3MY'
+    'G1FhokuIfGCHedFGX07DB'
   );
   const [selectionCriteria, setSelectionCriteria] = useState(mockSelectionCriteria);
   const [selectionRules, setSelectionRules] = useState(mockRules);
@@ -131,6 +131,7 @@ const ParticipantsManagementPage = () => {
   }, [questions]);
 
   useEffect(() => {
+    console.log('users', users);
     if (users && users.length) {
       const questionData = users.map((user) => {
         if (!user.answers || !user.answers.length) {

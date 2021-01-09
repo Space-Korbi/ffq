@@ -6,7 +6,7 @@ import { Route, Switch, useRouteMatch, NavLink, Link } from 'react-router-dom';
 import PrivateRoute from '../PrivateRoute';
 import { Role } from '../../helpers';
 
-import { authService, userService } from '../../services';
+import { authService } from '../../services';
 
 // Root Pages that can be routed to
 import {
@@ -181,17 +181,14 @@ const Dashboard = ({ isAdmin }) => {
                   component={() => (
                     <QuestionnairePresenterPage
                       isAdmin={isAdmin}
-                      questionnaireId="kAOW7MPbGnNtqwQQvg3MY"
+                      questionnaireId="G1FhokuIfGCHedFGX07DB"
                     />
                   )}
                 />
-                <Route
-                  path={`${path}/account`}
-                  component={() => <AccountPage user={user.user} />}
-                />
+                <Route path={`${path}/account`} component={() => <AccountPage />} />
                 <Route
                   path={`${path}/`}
-                  component={() => <HomePage isAdmin={isAdmin} user={user.user} />}
+                  component={() => <HomePage isAdmin={isAdmin} user={user} />}
                 />
               </Switch>
             </div>
