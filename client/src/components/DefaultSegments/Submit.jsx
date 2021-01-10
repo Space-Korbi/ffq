@@ -1,12 +1,15 @@
 import React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
+// services
+import { userService } from '../../services';
+
 const Submit = () => {
   const history = useHistory();
   const { userId } = useParams();
 
   const submit = () => {
-    // set user end date
+    userService.updateUser(userId, { data: { finishedOn: Date.now() } });
     history.push(`/users/${userId}`);
   };
 
