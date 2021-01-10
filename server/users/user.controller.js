@@ -28,7 +28,8 @@ const createUser = (req, res) => {
   const newUser = new User({
     email,
     password: bcrypt.hashSync(password, 8),
-    accountData: { firstName, lastName }
+    firstName,
+    lastName
   });
 
   newUser.save((err, user) => {
@@ -207,71 +208,54 @@ const getAnswerById = async (req, res) => {
 };
 
 const updateUserById = async (req, res) => {
-  const { body } = req;
-
-  console.log('---', body);
-
-  if (!body) {
-    return res.status(400).json({
-      success: false,
-      error: 'You must provide a body to update'
-    });
+  // Finds the validation errors in this request and wraps them in an object
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
   }
 
-  User.findOne({ _id: req.params.userId }, async (err, user) => {
-    if (err) {
+  const { body } = req;
+
+  User.findOne({ _id: req.params.userId })
+    .then((user) => {
+      console.log('-------', user);
+      const userUpdate = user;
+      console.log('BODY:', body);
+
+      body.validated.forEach((entry) => {
+        console.log('-----', entry);
+        const key = entry[0];
+        const value = entry[1];
+        userUpdate[key] = value;
+        // console.log('User update values', userUpdate[key]);
+      });
+      console.log('User', user);
+      console.log('Userupdate', userUpdate);
+
+      userUpdate
+        .save()
+        .then(() => {
+          return res.status(200).json({
+            questionId: body.questionId,
+            answer: body.answer,
+            index: body.questionIndex,
+            data: body.validated,
+            message: 'User updated!'
+          });
+        })
+        .catch((error) => {
+          return res.status(404).json({
+            error,
+            message: 'User not updated!'
+          });
+        });
+    })
+    .catch((err) => {
       return res.status(404).json({
         err,
         message: 'User not found!'
       });
-    }
-
-    const userUpdate = user;
-
-    switch (body.action) {
-      case updateAction.updateAnswer: {
-        const foundIndex = userUpdate.answers.findIndex(
-          (answer) => answer.questionId === body.questionId
-        );
-        if (foundIndex > -1) {
-          userUpdate.answers[foundIndex].answerOption = body.answer;
-        } else {
-          console.log(body.questionIndex);
-          userUpdate.answers.push({ questionId: body.questionId, answerOption: body.answer });
-          userUpdate.stoppedAtIndex = body.questionIndex;
-        }
-        break;
-      }
-      case updateAction.resetAnswers: {
-        userUpdate.answers = [];
-        userUpdate.stoppedAtIndex = 0;
-        break;
-      }
-
-      default:
-        break;
-    }
-
-    console.log('------ updated answer', userUpdate);
-
-    userUpdate
-      .save()
-      .then(() => {
-        return res.status(200).json({
-          success: true,
-          questionId: body.questionId,
-          answer: body.answer,
-          index: body.questionIndex,
-          message: 'User updated!'
-        });
-      })
-      .catch((error) => {
-        return res.status(404).json({
-          error,
-          message: 'User not updated!'
-        });
-      });
-  });
+    });
 };
 
 module.exports = {

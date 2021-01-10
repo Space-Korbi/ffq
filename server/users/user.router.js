@@ -17,6 +17,10 @@ router.get(
   [authJwt.verifyToken, authJwt.authoriseUser],
   UserCtrl.getAnswerById
 );
-router.put('/users/:userId', [authJwt.verifyToken, authJwt.authoriseUser], UserCtrl.updateUserById);
+router.put(
+  '/users/:userId',
+  [authJwt.verifyToken, authJwt.authoriseUser, validate.update],
+  UserCtrl.updateUserById
+);
 
 module.exports = router;

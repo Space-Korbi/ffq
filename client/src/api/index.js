@@ -34,6 +34,9 @@ export const getUsersById = (userId) => api.get(`/users/${userId}`);
 export const getAnswerById = (userId, questionId) =>
   api.get(`users/${userId}/questions/${questionId}`);
 
+// user update
+export const updateUserData = (userId, payload) => api.put(`users/${userId}`, payload);
+
 // question
 export const insertQuestionAt = (questionnaireId, payload) =>
   api.post(`/questionnaires/${questionnaireId}/questions`, payload);
@@ -68,6 +71,7 @@ const apis = {
   getUsersMetadata,
   getUsersById,
   getAllUsers,
+  updateUserData,
   getAllQuestions,
   getAllQuestionsOfQuestionnaire,
   uploadImage

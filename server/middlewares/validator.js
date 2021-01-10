@@ -1,5 +1,5 @@
 /* eslint-disable prefer-promise-reject-errors */
-const { body, check, validationResult } = require('express-validator');
+const { body, check, param, validationResult } = require('express-validator');
 const User = require('../users/user.model');
 
 // Maybe body should be escaped
@@ -41,6 +41,29 @@ const login = [
     .withMessage('Password must be at least 5 characters long.')
 ];
 
+const update = [
+  param('userId').notEmpty().withMessage('User ID is required').bail(),
+  body('*').custom((data, { req }) => {
+    // console.log('---', value);
+    console.log('data', data);
+    const entries = Object.entries(data);
+    const userModel = User.schema.obj;
+    delete userModel.roles;
+
+    const validatedEntries = entries.filter((entry) => {
+      return Object.keys(userModel).includes(entry[0]) && entry[1];
+    });
+
+    if (!validatedEntries) {
+      return Promise.reject('No valid data for update');
+    }
+
+    req.body.validated = validatedEntries;
+    delete req.body.data;
+    return Promise.resolve(validatedEntries);
+  })
+];
+
 const userValidationRules = () => {
   return [
     // username must be an email
@@ -66,6 +89,7 @@ const validate = (req, res, next) => {
 module.exports = {
   login,
   signup,
+  update,
   userValidationRules,
   validate
 };

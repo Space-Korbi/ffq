@@ -14,17 +14,14 @@ const User = mongoose.model(
   'User',
   new mongoose.Schema(
     {
-      email: { type: String, unique: true, required: true },
+      email: { type: String, unique: true, lowercase: true, required: true },
       password: { type: String, required: true },
-      accountData: {
-        firstName: { type: String, default: '' },
-        lastName: { type: String, default: '' },
-        hasAcceptedConsentForm: { type: Boolean, default: false }
-      },
+      firstName: { type: String, default: '' },
+      lastName: { type: String, default: '' },
+      hasAcceptedConsentForm: { type: Boolean, default: false },
       personalData: { type: Schema.Types.Mixed, default: {} },
       screeningData: { type: Schema.Types.Mixed, default: {} },
-      screeningStatus: { type: String, default: 'wait' },
-
+      screeningStatus: { type: String, enum: ['accept', 'reject', 'wait'], default: 'accept' },
       startedOn: { type: Date },
       finishedOn: { type: Date },
       stoppedAtIndex: { type: Number, default: -1 },

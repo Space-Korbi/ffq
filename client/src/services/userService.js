@@ -3,6 +3,7 @@ import {
   getUsersById,
   getUsersMetadata,
   // getUsersAccountData,
+  updateUserData,
   getAnswerById,
   updateAnswerById
 } from '../api';
@@ -23,6 +24,13 @@ const fetchUsersById = (userId) => {
 
 const getMetaData = (userId) => {
   return getUsersMetadata(userId);
+};
+
+const updateData = (userId, data) => {
+  return updateUserData(userId, data).then((res) => {
+    console.log('Res', res);
+    return res.data;
+  });
 };
 
 /* const getAccountData = (userId) => {
@@ -48,6 +56,7 @@ const userService = {
   fetchUsersById,
   getMetaData,
   // getAccountData,
+  updateData,
   fetchAnswersById,
   saveAnswer,
   resetAnswers
