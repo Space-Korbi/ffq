@@ -1,15 +1,26 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+
+// services
+import { userService } from '../../services';
 
 // custom hooks
 import { useFetchUsers } from '../../hooks';
 
 const AccountDataPresenter = ({ user }) => {
-  console.log(user);
-  const { firstName, lastName, hasAcceptedConsentForm } = user.accountData;
-  const { email, startDate, endDate, stoppedAtIndex, isAccepted } = user;
+  const [hasAcceptedConsentForm, setHasAcceptedConsentForm] = useState(user.hasAcceptedConsentForm);
+  const {
+    id,
+    email,
+    firstName,
+    lastName,
+    startDate,
+    endDate,
+    stoppedAtIndex,
+    screeningStatus
+  } = user;
 
   return (
     <div className="jumbotron">
@@ -26,16 +37,34 @@ const AccountDataPresenter = ({ user }) => {
         {hasAcceptedConsentForm ? (
           <span className="badge badge-success mx-1">Accepted</span>
         ) : (
-          <span className="badge badge-danger mx-1">Has not been accepted</span>
+          <span className="badge badge-danger mx-1">Not accepted</span>
+        )}
+        {!hasAcceptedConsentForm && (
+          <button
+            type="button"
+            className="btn btn-sm btn-outline-success"
+            onClick={() =>
+              userService.updateData(id, { hasAcceptedConsentForm: true }).then((res) => {
+                setHasAcceptedConsentForm(res.data.hasAcceptedConsentForm);
+              })
+            }
+          >
+            Accept now
+          </button>
         )}
       </p>
       <p>
-        <strong>FFQ started:</strong>
-        {isAccepted ? (
-          <span className="badge badge-success mx-1">{isAccepted}</span>
-        ) : (
-          <span className="badge badge-danger mx-1">Rejected</span>
-        )}
+        <strong>Screening Status:</strong>
+        {(() => {
+          switch (screeningStatus) {
+            case 'accept':
+              return <span className="badge badge-success mx-1">Accepted</span>;
+            case 'reject':
+              return <span className="badge badge-danger mx-1">Rejected</span>;
+            default:
+              return <span className="badge badge-warning mx-1">Wait</span>;
+          }
+        })()}
       </p>
       <p>
         <strong>FFQ started:</strong>
