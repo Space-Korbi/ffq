@@ -26,7 +26,7 @@ const User = mongoose.model(
       finishedOn: { type: Date },
       stoppedAtIndex: { type: Number, default: -1 },
       answers: [Answer],
-
+      questionsToSkip: { type: [String], _id: false, default: [] },
       roles: [
         {
           type: Schema.Types.ObjectId,

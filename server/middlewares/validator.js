@@ -57,7 +57,7 @@ const update = [
         }
       }
 
-      return Object.keys(userModel).includes(entry[0]) && entry[1];
+      return Object.keys(userModel).includes(entry[0]) && (entry[1] !== null || entry[1] !== '');
     });
 
     if (!validatedEntries) {

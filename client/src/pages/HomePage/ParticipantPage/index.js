@@ -39,7 +39,7 @@ const ParticipantPage = ({ user }) => {
         setHeader('Die Umfrage ist abgeschlossen.');
         setTitle('Vielen Dank für Ihre Teilnahme.');
         setButtonTitle('Umfrage starten');
-      } else if (user.stoppedAtIndex > -1) {
+      } else if (user.stoppedAtIndex !== -1) {
         setHeader('Willkommen zurück!');
         setTitle(`Um die Umfrage fortzusetzen klicken Sie bitte auf "Umfrage fortsetzen"`);
         setButtonTitle('Umfrage fortsetzen');

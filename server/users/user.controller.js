@@ -201,26 +201,80 @@ const getAnswerById = async (req, res) => {
   }).catch((err) => console.log(err));
 };
 
-const resetAdminAnswers = async (req, res) => {
+const addQuestionIdsSkip = (questionIds, state) => {
+  return state.concat(questionIds);
+};
+
+const removeQuestionIdsFromSkip = (questionIds, state) => {
+  return state.filter((prevAnswer) => !questionIds.includes(prevAnswer));
+};
+
+const updateSkip = (prevAnswerOption, newAnswerOption, state) => {
+  let newSkip = state;
+  // const newSkips = userUpdate;
+  if (prevAnswerOption && prevAnswerOption.skip) {
+    newSkip = removeQuestionIdsFromSkip(prevAnswerOption.skip, state);
+  }
+  if (newAnswerOption.skip) {
+    newSkip = addQuestionIdsSkip(newAnswerOption.skip, state);
+  }
+
+  return newSkip;
+};
+
+const updateUserById = async (req, res) => {
   // Finds the validation errors in this request and wraps them in an object
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
+  const { body } = req;
+
   User.findOne({ _id: req.params.userId })
     .then((user) => {
       const userUpdate = user;
 
-      userUpdate.answers = [];
-      userUpdate.stoppedAtIndex = -1;
-      userUpdate.startedOn = undefined;
-      userUpdate.finishedOn = undefined;
+      console.log('body.validated', body.validated);
+
+      body.validated.forEach((entry) => {
+        const key = entry[0];
+        const value = entry[1];
+
+        if (key === 'answers') {
+          const index = userUpdate.answers.findIndex((answer) => {
+            return answer.questionId === value.questionId;
+          });
+          if (index !== -1) {
+            userUpdate.questionsToSkip = updateSkip(
+              user.answers[index].answerOption,
+              value.answerOption,
+              userUpdate.questionsToSkip
+            );
+            userUpdate.answers[index] = value;
+          } else {
+            userUpdate.questionsToSkip = updateSkip(
+              null,
+              value.answerOption,
+              userUpdate.questionsToSkip
+            );
+            userUpdate.answers.push(value);
+          }
+        } else {
+          userUpdate[key] = value;
+        }
+      });
+
+      console.log('----', userUpdate);
 
       userUpdate
         .save()
         .then(() => {
-          return res.status(204).send();
+          return res.status(200).json({
+            updated: body.validated,
+            data: body.data.answers,
+            message: 'User updated!'
+          });
         })
         .catch((error) => {
           return res.status(404).json({
@@ -237,58 +291,27 @@ const resetAdminAnswers = async (req, res) => {
     });
 };
 
-const updateUserById = async (req, res) => {
+const resetAdminAnswers = async (req, res) => {
   // Finds the validation errors in this request and wraps them in an object
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { body } = req;
-
   User.findOne({ _id: req.params.userId })
     .then((user) => {
       const userUpdate = user;
 
-      console.log('body', body);
-      if (body.reset) {
-        userUpdate.answers = [];
-        userUpdate.stoppedAtIndex = -1;
-        userUpdate.startedOn = undefined;
-        userUpdate.finishedOn = undefined;
-      } else {
-        body.validated.forEach((entry) => {
-          const key = entry[0];
-          const value = entry[1];
-          if (key === 'stoppedAtIndex' && value < user.stoppedAtIndex) {
-            return;
-          }
-
-          if (key === 'answers') {
-            const index = userUpdate.answers.findIndex((answer) => {
-              return answer.questionId === value.questionId;
-            });
-            if (index !== -1) {
-              userUpdate.answers[index] = value;
-            } else {
-              userUpdate.answers.push(value);
-            }
-          } else {
-            userUpdate[key] = value;
-          }
-        });
-      }
-
-      console.log('----', userUpdate);
+      userUpdate.answers = [];
+      userUpdate.questionsToSkip = [];
+      userUpdate.stoppedAtIndex = -1;
+      userUpdate.startedOn = undefined;
+      userUpdate.finishedOn = undefined;
 
       userUpdate
         .save()
         .then(() => {
-          return res.status(200).json({
-            updated: body.validated,
-            data: body.data.answers,
-            message: 'User updated!'
-          });
+          return res.status(204).send();
         })
         .catch((error) => {
           return res.status(404).json({

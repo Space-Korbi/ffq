@@ -1,5 +1,5 @@
 import React from 'react';
-import { arrayOf, func, string, shape, exact } from 'prop-types';
+import { arrayOf, func, string, shape } from 'prop-types';
 import { nanoid } from 'nanoid';
 
 import { OutlineButton } from '../../Button';
@@ -28,7 +28,7 @@ const ButtonColumn = ({ answerOptions, position, dispatch }) => {
 };
 
 ButtonColumn.propTypes = {
-  answerOptions: arrayOf(exact({ id: string.isRequired, title: string })),
+  answerOptions: arrayOf(shape({ id: string.isRequired, title: string })),
   position: string.isRequired,
   dispatch: func.isRequired
 };
@@ -99,8 +99,8 @@ const ButtonsEditor = ({ answerOptions, dispatch }) => {
 
 ButtonsEditor.propTypes = {
   answerOptions: shape({
-    left: arrayOf(exact({ id: string.isRequired, title: string })),
-    right: arrayOf(exact({ id: string.isRequired, title: string }))
+    left: arrayOf(shape({ id: string.isRequired, title: string })),
+    right: arrayOf(shape({ id: string.isRequired, title: string }))
   }).isRequired,
   dispatch: func.isRequired
 };

@@ -29,8 +29,14 @@ const createQuestionnaire = async () => {
 };
 
 const fetchAllQuestionnaires = async () => {
-  const questionnaires = await getAllQuestionnaires();
-  return questionnaires.data.data;
+  return getAllQuestionnaires()
+    .then((questionnaires) => {
+      return questionnaires.data.data;
+    })
+    .catch((err) => {
+      console.log(err);
+      return [];
+    });
 };
 
 const fetchAllQuestionsOfQuestionnaire = async (questionnaireId) => {
