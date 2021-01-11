@@ -4,7 +4,6 @@
 import React, { useEffect, useState } from 'react';
 import { string, shape, arrayOf, exact, bool, oneOfType, func } from 'prop-types';
 import { useParams } from 'react-router-dom';
-import { get } from 'lodash';
 // custom hooks
 import { useSaveAnswer } from '../../hooks';
 
@@ -74,9 +73,12 @@ const Question = ({
   const [{ answer, isSaving, isSavingError }, setAnswer] = useSaveAnswer(userId, id);
   const [latestAnswer, setLatestAnswer] = useState();
 
+  // console.log('Answer', answer);
+  // console.log('latestAnswer', latestAnswer);
+
   useEffect(() => {
     if (!isSaving && !isSavingError) {
-      setAnswer({ userInput, currentIndex });
+      setAnswer({ answerOption: userInput, currentIndex });
     }
   }, [userInput]);
 

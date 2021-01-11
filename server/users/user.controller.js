@@ -8,12 +8,6 @@ const User = require('./user.model');
 
 const Role = db.role;
 
-const updateAction = {
-  updateAnswer: 'updateAnswer',
-  updateData: 'updateData',
-  resetAnswers: 'resetAnswers'
-};
-
 // create user
 // api
 const createUser = (req, res) => {
@@ -218,28 +212,42 @@ const updateUserById = async (req, res) => {
 
   User.findOne({ _id: req.params.userId })
     .then((user) => {
-      console.log('-------', user);
       const userUpdate = user;
-      console.log('BODY:', body);
 
-      body.validated.forEach((entry) => {
-        console.log('-----', entry);
-        const key = entry[0];
-        const value = entry[1];
-        userUpdate[key] = value;
-        // console.log('User update values', userUpdate[key]);
-      });
-      console.log('User', user);
-      console.log('Userupdate', userUpdate);
+      console.log('body', body);
+      if (body.reset) {
+        userUpdate.answers = [];
+        userUpdate.stoppedAtIndex = -1;
+        userUpdate.startedOn = undefined;
+        userUpdate.finishedOn = undefined;
+      } else {
+        body.validated.forEach((entry) => {
+          const key = entry[0];
+          const value = entry[1];
+          if (key === 'stoppedAtIndex' && value < user.stoppedAtIndex) {
+            return;
+          }
 
+          if (key === 'answers') {
+            const index = userUpdate.answers.findIndex((answer) => {
+              return answer.questionId === value.questionId;
+            });
+            if (index !== -1) {
+              userUpdate.answers[index] = value;
+            } else {
+              userUpdate.answers.push(value);
+            }
+          } else {
+            userUpdate[key] = value;
+          }
+        });
+      }
       userUpdate
         .save()
         .then(() => {
           return res.status(200).json({
-            questionId: body.questionId,
-            answer: body.answer,
-            index: body.questionIndex,
-            data: body.validated,
+            updated: body.validated,
+            data: body.data.answers,
             message: 'User updated!'
           });
         })

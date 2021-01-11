@@ -48,9 +48,12 @@ const QuestionnairePresenterPage = ({ questionnaireId, isAdmin }) => {
       const newAnswers = prevAnswer;
       const index = findIndex(newAnswers, { questionId: answer.data.questionId });
       if (index > -1) {
-        newAnswers[index].answerOption = answer.data.answer;
+        newAnswers[index].answerOption = answer.data.answerOption;
       } else {
-        newAnswers.push({ questionId: answer.data.questionId, answerOption: answer.data.answer });
+        newAnswers.push({
+          questionId: answer.data.questionId,
+          answerOption: answer.data.answerOption
+        });
       }
       return newAnswers;
     });

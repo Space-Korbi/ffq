@@ -35,7 +35,10 @@ export const getAnswerById = (userId, questionId) =>
   api.get(`users/${userId}/questions/${questionId}`);
 
 // user update
-export const updateUserData = (userId, payload) => api.put(`users/${userId}`, payload);
+export const updateUser = (userId, payload) => api.put(`users/${userId}`, payload);
+
+// user reset
+export const resetAnswersById = (userId) => api.put(`users/${userId}`, { reset: true });
 
 // question
 export const insertQuestionAt = (questionnaireId, payload) =>
@@ -71,7 +74,7 @@ const apis = {
   getUsersMetadata,
   getUsersById,
   getAllUsers,
-  updateUserData,
+  updateUser,
   getAllQuestions,
   getAllQuestionsOfQuestionnaire,
   uploadImage

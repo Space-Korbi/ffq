@@ -9,7 +9,7 @@ const Submit = () => {
   const { userId } = useParams();
 
   const submit = () => {
-    userService.updateUser(userId, { data: { finishedOn: Date.now() } });
+    userService.updateUserData(userId, { data: { finishedOn: Date.now(), stoppedAtIndex: -1 } });
     history.push(`/users/${userId}`);
   };
 

@@ -44,13 +44,23 @@ const login = [
 const update = [
   param('userId').notEmpty().withMessage('User ID is required').bail(),
   body('*').custom((data, { req }) => {
-    // console.log('---', value);
-    console.log('data', data);
     const entries = Object.entries(data);
+
+    if (data.reset) {
+      return Promise.resolve(data.reset);
+    }
+
     const userModel = User.schema.obj;
     delete userModel.roles;
 
     const validatedEntries = entries.filter((entry) => {
+      if (entry[0] === 'answers') {
+        const answers = entry[1];
+        if (!answers || !answers.questionId || !answers.answerOption) {
+          return false;
+        }
+      }
+
       return Object.keys(userModel).includes(entry[0]) && entry[1];
     });
 

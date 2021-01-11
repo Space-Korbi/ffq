@@ -3,9 +3,10 @@ import {
   getUsersById,
   getUsersMetadata,
   // getUsersAccountData,
-  updateUserData,
+  updateUser,
   getAnswerById,
-  updateAnswerById
+  updateAnswerById,
+  resetAnswersById
 } from '../api';
 
 const updateAction = {
@@ -26,9 +27,15 @@ const getMetaData = (userId) => {
   return getUsersMetadata(userId);
 };
 
-const updateData = (userId, data) => {
-  return updateUserData(userId, data).then((res) => {
-    console.log('Res', res);
+const updateUserData = (userId, data) => {
+  return updateUser(userId, data).then((res) => {
+    return res.data;
+  });
+};
+
+const updateUserAnswer = (userId, answers, stoppedAtIndex) => {
+  const data = { answers, stoppedAtIndex };
+  return updateUser(userId, { data }).then((res) => {
     return res.data;
   });
 };
@@ -47,8 +54,7 @@ const saveAnswer = (userId, questionId, answer, questionIndex) => {
 };
 
 const resetAnswers = (userId) => {
-  const payload = { action: updateAction.resetAnswers };
-  return updateAnswerById(userId, payload);
+  return resetAnswersById(userId);
 };
 
 const userService = {
@@ -56,7 +62,8 @@ const userService = {
   fetchUsersById,
   getMetaData,
   // getAccountData,
-  updateData,
+  updateUserData,
+  updateUserAnswer,
   fetchAnswersById,
   saveAnswer,
   resetAnswers

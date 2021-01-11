@@ -6,7 +6,7 @@ import { get, findIndex, endsWith, trimEnd, differenceBy } from 'lodash';
  * only allow integers to be entered in number input
  */
 
-function UserInputAnswer({ answerOptions, submittedAnswer, onSubmit }) {
+const UserInputAnswer = ({ answerOptions, submittedAnswer, onSubmit }) => {
   const [userInputs, setUserInputs] = useState(answerOptions);
 
   useEffect(() => {
@@ -104,7 +104,7 @@ function UserInputAnswer({ answerOptions, submittedAnswer, onSubmit }) {
       </form>
     </div>
   );
-}
+};
 
 UserInputAnswer.propTypes = {
   answerOptions: arrayOf(
