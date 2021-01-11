@@ -63,7 +63,7 @@ const QuestionEditor = ({ question, onExit }) => {
             >
               Save and Exit
             </button>
-            {// TODO: Replace with "Save and Next"}
+            {/* TODO: Replace with "Save and Next" */}
             <button
               type="button"
               className="btn btn-outline-primary"
@@ -72,7 +72,7 @@ const QuestionEditor = ({ question, onExit }) => {
               Exit without Save
             </button>
           </div>
-          {// TODO: write "Preview" above}
+          {/* TODO: write "Preview" above */}
           <QuestionPreview
             title={title}
             subtitle1={subtitle1}
