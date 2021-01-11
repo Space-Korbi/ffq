@@ -26,6 +26,6 @@ router.delete(
   QuestionnaireCtrl.deleteQuestionnaire
 );
 router.get('/questionnaires/:id', QuestionnaireCtrl.getQuestionnaireById);
-router.get('/questionnaires', QuestionnaireCtrl.getQuestionnaires);
+router.get('/questionnaires', [authJwt.verifyToken], QuestionnaireCtrl.getQuestionnaires);
 
 module.exports = router;

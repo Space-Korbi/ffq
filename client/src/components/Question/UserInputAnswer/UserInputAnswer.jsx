@@ -6,7 +6,7 @@ import { get, findIndex, endsWith, trimEnd, differenceBy } from 'lodash';
  * only allow integers to be entered in number input
  */
 
-function UserInputAnswer({ answerOptions, submittedAnswer, onSubmit }) {
+const UserInputAnswer = ({ answerOptions, submittedAnswer, onSubmit }) => {
   const [userInputs, setUserInputs] = useState(answerOptions);
 
   useEffect(() => {
@@ -16,6 +16,10 @@ function UserInputAnswer({ answerOptions, submittedAnswer, onSubmit }) {
       setUserInputs(allInputFields);
     }
   }, [submittedAnswer]);
+
+  useEffect(() => {
+    setUserInputs(answerOptions);
+  }, [answerOptions]);
 
   function updateAnswer(e) {
     const updatedUserInputs = [...userInputs];
@@ -94,13 +98,13 @@ function UserInputAnswer({ answerOptions, submittedAnswer, onSubmit }) {
         })}
         <div className="d-flex justify-content-center mb-3">
           <button type="submit" className="btn btn-outline-primary">
-            Weiter
+            Continue
           </button>
         </div>
       </form>
     </div>
   );
-}
+};
 
 UserInputAnswer.propTypes = {
   answerOptions: arrayOf(

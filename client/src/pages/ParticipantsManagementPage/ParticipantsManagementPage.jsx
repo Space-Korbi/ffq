@@ -10,7 +10,7 @@ import ToolkitProvider, { CSVExport } from 'react-bootstrap-table2-toolkit';
 import { useFetchUsers, useFetchQuestions } from '../../hooks';
 
 // helpers
-import { addValidString } from '../../helpers';
+import { addValidString, dateHelper } from '../../helpers';
 
 // components
 import { NavTabs, NavContents } from '../../components/Navigation';
@@ -73,27 +73,33 @@ const dataColumns = [
     }
   },
   {
-    dataField: 'personalData',
-    text: 'Personal Data'
-  },
-  {
     dataField: 'screeningData',
     text: 'Screening Data'
   },
   {
-    dataField: 'startDate',
-    text: 'Started'
+    dataField: 'personalData',
+    text: 'Personal Data'
   },
   {
-    dataField: 'endDate',
-    text: 'Finished'
+    dataField: 'startedOn',
+    text: 'Started',
+    formatter: (cellContent, row) => {
+      return dateHelper.applyDateStyle(cellContent);
+    }
+  },
+  {
+    dataField: 'finishedOn',
+    text: 'Finished',
+    formatter: (cellContent, row) => {
+      return dateHelper.applyDateStyle(cellContent);
+    }
   }
 ];
 
 const ParticipantsManagementPage = () => {
   const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers();
   const [{ questions, isLoadingQuestions, isErrorQuestions }] = useFetchQuestions(
-    'kAOW7MPbGnNtqwQQvg3MY'
+    'tehsOCylVjJebsg5wi0u7'
   );
   const [selectionCriteria, setSelectionCriteria] = useState(mockSelectionCriteria);
   const [selectionRules, setSelectionRules] = useState(mockRules);
@@ -131,6 +137,7 @@ const ParticipantsManagementPage = () => {
   }, [questions]);
 
   useEffect(() => {
+    console.log('users', users);
     if (users && users.length) {
       const questionData = users.map((user) => {
         if (!user.answers || !user.answers.length) {

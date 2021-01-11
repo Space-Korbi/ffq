@@ -1,19 +1,57 @@
-import React from 'react';
-import { number } from 'prop-types';
-import { useRouteMatch, Link } from 'react-router-dom';
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect } from 'react';
+import { shape } from 'prop-types';
+import { useRouteMatch, useHistory, useParams } from 'react-router-dom';
 
-const ParticipantPage = ({ stoppedAtIndex }) => {
+// services
+import { userService } from '../../../services';
+
+// helpers
+import { dateHelper } from '../../../helpers';
+
+const intervals = [
+  { startDate: new Date('2021-01-09 23:00:00.000Z'), endDate: new Date('2021-02-06 23:00:00.000Z') }
+];
+
+const ParticipantPage = ({ user }) => {
+  const [header, setHeader] = useState('Willkommen');
+  const [title, setTitle] = useState(
+    `Um die Umfrage zu starten klicken Sie bitte auf "Umfrage starten"`
+  );
+  const [buttonTitle, setButtonTitle] = useState('Umfrage starten');
+  const [disabled, setDisabled] = useState();
+  const history = useHistory();
+  const { userId } = useParams();
   const { url } = useRouteMatch();
 
-  let header = 'Willkommen!';
-  let title = `Um die Umfrage zu starten klicken Sie bitte auf "Umfrage starten"`;
-  let buttonTitle = `Umfrage starten`;
+  useEffect(() => {
+    const { startDate } = intervals[0];
+    const { endDate } = intervals[0];
 
-  if (stoppedAtIndex > -1) {
-    header = 'Willkommen zurück!';
-    title = `Um die Umfrage fortzusetzen klicken Sie bitte auf "Umfrage fortsetzen"`;
-    buttonTitle = `Umfrage fortsetzen`;
-  }
+    if (!dateHelper.hasPassed(startDate)) {
+      setTitle(`Die Umfrage kann am ${dateHelper.toDateDE(startDate)} gestartet werden`);
+      setDisabled(true);
+    }
+    if (dateHelper.isBetween(startDate, endDate)) {
+      if (Date.now > user.finishedOn) {
+        setDisabled(true);
+        setHeader('Die Umfrage ist abgeschlossen.');
+        setTitle('Vielen Dank für Ihre Teilnahme.');
+        setButtonTitle('Umfrage starten');
+      } else if (user.stoppedAtIndex !== -1) {
+        setHeader('Willkommen zurück!');
+        setTitle(`Um die Umfrage fortzusetzen klicken Sie bitte auf "Umfrage fortsetzen"`);
+        setButtonTitle('Umfrage fortsetzen');
+      }
+    }
+  }, []);
+
+  const start = () => {
+    userService.updateUserData(userId, { data: { startedOn: Date.now() } });
+    history.push(`${url}/questionnairePresenter`);
+  };
+
   return (
     <div className="d-flex justify-content-center mt-3">
       <div className="jumbotron text-center" style={{ maxWidth: '800px' }}>
@@ -21,9 +59,16 @@ const ParticipantPage = ({ stoppedAtIndex }) => {
         <p className="lead">{title}</p>
         <hr className="my-4" />
         <div className="text-center">
-          <Link className="btn btn-primary btn-large" to={`${url}/questionnairePresenter`}>
+          <button
+            disabled={disabled}
+            type="button"
+            className="btn btn-lg btn-primary mt-3"
+            onClick={() => {
+              start();
+            }}
+          >
             {buttonTitle}
-          </Link>
+          </button>
         </div>
       </div>
     </div>
@@ -31,7 +76,7 @@ const ParticipantPage = ({ stoppedAtIndex }) => {
 };
 
 ParticipantPage.propTypes = {
-  stoppedAtIndex: number.isRequired
+  user: shape({}).isRequired
 };
 
 export default ParticipantPage;

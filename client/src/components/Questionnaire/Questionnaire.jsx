@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Question from './Question';
 import NavigationButton from './Navigation';
 import ProgressIndicator from './ProgressIndicator';
-import Submit from './Submit';
 
 const images = { small: 'pizzaQuarter', medium: 'pizzaHalf', large: 'pizzaWhole' };
 
@@ -190,9 +189,7 @@ function Questionnaire() {
   return (
     <div className="mx-5 my-5">
       {isLastElement && !isValidQuestionIndex(currentElementIndex) ? (
-        <div>
-          <Submit />
-        </div>
+        <div>Hi</div>
       ) : (
         <Question
           key={currentElementIndex}

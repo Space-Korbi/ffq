@@ -34,8 +34,8 @@ QuestionPreview.propTypes = {
     type: string.isRequired,
     options: oneOfType([
       exact({
-        left: arrayOf(exact({ id: string.isRequired, title: string })),
-        right: arrayOf(exact({ id: string.isRequired, title: string }))
+        left: arrayOf(shape({ id: string.isRequired, title: string })),
+        right: arrayOf(shape({ id: string.isRequired, title: string }))
       }),
       arrayOf(
         shape({

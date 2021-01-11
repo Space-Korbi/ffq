@@ -69,9 +69,23 @@ const reducerHelper = {
     };
   },
 
-  addSkippingTargets: (state, action) => {
-    console.log('skipping...');
-    console.log(state, action);
+  setSkippedQuestions: (state, action) => {
+    if (action.payload.position === 'left') {
+      const newState = state.options.left.map((el) =>
+        el.id === action.payload.id ? { ...el, skip: action.payload.skip } : el
+      );
+      return {
+        type: AnswerType.Frequency,
+        options: { left: newState, right: state.options.right }
+      };
+    }
+    const newState = state.options.right.map((el) =>
+      el.id === action.payload.id ? { ...el, skip: action.payload.skip } : el
+    );
+    return {
+      type: AnswerType.Frequency,
+      options: { left: state.options.left, right: newState }
+    };
   },
 
   addCard: (state, action) => {
@@ -193,8 +207,8 @@ const answerReducer = (state, action) => {
       return reducerHelper.removeButton(state, action);
     case 'changeButtonTitle':
       return reducerHelper.changeButtonTitle(state, action);
-    case 'addSkippingTargets':
-      return reducerHelper.addSkippingTargets(state, action);
+    case 'setSkippedQuestions':
+      return reducerHelper.setSkippedQuestions(state, action);
     case 'addCard':
       return reducerHelper.addCard(state, action);
     case 'removeCard':

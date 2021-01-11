@@ -18,27 +18,44 @@ const SignUpPage = () => {
               firstName: '',
               lastName: '',
               email: '',
-              password: ''
+              password: '',
+              confirmPassword: ''
             }}
             validationSchema={Yup.object().shape({
               firstName: Yup.string().required('First name is required'),
               lastName: Yup.string().required('Last name is required'),
               email: Yup.string().required('Email is required'),
-              password: Yup.string().required('Password is required')
+              password: Yup.string()
+                .required('Password is required')
+                .min(5, 'Password must be at least 5 characters'),
+              confirmPassword: Yup.string()
+                .required('Please confirm your password')
+                .when('password', {
+                  is: (password) => !!(password && password.length > 0),
+                  then: Yup.string().oneOf([Yup.ref('password')], "Password doesn't match")
+                })
             })}
             onSubmit={({ firstName, lastName, email, password }, { setStatus, setSubmitting }) => {
-              authService.registerUser(firstName, lastName, email, password).then(
+              authService.signupUser(firstName, lastName, email, password).then(
                 (response) => {
                   setSubmitting(false);
                   if (response.status === 200) {
                     // eslint-disable-next-line no-alert
-                    window.alert('Sign Up successful!');
+                    window.alert('Sign up successful!');
                     history.push(`/login`);
                   }
                 },
                 (error) => {
                   setSubmitting(false);
-                  setStatus(error.response.data.message);
+                  const errorList = (listElement) => (
+                    <ul className="list-unstyled content-align-center mb-0">{listElement}</ul>
+                  );
+                  if (error.data.errors) {
+                    const errorListElements = error.data.errors.map((err) => {
+                      return <li key={err.value}>{err.msg}</li>;
+                    });
+                    setStatus(errorList(errorListElements));
+                  }
                 }
               );
             }}
@@ -89,6 +106,21 @@ const SignUpPage = () => {
                     }`}
                   />
                   <ErrorMessage name="password" component="div" className="invalid-feedback" />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="confirmPassword">Confirm Password</label>
+                  <Field
+                    name="confirmPassword"
+                    type="password"
+                    className={`form-control${
+                      errors.confirmPassword && touched.confirmPassword ? ' is-invalid' : ''
+                    }`}
+                  />
+                  <ErrorMessage
+                    name="confirmPassword"
+                    component="div"
+                    className="invalid-feedback"
+                  />
                 </div>
                 <div className="form-group">
                   <button type="submit" className="btn btn-primary" disabled={isSubmitting}>

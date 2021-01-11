@@ -180,13 +180,31 @@ const getQuestionnaireById = async (req, res) => {
   }).catch((err) => console.log(err));
 };
 
+// GET
+// http://localhost:3000/api-docs/#/default/get-questionnaires
 const getQuestionnaires = async (req, res) => {
   await Questionnaire.find({}, null, { sort: 'createdAt' }, (err, questionnaires) => {
     if (err) {
-      return res.status(400).json({ success: false, error: err });
+      return res.status(400).json({
+        error: err,
+        title: 'Bad request.',
+        detail: 'No questionnaires could fe found.'
+      });
     }
 
-    return res.status(200).json({ success: true, data: questionnaires });
+    if (questionnaires && !questionnaires.length) {
+      return res.status(404).json({
+        title: 'No Questionnaires.',
+        detail: 'No questionnaires have been created yet.',
+        data: questionnaires
+      });
+    }
+
+    return res.status(200).json({
+      title: 'All questionnaires.',
+      detail: 'Data of all questionnaires.',
+      data: questionnaires
+    });
   }).catch((err) => console.log(err));
 };
 

@@ -2,7 +2,7 @@ import { useEffect, useReducer } from 'react';
 // Services
 import { userService } from '../services';
 
-// Custom question fetching hook
+// Custom users fetching hook
 const useFetchUsers = (userId) => {
   const fetchUserReducer = (state, action) => {
     switch (action.type) {
@@ -38,17 +38,19 @@ const useFetchUsers = (userId) => {
 
   useEffect(() => {
     let didCancel = false;
+
     const fetchUsers = async () => {
       dispatch({ type: 'FETCH_INIT' });
+
       try {
         let fetchedUsers;
         if (userId) {
-          fetchedUsers = await userService.fetchUserById(userId);
+          fetchedUsers = await userService.fetchUsersById(userId);
         } else {
           fetchedUsers = await userService.fetchAllUsers();
         }
         if (!didCancel) {
-          dispatch({ type: 'FETCH_SUCCESS', payload: fetchedUsers.data.data });
+          dispatch({ type: 'FETCH_SUCCESS', payload: fetchedUsers.data.users });
         }
       } catch (error) {
         if (!didCancel) {

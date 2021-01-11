@@ -17,9 +17,9 @@ api.interceptors.request.use((request) => {
   return request;
 });
 
-// auth
-export const signup = (payload) => api.post(`/auth/signup`, payload);
-export const login = (payload) => api.post(`/auth/login`, payload);
+// login/signup
+export const signup = (payload) => axios.post(`http://localhost:3000/api/users/signup`, payload);
+export const login = (payload) => axios.post(`http://localhost:3000/api/users/login`, payload);
 
 // user
 export const updateAnswerById = (userId, payload) => api.put(`users/${userId}`, payload);
@@ -30,9 +30,16 @@ export const getUsersMetadata = (userId) =>
 api.get(`/users/${userId}/?resource=accountData`); */
 
 export const getAllUsers = () => api.get(`/users`);
-export const getUserById = (userId) => api.get(`/users/${userId}`);
+export const getUsersById = (userId) => api.get(`/users/${userId}`);
 export const getAnswerById = (userId, questionId) =>
   api.get(`users/${userId}/questions/${questionId}`);
+
+// user update
+export const updateUser = (userId, payload) => api.put(`users/${userId}`, payload);
+
+// user reset
+export const resetAdminAnswers = (userId) =>
+  api.put(`/users/${userId}/reset`, { data: { reset: true } });
 
 // question
 export const insertQuestionAt = (questionnaireId, payload) =>
@@ -66,8 +73,9 @@ const apis = {
   insertQuestionnaire,
   insertQuestionAt,
   getUsersMetadata,
-  // getUsersAccountData,
+  getUsersById,
   getAllUsers,
+  updateUser,
   getAllQuestions,
   getAllQuestionsOfQuestionnaire,
   uploadImage

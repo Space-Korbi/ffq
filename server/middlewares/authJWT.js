@@ -8,12 +8,19 @@ const Role = db.role;
 const verifyToken = (req, res, next) => {
   const token = req.headers['x-access-token'];
   if (!token) {
-    return res.status(403).send({ message: 'No token provided!' });
+    return res.status(403).json({
+      title: 'No token provided.',
+      detail: 'Ensure that a valid access token is inlcuded in the request header.'
+    });
   }
 
   jwt.verify(token, config.secret, (err, decoded) => {
     if (err) {
-      return res.status(401).send({ message: 'Unauthorized!' });
+      return res.status(401).json({
+        err,
+        title: 'Token could not be verified.',
+        detail: 'Ensure that the access token is valid.'
+      });
     }
 
     req.userId = decoded.id;
@@ -23,7 +30,10 @@ const verifyToken = (req, res, next) => {
 
 const authoriseUser = (req, res, next) => {
   if (req.userId !== req.params.userId) {
-    return res.status(401).send({ message: 'Unauthorized!' });
+    return res.status(401).send({
+      title: 'User unauthorized.',
+      detail: 'You are not authorized to access this resource.'
+    });
   }
   next();
 };
@@ -32,6 +42,13 @@ const isAdmin = (req, res, next) => {
   User.findById(req.userId).exec((err, user) => {
     if (err) {
       res.status(500).send({ message: err });
+      return;
+    }
+
+    if (!user) {
+      res
+        .status(404)
+        .json({ title: 'Not found.', detail: `No user found for provided access-token.` });
       return;
     }
 

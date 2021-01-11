@@ -21,29 +21,43 @@ const LoginPage = () => {
           <div className="alert alert-info">
             Test Accounts
             <br />
-            <strong>Administrator</strong> - Email: admin@abc.de PW: admin
+            <strong>Administrator</strong> - Email: admin@abc.de PW: 12345
             <br />
-            <strong>User</strong> - Email: user@abc.de PW: user
+            <strong>User</strong> - Email: user@abc.de PW: 54321
           </div>
           <h2>Login</h2>
           <br />
           <Formik
             initialValues={{
-              email: 'u@5',
+              email: 'a@1.de',
               password: '12345'
             }}
             validationSchema={Yup.object().shape({
               email: Yup.string().required('Email is required'),
-              password: Yup.string().required('Password is required')
+              password: Yup.string()
+                .required('Password is required')
+                .min(5, 'Password must be at least 5 characters')
             })}
             onSubmit={({ email, password }, { setStatus, setSubmitting }) => {
               authService.loginUser(email, password).then(
-                (user) => {
-                  history.push(`/users/${user.id}`);
+                (response) => {
+                  history.push(`/users/${response.user.id}`);
                 },
                 (error) => {
                   setSubmitting(false);
-                  setStatus(error.body);
+                  const errorList = (listElement) => (
+                    <ul className="list-unstyled content-align-center mb-0">{listElement}</ul>
+                  );
+                  if ([401, 403].indexOf(error.status) !== -1) {
+                    setStatus(errorList(<li>Password is incorrect.</li>));
+                  } else if ([404].indexOf(error.status) !== -1) {
+                    setStatus(errorList(<li>Email is incorrect.</li>));
+                  } else if (error.data.errors) {
+                    const errorListElements = error.data.errors.map((err) => {
+                      return <li key={err.value}>{err.msg}</li>;
+                    });
+                    setStatus(errorList(errorListElements));
+                  }
                 }
               );
             }}

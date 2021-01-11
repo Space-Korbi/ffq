@@ -21,23 +21,24 @@ const ButtonEditor = ({ dispatch, position, answerOption, index }) => {
   );
 
   const actionTabContent = (
-    <div className="input-group input-group-sm flex-nowrap">
-      <div className="input-group-prepend">
-        <span className="input-group-text" id="inputGroup-sizing-sm">
-          Skip
-        </span>
-      </div>
-      <input
-        type="number"
-        className="form-control"
-        aria-label="Sizing example input"
-        aria-describedby="inputGroup-sizing-sm"
-      />
-      <div className="input-group-append">
-        <span className="input-group-text" id="inputGroup-sizing-sm">
-          Questions
-        </span>
-      </div>
+    <div className="d-flex justify-content-center">
+      <button
+        type="button"
+        className="btn btn-outline-primary"
+        onClick={() => {
+          dispatch({
+            type: 'setSkippedQuestions',
+            payload: {
+              id: answerOption.id,
+              position,
+              skip: ['zuXep7dQpbtxP9eVDHGIC', '28cmxuyM4TEUM-AAgM67u']
+            }
+          });
+          console.log('open modal');
+        }}
+      >
+        Select questions to skip
+      </button>
     </div>
   );
 

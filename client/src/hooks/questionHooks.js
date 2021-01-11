@@ -169,13 +169,21 @@ const useSaveAnswer = (userId, questionId) => {
     const saveAnswer = async () => {
       dispatch({ type: 'SAVE_INIT' });
       try {
-        if (get(answer, 'userInput.id', false) || get(answer, ['userInput', '0', 'id'], false)) {
-          const savedAnswer = await userService.saveAnswer(
-            userId,
+        if (
+          get(answer, 'answerOption.id', false) ||
+          get(answer, ['answerOption', '0', 'id'], false)
+        ) {
+          const answers = {
             questionId,
-            answer.userInput,
+            answerOption: answer.answerOption
+          };
+
+          const savedAnswer = await userService.updateUserAnswer(
+            userId,
+            answers,
             answer.currentIndex
           );
+
           if (!didCancel) {
             dispatch({
               type: 'SAVE_SUCCESS',
