@@ -201,6 +201,42 @@ const getAnswerById = async (req, res) => {
   }).catch((err) => console.log(err));
 };
 
+const resetAdminAnswers = async (req, res) => {
+  // Finds the validation errors in this request and wraps them in an object
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  User.findOne({ _id: req.params.userId })
+    .then((user) => {
+      const userUpdate = user;
+
+      userUpdate.answers = [];
+      userUpdate.stoppedAtIndex = -1;
+      userUpdate.startedOn = undefined;
+      userUpdate.finishedOn = undefined;
+
+      userUpdate
+        .save()
+        .then(() => {
+          return res.status(204).send();
+        })
+        .catch((error) => {
+          return res.status(404).json({
+            error,
+            message: 'User not updated!'
+          });
+        });
+    })
+    .catch((err) => {
+      return res.status(404).json({
+        err,
+        message: 'User not found!'
+      });
+    });
+};
+
 const updateUserById = async (req, res) => {
   // Finds the validation errors in this request and wraps them in an object
   const errors = validationResult(req);
@@ -242,6 +278,9 @@ const updateUserById = async (req, res) => {
           }
         });
       }
+
+      console.log('----', userUpdate);
+
       userUpdate
         .save()
         .then(() => {
@@ -272,7 +311,8 @@ module.exports = {
   getUsers,
   getUsersById,
   getAnswerById,
-  updateUserById
+  updateUserById,
+  resetAdminAnswers
 };
 
 /*

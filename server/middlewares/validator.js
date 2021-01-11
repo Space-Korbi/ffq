@@ -46,10 +46,6 @@ const update = [
   body('*').custom((data, { req }) => {
     const entries = Object.entries(data);
 
-    if (data.reset) {
-      return Promise.resolve(data.reset);
-    }
-
     const userModel = User.schema.obj;
     delete userModel.roles;
 
@@ -71,6 +67,15 @@ const update = [
     req.body.validated = validatedEntries;
     delete req.body.data;
     return Promise.resolve(validatedEntries);
+  })
+];
+
+const reset = [
+  param('userId').notEmpty().withMessage('User ID is required').bail(),
+  body('*').custom((data) => {
+    if (data.reset) {
+      return Promise.resolve(data.reset);
+    }
   })
 ];
 
@@ -100,6 +105,7 @@ module.exports = {
   login,
   signup,
   update,
+  reset,
   userValidationRules,
   validate
 };

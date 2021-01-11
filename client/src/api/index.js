@@ -38,7 +38,8 @@ export const getAnswerById = (userId, questionId) =>
 export const updateUser = (userId, payload) => api.put(`users/${userId}`, payload);
 
 // user reset
-export const resetAnswersById = (userId) => api.put(`users/${userId}`, { reset: true });
+export const resetAdminAnswers = (userId) =>
+  api.put(`/users/${userId}/reset`, { data: { reset: true } });
 
 // question
 export const insertQuestionAt = (questionnaireId, payload) =>

@@ -6,7 +6,7 @@ import {
   updateUser,
   getAnswerById,
   updateAnswerById,
-  resetAnswersById
+  resetAdminAnswers
 } from '../api';
 
 const updateAction = {
@@ -54,7 +54,7 @@ const saveAnswer = (userId, questionId, answer, questionIndex) => {
 };
 
 const resetAnswers = (userId) => {
-  return resetAnswersById(userId);
+  return resetAdminAnswers(userId);
 };
 
 const userService = {
