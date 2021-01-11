@@ -10,7 +10,7 @@ import ToolkitProvider, { CSVExport } from 'react-bootstrap-table2-toolkit';
 import { useFetchUsers, useFetchQuestions } from '../../hooks';
 
 // helpers
-import { addValidString } from '../../helpers';
+import { addValidString, dateHelper } from '../../helpers';
 
 // components
 import { NavTabs, NavContents } from '../../components/Navigation';
@@ -39,15 +39,15 @@ const dataColumns = [
     text: 'Email'
   },
   {
-    dataField: 'accountData.firstName',
+    dataField: 'firstName',
     text: 'First Name'
   },
   {
-    dataField: 'accountData.lastName',
+    dataField: 'lastName',
     text: 'Last Name'
   },
   {
-    dataField: 'accountData.hasAcceptedConsentForm',
+    dataField: 'hasAcceptedConsentForm',
     text: 'Consent Form',
     formatter: (cellContent, row) => {
       if (cellContent) {
@@ -81,12 +81,18 @@ const dataColumns = [
     text: 'Personal Data'
   },
   {
-    dataField: 'startDate',
-    text: 'Started'
+    dataField: 'startedOn',
+    text: 'Started',
+    formatter: (cellContent, row) => {
+      return dateHelper.applyDateStyle(cellContent);
+    }
   },
   {
-    dataField: 'endDate',
-    text: 'Finished'
+    dataField: 'finishedOn',
+    text: 'Finished',
+    formatter: (cellContent, row) => {
+      return dateHelper.applyDateStyle(cellContent);
+    }
   }
 ];
 

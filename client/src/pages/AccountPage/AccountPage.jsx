@@ -6,6 +6,9 @@ import { useParams } from 'react-router-dom';
 // services
 import { userService } from '../../services';
 
+// helpers
+import { dateHelper } from '../../helpers';
+
 // custom hooks
 import { useFetchUsers } from '../../hooks';
 
@@ -16,8 +19,8 @@ const AccountDataPresenter = ({ user }) => {
     email,
     firstName,
     lastName,
-    startDate,
-    endDate,
+    startedOn,
+    finishedOn,
     stoppedAtIndex,
     screeningStatus
   } = user;
@@ -44,9 +47,11 @@ const AccountDataPresenter = ({ user }) => {
             type="button"
             className="btn btn-sm btn-outline-success"
             onClick={() =>
-              userService.updateData(id, { hasAcceptedConsentForm: true }).then((res) => {
-                setHasAcceptedConsentForm(res.data.hasAcceptedConsentForm);
-              })
+              userService
+                .updateUserData(id, { data: { hasAcceptedConsentForm: true } })
+                .then((res) => {
+                  setHasAcceptedConsentForm(true);
+                })
             }
           >
             Accept now
@@ -68,19 +73,15 @@ const AccountDataPresenter = ({ user }) => {
       </p>
       <p>
         <strong>FFQ started:</strong>
-        {startDate ? (
-          <span className="badge badge-success mx-1">{startDate}</span>
-        ) : (
-          <span className="badge badge-danger mx-1"> Has not been started </span>
-        )}
+        {dateHelper.applyDateStyle(startedOn)}
       </p>
       <p>
         <strong>FFQ finished:</strong>
-        {endDate ? (
-          <span className="badge badge-success mx-1">{endDate}</span>
+        {finishedOn ? (
+          <span className="badge badge-success mx-1">{dateHelper.toDateDE(finishedOn)}</span>
         ) : (
           <span>
-            <span className="badge badge-warning mx-1">Not yet finished.</span>The last question
+            <span className="badge badge-warning mx-1">Not finished.</span>The last question
             answered is
             <span className="badge badge-info mx-1">Question {stoppedAtIndex + 1}</span>
           </span>
