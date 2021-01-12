@@ -235,8 +235,6 @@ const updateUserById = async (req, res) => {
     .then((user) => {
       const userUpdate = user;
 
-      console.log('body.validated', body.validated);
-
       body.validated.forEach((entry) => {
         const key = entry[0];
         const value = entry[1];
