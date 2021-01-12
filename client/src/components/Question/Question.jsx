@@ -74,7 +74,7 @@ const Question = ({
   const [latestAnswer, setLatestAnswer] = useState();
 
   useEffect(() => {
-    if (!isSaving && !isSavingError) {
+    if (!isSaving && !isSavingError && userInput) {
       setAnswer({ answerOption: userInput, currentIndex });
     }
   }, [userInput]);
@@ -91,6 +91,7 @@ const Question = ({
 
   useEffect(() => {
     setLatestAnswer(submittedAnswer);
+    setUserInput(null);
   }, [submittedAnswer]);
 
   return (

@@ -56,10 +56,8 @@ const QuestionnairePresenter = ({
 
   // Recursevly looking for the next Question that wont be skipped
   const nextUnskippedQuestionAt = (index) => {
-    console.log('trying going to', index);
     const newIndex = index;
     if (willSkipQuestionAt(index)) {
-      console.log('skipping', index);
       return nextUnskippedQuestionAt(newIndex + 1);
     }
     return newIndex;
@@ -70,7 +68,6 @@ const QuestionnairePresenter = ({
   useEffect(() => {
     answersRef.current = answers;
 
-    console.log(answers);
     if (answers && answers.length && answers[0]) {
       const nextQuestionIndex = nextUnskippedQuestionAt(currentIndex + 1);
       setCurrentIndex(nextQuestionIndex);
@@ -86,10 +83,8 @@ const QuestionnairePresenter = ({
   }, [currentIndex]);
 
   const prevUnskippedQuestionAt = (index) => {
-    console.log('trying going prev to', index);
     const newIndex = index;
     if (willSkipQuestionAt(index)) {
-      console.log('skipping back', index);
       return prevUnskippedQuestionAt(newIndex - 1);
     }
     return newIndex;
@@ -107,11 +102,9 @@ const QuestionnairePresenter = ({
 
   const updateSkip = (prevAnswerOption, newAnswerOption) => {
     if (prevAnswerOption && prevAnswerOption.skip) {
-      // console.log('removing', prevAnswerOption.skip);
       removeQuestionIdsFromSkip(prevAnswerOption.skip);
     }
     if (newAnswerOption.skip) {
-      // console.log('Adding', newAnswerOption.skip);
       addQuestionIdsSkip(newAnswerOption.skip);
     }
   };
