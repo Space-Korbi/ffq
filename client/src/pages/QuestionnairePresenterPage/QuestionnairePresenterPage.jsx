@@ -6,7 +6,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { bool, string } from 'prop-types';
 import { useParams } from 'react-router-dom';
-import { findIndex } from 'lodash';
 import { userService } from '../../services';
 
 // custom hooks
@@ -31,22 +30,6 @@ const QuestionnairePresenter = ({
   const { userId } = useParams();
   const answersRef = useRef(answers);
 
-  useEffect(() => {
-    if (!previousAnswers || !previousAnswers.length) {
-      const initalAnswers = new Array(questions.length);
-      setAnswers(initalAnswers);
-    } else {
-      const initalAnswers = new Array(questions.length).fill(null);
-      previousAnswers.forEach((answer) => {
-        const index = questions.findIndex((question) => {
-          return question._id === answer.questionId;
-        });
-        initalAnswers[index] = answer;
-      });
-      setAnswers(initalAnswers);
-    }
-  }, []);
-
   const willSkipQuestionAt = (index) => {
     if (questions && questions[index] && toSkip.includes(questions[index]._id)) {
       return true;
@@ -63,7 +46,7 @@ const QuestionnairePresenter = ({
     return newIndex;
   };
 
-  const [currentIndex, setCurrentIndex] = useState(() => nextUnskippedQuestionAt(stoppedAtIndex));
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     answersRef.current = answers;
@@ -73,6 +56,24 @@ const QuestionnairePresenter = ({
       setCurrentIndex(nextQuestionIndex);
     }
   }, [answers]);
+
+  useEffect(() => {
+    if (!previousAnswers || !previousAnswers.length) {
+      const initalAnswers = new Array(questions.length);
+      setAnswers(initalAnswers);
+    } else {
+      const initalAnswers = new Array(questions.length).fill(null);
+      previousAnswers.forEach((answer) => {
+        const index = questions.findIndex((question) => {
+          return question._id === answer.questionId;
+        });
+        console.log(index);
+        setCurrentIndex(() => nextUnskippedQuestionAt(index));
+        initalAnswers[index] = answer;
+      });
+      setAnswers(initalAnswers);
+    }
+  }, []);
 
   useEffect(() => {
     if (currentIndex <= 0) {
