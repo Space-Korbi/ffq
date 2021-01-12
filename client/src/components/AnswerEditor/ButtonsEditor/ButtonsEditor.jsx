@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { arrayOf, func, string, shape } from 'prop-types';
 import { nanoid } from 'nanoid';
@@ -6,7 +7,7 @@ import { OutlineButton } from '../../Button';
 import ButtonEditor from './ButtonEditor';
 import { CardsGrid } from '../../Cards';
 
-const ButtonColumn = ({ answerOptions, position, dispatch }) => {
+const ButtonColumn = ({ answerOptions, position, dispatch, modalTable }) => {
   const ButtonEditors = answerOptions.map((answerOption, index) => {
     return (
       <ButtonEditor
@@ -15,6 +16,7 @@ const ButtonColumn = ({ answerOptions, position, dispatch }) => {
         answerOption={answerOption}
         dispatch={dispatch}
         position={position}
+        modalTable={modalTable}
       />
     );
   });
@@ -54,7 +56,7 @@ const AddButton = ({ position, dispatch }) => {
 
 AddButton.propTypes = { position: string.isRequired, dispatch: func.isRequired };
 
-const ButtonsEditor = ({ answerOptions, dispatch }) => {
+const ButtonsEditor = ({ answerOptions, dispatch, modalTable }) => {
   const removeButton = (buttonToRemove, position) => {
     dispatch({ type: 'removeButton', payload: { position, id: buttonToRemove.id } });
   };
@@ -78,6 +80,7 @@ const ButtonsEditor = ({ answerOptions, dispatch }) => {
                 position="left"
                 dispatch={dispatch}
                 removeButton={removeButton}
+                modalTable={modalTable}
               />
             </div>
           )}
@@ -88,6 +91,7 @@ const ButtonsEditor = ({ answerOptions, dispatch }) => {
                 position="right"
                 dispatch={dispatch}
                 removeButton={removeButton}
+                modalTable={modalTable}
               />
             </div>
           )}

@@ -211,6 +211,27 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
     }
   ];
 
+  const modalTableColumns = [
+    {
+      text: '',
+      dataField: 'index',
+      align: 'center',
+      style: { width: '8px' }
+    },
+    {
+      text: 'Title',
+      dataField: 'question.title'
+    },
+    {
+      text: 'Subtitle1',
+      dataField: 'question.subtitle1'
+    },
+    {
+      text: 'Subtitle2',
+      dataField: 'question.subtitle2'
+    }
+  ];
+
   const updateQuestions = (editedQuestion) => {
     const questionsCopy = questionsRef.current;
     questionsCopy.splice(selectedQuestion.index, 1, editedQuestion);
@@ -221,7 +242,11 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
   return (
     <div>
       {isEditing ? (
-        <QuestionEditor question={selectedQuestion.question} onExit={updateQuestions} />
+        <QuestionEditor
+          question={selectedQuestion.question}
+          onExit={updateQuestions}
+          modalTable={{ data, modalTableColumns, index: selectedQuestion.index }}
+        />
       ) : (
         <>
           {isLoading ? (

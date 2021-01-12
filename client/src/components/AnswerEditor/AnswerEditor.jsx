@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import { arrayOf, func, string, shape, exact, bool, oneOfType } from 'prop-types';
 
@@ -6,7 +7,7 @@ import CardsEditor from './CardsEditor/CardsEditor';
 import InputsEditor from './InputsEditor/InputsEditor';
 import AnswerType from '../../types';
 
-const AnswerEditor = ({ answerOptions, dispatch, answerType }) => {
+const AnswerEditor = ({ answerOptions, dispatch, answerType, modalTable }) => {
   const [editor, setEditor] = useState(<div />);
 
   useEffect(() => {
@@ -14,7 +15,11 @@ const AnswerEditor = ({ answerOptions, dispatch, answerType }) => {
       case AnswerType.Frequency:
         setEditor(
           <div>
-            <ButtonsEditor answerOptions={answerOptions.options} dispatch={dispatch} />
+            <ButtonsEditor
+              answerOptions={answerOptions.options}
+              dispatch={dispatch}
+              modalTable={modalTable}
+            />
           </div>
         );
         break;

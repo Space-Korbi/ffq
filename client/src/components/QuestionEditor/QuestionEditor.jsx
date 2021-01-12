@@ -14,7 +14,7 @@ import { answerReducer } from '../../helpers';
 import { questionService } from '../../services';
 import AnswerEditor from '../AnswerEditor/AnswerEditor';
 
-const QuestionEditor = ({ question, onExit }) => {
+const QuestionEditor = ({ question, onExit, modalTable }) => {
   const [title, setTitle] = useState(question.title);
   const [subtitle1, setSubtitle1] = useState(question.subtitle1);
   const [subtitle2, setSubtitle2] = useState(question.subtitle2);
@@ -41,7 +41,12 @@ const QuestionEditor = ({ question, onExit }) => {
             />
             <HelpTextInput help={help} onChange={setHelp} />
           </div>
-          <AnswerEditor answerOptions={answerOptions} answerType={answerType} dispatch={dispatch} />
+          <AnswerEditor
+            answerOptions={answerOptions}
+            answerType={answerType}
+            dispatch={dispatch}
+            modalTable={modalTable}
+          />
         </div>
 
         {/**
