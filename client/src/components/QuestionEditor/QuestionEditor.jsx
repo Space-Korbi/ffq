@@ -68,13 +68,13 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
             >
               Save and Exit
             </button>
-            {/* TODO: Replace with "Save and Next" */}
+            {/* TODO: link to or create next question" */}
             <button
               type="button"
               className="btn btn-outline-primary"
               onClick={() => onExit(question)}
             >
-              Exit without Save
+              Save and Next
             </button>
           </div>
           {/* TODO: write "Preview" above */}
@@ -102,8 +102,8 @@ QuestionEditor.propTypes = {
       type: string.isRequired,
       options: oneOfType([
         exact({
-          left: arrayOf(exact({ id: string.isRequired, title: string })),
-          right: arrayOf(exact({ id: string.isRequired, title: string }))
+          left: arrayOf(shape({ id: string.isRequired, title: string })),
+          right: arrayOf(shape({ id: string.isRequired, title: string }))
         }),
         arrayOf(
           shape({

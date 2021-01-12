@@ -9,10 +9,22 @@ import { EditorCard } from '../../Cards';
 
 const ButtonEditor = ({ dispatch, position, answerOption, index, modalTable }) => {
   const tabNames = ['Text', 'Action'];
-  const [selectedQuestions, setSelectedQuestions] = useState([]);
+
+  const setPrevSelection = () => {
+    let prevSelected = [];
+    if (answerOption.skip && answerOption.skip.length) {
+      prevSelected = modalTable.data
+        .filter((data) => answerOption.skip.includes(data.question._id))
+        .map((data) => {
+          return { index: data.index, questionId: data.question._id };
+        });
+    }
+    return prevSelected;
+  };
+
+  const [selectedQuestions, setSelectedQuestions] = useState(() => setPrevSelection());
 
   const handleOnSelect = (row, isSelect) => {
-    console.log('--------', row, isSelect);
     if (isSelect) {
       setSelectedQuestions((prevSelection) => [
         ...prevSelection,
@@ -72,8 +84,8 @@ const ButtonEditor = ({ dispatch, position, answerOption, index, modalTable }) =
     hideSelectAll: true,
     selected: selectedQuestions.map((question) => question.index),
     nonSelectable: range(0, modalTable.index),
-    nonSelectableStyle: { backgroundColor: 'gray' },
     hideSelectColumn: true,
+    nonSelectableClasses: 'non-selectable-column',
     onSelect: handleOnSelect,
     bgColor: '#dc3545'
   };
@@ -117,7 +129,6 @@ const ButtonEditor = ({ dispatch, position, answerOption, index, modalTable }) =
                 data={modalTable.data}
                 columns={modalTable.modalTableColumns}
                 selectRow={selectRow}
-                hover
               />
             </div>
             <div className="modal-footer">

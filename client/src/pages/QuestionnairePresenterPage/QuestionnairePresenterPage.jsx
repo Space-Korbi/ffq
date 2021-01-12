@@ -69,6 +69,12 @@ const QuestionnairePresenter = ({
 
   useEffect(() => {
     answersRef.current = answers;
+
+    console.log(answers);
+    if (answers && answers.length && answers[0]) {
+      const nextQuestionIndex = nextUnskippedQuestionAt(currentIndex + 1);
+      setCurrentIndex(nextQuestionIndex);
+    }
   }, [answers]);
 
   useEffect(() => {
@@ -124,9 +130,6 @@ const QuestionnairePresenter = ({
       newState[currentIndex] = { questionId, answerOption };
       return newState;
     });
-
-    const nextQuestionIndex = nextUnskippedQuestionAt(currentIndex + 1);
-    setCurrentIndex(nextQuestionIndex);
   };
 
   return (
