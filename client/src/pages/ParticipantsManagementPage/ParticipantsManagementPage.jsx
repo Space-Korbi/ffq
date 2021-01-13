@@ -13,6 +13,7 @@ import { useFetchUsers, useFetchQuestions } from '../../hooks';
 import { addValidString, dateHelper } from '../../helpers';
 
 // components
+import Spinner from '../../components/Spinner';
 import { NavTabs, NavContents } from '../../components/Navigation';
 import { CriteriaEditor, RuleEditor } from '../../components/UserSelection';
 
@@ -96,18 +97,18 @@ const dataColumns = [
   }
 ];
 
-const ParticipantsManagementPage = () => {
-  const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers();
-  const [{ questions, isLoadingQuestions, isErrorQuestions }] = useFetchQuestions(
-    'tehsOCylVjJebsg5wi0u7'
-  );
-  const [selectionCriteria, setSelectionCriteria] = useState(mockSelectionCriteria);
-  const [selectionRules, setSelectionRules] = useState(mockRules);
+const ParticipantsManagement = ({
+  users,
+  questions,
+  prevSelectionCriteria,
+  prevSelectionRules
+}) => {
+  const [selectionCriteria, setSelectionCriteria] = useState(prevSelectionCriteria);
+  const [selectionRules, setSelectionRules] = useState(prevSelectionRules);
   const [columns, setColumns] = useState(dataColumns);
   const [data, setData] = useState([]);
 
   const answerFormatter = (column, colIndex) => {
-    console.log('Column', column);
     if (column && !Array.isArray(column)) {
       return column;
     }
@@ -153,7 +154,6 @@ const ParticipantsManagementPage = () => {
   }, [questions]);
 
   const extractAnswers = (answers) => {
-    console.log(answers);
     let formattedAnswer;
     if (answers && !Array.isArray(answers)) {
       if (answers.index) {
@@ -273,25 +273,47 @@ const ParticipantsManagementPage = () => {
   ];
 
   return (
-    <div className="m-4 d-flex justify-content-center">
-      <div className="w-100">
-        {isErrorUsers && (
-          <div className="alert alert-danger d-flex justify-content-center" role="alert">
-            Something went wrong
+    <div>
+      <div>
+        <NavTabs tabNames={tabNames} />
+      </div>
+      <div className="mt-5">
+        <NavContents tabNames={tabNames} tabContents={tabContents} />
+      </div>
+    </div>
+  );
+};
+
+const ParticipantsManagementPage = () => {
+  const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers();
+  const [{ fetchedQuestions, isLoadingQuestions, isErrorQuestions }] = useFetchQuestions(
+    'tehsOCylVjJebsg5wi0u7'
+  );
+  return (
+    <div>
+      <div>
+        {(isErrorUsers || isErrorQuestions) && (
+          <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
+            Something went wrong...
           </div>
         )}
-        {isLoadingUsers ? (
-          'Loading...'
-        ) : (
-          <div>
-            <div>
-              <NavTabs tabNames={tabNames} />
-            </div>
-            <div className="mt-5">
-              <NavContents tabNames={tabNames} tabContents={tabContents} />
-            </div>
+        {(isLoadingUsers || isLoadingQuestions) && (
+          <div className="d-flex justify-content-center mt-5">
+            <Spinner />
           </div>
         )}
+        <div className="m-4 d-flex justify-content-center">
+          <div className="w-100">
+            {users && users.length > 0 && fetchedQuestions && (
+              <ParticipantsManagement
+                users={users}
+                questions={fetchedQuestions}
+                prevSelectionCriteria={mockSelectionCriteria}
+                prevSelectionRules={mockRules}
+              />
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

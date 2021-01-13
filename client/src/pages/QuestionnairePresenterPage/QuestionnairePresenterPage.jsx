@@ -6,12 +6,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { bool, string } from 'prop-types';
 import { useParams } from 'react-router-dom';
+
+// services
 import { userService } from '../../services';
 
 // custom hooks
 import { useFetchQuestions, useFetchUsers } from '../../hooks';
 
 // components
+import Spinner from '../../components/Spinner';
 import { Question } from '../../components/Question';
 import Submit from '../../components/DefaultSegments';
 import ProgressIndicator from '../../components/ProgressIndicator';
@@ -200,23 +203,32 @@ const QuestionnairePresenter = ({
 
 const QuestionnairePresenterPage = ({ questionnaireId, isAdmin }) => {
   const { userId } = useParams();
-  const [{ questions, isLoadingQuestions, isError }] = useFetchQuestions(questionnaireId);
+  const [{ fetchedQuestions, isLoadingQuestions, isErrorQuestions }] = useFetchQuestions(
+    questionnaireId
+  );
   const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers(userId);
 
   return (
     <div>
-      {!users || !users.length || isLoadingQuestions || isLoadingUsers ? (
-        'Loading...'
-      ) : (
+      {(isErrorUsers || isErrorQuestions) && (
+        <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
+          Something went wrong...
+        </div>
+      )}
+      {(isLoadingUsers || isLoadingQuestions) && (
+        <div className="d-flex justify-content-center mt-5">
+          <Spinner />
+        </div>
+      )}
+      {users && users.length > 0 && fetchedQuestions && (
         <QuestionnairePresenter
-          questions={questions}
+          questions={fetchedQuestions}
           previousAnswers={users[0].answers}
           questionsToSkip={users[0].questionsToSkip}
           stoppedAtIndex={users[0].stoppedAtIndex + 1}
           isAdmin={isAdmin}
         />
       )}
-      {(!questions || isError || isErrorUsers) && <div>Something went wrong ...</div>}
     </div>
   );
 };

@@ -13,6 +13,7 @@ import { dateHelper } from '../../helpers';
 import { useFetchUsers } from '../../hooks';
 
 // components
+import Spinner from '../../components/Spinner';
 import ConsentModal from '../../components/Modals';
 
 const AccountDataPresenter = ({ user }) => {
@@ -101,13 +102,20 @@ const AccountPage = () => {
   const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers(userId);
 
   return (
-    <div className="container">
+    <div>
       {isErrorUsers && (
-        <div className="alert alert-danger d-flex justify-content-center" role="alert">
+        <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
           Something went wrong...
         </div>
       )}
-      {users && users.length ? <AccountDataPresenter user={users[0]} /> : 'Loading...'}
+      {isLoadingUsers && (
+        <div className="d-flex justify-content-center mt-5">
+          <Spinner />
+        </div>
+      )}
+      <div className="container">
+        {users && users.length > 0 && <AccountDataPresenter user={users[0]} />}
+      </div>
     </div>
   );
 };

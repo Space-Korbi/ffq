@@ -1,28 +1,30 @@
+/* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
 import DatePicker from 'react-date-picker';
 
 import PropTypes from 'prop-types';
 import BootstrapTable from 'react-bootstrap-table-next';
+
+// services
+import { questionnaireService } from '../../services';
+
+// custom hooks
+import { useFetchQuestionnaires, useFetchQuestions } from '../../hooks';
+
+// components
+import Spinner from '../../components/Spinner';
 import QuestionEditor from '../../components/QuestionEditor';
-
-import {
-  DeleteButton,
-  EditButton,
-  CopyButton,
-  MoveButton,
-  OutlineButton
-} from '../../components/Button';
-import RemovableListItem from '../../components/List';
-
-import { questionService, questionnaireService } from '../../services';
+import { DeleteButton, EditButton, MoveButton, OutlineButton } from '../../components/Button';
 
 const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
+  const [{ fetchedQuestions, isLoadingQuestions, isErrorQuestions }] = useFetchQuestions(
+    questionnaire._id
+  );
+
   const [questions, setQuestions] = useState([]);
   const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState();
@@ -34,16 +36,10 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
   const questionsRef = useRef(questions);
 
   useEffect(() => {
-    setIsLoading(true);
-    const fetchQuestions = async () => {
-      const fetchedQuestions = await questionnaireService.fetchAllQuestionsOfQuestionnaire(
-        questionnaire._id
-      );
+    if (fetchedQuestions) {
       setQuestions(fetchedQuestions);
-    };
-    fetchQuestions();
-    setIsLoading(false);
-  }, []);
+    }
+  }, [fetchedQuestions]);
 
   useEffect(() => {
     if (selectedQuestion) {
@@ -64,12 +60,14 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
   };
 
   useEffect(() => {
-    questionsRef.current = questions;
-    if (isEditing) {
-      return;
+    if (questions) {
+      questionsRef.current = questions;
+      if (isEditing) {
+        return;
+      }
+      const rowData = prepareRows(questions);
+      setData(rowData);
     }
-    const rowData = prepareRows(questions);
-    setData(rowData);
   }, [questions, isEditing]);
 
   const handleCreateQuestionAt = async (index) => {
@@ -248,69 +246,76 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
           modalTable={{ data, modalTableColumns, index: selectedQuestion.index }}
         />
       ) : (
-        <>
-          {isLoading ? (
-            'Loading...'
-          ) : (
-            <>
-              <div className="row d-flex no-gutters">
-                <div className="col align-items-center">
-                  {/* <div className="mb-4 d-flex justify-content-end">
+        <div>
+          <div className="row d-flex no-gutters">
+            <div className="col align-items-center">
+              {/* <div className="mb-4 d-flex justify-content-end">
                     <DeleteButton isTrashCan onClick={() => deleteQuestionnaire(questionnaireId)} />
                   </div> */}
-                  <div className="my-1 d-inline-flex">
-                    <div className="input-group">
-                      <div className="input-group-prepend">
-                        <span className="input-group-text" id="inputGroup-name">
-                          Name
-                        </span>
-                      </div>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={questionnaireName}
-                        onChange={(e) => setQuestionnnaireName(e.target.value)}
-                        aria-describedby="inputGroup-name"
-                      />
-                    </div>
+              <div className="my-1 d-inline-flex">
+                <div className="input-group">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text" id="inputGroup-name">
+                      Name
+                    </span>
                   </div>
-                  <div className="my-1 d-flex">
-                    <label className="form-check-label mx-1" htmlFor="inlineFormCheck">
-                      Start Date
-                    </label>
-                    <DatePicker onChange={setStartDate} value={startDate} />
-                  </div>
-                  <div className="my-1 d-flex">
-                    <label className="form-check-label mx-1" htmlFor="inlineFormCheck">
-                      End Date
-                    </label>
-                    <DatePicker onChange={setEndDate} value={endDate} />
-                  </div>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={questionnaireName}
+                    onChange={(e) => setQuestionnnaireName(e.target.value)}
+                    aria-describedby="inputGroup-name"
+                  />
                 </div>
               </div>
-              <div className="row d-flex no-gutters mt-3">
-                <div className="col d-flex justify-content-between align-items-center">
-                  <button
-                    type="button"
-                    className="btn btn-outline-primary"
-                    onClick={() => {
-                      handleChangeSettings();
-                    }}
-                  >
-                    Save Settings
-                  </button>
+              <div className="my-1 d-flex">
+                <label className="form-check-label mx-1" htmlFor="inlineFormCheck">
+                  Start Date
+                </label>
+                <DatePicker onChange={setStartDate} value={startDate} />
+              </div>
+              <div className="my-1 d-flex">
+                <label className="form-check-label mx-1" htmlFor="inlineFormCheck">
+                  End Date
+                </label>
+                <DatePicker onChange={setEndDate} value={endDate} />
+              </div>
+            </div>
+          </div>
+          <div className="row d-flex no-gutters mt-3">
+            <div className="col d-flex justify-content-between align-items-center">
+              <button
+                type="button"
+                className="btn btn-outline-primary"
+                onClick={() => {
+                  handleChangeSettings();
+                }}
+              >
+                Save Settings
+              </button>
 
-                  <button
-                    type="button"
-                    className="btn btn-outline-primary"
-                    onClick={() => {
-                      handleCreateQuestionAt();
-                    }}
-                  >
-                    Add Question
-                  </button>
-                </div>
+              <button
+                type="button"
+                className="btn btn-outline-primary"
+                onClick={() => {
+                  handleCreateQuestionAt();
+                }}
+              >
+                Add Question
+              </button>
+            </div>
+          </div>
+          <div>
+            {isErrorQuestions && (
+              <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
+                Something went wrong...
               </div>
+            )}
+            {isLoadingQuestions ? (
+              <div className="d-flex justify-content-center mt-5">
+                <Spinner />
+              </div>
+            ) : (
               <div className="row no-gutters overflow-auto flex-row flex-nowrap my-3">
                 <BootstrapTable
                   keyField="index"
@@ -321,25 +326,25 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
                   noDataIndication="No Data"
                 />
               </div>
-            </>
-          )}
-        </>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );
 };
 
-const QuestionnaireEditorPage = (props) => {
-  const [selectedQuestions, setSelectedQuestions] = useState([]);
+const QuestionnaireEditorPage = () => {
   const [questionnaires, setQuestionnaires] = useState([]);
+  const [
+    { fetchedQuestionnaires, isLoadingQuestionnaires, isErrorQuestionnaires }
+  ] = useFetchQuestionnaires();
 
   useEffect(() => {
-    const fetchQuestionnaire = async () => {
-      const fetchedQuestionnaires = await questionnaireService.fetchAllQuestionnaires();
+    if (fetchedQuestionnaires) {
       setQuestionnaires(fetchedQuestionnaires);
-    };
-    fetchQuestionnaire();
-  }, []);
+    }
+  }, [fetchedQuestionnaires]);
 
   const handleCreateQuestionnaire = async () => {
     await questionnaireService.createQuestionnaire().then((response) => {
@@ -354,28 +359,31 @@ const QuestionnaireEditorPage = (props) => {
     );
   };
 
-  const removeQuestion = (id) => {
-    setSelectedQuestions((state) => {
-      const filtered = state.filter((selectedQuestion) => selectedQuestion !== id);
-      return filtered;
-    });
-  };
-
-  const handleOnChange = (e, id) => {
-    if (e.target.checked) {
-      setSelectedQuestions((state) => [...state, id]);
-    }
-
-    if (!e.target.checked) {
-      removeQuestion(id);
-    }
-  };
-
   return (
     <div>
-      <div className="m-lg-5">
-        {questionnaires && questionnaires.length ? (
-          questionnaires.map((questionnaire) => {
+      {!questionnaires ? (
+        <div>
+          {isErrorQuestionnaires && (
+            <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
+              Something went wrong...
+            </div>
+          )}
+          {isLoadingQuestionnaires ? (
+            <div className="d-flex justify-content-center mt-5">
+              <Spinner />
+            </div>
+          ) : (
+            <div className="my-5 d-flex justify-content-center">
+              <OutlineButton
+                title="Create Questionnaire"
+                onClick={() => handleCreateQuestionnaire()}
+              />
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="m-lg-5">
+          {questionnaires.map((questionnaire) => {
             return (
               <div key={questionnaire._id} className="my-3">
                 <div className="px-2">
@@ -386,20 +394,11 @@ const QuestionnaireEditorPage = (props) => {
                 </div>
               </div>
             );
-          })
-        ) : (
-          <div className="my-5 d-flex justify-content-center">
-            <OutlineButton
-              title="Create Questionnaire"
-              onClick={() => handleCreateQuestionnaire()}
-            />
-          </div>
-        )}
-      </div>
+          })}
+        </div>
+      )}
     </div>
   );
 };
-
-QuestionnaireEditorPage.propTypes = {};
 
 export default QuestionnaireEditorPage;

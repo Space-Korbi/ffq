@@ -9,27 +9,28 @@ import { useFetchUsers } from '../../hooks';
 import AdminPage from './AdminPage';
 import ParticipantPage from './ParticipantPage';
 
+// components
+import Spinner from '../../components/Spinner';
+
 const HomePage = ({ isAdmin }) => {
   const { userId } = useParams();
   const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers(userId);
 
+  // Todo: onlu load user metadata or data thats needed
   return (
-    <div className="d-flex justify-content-center mt-5">
+    <div>
       {isErrorUsers && (
-        <div className="alert alert-danger d-flex justify-content-center" role="alert">
+        <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
           Something went wrong...
         </div>
       )}
-      {isLoadingUsers ? (
-        'Loading...'
-      ) : (
-        <>
-          {users && users.length ? (
-            <>{isAdmin ? <AdminPage /> : <ParticipantPage user={users[0]} />}</>
-          ) : (
-            'Loading...'
-          )}
-        </>
+      {isLoadingUsers && (
+        <div className="d-flex justify-content-center mt-5">
+          <Spinner />
+        </div>
+      )}
+      {users && users.length > 0 && (
+        <>{isAdmin ? <AdminPage /> : <ParticipantPage user={users[0]} />}</>
       )}
     </div>
   );
