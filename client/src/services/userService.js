@@ -15,12 +15,17 @@ const updateAction = {
   resetAnswers: 'resetAnswers'
 };
 
+// fetchUsersById and fetchAllUsers can be merged into one function with optional userId parameter
 const fetchAllUsers = () => {
-  return getAllUsers();
+  return getAllUsers().then((response) => {
+    return response.data.users;
+  });
 };
 
 const fetchUsersById = (userId) => {
-  return getUsersById(userId);
+  return getUsersById(userId).then((response) => {
+    return response.data.users;
+  });
 };
 
 const getMetaData = (userId) => {

@@ -46,6 +46,7 @@ const saveImageInDB = async (amountOption) => {
 /**
  * TODO
  * when changin images, delete the old image that is being replaced from uploads
+ * Might be implemented already... needs to be checked
  */
 
 const updateAmountOptions = async (amountOptions) => {
