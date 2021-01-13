@@ -100,6 +100,15 @@ const reducerHelper = {
       options: cards
     };
   },
+  changeCardIndex: (state, action) => {
+    const newState = state.options.map((el) =>
+      el.id === action.payload.id ? { ...el, index: action.payload.index } : el
+    );
+    return {
+      type: AnswerType.Amount,
+      options: newState
+    };
+  },
   removeCard: (state, action) => {
     const cards = state.options.filter((card) => card.id !== action.payload.id);
     return {
@@ -211,6 +220,8 @@ const answerReducer = (state, action) => {
       return reducerHelper.setSkippedQuestions(state, action);
     case 'addCard':
       return reducerHelper.addCard(state, action);
+    case 'changeCardIndex':
+      return reducerHelper.changeCardIndex(state, action);
     case 'removeCard':
       return reducerHelper.removeCard(state, action);
     case 'changeCardTitle':

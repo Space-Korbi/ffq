@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { string, func, shape, number, bool } from 'prop-types';
 
 import { XIcon } from '@primer/octicons-react';
@@ -77,8 +77,16 @@ ImageUpload.defaultProps = {
   imageName: '...'
 };
 
-const CardEditor = ({ id, answerOption, dispatch }) => {
+const CardEditor = ({ index, answerOption, dispatch }) => {
   const tabNames = ['Text', 'Image'];
+
+  useEffect(() => {
+    console.log('INdex', index);
+    dispatch({
+      type: 'changeCardIndex',
+      payload: { id: answerOption.id, index }
+    });
+  }, [index]);
 
   const textTabContent = (
     <TextEditor
@@ -112,7 +120,7 @@ const CardEditor = ({ id, answerOption, dispatch }) => {
   return (
     <div className="col my-3">
       <EditorCard
-        index={id}
+        index={index}
         tabNames={tabNames}
         tabContents={[textTabContent, imageTabContent]}
         removeCard={removeCard}
@@ -122,7 +130,7 @@ const CardEditor = ({ id, answerOption, dispatch }) => {
 };
 
 CardEditor.propTypes = {
-  id: number.isRequired,
+  index: number.isRequired,
   answerOption: shape({
     id: string.isRequired,
     title: string,

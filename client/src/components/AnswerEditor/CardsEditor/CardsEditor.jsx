@@ -11,7 +11,7 @@ const CardsEditor = ({ answerOptions, dispatch }) => {
     return (
       <CardEditor
         key={answerOption.id}
-        id={index + 1}
+        index={index + 1}
         answerOption={answerOption}
         dispatch={dispatch}
       />

@@ -106,6 +106,21 @@ const ParticipantsManagementPage = () => {
   const [columns, setColumns] = useState(dataColumns);
   const [data, setData] = useState([]);
 
+  const answerFormatter = (column, colIndex) => {
+    console.log('Column', column);
+    if (column && !Array.isArray(column)) {
+      return column;
+    }
+    if (column && Array.isArray(column)) {
+      const formattedAnswer = column.map((answer) => {
+        return <li key={answer}>{answer}</li>;
+      });
+
+      return <ul className="list-unstyled content-align-center mb-0">{formattedAnswer}</ul>;
+    }
+    return '';
+  };
+
   const questionHeaderFormatter = (column, colIndex) => {
     return (
       <div>
@@ -128,6 +143,7 @@ const ParticipantsManagementPage = () => {
           subtitle1: question.subtitle1,
           subtitle2: question.subtitle2,
           csvText: question.title,
+          formatter: answerFormatter,
           headerFormatter: questionHeaderFormatter
         };
       });
@@ -136,8 +152,28 @@ const ParticipantsManagementPage = () => {
     }
   }, [questions]);
 
+  const extractAnswers = (answers) => {
+    console.log(answers);
+    let formattedAnswer;
+    if (answers && !Array.isArray(answers)) {
+      if (answers.index) {
+        formattedAnswer = answers.index;
+      } else {
+        formattedAnswer = answers.title;
+      }
+    } else if (answers && Array.isArray(answers)) {
+      formattedAnswer = answers.map((answer) => {
+        if (!answer.hasNumberInput) {
+          return `${answer.title}: ${answer.answer}`;
+        }
+        return `${answer.title}: ${answer.answer} ${answer.numberAnswer} ${answer.numberInputTitle}`;
+      });
+    }
+
+    return formattedAnswer;
+  };
+
   useEffect(() => {
-    console.log('users', users);
     if (users && users.length) {
       const questionData = users.map((user) => {
         if (!user.answers || !user.answers.length) {
@@ -145,7 +181,7 @@ const ParticipantsManagementPage = () => {
         }
         const userWithAnswers = { ...user };
         user.answers.forEach((answer) => {
-          userWithAnswers[answer.questionId] = JSON.stringify(answer.answerOption, null, 1);
+          userWithAnswers[answer.questionId] = extractAnswers(answer.answerOption);
         });
         return userWithAnswers;
       });
@@ -203,7 +239,7 @@ const ParticipantsManagementPage = () => {
   const tabNames = ['Participants', 'Selection Criteria', 'Selection Rules'];
   const tabContents = [
     <div>
-      <ToolkitProvider keyField="email" data={data} columns={columns} exportCSV>
+      <ToolkitProvider keyField="email" data={data} columns={columns} bootstrap4 exportCSV>
         {(props) => (
           <div>
             <ExportCSVButton {...props.csvProps}>Export CSV</ExportCSVButton>
