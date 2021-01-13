@@ -38,7 +38,7 @@ const User = mongoose.model(
   ).set('toJSON', {
     virtuals: true,
     versionKey: false,
-    // minimize: true,
+    // minimize: false,
     transform(doc, ret) {
       const transformed = ret;
       delete transformed._id;

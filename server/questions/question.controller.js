@@ -84,16 +84,6 @@ const getQuestionsOfQuestionnaire = async (req, res) => {
     async.parallel(findQuestionCalls, (err, results) => {
       return res.status(200).json({ success: true, data: results });
     });
-
-    /*
-    await Promise.all(
-      questionnaire.questions.map(async (questionId) => {
-        console.log('Im a questionId', questionId);
-        await Question.findById(questionId).then((question) => {
-          console.log('Question', question);
-        });
-      })
-    ); */
   });
 };
 

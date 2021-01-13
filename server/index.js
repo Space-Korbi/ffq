@@ -8,7 +8,6 @@ const app = express();
 
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const jwt = require('./helpers/jwt');
 const errorHandler = require('./helpers/error-handling');
 
 /**
@@ -22,24 +21,10 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// *! Json watmore tutorial
-/*
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(cors());
-
-// use JWT auth to secure the api
-app.use(jwt());
-
-// global error handler
-app.use(errorHandler);
-*/
-
-// *! zkoder tutorial
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+app.use(bodyParser.urlencoded({ limit: '7mb', extended: true }));
 // serve static files such as images
 app.use(express.static('uploads'));
 
@@ -90,22 +75,17 @@ db.mongoose
     process.exit();
   });
 
-// Authentication Routes
-require('./auth/auth.routes')(app);
-
 // Routes
 const userRouter = require('./users/user.router');
 const questionnaireRouter = require('./questionnaires/questionnaire.router');
 const questionRouter = require('./questions/question.router');
 const imageRouter = require('./images/image.router');
 
-const testRouter = require('./test/test.router');
-
 /**
  * Mount the routes on the '/api' path.
  * An array with middleware sub-stacks that handle HTTP requests on the '/api' path.
  */
-app.use('/api', [userRouter, questionRouter, questionnaireRouter, imageRouter, testRouter]);
+app.use('/api', [userRouter, questionRouter, questionnaireRouter, imageRouter]);
 
 // app.use([errorHandler.errorHandler]);
 

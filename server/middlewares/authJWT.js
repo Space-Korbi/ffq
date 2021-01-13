@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const config = require('../auth/auth.config');
+const config = require('../config/auth.config');
 const db = require('../helpers/db');
 
 const User = db.user;
