@@ -60,12 +60,12 @@ const Dashboard = ({ isAdmin }) => {
   ];
 
   const userLinks = [
-    {
+    /* {
       name: 'Questionnaire',
       to: '/questionnairePresenter',
       className: 'nav-link',
       activeClassName: 'nav-link active'
-    },
+    }, */
     {
       name: 'Account',
       to: '/account',

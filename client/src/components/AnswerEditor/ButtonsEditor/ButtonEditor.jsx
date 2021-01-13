@@ -170,8 +170,8 @@ ButtonEditor.propTypes = {
   answerOption: shape({
     type: string,
     options: shape({
-      left: arrayOf(exact({ id: string.isRequired, title: string })),
-      right: arrayOf(exact({ id: string.isRequired, title: string }))
+      left: arrayOf(shape({ id: string.isRequired, title: string })),
+      right: arrayOf(shape({ id: string.isRequired, title: string }))
     })
   }).isRequired,
   dispatch: func.isRequired,

@@ -12,6 +12,9 @@ import { dateHelper } from '../../helpers';
 // custom hooks
 import { useFetchUsers } from '../../hooks';
 
+// components
+import ConsentModal from '../../components/Modals';
+
 const AccountDataPresenter = ({ user }) => {
   const [hasAcceptedConsentForm, setHasAcceptedConsentForm] = useState(user.hasAcceptedConsentForm);
   const {
@@ -45,19 +48,21 @@ const AccountDataPresenter = ({ user }) => {
         {!hasAcceptedConsentForm && (
           <button
             type="button"
-            className="btn btn-sm btn-outline-success"
-            onClick={() =>
-              userService
-                .updateUserData(id, { data: { hasAcceptedConsentForm: true } })
-                .then((res) => {
-                  setHasAcceptedConsentForm(true);
-                })
-            }
+            className="btn btn-outline-primary "
+            data-toggle="modal"
+            data-target="#staticBackdrop"
           >
-            Accept now
+            View consent form
           </button>
         )}
       </p>
+      <ConsentModal
+        onAccept={() =>
+          userService.updateUserData(id, { data: { hasAcceptedConsentForm: true } }).then((res) => {
+            setHasAcceptedConsentForm(true);
+          })
+        }
+      />
       <p>
         <strong>Screening Status:</strong>
         {(() => {

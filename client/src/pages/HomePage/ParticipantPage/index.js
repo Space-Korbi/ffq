@@ -10,6 +10,9 @@ import { userService } from '../../../services';
 // helpers
 import { dateHelper } from '../../../helpers';
 
+// components
+import ConsentModal from '../../../components/Modals';
+
 const intervals = [
   { startDate: new Date('2021-01-09 23:00:00.000Z'), endDate: new Date('2021-02-06 23:00:00.000Z') }
 ];
@@ -59,17 +62,38 @@ const ParticipantPage = ({ user }) => {
         <p className="lead">{title}</p>
         <hr className="my-4" />
         <div className="text-center">
-          <button
-            disabled={disabled}
-            type="button"
-            className="btn btn-lg btn-primary mt-3"
-            onClick={() => {
-              start();
-            }}
-          >
-            {buttonTitle}
-          </button>
+          {user.hasAcceptedConsentForm ? (
+            <button
+              disabled={disabled}
+              type="button"
+              className="btn btn-lg btn-primary mt-3"
+              onClick={() => {
+                start();
+              }}
+            >
+              {buttonTitle}
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="btn btn-outline-primary "
+              data-toggle="modal"
+              data-target="#staticBackdrop"
+            >
+              {buttonTitle}
+            </button>
+          )}
         </div>
+        <ConsentModal
+          onAccept={() =>
+            userService
+              .updateUserData(user.id, { data: { hasAcceptedConsentForm: true } })
+              .then((res) => {
+                userService.updateUserData(userId, { data: { startedOn: Date.now() } });
+                history.push(`${url}/questionnairePresenter`);
+              })
+          }
+        />
       </div>
     </div>
   );
