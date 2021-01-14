@@ -4,24 +4,81 @@
  * It is similar to the Fetch API and is used to perform HTTP requests.
  */
 import axios from 'axios';
+import { authHeader } from '../helpers';
 
 // Creating a new instance of axios with a custom config.
 const api = axios.create({
   baseURL: 'http://localhost:3000/api'
 });
 
-export const insertMovie = (payload) => api.post(`/movie`, payload);
-export const getAllMovies = () => api.get(`/movies`);
-export const updateMovieById = (id, payload) => api.put(`/movie/${id}`, payload);
-export const deleteMovieById = (id) => api.delete(`/movie/${id}`);
-export const getMovieById = (id) => api.get(`/movie/${id}`);
+// Attach access token to every request header
+api.interceptors.request.use((request) => {
+  request.headers = authHeader();
+  return request;
+});
+
+// login/signup
+export const signup = (payload) => axios.post(`http://localhost:3000/api/users/signup`, payload);
+export const login = (payload) => axios.post(`http://localhost:3000/api/users/login`, payload);
+
+// user
+export const updateAnswerById = (userId, payload) => api.put(`users/${userId}`, payload);
+export const getUsersMetadata = (userId) =>
+  api.get(`/users/${userId}/?resource=metaData`, authHeader());
+
+/* export const getUsersAccountData = (userId) =>
+api.get(`/users/${userId}/?resource=accountData`); */
+
+export const getAllUsers = () => api.get(`/users`);
+export const getUsersById = (userId) => api.get(`/users/${userId}`);
+export const getAnswerById = (userId, questionId) =>
+  api.get(`users/${userId}/questions/${questionId}`);
+
+// user update
+export const updateUser = (userId, payload) => api.put(`users/${userId}`, payload);
+
+// user reset
+export const resetAdminAnswers = (userId) =>
+  api.put(`/users/${userId}/reset`, { data: { reset: true } });
+
+// question
+export const insertQuestionAt = (questionnaireId, payload) =>
+  api.post(`/questionnaires/${questionnaireId}/questions`, payload);
+export const updateQuestionById = (id, payload) => api.put(`/questions/${id}`, payload);
+export const getAllQuestions = () => api.get(`/questions`);
+export const getAllQuestionsOfQuestionnaire = (questionnaireId) =>
+  api.get(`/questionnaires/${questionnaireId}/questions`);
+export const deleteQuestionById = (questionnaireId, questionId) =>
+  api.delete(`/questionnaires/${questionnaireId}/questions/${questionId}`);
+
+// questionnaire
+export const insertQuestionnaire = (payload) => api.post(`/questionnaires`, payload);
+export const updateQuestionnaire = (questionnaireId, payload) =>
+  api.put(`/questionnaires/${questionnaireId}`, payload);
+export const getAllQuestionnaires = () => api.get(`/questionnaires`);
+export const getQuestionnaireById = (questionnaireId) =>
+  api.get(`/questionnaires/${questionnaireId}`);
+export const deleteQuestionnaireById = (questionnaireId) =>
+  api.delete(`/questionnaires/${questionnaireId}`);
+
+// image
+export const uploadImage = (payload) => api.post(`/upload`, payload);
+export const getAllImages = () => api.get(`/images`);
+export const getImageById = (id) => api.get(`/image/${id}`);
+export const deleteImageById = (id) => api.delete(`/image/${id}`);
 
 const apis = {
-  insertMovie,
-  getAllMovies,
-  updateMovieById,
-  deleteMovieById,
-  getMovieById
+  signup,
+  login,
+  insertQuestionnaire,
+  insertQuestionAt,
+  getUsersMetadata,
+  getUsersById,
+  getAllUsers,
+  updateUser,
+  getAllQuestions,
+  getAllQuestionsOfQuestionnaire,
+  uploadImage
 };
 
 export default apis;

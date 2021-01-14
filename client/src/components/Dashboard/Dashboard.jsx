@@ -1,164 +1,206 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-import React from 'react';
-import { BrowserRouter as Route, Switch, useRouteMatch, Link } from 'react-router-dom';
-import { MoviesList, MoviesInsert } from '../../pages';
-import { Table } from '../Table';
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { Route, Switch, useRouteMatch, NavLink, Link } from 'react-router-dom';
 
-const Dashboard = () => {
-  const { path, url } = useRouteMatch();
+// helpers
+import { Role } from '../../helpers';
+
+// services
+import { authService } from '../../services';
+
+// Root Pages that can be routed to
+import {
+  HomePage,
+  QuestionnaireEditorPage,
+  QuestionnairePresenterPage,
+  ParticipantsManagementPage,
+  AccountPage
+} from '../../pages';
+
+// components
+import PrivateRoute from '../PrivateRoute';
+
+const Dashboard = ({ isAdmin }) => {
+  const { path, url, params } = useRouteMatch();
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    setUser(JSON.parse(localStorage.getItem('user')));
+  }, []);
 
   /**
-   * ! Deletable Sample
-   * column, data
+   * * TODO
+   * Move navigation into its own component
+   * Map nav items according to admin and participant
+   * highlight active nav link
    */
+  const adminLinks = [
+    {
+      name: 'Editor',
+      to: '/questionnaireEditor',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    },
+    {
+      name: 'Preview',
+      to: '/questionnairePresenter',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    },
+    {
+      name: 'User Manager',
+      to: '/participantsManager',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    },
+    {
+      name: 'Account',
+      to: '/account',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    }
+  ];
 
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: 'ID',
-        accessor: '_id' // accessor is the "key" in the data
-      },
-      {
-        Header: 'Name',
-        accessor: 'name'
-      }
-    ],
-    []
-  );
-
-  const data = React.useMemo(
-    () => [
-      { _id: '1,0', name: 'Lorem' },
-      { _id: '2,0', name: 'ipsum' }
-    ],
-    []
-  );
-
-  const checkMyData = (row) => {
-    // We also turn on the flag to not reset the page
-    // eslint-disable-next-line no-console
-    console.log('Row:', row);
-  };
+  const userLinks = [
+    /* {
+      name: 'Questionnaire',
+      to: '/questionnairePresenter',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    }, */
+    {
+      name: 'Account',
+      to: '/account',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    }
+  ];
 
   return (
-    <div className="frame">
-      <nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-        <a className="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">
-          FFQ
-        </a>
+    <div style={{ minWidth: '300px' }}>
+      <nav
+        className={
+          isAdmin ? 'navbar navbar-expand-md navbar-dark bg-dark' : 'navbar navbar-dark bg-dark'
+        }
+      >
+        <span
+          className="navbar-text mr-3 p-0"
+          style={{
+            color: 'beige',
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+            whiteSpace: 'nowrap'
+          }}
+        >
+          <Link
+            className="navbar-brand bg-transparent shadow-none p-0"
+            to={`/users/${params.userId}`}
+          >
+            <img src="../../hi-ffq.png" width="34" height="34" alt="" loading="lazy" />
+          </Link>
+        </span>
         <button
-          className="navbar-toggler position-absolute d-md-none collapsed"
+          className="navbar-toggler"
           type="button"
           data-toggle="collapse"
-          data-target="#sidebarMenu"
-          aria-controls="sidebarMenu"
+          data-target="#navbarToggler"
+          aria-controls="navbarToggler"
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon" />
         </button>
-        <ul className="navbar-nav px-3">
-          <li className="nav-item text-nowrap">
-            <a className="nav-link" href="#">
-              Sign out
-            </a>
-          </li>
-        </ul>
-      </nav>
-      <div className="container-fluid">
-        <div className="row">
-          <nav id="sidebarMenu" className="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-            <div className="sidebar-sticky pt-3">
-              <ul className="nav flex-column">
-                <li className="nav-item">
-                  <a className="nav-link active" href="#">
-                    Dashboard <span className="sr-only">(current)</span>
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <Link to={`${url}/sample`} className="nav-link">
-                    Sample
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link to={`${url}/movies/list`} className="nav-link">
-                    List Movies
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link to={`${url}/movies/create`} className="nav-link">
-                    Create Movie
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    Integrations
-                  </a>
-                </li>
-              </ul>
-              <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                <span>Saved reports</span>
-              </h6>
-              <ul className="nav flex-column mb-2">
-                <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    Current month
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    Last quarter
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    Social engagement
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    Year-end sale
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </nav>
-          <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-            <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-              <h1 className="h2">Dashboard</h1>
-              <div className="btn-toolbar mb-2 mb-md-0">
-                <div className="btn-group mr-2">
-                  <button type="button" className="btn btn-sm btn-outline-secondary">
-                    Share
-                  </button>
-                  <button type="button" className="btn btn-sm btn-outline-secondary">
-                    Export
-                  </button>
-                </div>
-                <button type="button" className="btn btn-sm btn-outline-secondary dropdown-toggle">
-                  This week
-                </button>
+
+        <div className="collapse navbar-collapse" id="navbarToggler">
+          <div className="flex-grow-1">
+            {isAdmin && (
+              <div>
+                <ul className="navbar-nav mr-auto">
+                  {adminLinks.map((link) => (
+                    <li className="nav-item" key={link.name}>
+                      <NavLink
+                        to={`${url}${link.to}`}
+                        className={link.className}
+                        activeClassName={link.activeClassName}
+                        key={link.name}
+                      >
+                        {link.name}
+                      </NavLink>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
-            <h2>Section title</h2>
-            <div>
+            )}
+            {!isAdmin && (
+              <ul className="navbar-nav">
+                {userLinks.map((link) => (
+                  <li className="nav-item" key={link.name}>
+                    <NavLink
+                      to={`${url}${link.to}`}
+                      className={link.className}
+                      activeClassName={link.activeClassName}
+                    >
+                      {link.name}
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <ul className="navbar-nav">
+            <li className="nav-item">
+              <a className="nav-link ml-auto" href="/login" onClick={() => authService.logout()}>
+                Logout
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <main role="main" className="col p-0">
+        {user && (
+          <div className="row no-gutters">
+            <div className="col">
               <Switch>
-                <Route path={`${path}/sample`}>
-                  <Table columns={columns} data={data} checkMyData={checkMyData} />
-                </Route>
-                <Route path={`${path}/movies/list`}>
-                  <MoviesList />
-                </Route>
-                <Route path={`${path}/movies/create`}>
-                  <MoviesInsert />
-                </Route>
+                <PrivateRoute
+                  path={`${path}/questionnaireEditor`}
+                  roles={[Role.Admin]}
+                  isAdmin={isAdmin}
+                  component={QuestionnaireEditorPage}
+                />
+                <PrivateRoute
+                  path={`${path}/participantsManager`}
+                  roles={[Role.Admin]}
+                  isAdmin={isAdmin}
+                  component={ParticipantsManagementPage}
+                />
+                <Route
+                  path={`${path}/questionnairePresenter`}
+                  component={() => (
+                    <QuestionnairePresenterPage
+                      isAdmin={isAdmin}
+                      questionnaireId="tehsOCylVjJebsg5wi0u7"
+                    />
+                  )}
+                />
+                <Route
+                  path={`${path}/account`}
+                  component={() => <AccountPage isAdmin={isAdmin} />}
+                />
+                <Route
+                  path={`${path}/`}
+                  component={() => <HomePage isAdmin={isAdmin} user={user} />}
+                />
               </Switch>
             </div>
-          </main>
-        </div>
-      </div>
+          </div>
+        )}
+      </main>
     </div>
   );
+};
+
+Dashboard.propTypes = {
+  isAdmin: PropTypes.bool.isRequired
 };
 
 export default Dashboard;
