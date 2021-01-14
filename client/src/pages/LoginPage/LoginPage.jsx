@@ -25,6 +25,9 @@ const LoginPage = () => {
             <br />
             <strong>User</strong> - Email: user@abc.de PW: 54321
           </div>
+          <div className="d-flex justify-content-center">
+            <img className="my-4" src="../../hi-ffq.png" alt="" width="72" height="72" />
+          </div>
           <h2>Login</h2>
           <br />
           <Formik
