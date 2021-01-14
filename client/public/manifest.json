@@ -10,11 +10,6 @@
     {
       "src": "hi-ffq.png",
       "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "hi-ffq@2x.png",
-      "type": "image/png",
       "sizes": "512x512"
     }
   ],

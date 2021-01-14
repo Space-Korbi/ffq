@@ -3,9 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Route, Switch, useRouteMatch, NavLink, Link } from 'react-router-dom';
-import PrivateRoute from '../PrivateRoute';
+
+// helpers
 import { Role } from '../../helpers';
 
+// services
 import { authService } from '../../services';
 
 // Root Pages that can be routed to
@@ -16,6 +18,9 @@ import {
   ParticipantsManagementPage,
   AccountPage
 } from '../../pages';
+
+// components
+import PrivateRoute from '../PrivateRoute';
 
 const Dashboard = ({ isAdmin }) => {
   const { path, url, params } = useRouteMatch();
@@ -82,7 +87,7 @@ const Dashboard = ({ isAdmin }) => {
         }
       >
         <span
-          className="navbar-text mr-3"
+          className="navbar-text mr-3 p-0"
           style={{
             color: 'beige',
             textOverflow: 'ellipsis',
@@ -91,13 +96,10 @@ const Dashboard = ({ isAdmin }) => {
           }}
         >
           <Link
-            style={{
-              color: 'beige',
-              textDecoration: 'none'
-            }}
+            className="navbar-brand bg-transparent shadow-none p-0"
             to={`/users/${params.userId}`}
           >
-            FFQ
+            <img src="../../hi-ffq.png" width="34" height="34" alt="" loading="lazy" />
           </Link>
         </span>
         <button
