@@ -81,7 +81,6 @@ const CardEditor = ({ index, answerOption, dispatch }) => {
   const tabNames = ['Text', 'Image'];
 
   useEffect(() => {
-    console.log('INdex', index);
     dispatch({
       type: 'changeCardIndex',
       payload: { id: answerOption.id, index }

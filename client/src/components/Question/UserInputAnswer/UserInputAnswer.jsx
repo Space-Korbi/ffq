@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { shape, arrayOf, string, bool, func } from 'prop-types';
 import { get, findIndex, endsWith, trimEnd, differenceBy } from 'lodash';
-/**
- * TODO
- * only allow integers to be entered in number input
- */
 
 const UserInputAnswer = ({ answerOptions, submittedAnswer, onSubmit }) => {
   const [userInputs, setUserInputs] = useState(answerOptions);

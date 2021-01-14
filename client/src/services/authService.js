@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { BehaviorSubject } from 'rxjs';
 import { login, signup } from '../api';
 

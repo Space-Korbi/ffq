@@ -1,6 +1,5 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
-import { arrayOf, func, string, shape } from 'prop-types';
+import { arrayOf, func, string, shape, number } from 'prop-types';
 import { nanoid } from 'nanoid';
 
 import { OutlineButton } from '../../Button';
@@ -32,7 +31,8 @@ const ButtonColumn = ({ answerOptions, position, dispatch, modalTable }) => {
 ButtonColumn.propTypes = {
   answerOptions: arrayOf(shape({ id: string.isRequired, title: string })),
   position: string.isRequired,
-  dispatch: func.isRequired
+  dispatch: func.isRequired,
+  modalTable: shape({ data: shape({}), modalTableColumns: shape({}), index: number }).isRequired
 };
 ButtonColumn.defaultProps = {
   answerOptions: []
@@ -106,7 +106,8 @@ ButtonsEditor.propTypes = {
     left: arrayOf(shape({ id: string.isRequired, title: string })),
     right: arrayOf(shape({ id: string.isRequired, title: string }))
   }).isRequired,
-  dispatch: func.isRequired
+  dispatch: func.isRequired,
+  modalTable: shape({ data: shape({}), modalTableColumns: shape({}), index: number }).isRequired
 };
 
 export default ButtonsEditor;

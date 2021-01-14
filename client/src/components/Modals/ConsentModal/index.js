@@ -23,7 +23,7 @@ function ConsentModal({ onAccept }) {
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div className="modal-body">I give consent... legal bla bla</div>
+            <div className="modal-body">I consent to... </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-dismiss="modal">
                 Close

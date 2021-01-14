@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Route, Switch, useRouteMatch, NavLink, Link } from 'react-router-dom';
@@ -25,7 +23,6 @@ import PrivateRoute from '../PrivateRoute';
 const Dashboard = ({ isAdmin }) => {
   const { path, url, params } = useRouteMatch();
   const [user, setUser] = useState();
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setUser(JSON.parse(localStorage.getItem('user')));
@@ -160,9 +157,7 @@ const Dashboard = ({ isAdmin }) => {
         </div>
       </nav>
       <main role="main" className="col p-0">
-        {isLoading || !user ? (
-          'Loading...'
-        ) : (
+        {user && (
           <div className="row no-gutters">
             <div className="col">
               <Switch>
@@ -187,7 +182,10 @@ const Dashboard = ({ isAdmin }) => {
                     />
                   )}
                 />
-                <Route path={`${path}/account`} component={() => <AccountPage />} />
+                <Route
+                  path={`${path}/account`}
+                  component={() => <AccountPage isAdmin={isAdmin} />}
+                />
                 <Route
                   path={`${path}/`}
                   component={() => <HomePage isAdmin={isAdmin} user={user} />}

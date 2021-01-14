@@ -1,7 +1,5 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import { arrayOf, func, string, shape, exact, number } from 'prop-types';
+import { arrayOf, func, string, shape, number } from 'prop-types';
 import BootstrapTable from 'react-bootstrap-table-next';
 
 import TextEditor from '../../TextEditor';
@@ -176,7 +174,8 @@ ButtonEditor.propTypes = {
   }).isRequired,
   dispatch: func.isRequired,
   position: string.isRequired,
-  index: number.isRequired
+  index: number.isRequired,
+  modalTable: shape({ data: shape({}), modalTableColumns: shape({}), index: number }).isRequired
 };
 
 export default ButtonEditor;

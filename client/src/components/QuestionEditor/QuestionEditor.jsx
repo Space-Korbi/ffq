@@ -48,16 +48,11 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
             modalTable={modalTable}
           />
         </div>
-
-        {/**
-         * TODO
-         * onSave leave componentn, go to next question or reload with new props so that a reload doesnt call old props
-         */}
         <div className="col col-lg-5 px-0 mx-lg-3">
           <div className="text-center my-2">
             <button
               type="button"
-              className="btn btn-primary mr-2"
+              className="btn btn-outline-primary mr-2"
               onClick={() =>
                 questionService
                   .saveQuestion(question._id, { title, subtitle1, subtitle2, help }, answerOptions)
@@ -77,7 +72,7 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
               Save and Next
             </button>
           </div>
-          {/* TODO: write "Preview" above */}
+
           <QuestionPreview
             title={title}
             subtitle1={subtitle1}

@@ -5,9 +5,10 @@ import { Question } from '../Question';
 
 const QuestionPreview = ({ title, subtitle1, subtitle2, help, answerOptions }) => {
   return (
-    <>
+    <div className="mt-4">
+      <span className="badge badge-info">Preview</span>
       <div
-        className="mt-4 border border-info "
+        className="border border-info "
         style={{ minHeight: '760px', minWidth: '270px', maxWidth: '100%' }}
       >
         <Question
@@ -21,7 +22,7 @@ const QuestionPreview = ({ title, subtitle1, subtitle2, help, answerOptions }) =
           onSubmitAnswer={() => console.log('Answer submitted')}
         />
       </div>
-    </>
+    </div>
   );
 };
 

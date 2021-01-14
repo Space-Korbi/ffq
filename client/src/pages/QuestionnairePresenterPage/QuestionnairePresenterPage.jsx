@@ -19,14 +19,9 @@ import { Question } from '../../components/Question';
 import Submit from '../../components/DefaultSegments';
 import ProgressIndicator from '../../components/ProgressIndicator';
 
-const QuestionnairePresenter = ({
-  questions,
-  previousAnswers,
-  questionsToSkip,
-  stoppedAtIndex,
-  isAdmin
-}) => {
+const QuestionnairePresenter = ({ questions, previousAnswers, questionsToSkip, isAdmin }) => {
   // set inital values
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
   const [answers, setAnswers] = useState([]);
   const [toSkip, setToSkip] = useState(questionsToSkip);
@@ -49,8 +44,6 @@ const QuestionnairePresenter = ({
     return newIndex;
   };
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-
   useEffect(() => {
     answersRef.current = answers;
 
@@ -64,19 +57,20 @@ const QuestionnairePresenter = ({
     if (!previousAnswers || !previousAnswers.length) {
       const initalAnswers = new Array(questions.length);
       setAnswers(initalAnswers);
-    } else {
+    } else if (questions && questions.length) {
       const initalAnswers = new Array(questions.length).fill(null);
       previousAnswers.forEach((answer) => {
         const index = questions.findIndex((question) => {
           return question._id === answer.questionId;
         });
-        console.log(index);
-        setCurrentIndex(() => nextUnskippedQuestionAt(index));
-        initalAnswers[index] = answer;
+        if (index !== -1) {
+          setCurrentIndex(() => nextUnskippedQuestionAt(index));
+          initalAnswers[index] = answer;
+        }
       });
       setAnswers(initalAnswers);
     }
-  }, []);
+  }, [questions]);
 
   useEffect(() => {
     if (currentIndex <= 0) {

@@ -5,11 +5,6 @@ const ProgressIndicator = ({ currentPosition, length }) => {
   const percentage = `${Math.round((currentPosition / length) * 100)}%`;
   return (
     <div className="d-flex flex-grow-1">
-      {/* <div className="d-flex justify-content-center">
-        <span className="badge badge-info">
-          {currentPosition} of {length} answered
-        </span>
-      </div> */}
       <div className="progress d-flex flex-fill">
         <div
           className="progress-bar bg-info"

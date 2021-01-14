@@ -1,4 +1,3 @@
-/* eslint-disable no-alert */
 import { nanoid } from 'nanoid';
 import {
   insertQuestionAt,
@@ -34,6 +33,7 @@ const fetchAllQuestionnaires = async () => {
       return questionnaires.data.data;
     })
     .catch((err) => {
+      // eslint-disable-next-line no-console
       console.log(err);
       return [];
     });
