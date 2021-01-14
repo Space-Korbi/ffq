@@ -14,7 +14,8 @@ import {
   QuestionnaireEditorPage,
   QuestionnairePresenterPage,
   ParticipantsManagementPage,
-  AccountPage
+  AccountPage,
+  LoginPage
 } from '../../pages';
 
 // components
@@ -175,12 +176,7 @@ const Dashboard = ({ isAdmin }) => {
                 />
                 <Route
                   path={`${path}/questionnairePresenter`}
-                  component={() => (
-                    <QuestionnairePresenterPage
-                      isAdmin={isAdmin}
-                      questionnaireId="tehsOCylVjJebsg5wi0u7"
-                    />
-                  )}
+                  component={() => <QuestionnairePresenterPage isAdmin={isAdmin} />}
                 />
                 <Route
                   path={`${path}/account`}
@@ -190,6 +186,7 @@ const Dashboard = ({ isAdmin }) => {
                   path={`${path}/`}
                   component={() => <HomePage isAdmin={isAdmin} user={user} />}
                 />
+                <Route path="*" component={LoginPage} />
               </Switch>
             </div>
           </div>

@@ -2,6 +2,7 @@ const async = require('async');
 const Questionnaire = require('./questionnaire.model');
 const Question = require('../questions/question.model');
 const { deleteImagesOfQuestion } = require('../questions/question.controller');
+const { param } = require('../users/user.router');
 
 /**
  * * Questionnaire controller
@@ -193,10 +194,15 @@ const getQuestionnaires = async (req, res) => {
     }
 
     if (questionnaires && !questionnaires.length) {
-      return res.status(404).json({
-        title: 'No Questionnaires.',
-        detail: 'No questionnaires have been created yet.',
-        data: questionnaires
+      return res.status(204).send();
+    }
+
+    if (req.query && req.query.param === '_id') {
+      const ids = questionnaires.map((questionnaire) => questionnaire._id);
+      return res.status(200).json({
+        title: 'Questionnaires.',
+        detail: 'Ids of all questionnaires.',
+        data: ids
       });
     }
 

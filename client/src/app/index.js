@@ -42,7 +42,7 @@ class App extends React.Component {
           <PrivateRoute path="/users/:userId" isAdmin={isAdmin} component={Dashboard} />
           <Route path="/signup" exact component={SignUpPage} />
           <Route path="/login" exact component={LoginPage} />
-          <Route path="/" exact component={LoginPage} />
+          <Route path="*" component={LoginPage} />
         </Switch>
       </Router>
     );

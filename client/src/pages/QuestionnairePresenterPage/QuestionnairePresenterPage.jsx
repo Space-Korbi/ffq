@@ -1,5 +1,3 @@
-/* eslint-disable no-shadow */
-/* eslint-disable no-use-before-define */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-unused-prop-types */
 /* eslint-disable no-unused-vars */
@@ -8,7 +6,7 @@ import { bool, string } from 'prop-types';
 import { useParams } from 'react-router-dom';
 
 // services
-import { userService } from '../../services';
+import { userService, questionnaireService } from '../../services';
 
 // custom hooks
 import { useFetchQuestions, useFetchUsers } from '../../hooks';
@@ -126,7 +124,7 @@ const QuestionnairePresenter = ({ questions, previousAnswers, questionsToSkip, i
   return (
     <div>
       <div>
-        {questions.length && (
+        {questions.length > 0 && (
           <>
             {currentIndex >= questions.length ? (
               <Submit />
@@ -195,12 +193,23 @@ const QuestionnairePresenter = ({ questions, previousAnswers, questionsToSkip, i
   );
 };
 
-const QuestionnairePresenterPage = ({ questionnaireId, isAdmin }) => {
+const QuestionnairePresenterPage = ({ isAdmin }) => {
   const { userId } = useParams();
-  const [{ fetchedQuestions, isLoadingQuestions, isErrorQuestions }] = useFetchQuestions(
-    questionnaireId
-  );
+  const [
+    { fetchedQuestions, isLoadingQuestions, isErrorQuestions },
+    setQuestionniareId
+  ] = useFetchQuestions();
   const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers(userId);
+
+  useEffect(() => {
+    const fetchIds = async () => {
+      await questionnaireService.fetchQuestionnaires('_id').then((response) => {
+        setQuestionniareId(response[0]);
+      });
+    };
+
+    fetchIds();
+  }, []);
 
   return (
     <div>
@@ -228,7 +237,6 @@ const QuestionnairePresenterPage = ({ questionnaireId, isAdmin }) => {
 };
 
 QuestionnairePresenterPage.propTypes = {
-  questionnaireId: string.isRequired,
   isAdmin: bool
 };
 

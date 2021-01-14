@@ -1,7 +1,7 @@
+require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
-const config = require('../config/auth.config');
 const db = require('../helpers/db');
 
 const User = require('./user.model');
@@ -108,7 +108,7 @@ const loginUser = async (req, res) => {
         });
       }
 
-      const token = jwt.sign({ id: user.id }, config.secret, {
+      const token = jwt.sign({ id: user.id }, process.env.SECRET || 'localDevSecret', {
         expiresIn: 86400 // 24 hours
       });
 

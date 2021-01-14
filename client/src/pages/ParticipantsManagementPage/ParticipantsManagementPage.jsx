@@ -4,7 +4,10 @@
 
 import React, { useEffect, useState } from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
-import ToolkitProvider, { CSVExport } from 'react-bootstrap-table2-toolkit';
+import ToolkitProvider from 'react-bootstrap-table2-toolkit';
+
+// services
+import { questionnaireService } from '../../services';
 
 // custom hooks
 import { useFetchUsers, useFetchQuestions } from '../../hooks';
@@ -286,9 +289,21 @@ const ParticipantsManagement = ({
 
 const ParticipantsManagementPage = () => {
   const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers();
-  const [{ fetchedQuestions, isLoadingQuestions, isErrorQuestions }] = useFetchQuestions(
-    'tehsOCylVjJebsg5wi0u7'
-  );
+  const [
+    { fetchedQuestions, isLoadingQuestions, isErrorQuestions },
+    setQuestionniareId
+  ] = useFetchQuestions();
+
+  useEffect(() => {
+    const fetchIds = async () => {
+      await questionnaireService.fetchQuestionnaires('_id').then((response) => {
+        setQuestionniareId(response[0]);
+      });
+    };
+
+    fetchIds();
+  }, []);
+
   return (
     <div>
       <div>

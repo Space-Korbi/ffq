@@ -56,6 +56,8 @@ export const insertQuestionnaire = (payload) => api.post(`/questionnaires`, payl
 export const updateQuestionnaire = (questionnaireId, payload) =>
   api.put(`/questionnaires/${questionnaireId}`, payload);
 export const getAllQuestionnaires = () => api.get(`/questionnaires`);
+export const getQuestionnaires = (query) => api.get(`/questionnaires`, { params: query });
+
 export const getQuestionnaireById = (questionnaireId) =>
   api.get(`/questionnaires/${questionnaireId}`);
 export const deleteQuestionnaireById = (questionnaireId) =>

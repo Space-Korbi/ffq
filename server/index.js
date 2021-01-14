@@ -2,6 +2,7 @@
 require('dotenv').config();
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
+const path = require('path');
 
 // * Create express app
 const app = express();
@@ -30,7 +31,6 @@ app.use(express.static('uploads'));
 
 // * Database
 const db = require('./helpers/db');
-const dbConfig = require('./config/db.config');
 
 const Role = db.role;
 
@@ -59,9 +59,12 @@ const initial = () => {
     }
   });
 };
+// mongodb+srv://korbinian:<password>@hi-ffq.mwn7p.mongodb.net/<dbname>?retryWrites=true&w=majority
+
+const dbURI = process.env.MONGODB_URI || `mongodb://localhost:27017/ffq`;
 
 db.mongoose
-  .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
+  .connect(dbURI, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true
@@ -74,6 +77,8 @@ db.mongoose
     console.error('Connection error', err);
     process.exit();
   });
+
+app.use(express.static(path.join(__dirname, 'client', 'build')));
 
 // Routes
 const userRouter = require('./users/user.router');
@@ -92,5 +97,9 @@ app.use('/api', [userRouter, questionRouter, questionnaireRouter, imageRouter]);
 const swaggerDocument = require('./Questionnaire.v1.json');
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../', 'client', 'build', 'index.html'));
+});
 
 app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));

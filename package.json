@@ -19,5 +19,13 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.1.2"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "scripts": {
+    "start": "cd server && yarn install && yarn node index.js",
+    "heroku-postbuild": "cd ../client && yarn install --only=dev && yarn install && yarn run build"
+  },
+  "engines": {
+    "node": "15.x",
+    "yarn": "1.22.5"
+  }
 }
