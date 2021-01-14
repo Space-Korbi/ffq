@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useState, useReducer } from 'react';
 
 // services
 import { questionnaireService } from '../services';
@@ -43,7 +43,6 @@ const useFetchQuestionnaires = () => {
     let didCancel = false;
     const fetchQuestionnaires = async () => {
       dispatch({ type: 'FETCH_INIT' });
-
       try {
         const fetchedQuestionnaires = await questionnaireService.fetchAllQuestionnaires();
         if (!didCancel) {
@@ -66,6 +65,8 @@ const useFetchQuestionnaires = () => {
 
 // Custom question fetching hook
 const useFetchQuestions = (initialQuestionnaireId) => {
+  const [questionniareId, setQuestionniareId] = useState(initialQuestionnaireId);
+
   const fetchQuestionReducer = (state, action) => {
     switch (action.type) {
       case 'FETCH_INIT':
@@ -104,7 +105,7 @@ const useFetchQuestions = (initialQuestionnaireId) => {
       dispatch({ type: 'FETCH_INIT' });
       try {
         const fetchedQuestions = await questionnaireService.fetchAllQuestionsOfQuestionnaire(
-          initialQuestionnaireId
+          questionniareId
         );
         if (!didCancel) {
           dispatch({ type: 'FETCH_SUCCESS', payload: fetchedQuestions });
@@ -119,9 +120,9 @@ const useFetchQuestions = (initialQuestionnaireId) => {
     return () => {
       didCancel = true;
     };
-  }, [initialQuestionnaireId]);
+  }, [questionniareId]);
 
-  return [state];
+  return [state, setQuestionniareId];
 };
 
 export { useFetchQuestionnaires, useFetchQuestions };

@@ -1,5 +1,5 @@
+require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const config = require('../config/auth.config');
 const db = require('../helpers/db');
 
 const User = db.user;
@@ -14,7 +14,7 @@ const verifyToken = (req, res, next) => {
     });
   }
 
-  jwt.verify(token, config.secret, (err, decoded) => {
+  jwt.verify(token, process.env.SECRET || 'localDevSecret', (err, decoded) => {
     if (err) {
       return res.status(401).json({
         err,

@@ -4,6 +4,7 @@ import {
   getAllQuestionsOfQuestionnaire,
   insertQuestionnaire,
   getAllQuestionnaires,
+  getQuestionnaires,
   updateQuestionnaire,
   deleteQuestionnaireById,
   deleteQuestionById
@@ -28,24 +29,24 @@ const createQuestionnaire = async () => {
 };
 
 const fetchAllQuestionnaires = async () => {
-  return getAllQuestionnaires()
-    .then((questionnaires) => {
-      return questionnaires.data.data;
-    })
-    .catch((err) => {
-      // eslint-disable-next-line no-console
-      console.log(err);
-      return [];
-    });
+  return getAllQuestionnaires().then((questionnaires) => {
+    return questionnaires.data.data;
+  });
+};
+
+const fetchQuestionnaires = async (param) => {
+  return getQuestionnaires({ param }).then((response) => {
+    return response.data.data;
+  });
 };
 
 const fetchAllQuestionsOfQuestionnaire = async (questionnaireId) => {
   if (!questionnaireId) {
     return [];
   }
-
-  const questions = await getAllQuestionsOfQuestionnaire(questionnaireId);
-  return questions.data.data;
+  return getAllQuestionsOfQuestionnaire(questionnaireId).then((response) => {
+    return response.data.data;
+  });
 };
 
 const createQuestionAt = async (questionnaireId, index) => {
@@ -119,6 +120,7 @@ const deleteQuestionnaire = async (id) => {
 const questionnaireService = {
   createQuestionnaire,
   fetchAllQuestionnaires,
+  fetchQuestionnaires,
   fetchAllQuestionsOfQuestionnaire,
   createQuestionAt,
   moveQuestionFromTo,

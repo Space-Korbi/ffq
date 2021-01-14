@@ -25,7 +25,6 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
 
   const [questions, setQuestions] = useState([]);
   const [data, setData] = useState([]);
-  const [isDeleting, setIsDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState();
 
@@ -130,11 +129,7 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
   const deleteButton = (cell, row) => {
     return (
       <div className="d-flex justify-content-center">
-        <DeleteButton
-          isTrashCan
-          isDeleting={isDeleting}
-          onClick={() => handleRemoveQuestion(row.question, row.index)}
-        />
+        <DeleteButton isTrashCan onClick={() => handleRemoveQuestion(row.question, row.index)} />
       </div>
     );
   };
@@ -176,6 +171,14 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
       style: { width: '45px' }
     },
     {
+      dataField: 'move',
+      text: 'Move',
+      editable: false,
+      align: 'center',
+      style: { width: '12px' },
+      formatter: moveButtons
+    },
+    {
       text: 'Title',
       dataField: 'question.title'
     },
@@ -191,14 +194,7 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
       text: 'Help',
       dataField: 'question.help'
     },
-    {
-      dataField: 'move',
-      text: '',
-      editable: false,
-      align: 'center',
-      style: { width: '12px' },
-      formatter: moveButtons
-    },
+
     {
       dataField: 'delete',
       text: '',
@@ -335,10 +331,11 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
 };
 
 const QuestionnaireEditorPage = () => {
-  const [questionnaires, setQuestionnaires] = useState([]);
   const [
     { fetchedQuestionnaires, isLoadingQuestionnaires, isErrorQuestionnaires }
   ] = useFetchQuestionnaires();
+
+  const [questionnaires, setQuestionnaires] = useState();
 
   useEffect(() => {
     if (fetchedQuestionnaires) {
@@ -361,7 +358,7 @@ const QuestionnaireEditorPage = () => {
 
   return (
     <div>
-      {!questionnaires ? (
+      {!questionnaires || !questionnaires.length ? (
         <div>
           {isErrorQuestionnaires && (
             <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
