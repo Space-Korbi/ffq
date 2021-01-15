@@ -8,7 +8,7 @@ import { authHeader } from '../helpers';
 
 // Creating a new instance of axios with a custom config.
 const api = axios.create({
-  baseURL: '/api'
+  baseURL: process.env.REACT_APP_BASE_URL
 });
 
 // Attach access token to every request header
@@ -18,8 +18,10 @@ api.interceptors.request.use((request) => {
 });
 
 // login/signup
-export const signup = (payload) => axios.post(`/api/users/signup`, payload);
-export const login = (payload) => axios.post(`/api/users/login`, payload);
+export const signup = (payload) =>
+  axios.post(`${process.env.REACT_APP_BASE_URL}/users/signup`, payload);
+export const login = (payload) =>
+  axios.post(`${process.env.REACT_APP_BASE_URL}/users/login`, payload);
 
 // user
 export const updateAnswerById = (userId, payload) => api.put(`users/${userId}`, payload);
