@@ -78,7 +78,7 @@ db.mongoose
     process.exit();
   });
 
-app.use(express.static(path.join(__dirname, 'client', 'build')));
+app.use(express.static(path.join(__dirname, '../', 'client', 'build')));
 
 // Routes
 const userRouter = require('./users/user.router');
