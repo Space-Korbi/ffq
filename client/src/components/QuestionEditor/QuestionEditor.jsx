@@ -63,14 +63,14 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
             >
               Save and Exit
             </button>
-            {/* TODO: link to or create next question" */}
+            {/* TODO: link to or create next question" 
             <button
               type="button"
               className="btn btn-outline-primary"
               onClick={() => onExit(question)}
             >
               Save and Next
-            </button>
+            </button> */}
           </div>
 
           <QuestionPreview

@@ -45,9 +45,9 @@ const UserInputAnswer = ({ answerOptions, submittedAnswer, onSubmit }) => {
       >
         {userInputs.map((userInput) => {
           return (
-            <div key={userInput.id} className="m-4">
-              <div className="row">
-                <div className="col">
+            <div key={userInput.id} className="my-4 mx-2 mx-md-4">
+              <div className="row row-cols-1 row-cols-sm-2 no-gutters">
+                <div className="col col-sm-8 pr-sm-1">
                   <div className="input-group input-group-lg">
                     <div className="input-group-prepend">
                       <span className="input-group-text" id="inputGroup-sizing-lg">
@@ -68,8 +68,8 @@ const UserInputAnswer = ({ answerOptions, submittedAnswer, onSubmit }) => {
                   </div>
                 </div>
                 {userInput.hasNumberInput && (
-                  <div className="col-4">
-                    <div className="input-group input-group-lg">
+                  <div className="col col-sm-4 pl-sm-1">
+                    <div className="input-group input-group-lg mt-2 mt-sm-0">
                       <input
                         type="number"
                         id={`${userInput.id}-numberInput`}
@@ -93,7 +93,11 @@ const UserInputAnswer = ({ answerOptions, submittedAnswer, onSubmit }) => {
           );
         })}
         <div className="d-flex justify-content-center mb-3">
-          <button type="submit" className="btn btn-outline-primary">
+          <button
+            type="button"
+            className="btn btn-outline-primary"
+            onClick={() => onSubmit(userInputs)}
+          >
             Continue
           </button>
         </div>

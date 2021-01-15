@@ -15,8 +15,11 @@ const LoginPage = () => {
   }, []);
 
   return (
-    <div className="d-flex h-100 align-self-stretch justify-content-center bg-light">
-      <div className="d-flex col-sm-8 col-md-6 col-lg-5 my-5">
+    <div
+      className="d-flex align-self-stretch justify-content-center bg-light"
+      style={{ height: '100vh', overflow: 'scroll' }}
+    >
+      <div className="d-flex col-sm-8 col-md-6 col-lg-5 mt-5">
         <div className="col">
           <div className="alert alert-info">
             Test Accounts
@@ -26,7 +29,7 @@ const LoginPage = () => {
             <strong>User</strong> - Email: user@abc.de PW: 54321
           </div>
           <div className="d-flex justify-content-center">
-            <img className="my-4" src="../../hi-ffq.png" alt="" width="72" height="72" />
+            <img className="mb-5" src="../../hi-ffq.png" alt="" width="72" height="72" />
           </div>
           <h2>Login</h2>
           <br />
@@ -88,7 +91,7 @@ const LoginPage = () => {
                   />
                   <ErrorMessage name="password" component="div" className="invalid-feedback" />
                 </div>
-                <div className="form-group">
+                <div className="form-group mb-5">
                   <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
                     Login
                   </button>
@@ -106,7 +109,7 @@ const LoginPage = () => {
                     />
                   )}
                 </div>
-                {status && <div className="alert alert-danger">{status}</div>}
+                {status && <div className="alert alert-danger mb-5">{status}</div>}
               </Form>
             )}
           </Formik>
