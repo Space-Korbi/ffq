@@ -71,6 +71,10 @@ const SelectionCriteria = ({
   return (
     <div className="row d-flex justify-content-center">
       <div className="col">
+        <div className="alert alert-warning" role="alert">
+          Diese Daten werden noch nicht auf dem Server gespeicher. Wenn die Seite neu geladen wird,
+          wird die `Selection Criteria` zurückgesetzt.
+        </div>
         <h6>
           Selection Criteria
           <sup className="text-info ml-1">
