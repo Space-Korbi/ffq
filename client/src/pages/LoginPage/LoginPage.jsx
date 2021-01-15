@@ -17,9 +17,9 @@ const LoginPage = () => {
   return (
     <div
       className="d-flex align-self-stretch justify-content-center bg-light"
-      style={{ height: '100vh' }}
+      style={{ height: '100vh', overflow: 'scroll' }}
     >
-      <div className="d-flex col-sm-8 col-md-6 col-lg-5 my-5">
+      <div className="d-flex col-sm-8 col-md-6 col-lg-5 mt-5">
         <div className="col">
           <div className="alert alert-info">
             Test Accounts
@@ -91,7 +91,7 @@ const LoginPage = () => {
                   />
                   <ErrorMessage name="password" component="div" className="invalid-feedback" />
                 </div>
-                <div className="form-group">
+                <div className="form-group mb-5">
                   <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
                     Login
                   </button>
@@ -109,7 +109,7 @@ const LoginPage = () => {
                     />
                   )}
                 </div>
-                {status && <div className="alert alert-danger">{status}</div>}
+                {status && <div className="alert alert-danger mb-5">{status}</div>}
               </Form>
             )}
           </Formik>
