@@ -22,7 +22,7 @@
   "dependencies": {},
   "scripts": {
     "start": "cd server && yarn install && yarn node index.js",
-    "heroku-postbuild": "cd ../client && yarn install --only=dev && yarn install && yarn run build"
+    "heroku-postbuild": "cd client && yarn install --only=dev && yarn install && yarn run build"
   },
   "engines": {
     "node": "15.x",
