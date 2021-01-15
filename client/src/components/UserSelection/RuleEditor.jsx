@@ -76,7 +76,7 @@ const RuleEditor = ({ selectionCriteria, rules, saveRule, removeRule }) => {
 
   return (
     <div className="row">
-      <div className="col-5 col-lg-4 mb-3">
+      <div className="col-md-6 col-lg-5 mb-3">
         <AddRule selectionCriteria={selectionCriteria} saveRule={saveRule} />
       </div>
       <div className="col">

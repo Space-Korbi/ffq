@@ -4,8 +4,8 @@ html {
   min-height: 100%;
 }
 
-body,
-#root {
+body #root .login,
+body #root .signup {
   min-height: 100vh;
 }
 
@@ -14,7 +14,8 @@ body,
 }
 
 main {
-  margin-bottom: 50px;
+  min-height: 100%;
+  margin-bottom: 55px;
 }
 
 .jumbotron-question {
