@@ -1,5 +1,5 @@
 /* eslint-disable prefer-promise-reject-errors */
-const { body, check, param, validationResult } = require('express-validator');
+const { body, check, param } = require('express-validator');
 const User = require('../users/user.model');
 
 // Maybe body should be escaped

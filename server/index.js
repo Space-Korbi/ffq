@@ -18,7 +18,7 @@ const errorHandler = require('./helpers/error-handling');
 app.disable('x-powered-by');
 
 const corsOptions = {
-  origin: 'http://localhost:8000'
+  origin: ['http://localhost:8000', process.env.ORIGIN]
 };
 app.use(cors(corsOptions));
 
@@ -78,7 +78,7 @@ db.mongoose
     process.exit();
   });
 
-app.use(express.static(path.join(__dirname, 'client', 'build')));
+app.use(express.static(path.join(__dirname, '../', 'client', 'build')));
 
 // Routes
 const userRouter = require('./users/user.router');
