@@ -77,10 +77,10 @@ const RuleEditor = ({ selectionCriteria, rules, saveRule, removeRule }) => {
   return (
     <div className="row">
       <div className="col-md-6 col-lg-5 mb-3">
-      <div className="alert alert-warning" role="alert">
-        Diese Daten werden noch nicht auf dem Server gespeicher. Wenn die Seite neu geladen wird,
-        werden die `Selection Criteria` und die `Rules` zurückgesetzt.
-      </div>
+        <div className="alert alert-warning" role="alert">
+          Diese Daten werden noch nicht auf dem Server gespeicher. Wenn die Seite neu geladen wird,
+          werden die `Selection Criteria` und die `Rules` zurückgesetzt.
+        </div>
         <AddRule selectionCriteria={selectionCriteria} saveRule={saveRule} />
       </div>
       <div className="col">
