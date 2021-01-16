@@ -128,7 +128,7 @@ const SignUpPage = () => {
                     className="invalid-feedback"
                   />
                 </div>
-                <div className="form-group mb-5">
+                <div className="form-group pb-5">
                   <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
                     Sign Up
                   </button>
