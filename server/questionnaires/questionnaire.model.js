@@ -3,6 +3,15 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
+const accessInterval = Schema(
+  {
+    id: { type: String },
+    start: { type: Date },
+    end: { type: Date }
+  },
+  { _id: false, default: [] }
+);
+
 /**
  * * Questionnaire
  * @param _id
@@ -20,8 +29,8 @@ const Questionnaire = new Schema(
       required: true
     },
     name: { type: String, default: 'New Questionnaire' },
-    startDate: { type: Date, default: Date.UTC(2020, 1, 1, 0, 0, 0, 0) },
-    endDate: { type: Date, default: Date.UTC(2020, 1, 2, 0, 0, 0, 0) },
+    accessIntervals: { type: [accessInterval] },
+    endDate: { type: [Date] },
     questions: { type: [String] }
   },
   { timestamps: true }

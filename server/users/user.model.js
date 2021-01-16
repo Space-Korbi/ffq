@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const Answer = mongoose.Schema(
+const Answer = Schema(
   {
     questionId: { type: String },
     answerOption: { type: Schema.Types.Mixed }
