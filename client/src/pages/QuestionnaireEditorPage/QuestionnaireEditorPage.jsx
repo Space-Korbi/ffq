@@ -2,7 +2,10 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
-import DatePicker from 'react-date-picker';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
+import de from 'date-fns/locale/de';
 
 import PropTypes from 'prop-types';
 import BootstrapTable from 'react-bootstrap-table-next';
@@ -15,6 +18,7 @@ import { useFetchQuestionnaires, useFetchQuestions } from '../../hooks';
 
 // components
 import Spinner from '../../components/Spinner';
+import { NavTabs, NavContents } from '../../components/Navigation';
 import QuestionEditor from '../../components/QuestionEditor';
 import { DeleteButton, EditButton, MoveButton, OutlineButton } from '../../components/Button';
 
@@ -233,7 +237,7 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
     setIsEditing(false);
   };
 
-  return (
+  const questionsContent = (
     <div>
       {isEditing ? (
         <QuestionEditor
@@ -243,53 +247,8 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
         />
       ) : (
         <div>
-          <div className="row d-flex no-gutters">
-            <div className="col align-items-center">
-              {/* <div className="mb-4 d-flex justify-content-end">
-                    <DeleteButton isTrashCan onClick={() => deleteQuestionnaire(questionnaireId)} />
-                  </div> */}
-              <div className="my-1 d-inline-flex">
-                <div className="input-group">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text" id="inputGroup-name">
-                      Name
-                    </span>
-                  </div>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={questionnaireName}
-                    onChange={(e) => setQuestionnnaireName(e.target.value)}
-                    aria-describedby="inputGroup-name"
-                  />
-                </div>
-              </div>
-              <div className="my-1 d-flex">
-                <label className="form-check-label mx-1" htmlFor="inlineFormCheck">
-                  Start Date
-                </label>
-                <DatePicker onChange={setStartDate} value={startDate} />
-              </div>
-              <div className="my-1 d-flex">
-                <label className="form-check-label mx-1" htmlFor="inlineFormCheck">
-                  End Date
-                </label>
-                <DatePicker onChange={setEndDate} value={endDate} />
-              </div>
-            </div>
-          </div>
           <div className="row d-flex no-gutters mt-3">
             <div className="col d-flex justify-content-between align-items-center">
-              <button
-                type="button"
-                className="btn btn-outline-primary"
-                onClick={() => {
-                  handleChangeSettings();
-                }}
-              >
-                Save Settings
-              </button>
-
               <button
                 type="button"
                 className="btn btn-outline-primary"
@@ -326,6 +285,77 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
           </div>
         </div>
       )}
+    </div>
+  );
+
+  const settingsContent = (
+    <div className="row d-flex no-gutters">
+      <div className="col align-items-center">
+        {/* <div className="mb-4 d-flex justify-content-end">
+                    <DeleteButton isTrashCan onClick={() => deleteQuestionnaire(questionnaireId)} />
+                  </div> */}
+        <div className="my-1 d-inline-flex">
+          <div className="input-group">
+            <div className="input-group-prepend">
+              <span className="input-group-text" id="inputGroup-name">
+                Name
+              </span>
+            </div>
+            <input
+              type="text"
+              className="form-control"
+              value={questionnaireName}
+              onChange={(e) => setQuestionnnaireName(e.target.value)}
+              aria-describedby="inputGroup-name"
+            />
+          </div>
+        </div>
+        <div className="my-1 d-flex">
+          <label className="form-check-label mx-1" htmlFor="inlineFormCheck">
+            Start Date
+          </label>
+          <DatePicker
+            selected={startDate}
+            locale={de}
+            dateFormat="dd/MM/yyyy"
+            onChange={(date) => setStartDate(date)}
+          />
+        </div>
+        <div className="my-1 d-flex">
+          <label className="form-check-label mx-1" htmlFor="inlineFormCheck">
+            End Date
+          </label>
+          <DatePicker
+            selected={endDate}
+            locale={de}
+            dateFormat="dd/MM/yyyy"
+            onChange={(date) => setEndDate(date)}
+          />
+        </div>
+        <button
+          type="button"
+          className="btn btn-outline-primary"
+          onClick={() => {
+            handleChangeSettings();
+          }}
+        >
+          Save Settings
+        </button>
+      </div>
+    </div>
+  );
+
+  const tabNames = ['Questions', 'Settings'];
+  const tabContents = [questionsContent, settingsContent];
+
+  return (
+    <div>
+      <div>
+        <NavTabs tabNames={tabNames} />
+      </div>
+      <div className="mt-5">
+        <NavContents tabNames={tabNames} tabContents={tabContents} />
+      </div>
     </div>
   );
 };

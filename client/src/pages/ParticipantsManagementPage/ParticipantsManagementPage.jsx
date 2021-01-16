@@ -239,8 +239,7 @@ const ParticipantsManagement = ({
     );
   };
 
-  const tabNames = ['Participants', 'Selection Criteria', 'Selection Rules'];
-  const tabContents = [
+  const participantsContent = (
     <div>
       <ToolkitProvider keyField="email" data={data} columns={columns} bootstrap4 exportCSV>
         {(props) => (
@@ -261,19 +260,28 @@ const ParticipantsManagement = ({
           </div>
         )}
       </ToolkitProvider>
-    </div>,
+    </div>
+  );
+
+  const selectionCriteriaContent = (
     <CriteriaEditor
       selectionCriteria={selectionCriteria}
       addSelectionCriteria={saveSelectionCriteria}
       removeSelectionCriteria={removeFromSelectionCriteria}
-    />,
+    />
+  );
+
+  const ruleEditorContent = (
     <RuleEditor
       selectionCriteria={selectionCriteria}
       rules={selectionRules}
       saveRule={saveRule}
       removeRule={removeRule}
     />
-  ];
+  );
+
+  const tabNames = ['Participants', 'Selection Criteria', 'Selection Rules'];
+  const tabContents = [participantsContent, selectionCriteriaContent, ruleEditorContent];
 
   return (
     <div>
