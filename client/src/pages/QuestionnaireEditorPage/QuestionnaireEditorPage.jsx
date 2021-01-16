@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import BootstrapTable from 'react-bootstrap-table-next';
 
 // services
+import { nanoid } from 'nanoid';
 import { questionnaireService } from '../../services';
 
 // custom hooks
@@ -21,6 +22,103 @@ import Spinner from '../../components/Spinner';
 import { NavTabs, NavContents } from '../../components/Navigation';
 import QuestionEditor from '../../components/QuestionEditor';
 import { DeleteButton, EditButton, MoveButton, OutlineButton } from '../../components/Button';
+import RemovableListItem from '../../components/List';
+
+const AccessInterval = ({ interval, setStartDate, setEndDate }) => {
+  return (
+    <div className="row">
+      <div className="col">
+        <label htmlFor="startDate">Start Date</label>
+        <div id="startDate">
+          <DatePicker
+            selected={interval.startDate}
+            locale={de}
+            dateFormat="dd/MM/yyyy"
+            onChange={(date) => setStartDate(interval.id, date)}
+          />
+        </div>
+      </div>
+      <div className="col">
+        <label htmlFor="endDate">End Date</label>
+        <div id="endDate">
+          <DatePicker
+            selected={interval.endDate}
+            locale={de}
+            dateFormat="dd/MM/yyyy"
+            onChange={(date) => setEndDate(interval.id, date)}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const AccessIntervals = () => {
+  const [accessIntervals, setAccessIntervals] = useState([]);
+
+  const setStart = (id, date) => {
+    const newIntervals = accessIntervals.map((interval) => {
+      if (interval.id === id) {
+        const updatedInterval = {
+          ...interval,
+          startDate: date
+        };
+        return updatedInterval;
+      }
+      return interval;
+    });
+    setAccessIntervals(newIntervals);
+  };
+
+  const setEnd = (id, date) => {
+    const newIntervals = accessIntervals.map((interval) => {
+      if (interval.id === id) {
+        const updatedInterval = {
+          ...interval,
+          endDate: date
+        };
+        return updatedInterval;
+      }
+      return interval;
+    });
+    setAccessIntervals(newIntervals);
+  };
+
+  const addInterval = () => {
+    setAccessIntervals((prevState) => [
+      ...prevState,
+      { id: nanoid(), startDate: new Date(), endDate: new Date() }
+    ]);
+  };
+
+  const removeInterval = (intervalId) => {
+    console.log('intervalToRemove', intervalId);
+    const newIntervals = accessIntervals.filter((prevInterval) => prevInterval.id !== intervalId);
+    setAccessIntervals(newIntervals);
+  };
+
+  return (
+    <div className="card m-auto">
+      <div className="card-header d-flex justify-content-between text-center align-items-center">
+        <div>Access Intervals</div>
+        <OutlineButton title="+" onClick={() => addInterval()} />
+      </div>
+      <ul className="list-group list-group-flush">
+        {accessIntervals.map((interval) => {
+          return (
+            <RemovableListItem
+              id={interval.id}
+              content={
+                <AccessInterval interval={interval} setStartDate={setStart} setEndDate={setEnd} />
+              }
+              onClick={() => removeInterval(interval.id)}
+            />
+          );
+        })}
+      </ul>
+    </div>
+  );
+};
 
 const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
   const [{ fetchedQuestions, isLoadingQuestions, isErrorQuestions }] = useFetchQuestions(
@@ -310,6 +408,7 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
             />
           </div>
         </div>
+        <AccessIntervals />
         <div className="my-1 d-flex">
           <label className="form-check-label mx-1" htmlFor="inlineFormCheck">
             Start Date
