@@ -1,8 +1,8 @@
 const async = require('async');
+const { validationResult } = require('express-validator');
 const Questionnaire = require('./questionnaire.model');
 const Question = require('../questions/question.model');
 const { deleteImagesOfQuestion } = require('../questions/question.controller');
-const { param } = require('../users/user.router');
 
 /**
  * * Questionnaire controller
@@ -52,6 +52,12 @@ const createQuestionnaire = async (req, res) => {
 };
 
 const updateQuestionnaire = async (req, res) => {
+  // Finds the validation errors in this request and wraps them in an object
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const { body } = req;
 
   if (!body) {
@@ -99,8 +105,8 @@ const updateQuestionnaire = async (req, res) => {
       }
       case updateAction.changeSettings: {
         questionnaireUpdate.name = body.settings.name;
-        questionnaireUpdate.startDate = body.settings.startDate;
-        questionnaireUpdate.endDate = body.settings.endDate;
+        questionnaireUpdate.accessIntervals = body.settings.accessIntervals;
+        questionnaireUpdate.consentScript = body.settings.consentScript;
         break;
       }
       default:
@@ -112,12 +118,10 @@ const updateQuestionnaire = async (req, res) => {
       .save()
       .then(() => {
         return res.status(200).json({
+          questionnaireUpdate,
           success: true,
           id: questionnaire._id,
           question,
-          name: questionnaireUpdate.name,
-          startDate: questionnaireUpdate.startDate,
-          endDate: questionnaireUpdate.endDate,
           index: body.index,
           message: 'Questionnaire updated!'
         });
