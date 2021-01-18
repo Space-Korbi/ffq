@@ -2,16 +2,11 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-
-import de from 'date-fns/locale/de';
 
 import PropTypes from 'prop-types';
 import BootstrapTable from 'react-bootstrap-table-next';
 
 // services
-import { nanoid } from 'nanoid';
 import { questionnaireService } from '../../services';
 
 // custom hooks
@@ -21,104 +16,14 @@ import { useFetchQuestionnaires, useFetchQuestions } from '../../hooks';
 import Spinner from '../../components/Spinner';
 import { NavTabs, NavContents } from '../../components/Navigation';
 import QuestionEditor from '../../components/QuestionEditor';
-import { DeleteButton, EditButton, MoveButton, OutlineButton } from '../../components/Button';
-import RemovableListItem from '../../components/List';
-
-const AccessInterval = ({ interval, setStartDate, setEndDate }) => {
-  return (
-    <div className="row">
-      <div className="col">
-        <label htmlFor="startDate">Start Date</label>
-        <div id="startDate">
-          <DatePicker
-            selected={interval.startDate}
-            locale={de}
-            dateFormat="dd/MM/yyyy"
-            onChange={(date) => setStartDate(interval.id, date)}
-          />
-        </div>
-      </div>
-      <div className="col">
-        <label htmlFor="endDate">End Date</label>
-        <div id="endDate">
-          <DatePicker
-            selected={interval.endDate}
-            locale={de}
-            dateFormat="dd/MM/yyyy"
-            onChange={(date) => setEndDate(interval.id, date)}
-          />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const AccessIntervals = () => {
-  const [accessIntervals, setAccessIntervals] = useState([]);
-
-  const setStart = (id, date) => {
-    const newIntervals = accessIntervals.map((interval) => {
-      if (interval.id === id) {
-        const updatedInterval = {
-          ...interval,
-          startDate: date
-        };
-        return updatedInterval;
-      }
-      return interval;
-    });
-    setAccessIntervals(newIntervals);
-  };
-
-  const setEnd = (id, date) => {
-    const newIntervals = accessIntervals.map((interval) => {
-      if (interval.id === id) {
-        const updatedInterval = {
-          ...interval,
-          endDate: date
-        };
-        return updatedInterval;
-      }
-      return interval;
-    });
-    setAccessIntervals(newIntervals);
-  };
-
-  const addInterval = () => {
-    setAccessIntervals((prevState) => [
-      ...prevState,
-      { id: nanoid(), startDate: new Date(), endDate: new Date() }
-    ]);
-  };
-
-  const removeInterval = (intervalId) => {
-    console.log('intervalToRemove', intervalId);
-    const newIntervals = accessIntervals.filter((prevInterval) => prevInterval.id !== intervalId);
-    setAccessIntervals(newIntervals);
-  };
-
-  return (
-    <div className="card m-auto">
-      <div className="card-header d-flex justify-content-between text-center align-items-center">
-        <div>Access Intervals</div>
-        <OutlineButton title="+" onClick={() => addInterval()} />
-      </div>
-      <ul className="list-group list-group-flush">
-        {accessIntervals.map((interval) => {
-          return (
-            <RemovableListItem
-              id={interval.id}
-              content={
-                <AccessInterval interval={interval} setStartDate={setStart} setEndDate={setEnd} />
-              }
-              onClick={() => removeInterval(interval.id)}
-            />
-          );
-        })}
-      </ul>
-    </div>
-  );
-};
+import {
+  AddButton,
+  DeleteButton,
+  EditButton,
+  MoveButton,
+  OutlineButton
+} from '../../components/Button';
+import QuestionnaireSettings from '../../components/Settings';
 
 const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
   const [{ fetchedQuestions, isLoadingQuestions, isErrorQuestions }] = useFetchQuestions(
@@ -130,7 +35,6 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState();
 
-  const [questionnaireName, setQuestionnnaireName] = useState(questionnaire.name);
   const [startDate, setStartDate] = useState(new Date(questionnaire.startDate));
   const [endDate, setEndDate] = useState(new Date(questionnaire.endDate));
 
@@ -217,14 +121,11 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
       });
   };
 
-  const handleChangeSettings = async () => {
-    const settings = { name: questionnaireName, startDate, endDate };
+  const saveSettings = async (settings) => {
     await questionnaireService
       .updateQuestionnaireSettings(questionnaire._id, settings)
       .then((response) => {
-        setQuestionnnaireName(response.name);
-        setStartDate(new Date(response.startDate));
-        setEndDate(new Date(response.endDate));
+        console.log(response);
       });
   };
 
@@ -254,6 +155,20 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
           onClick={() => setSelectedQuestion({ question: row.question, index: row.index })}
         />
       </div>
+    );
+  };
+
+  const addButton = (column, colIndex) => {
+    return (
+      <button
+        type="button"
+        className="btn btn-sm btn-primary"
+        onClick={() => {
+          handleCreateQuestionAt();
+        }}
+      >
+        Add Question
+      </button>
     );
   };
 
@@ -303,6 +218,7 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
       editable: false,
       align: 'center',
       style: { width: '12px' },
+      headerFormatter: addButton,
       formatter: deleteButton
     }
   ];
@@ -345,19 +261,6 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
         />
       ) : (
         <div>
-          <div className="row d-flex no-gutters mt-3">
-            <div className="col d-flex justify-content-between align-items-center">
-              <button
-                type="button"
-                className="btn btn-outline-primary"
-                onClick={() => {
-                  handleCreateQuestionAt();
-                }}
-              >
-                Add Question
-              </button>
-            </div>
-          </div>
           <div>
             {isErrorQuestions && (
               <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
@@ -387,61 +290,7 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
   );
 
   const settingsContent = (
-    <div className="row d-flex no-gutters">
-      <div className="col align-items-center">
-        {/* <div className="mb-4 d-flex justify-content-end">
-                    <DeleteButton isTrashCan onClick={() => deleteQuestionnaire(questionnaireId)} />
-                  </div> */}
-        <div className="my-1 d-inline-flex">
-          <div className="input-group">
-            <div className="input-group-prepend">
-              <span className="input-group-text" id="inputGroup-name">
-                Name
-              </span>
-            </div>
-            <input
-              type="text"
-              className="form-control"
-              value={questionnaireName}
-              onChange={(e) => setQuestionnnaireName(e.target.value)}
-              aria-describedby="inputGroup-name"
-            />
-          </div>
-        </div>
-        <AccessIntervals />
-        <div className="my-1 d-flex">
-          <label className="form-check-label mx-1" htmlFor="inlineFormCheck">
-            Start Date
-          </label>
-          <DatePicker
-            selected={startDate}
-            locale={de}
-            dateFormat="dd/MM/yyyy"
-            onChange={(date) => setStartDate(date)}
-          />
-        </div>
-        <div className="my-1 d-flex">
-          <label className="form-check-label mx-1" htmlFor="inlineFormCheck">
-            End Date
-          </label>
-          <DatePicker
-            selected={endDate}
-            locale={de}
-            dateFormat="dd/MM/yyyy"
-            onChange={(date) => setEndDate(date)}
-          />
-        </div>
-        <button
-          type="button"
-          className="btn btn-outline-primary"
-          onClick={() => {
-            handleChangeSettings();
-          }}
-        >
-          Save Settings
-        </button>
-      </div>
-    </div>
+    <QuestionnaireSettings questionnaire={questionnaire} save={saveSettings} />
   );
 
   const tabNames = ['Questions', 'Settings'];
@@ -452,7 +301,7 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
       <div>
         <NavTabs tabNames={tabNames} />
       </div>
-      <div className="mt-5">
+      <div>
         <NavContents tabNames={tabNames} tabContents={tabContents} />
       </div>
     </div>
@@ -508,7 +357,7 @@ const QuestionnaireEditorPage = () => {
           )}
         </div>
       ) : (
-        <div className="m-lg-5">
+        <div className="px-3">
           {questionnaires.map((questionnaire) => {
             return (
               <div key={questionnaire._id} className="my-3">
