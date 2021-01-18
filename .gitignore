@@ -9,7 +9,7 @@ node_modules/
 /coverage
 
 # production
-/build
+client/build
 
 # uploads
 uploads/
@@ -29,3 +29,6 @@ uploads/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# statistics 
+.VSCodeCounter/
