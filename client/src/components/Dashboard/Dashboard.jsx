@@ -30,12 +30,18 @@ const Dashboard = ({ isAdmin }) => {
   useEffect(() => {
     let didCancel = false;
     const fetchMetaData = async () => {
-      await questionnaireService.fetchQuestionnaires('metaData').then((response) => {
-        if (!didCancel) {
-          console.log('dash', response);
-          setQuestionnaireMetaData(response.metaData[0]);
-        }
-      });
+      await questionnaireService
+        .fetchQuestionnaires('metaData')
+        .then((response) => {
+          if (!didCancel) {
+            if (response.metaData) {
+              setQuestionnaireMetaData(response.metaData[0]);
+            }
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     };
     fetchMetaData();
     return () => {

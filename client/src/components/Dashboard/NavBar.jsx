@@ -32,23 +32,23 @@ const adminLinks = [
   }
 ];
 
-const userLinks = [
-  /* {
-      name: 'Questionnaire',
-      to: '/questionnairePresenter',
-      className: 'nav-link',
-      activeClassName: 'nav-link active'
-    }, */
-  {
-    name: 'Account',
-    to: '/account',
-    className: 'nav-link',
-    activeClassName: 'nav-link active'
-  }
-];
-
 function NavBar({ isAdmin }) {
   const { url, params } = useRouteMatch();
+
+  const userLinks = [
+    {
+      name: 'Home',
+      to: '',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    },
+    {
+      name: 'Account',
+      to: '/account',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    }
+  ];
 
   return (
     <div>
@@ -110,6 +110,7 @@ function NavBar({ isAdmin }) {
                 {userLinks.map((link) => (
                   <li className="nav-item" key={link.name}>
                     <NavLink
+                      exact
                       to={`${url}${link.to}`}
                       className={link.className}
                       activeClassName={link.activeClassName}
