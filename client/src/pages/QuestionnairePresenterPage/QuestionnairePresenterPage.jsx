@@ -17,13 +17,7 @@ import { Question } from '../../components/Question';
 import Submit from '../../components/DefaultSegments';
 import ProgressIndicator from '../../components/ProgressIndicator';
 
-const QuestionnairePresenter = ({
-  questions,
-  previousAnswers,
-  questionsToSkip,
-  isAdmin,
-  setHideNavbar
-}) => {
+const QuestionnairePresenter = ({ questions, previousAnswers, questionsToSkip, isAdmin }) => {
   // set inital values
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
@@ -31,10 +25,6 @@ const QuestionnairePresenter = ({
   const [toSkip, setToSkip] = useState(questionsToSkip);
   const { userId } = useParams();
   const answersRef = useRef(answers);
-
-  useEffect(() => {
-    setHideNavbar(true);
-  }, []);
 
   const willSkipQuestionAt = (index) => {
     if (questions && questions[index] && toSkip.includes(questions[index]._id)) {
@@ -133,53 +123,53 @@ const QuestionnairePresenter = ({
 
   return (
     <div>
-      <div>
-        {questions.length > 0 && (
-          <>
-            {currentIndex >= questions.length ? (
-              <Submit setHideNavbar />
-            ) : (
-              <>
-                <nav className="navbar navbar-expand-md navbar-dark bg-dark questionnaire">
-                  <div className="d-flex flex-fill align-items-center">
-                    <button
-                      type="button"
-                      className="btn btn btn-light"
-                      disabled={isDisabled}
-                      onClick={() => {
-                        const prevQuestionIndex = prevUnskippedQuestionAt(currentIndex - 1);
-                        setCurrentIndex(prevQuestionIndex);
-                      }}
-                    >
-                      Back
-                    </button>
-                    <div className="p-1" />
-                    <ProgressIndicator currentPosition={currentIndex} length={questions.length} />
-                    <div className="p-1" />
-                    {isAdmin && (
-                      <button
-                        type="button"
-                        className="btn btn-sm btn-outline-warning"
-                        onClick={() => {
-                          userService.resetAnswers(userId).then(() => {
-                            setCurrentIndex(0);
-                            setToSkip([]);
-                            setAnswers([]);
-                          });
-                        }}
-                      >
-                        Reset answers
-                      </button>
-                    )}
-                    {/* <button
+      <nav className="navbar navbar-expand-md navbar-dark bg-dark questionnaire">
+        <div className="d-flex flex-fill align-items-center">
+          <button
+            type="button"
+            className="btn btn btn-light"
+            disabled={isDisabled}
+            onClick={() => {
+              const prevQuestionIndex = prevUnskippedQuestionAt(currentIndex - 1);
+              setCurrentIndex(prevQuestionIndex);
+            }}
+          >
+            Back
+          </button>
+          <div className="p-1" />
+          <ProgressIndicator currentPosition={currentIndex} length={questions.length} />
+          <div className="p-1" />
+          {isAdmin && (
+            <button
+              type="button"
+              className="btn btn-sm btn-outline-warning"
+              onClick={() => {
+                userService.resetAnswers(userId).then(() => {
+                  setCurrentIndex(0);
+                  setToSkip([]);
+                  setAnswers([]);
+                });
+              }}
+            >
+              Reset answers
+            </button>
+          )}
+          {/* <button
                 type="button"
                 className="btn btn btn-light"
                 onClick={() => setCurrentIndex(currentIndex + 1)}
               >
                 Weiter
               </button> */}
-                  </div>
-                </nav>
+        </div>
+      </nav>
+      <div>
+        {questions.length > 0 && (
+          <>
+            {currentIndex >= questions.length ? (
+              <Submit />
+            ) : (
+              <>
                 <div>
                   <Question
                     id={questions[currentIndex]._id}
@@ -203,7 +193,7 @@ const QuestionnairePresenter = ({
   );
 };
 
-const QuestionnairePresenterPage = ({ isAdmin, setHideNavbar }) => {
+const QuestionnairePresenterPage = ({ isAdmin }) => {
   const { userId } = useParams();
   const [
     { fetchedQuestions, isLoadingQuestions, isErrorQuestions },
@@ -243,7 +233,6 @@ const QuestionnairePresenterPage = ({ isAdmin, setHideNavbar }) => {
           questionsToSkip={users[0].questionsToSkip}
           stoppedAtIndex={users[0].stoppedAtIndex + 1}
           isAdmin={isAdmin}
-          setHideNavbar={setHideNavbar}
         />
       )}
     </div>

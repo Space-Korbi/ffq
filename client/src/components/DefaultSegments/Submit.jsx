@@ -1,11 +1,10 @@
-import { func } from 'prop-types';
 import React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
 // services
 import { userService } from '../../services';
 
-const Submit = ({ setHideNavbar }) => {
+const Submit = () => {
   const history = useHistory();
   const { userId } = useParams();
 
@@ -25,7 +24,6 @@ const Submit = ({ setHideNavbar }) => {
           type="button"
           className="btn btn-lg btn-primary mt-3"
           onClick={() => {
-            setHideNavbar(false);
             submit();
           }}
         >
@@ -34,10 +32,6 @@ const Submit = ({ setHideNavbar }) => {
       </div>
     </div>
   );
-};
-
-Submit.propTypes = {
-  setHideNavbar: func.isRequired
 };
 
 export default Submit;
