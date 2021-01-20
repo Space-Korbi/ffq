@@ -12,7 +12,7 @@ import de from 'date-fns/locale/de';
 import { DeleteButton, AddButton } from '../Button';
 
 const CustomDateInput = ({ value, onClick }) => (
-  <button type="button" className="btn btn-light py-1" onClick={onClick}>
+  <button type="button" className="btn btn-light px-0 py-1" onClick={onClick}>
     {value}
   </button>
 );
@@ -22,8 +22,8 @@ CustomDateInput.propTypes = { value: String.isRequired, onClick: func.isRequired
 const DateIntervalTable = ({ dateIntervals, setStart, setEnd, remove, add }) => {
   return (
     <div className="table m-0">
-      <table className="table table-sm m-0 border-top-0">
-        <caption className="ml-1">
+      <table className="table table-sm table-borderless m-0 border-top-0">
+        <caption className="p-0 pt-2 ml-1">
           The questionnaire will only be accessible between intervals.
         </caption>
         <thead>
@@ -35,7 +35,7 @@ const DateIntervalTable = ({ dateIntervals, setStart, setEnd, remove, add }) => 
               End
             </th>
             <th scope="col" className="pt-0">
-              <AddButton onClick={() => add()} styling="float-right" />
+              <AddButton onClick={() => add()} styling="float-right btn-outline-primary" />
             </th>
           </tr>
         </thead>

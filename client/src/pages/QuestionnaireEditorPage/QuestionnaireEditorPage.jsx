@@ -35,9 +35,6 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState();
 
-  const [startDate, setStartDate] = useState(new Date(questionnaire.startDate));
-  const [endDate, setEndDate] = useState(new Date(questionnaire.endDate));
-
   const questionsRef = useRef(questions);
 
   useEffect(() => {
@@ -160,15 +157,12 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
 
   const addButton = (column, colIndex) => {
     return (
-      <button
-        type="button"
-        className="btn btn-sm btn-primary"
+      <AddButton
+        styling="btn-primary "
         onClick={() => {
           handleCreateQuestionAt();
         }}
-      >
-        Add Question
-      </button>
+      />
     );
   };
 
@@ -177,6 +171,7 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
       text: '',
       dataField: 'index',
       align: 'center',
+      headerFormatter: addButton,
       style: { width: '8px' }
     },
     {
@@ -218,7 +213,6 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
       editable: false,
       align: 'center',
       style: { width: '12px' },
-      headerFormatter: addButton,
       formatter: deleteButton
     }
   ];

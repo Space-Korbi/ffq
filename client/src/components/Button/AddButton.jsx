@@ -6,7 +6,7 @@ const AddButton = ({ onClick, styling }) => {
   return (
     <button
       type="button"
-      className={`btn btn-outline-primary d-flex align-items-center p-1 ${styling}`}
+      className={`btn d-flex align-items-center p-1 ${styling}`}
       onClick={onClick}
     >
       <PlusIcon />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { bool } from 'prop-types';
+import { arrayOf, bool, shape, string } from 'prop-types';
 import { useParams } from 'react-router-dom';
 
 // custom hooks
@@ -12,11 +12,10 @@ import ParticipantPage from './ParticipantPage';
 // components
 import Spinner from '../../components/Spinner';
 
-const HomePage = ({ isAdmin }) => {
+const HomePage = ({ questionnaireMetaData, isAdmin }) => {
   const { userId } = useParams();
   const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers(userId);
 
-  // Todo: onlu load user metadata or data thats needed
   return (
     <div>
       {isErrorUsers && (
@@ -29,15 +28,26 @@ const HomePage = ({ isAdmin }) => {
           <Spinner />
         </div>
       )}
-      {users && users.length > 0 && (
-        <>{isAdmin ? <AdminPage /> : <ParticipantPage user={users[0]} />}</>
+      {users && users.length > 0 && questionnaireMetaData && (
+        <>
+          {isAdmin ? (
+            <AdminPage />
+          ) : (
+            <ParticipantPage user={users[0]} questionnaireData={questionnaireMetaData} />
+          )}
+        </>
       )}
     </div>
   );
 };
 
 HomePage.propTypes = {
-  isAdmin: bool.isRequired
+  isAdmin: bool.isRequired,
+  questionnaireMetaData: shape({
+    id: string,
+    name: string,
+    accessIntervals: arrayOf(shape({ id: string, start: string, end: string }))
+  }).isRequired
 };
 
 export default HomePage;

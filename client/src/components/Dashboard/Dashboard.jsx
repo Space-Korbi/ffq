@@ -6,7 +6,7 @@ import { Route, Switch, useRouteMatch, NavLink, Link } from 'react-router-dom';
 import { Role } from '../../helpers';
 
 // services
-import { authService } from '../../services';
+import { authService, questionnaireService } from '../../services';
 
 // Root Pages that can be routed to
 import {
@@ -24,6 +24,22 @@ import PrivateRoute from '../PrivateRoute';
 const Dashboard = ({ isAdmin }) => {
   const { path, url, params } = useRouteMatch();
   const [user, setUser] = useState();
+  const [questionnaireMetaData, setQuestionnaireMetaData] = useState();
+
+  useEffect(() => {
+    let didCancel = false;
+    const fetchMetaData = async () => {
+      await questionnaireService.fetchQuestionnaires('metaData').then((response) => {
+        if (!didCancel) {
+          setQuestionnaireMetaData(response.metaData[0]);
+        }
+      });
+    };
+    fetchMetaData();
+    return () => {
+      didCancel = true;
+    };
+  }, []);
 
   useEffect(() => {
     setUser(JSON.parse(localStorage.getItem('user')));
@@ -158,7 +174,7 @@ const Dashboard = ({ isAdmin }) => {
         </div>
       </nav>
       <main role="main" className="col p-0">
-        {user && (
+        {user && questionnaireMetaData && (
           <div className="row no-gutters">
             <div className="col">
               <Switch>
@@ -180,11 +196,18 @@ const Dashboard = ({ isAdmin }) => {
                 />
                 <Route
                   path={`${path}/account`}
-                  component={() => <AccountPage isAdmin={isAdmin} />}
+                  component={() => (
+                    <AccountPage
+                      isAdmin={isAdmin}
+                      consentScript={questionnaireMetaData.consentScript}
+                    />
+                  )}
                 />
                 <Route
                   path={`${path}/`}
-                  component={() => <HomePage isAdmin={isAdmin} user={user} />}
+                  component={() => (
+                    <HomePage isAdmin={isAdmin} questionnaireMetaData={questionnaireMetaData} />
+                  )}
                 />
                 <Route path="*" component={LoginPage} />
               </Switch>

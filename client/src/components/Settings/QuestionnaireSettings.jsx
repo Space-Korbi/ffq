@@ -22,7 +22,7 @@ const QuestionnaireSettings = ({ questionnaire, save }) => {
           >
             Save Settings
           </button>
-          <p className="lead m-0 mt-4">Questionnaire Name</p>
+          <p className="lead m-0 mb-1 mt-5">Questionnaire Name</p>
           <hr className="m-0 mb-3" />
           <input
             type="text"
@@ -32,12 +32,12 @@ const QuestionnaireSettings = ({ questionnaire, save }) => {
             aria-describedby="inputGroup-name"
           />
 
-          <p className="lead m-0 mt-4">Access Intervals</p>
+          <p className="lead m-0 mb-1 mt-5">Access Intervals</p>
           <hr className="m-0 mb-3" />
           <div className="col d-flex p-0">
             <DateIntervalSettings intervals={accessIntervals} setIntervals={setAccessIntervals} />
           </div>
-          <p className="lead m-0 mt-4">Consent Script</p>
+          <p className="lead m-0 mb-1 mt-5">Consent Script</p>
           <hr className="m-0 mb-3" />
           <textarea
             className="form-control"

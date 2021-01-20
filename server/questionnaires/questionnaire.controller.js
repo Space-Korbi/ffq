@@ -104,6 +104,7 @@ const updateQuestionnaire = async (req, res) => {
         break;
       }
       case updateAction.changeSettings: {
+        // sort intervals before saving
         questionnaireUpdate.name = body.settings.name;
         questionnaireUpdate.accessIntervals = body.settings.accessIntervals;
         questionnaireUpdate.consentScript = body.settings.consentScript;
@@ -201,13 +202,33 @@ const getQuestionnaires = async (req, res) => {
       return res.status(204).send();
     }
 
-    if (req.query && req.query.param === '_id') {
-      const ids = questionnaires.map((questionnaire) => questionnaire._id);
-      return res.status(200).json({
-        title: 'Questionnaires.',
-        detail: 'Ids of all questionnaires.',
-        data: ids
-      });
+    console.log(req.query);
+
+    if (req.query) {
+      if (req.query.param === '_id') {
+        const ids = questionnaires.map((questionnaire) => questionnaire._id);
+        return res.status(200).json({
+          title: 'Questionnaires.',
+          detail: 'Ids of all questionnaires.',
+          data: ids
+        });
+      }
+      if (req.query.param === 'metaData') {
+        const metaData = questionnaires.map((questionnaire) => {
+          return {
+            id: questionnaire.id,
+            name: questionnaire.name,
+            consentScript: questionnaire.consentScript,
+            accessIntervals: questionnaire.accessIntervals
+          };
+        });
+        console.log(metaData);
+        return res.status(200).json({
+          title: 'Questionnaires meta data.',
+          detail: 'MetaData of all questionnaires.',
+          metaData
+        });
+      }
     }
 
     return res.status(200).json({

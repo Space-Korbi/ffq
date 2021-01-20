@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { shape } from 'prop-types';
 import { useRouteMatch, useHistory, useParams } from 'react-router-dom';
+import moment from 'moment/min/moment-with-locales';
 
 // services
 import { userService } from '../../../services';
@@ -13,15 +14,50 @@ import { dateHelper } from '../../../helpers';
 // components
 import ConsentModal from '../../../components/Modals';
 
-const intervals = [
-  { startDate: new Date('2021-01-09 23:00:00.000Z'), endDate: new Date('2021-02-06 23:00:00.000Z') }
-];
+const updateJumbotron = (intervals, user) => {
+  let title = '';
+  let daysTilStart = '';
+  let accessInformation = '';
+  let disabled = false;
 
-const ParticipantPage = ({ user }) => {
-  const [header, setHeader] = useState('Willkommen');
-  const [title, setTitle] = useState(
-    `Um die Umfrage zu starten klicken Sie bitte auf "Umfrage starten"`
-  );
+  const today = moment().toDate();
+
+  const upcomingIntervals = intervals.filter((interval) => {
+    if (
+      moment(today).isSameOrBefore(interval.start) ||
+      moment(today).isSameOrBefore(interval.end)
+    ) {
+      return true;
+    }
+    return false;
+  });
+
+  if (!upcomingIntervals[0]) {
+    title = 'Die Umfrage ist abgeschlossen. Vielen Dank für Ihre Teilnahme.';
+    disabled = true;
+  }
+  const nextInterval = upcomingIntervals[0];
+  accessInformation = `Die Umfrage kann vom ${moment(nextInterval.start).format(
+    'DD.MM.YY'
+  )} bis zum ${moment(nextInterval.end).format('DD.MM.YY')} ausgefüllt werden.`;
+
+  if (moment(today).isSameOrBefore(nextInterval.start)) {
+    title = 'Die nächste Umfrage beginnt';
+    daysTilStart = moment(nextInterval.start).fromNow();
+    disabled = true;
+  } else {
+    title = `Um die Umfrage zu starten klicken Sie bitte auf "Umfrage starten"`;
+    disabled = false;
+  }
+
+  return { title, daysTilStart, accessInformation, disabled };
+};
+
+const ParticipantPage = ({ user, questionnaireData }) => {
+  moment.locale('de');
+  const [title, setTitle] = useState('');
+  const [daysTilStart, setDaysTilStart] = useState('');
+  const [accessInformation, setAccessInformation] = useState('');
   const [buttonTitle, setButtonTitle] = useState('Umfrage starten');
   const [disabled, setDisabled] = useState();
   const history = useHistory();
@@ -29,24 +65,18 @@ const ParticipantPage = ({ user }) => {
   const { url } = useRouteMatch();
 
   useEffect(() => {
-    const { startDate } = intervals[0];
-    const { endDate } = intervals[0];
+    const current = updateJumbotron(questionnaireData.accessIntervals);
+    setDisabled(current.disabled);
+    setTitle(current.title);
+    setDaysTilStart(current.daysTilStart);
+    setAccessInformation(current.accessInformation);
 
-    if (!dateHelper.hasPassed(startDate)) {
-      setTitle(`Die Umfrage kann am ${dateHelper.toDateDE(startDate)} gestartet werden`);
+    if (Date.now > user.finishedOn) {
       setDisabled(true);
-    }
-    if (dateHelper.isBetween(startDate, endDate)) {
-      if (Date.now > user.finishedOn) {
-        setDisabled(true);
-        setHeader('Die Umfrage ist abgeschlossen.');
-        setTitle('Vielen Dank für Ihre Teilnahme.');
-        setButtonTitle('Umfrage starten');
-      } else if (user.stoppedAtIndex !== -1) {
-        setHeader('Willkommen zurück!');
-        setTitle(`Um die Umfrage fortzusetzen klicken Sie bitte auf "Umfrage fortsetzen"`);
-        setButtonTitle('Umfrage fortsetzen');
-      }
+      setButtonTitle('Umfrage starten');
+    } else if (user.stoppedAtIndex !== -1) {
+      setTitle(`Um die Umfrage fortzusetzen klicken Sie bitte auf "Umfrage fortsetzen"`);
+      setButtonTitle('Umfrage fortsetzen');
     }
   }, []);
 
@@ -56,10 +86,14 @@ const ParticipantPage = ({ user }) => {
   };
 
   return (
-    <div className="d-flex justify-content-center mt-3">
-      <div className="jumbotron text-center" style={{ maxWidth: '800px' }}>
-        <h1 className="display-4">{header}</h1>
-        <p className="lead">{title}</p>
+    <div className="d-flex justify-content-center p-4 p-sm-5">
+      <div className="text-center" style={{ maxWidth: '800px' }}>
+        <p className="display-4 my-5">Willkommen</p>
+        <h4 className="">{title}</h4>
+        <h2 className="my-3">
+          <span className="badge badge-secondary">{daysTilStart}</span>
+        </h2>
+        <p className="lead mt-5">{accessInformation}</p>
         <hr className="my-4" />
         <div className="text-center">
           {user.hasAcceptedConsentForm ? (
@@ -85,6 +119,7 @@ const ParticipantPage = ({ user }) => {
           )}
         </div>
         <ConsentModal
+          consentScript={questionnaireData.consentScript}
           onAccept={() =>
             userService
               .updateUserData(user.id, { data: { hasAcceptedConsentForm: true } })
