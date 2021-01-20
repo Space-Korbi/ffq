@@ -18,11 +18,12 @@ import ConsentModal from '../../components/Modals';
 
 const AccountDataPresenter = ({ user, isAdmin, consentScript }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [repeatPassword, setRepeatPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [hasAcceptedConsentForm, setHasAcceptedConsentForm] = useState(user.hasAcceptedConsentForm);
 
   const { id, email, startedOn, finishedOn, stoppedAtIndex, screeningStatus } = user;
@@ -33,6 +34,14 @@ const AccountDataPresenter = ({ user, isAdmin, consentScript }) => {
       // userService.updateUserData({ firstName, lastName });
     }
     setIsEditing((prevState) => !prevState);
+  };
+
+  const handleChangePassword = () => {
+    if (isChangingPassword) {
+      console.log('Hoooo');
+      // userService.updateUserData({ firstName, lastName });
+    }
+    setIsChangingPassword((prevState) => !prevState);
   };
 
   return (
@@ -103,12 +112,11 @@ const AccountDataPresenter = ({ user, isAdmin, consentScript }) => {
               <button
                 type="button"
                 className="btn btn-outline-primary btn-sm ml-auto mb-auto"
-                disabled={!oldPassword || !newPassword || !repeatPassword}
                 onClick={() => {
-                  console.log('changing password');
+                  handleChangePassword();
                 }}
               >
-                Change Password
+                {isChangingPassword ? 'Save Password' : 'Change Password'}
               </button>
             </div>
           </div>
@@ -122,6 +130,7 @@ const AccountDataPresenter = ({ user, isAdmin, consentScript }) => {
                   className="form-control"
                   id="inputOldPassword"
                   value={oldPassword}
+                  disabled={!isChangingPassword}
                   onChange={(e) => setOldPassword(e.target.value)}
                   aria-describedby="inputGroup-name"
                 />
@@ -135,6 +144,7 @@ const AccountDataPresenter = ({ user, isAdmin, consentScript }) => {
                   className="form-control"
                   id="inputNewPassword"
                   value={newPassword}
+                  disabled={!isChangingPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   aria-describedby="inputGroup-name"
                 />
@@ -142,13 +152,14 @@ const AccountDataPresenter = ({ user, isAdmin, consentScript }) => {
             </div>
             <div className="col-lg-4 mb-lg-0">
               <div className="form-group mb-0">
-                <label htmlFor="inputRepeatPassword">Repeat Password</label>
+                <label htmlFor="inputConfirmPassword">Repeat Password</label>
                 <input
                   type="text"
                   className="form-control"
-                  id="inputRepeatPassword"
-                  value={repeatPassword}
-                  onChange={(e) => setRepeatPassword(e.target.value)}
+                  id="inputConfirmPassword"
+                  value={confirmPassword}
+                  disabled={!isChangingPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   aria-describedby="inputGroup-name"
                 />
               </div>
@@ -190,16 +201,6 @@ const AccountDataPresenter = ({ user, isAdmin, consentScript }) => {
             <span className="badge badge-success mx-1">Accepted</span>
           ) : (
             <span className="badge badge-danger mx-1">Not accepted</span>
-          )}
-          {!hasAcceptedConsentForm && (
-            <button
-              type="button"
-              className="btn btn-outline-primary "
-              data-toggle="modal"
-              data-target="#staticBackdrop"
-            >
-              View consent form
-            </button>
           )}
           <ConsentModal
             consentScript={consentScript}
@@ -256,78 +257,3 @@ const AccountPage = ({ isAdmin, consentScript }) => {
 };
 
 export default AccountPage;
-
-/*
-import React, { useState } from 'react';
-import { arrayOf, func, shape, string } from 'prop-types';
-
-// components
-import DateIntervalSettings from '../DateInterval';
-
-const QuestionnaireSettings = ({ questionnaire, save }) => {
-  const [name, setName] = useState(questionnaire.name);
-  const [consentScript, setConsentScript] = useState(questionnaire.consentScript);
-  const [accessIntervals, setAccessIntervals] = useState(questionnaire.accessIntervals);
-
-  return (
-    <div>
-      <div className="row no-gutters mt-4">
-        <div className="col col-md-8 col-lg-6 col-xl-5">
-          <button
-            type="button"
-            className="btn btn-outline-primary"
-            onClick={() => {
-              save({ name, consentScript, accessIntervals });
-            }}
-          >
-            Save Settings
-          </button>
-          <p className="lead m-0 mt-5">Questionnaire Name</p>
-          <hr className="m-0 mb-3" />
-          <input
-            type="text"
-            className="form-control"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            aria-describedby="inputGroup-name"
-          />
-
-          <p className="lead m-0 mt-5">Access Intervals</p>
-          <hr className="m-0 mb-3" />
-          <div className="col d-flex p-0">
-            <DateIntervalSettings intervals={accessIntervals} setIntervals={setAccessIntervals} />
-          </div>
-          <p className="lead m-0 mt-5">Consent Script</p>
-          <hr className="m-0 mb-3" />
-          <textarea
-            className="form-control"
-            id="consentText"
-            rows="6"
-            value={consentScript}
-            onChange={(e) => setConsentScript(e.target.value)}
-          />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-QuestionnaireSettings.propTypes = {
-  questionnaire: shape({
-    id: string,
-    name: string,
-    consentScript: string,
-    accessIntervals: arrayOf(
-      shape({
-        id: string,
-        start: string,
-        end: string
-      })
-    )
-  }).isRequired,
-  save: func.isRequired
-};
-
-export default QuestionnaireSettings;
-
-*/
