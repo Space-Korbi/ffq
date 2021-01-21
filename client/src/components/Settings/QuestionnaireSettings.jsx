@@ -7,7 +7,7 @@ import DateIntervalSettings from '../DateInterval';
 const QuestionnaireSettings = ({ questionnaire, save }) => {
   const [name, setName] = useState(questionnaire.name);
   const [consentScript, setConsentScript] = useState(questionnaire.consentScript);
-  const [accessIntervals, setAccessIntervals] = useState(questionnaire.accessIntervals);
+  const [iterations, setIterations] = useState(questionnaire.iterations);
 
   return (
     <div>
@@ -17,7 +17,7 @@ const QuestionnaireSettings = ({ questionnaire, save }) => {
             type="button"
             className="btn btn-outline-primary"
             onClick={() => {
-              save({ name, consentScript, accessIntervals });
+              save({ name, consentScript, iterations });
             }}
           >
             Save Settings
@@ -35,7 +35,7 @@ const QuestionnaireSettings = ({ questionnaire, save }) => {
           <p className="lead m-0 mb-1 mt-5">Access Intervals</p>
           <hr className="m-0 mb-3" />
           <div className="col d-flex p-0">
-            <DateIntervalSettings intervals={accessIntervals} setIntervals={setAccessIntervals} />
+            <DateIntervalSettings iterations={iterations} setIterations={setIterations} />
           </div>
           <p className="lead m-0 mb-1 mt-5">Consent Script</p>
           <hr className="m-0 mb-3" />
@@ -57,7 +57,7 @@ QuestionnaireSettings.propTypes = {
     id: string,
     name: string,
     consentScript: string,
-    accessIntervals: arrayOf(
+    iterations: arrayOf(
       shape({
         id: string,
         start: string,

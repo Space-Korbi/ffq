@@ -69,12 +69,7 @@ const Dashboard = ({ isAdmin }) => {
           isAdmin={isAdmin}
           component={ParticipantsManagementPage}
         />
-        <Route
-          path={`${path}/account`}
-          component={() => (
-            <AccountPage isAdmin={isAdmin} consentScript={questionnaireMetaData.consentScript} />
-          )}
-        />
+        <Route path={`${path}/account`} component={() => <AccountPage isAdmin={isAdmin} />} />
         <Route
           exact
           path={`${path}/`}
@@ -89,12 +84,12 @@ const Dashboard = ({ isAdmin }) => {
   return (
     <div style={{ minWidth: '300px' }}>
       <main role="main" className="col p-0">
-        {user && questionnaireMetaData && (
+        {user && (
           <div className="row no-gutters">
             <div className="col">
               <Switch>
                 <Route
-                  path={`${path}/questionnairePresenter`}
+                  path={`${path}/questionnairePresenter/:iterationId`}
                   component={() => <QuestionnairePresenterPage isAdmin={isAdmin} />}
                 />
                 <Route exact component={DefaultNavBarContainer} />

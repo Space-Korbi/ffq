@@ -104,9 +104,9 @@ const updateQuestionnaire = async (req, res) => {
         break;
       }
       case updateAction.changeSettings: {
-        // sort intervals before saving
+        // sort iterations before saving
         questionnaireUpdate.name = body.settings.name;
-        questionnaireUpdate.accessIntervals = body.settings.accessIntervals;
+        questionnaireUpdate.iterations = body.settings.iterations;
         questionnaireUpdate.consentScript = body.settings.consentScript;
         break;
       }
@@ -202,8 +202,6 @@ const getQuestionnaires = async (req, res) => {
       return res.status(204).send();
     }
 
-    console.log(req.query);
-
     if (req.query) {
       if (req.query.param === '_id') {
         const ids = questionnaires.map((questionnaire) => questionnaire._id);
@@ -213,13 +211,29 @@ const getQuestionnaires = async (req, res) => {
           data: ids
         });
       }
+      if (req.query.param === 'info') {
+        const info = questionnaires.map((questionnaire) => {
+          return {
+            id: questionnaire.id,
+            name: questionnaire.name,
+            consentScript: questionnaire.consentScript,
+            iterations: questionnaire.iterations
+          };
+        });
+        return res.status(200).json({
+          title: 'Questionnaires info.',
+          detail: 'Information of all questionnaires.',
+          info
+        });
+      }
+
       if (req.query.param === 'metaData') {
         const metaData = questionnaires.map((questionnaire) => {
           return {
             id: questionnaire.id,
             name: questionnaire.name,
             consentScript: questionnaire.consentScript,
-            accessIntervals: questionnaire.accessIntervals
+            iterations: questionnaire.iterations
           };
         });
         console.log(metaData);

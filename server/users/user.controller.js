@@ -153,16 +153,16 @@ const getUsersById = async (req, res) => {
     if (!req.query) {
       returnData = users;
     } else {
+      const usersAnswersRemoved = users;
       switch (req.query.resource) {
         case 'metaData':
+          delete usersAnswersRemoved.iterations.answers;
           returnData = {
             email: users.email,
             firstName: users.firstName,
             lastName: users.lastName,
             hasAcceptedConsentForm: users.hasAcceptedConsentForm,
-            startData: users.startDate,
-            endDate: users.endDate,
-            stoppedAtIndex: users.stoppedAtIndex
+            iterations: usersAnswersRemoved.answersOfIteration
           };
           break;
         default:
@@ -234,28 +234,52 @@ const updateUserById = async (req, res) => {
     .then((user) => {
       const userUpdate = user;
 
+      console.log('HEYYYY+++++++', body.validated);
       body.validated.forEach((entry) => {
         const key = entry[0];
         const value = entry[1];
 
-        if (key === 'answers') {
-          const index = userUpdate.answers.findIndex((answer) => {
-            return answer.questionId === value.questionId;
+        if (key === 'iterations') {
+          console.log('key -', key, 'value:', value);
+          // find iteration
+          const iterationIndex = userUpdate.iterations.findIndex((iteration) => {
+            return iteration.iterationId === value.iterationId;
           });
-          if (index !== -1) {
-            userUpdate.questionsToSkip = updateSkip(
-              user.answers[index].answerOption,
-              value.answerOption,
-              userUpdate.questionsToSkip
-            );
-            userUpdate.answers[index] = value;
+
+          // if no iteration push entire iteraiton object
+          if (iterationIndex === -1) {
+            userUpdate.iterations.push(value);
           } else {
-            userUpdate.questionsToSkip = updateSkip(
-              null,
-              value.answerOption,
-              userUpdate.questionsToSkip
-            );
-            userUpdate.answers.push(value);
+            const iteration = userUpdate.iterations[iterationIndex];
+            if (value.answers) {
+              console.log('Answers');
+              const answerIndex = iteration.answers.findIndex((answer) => {
+                return answer.questionId === value.answers.questionId;
+              });
+              if (answerIndex !== -1) {
+                iteration.questionsToSkip = updateSkip(
+                  iteration.answers[answerIndex].answerOption,
+                  value.answers.answerOption,
+                  iteration.questionsToSkip
+                );
+                iteration.answers[answerIndex] = value.answers;
+              } else {
+                iteration.questionsToSkip = updateSkip(
+                  null,
+                  value.answers.answerOption,
+                  iteration.questionsToSkip
+                );
+                iteration.answers.push(value.answers);
+              }
+            } else {
+              delete value.answers;
+              const nonAnswerEntries = Object.entries(value);
+              nonAnswerEntries.forEach((entry) => {
+                const nonAnswerKey = entry[0];
+                const nonAnswerValue = entry[1];
+                iteration[nonAnswerKey] = nonAnswerValue;
+              });
+            }
           }
         } else {
           userUpdate[key] = value;
@@ -269,7 +293,7 @@ const updateUserById = async (req, res) => {
         .then(() => {
           return res.status(200).json({
             updated: body.validated,
-            data: body.data.answers,
+            data: body.data.iterations.answers,
             message: 'User updated!'
           });
         })
@@ -299,11 +323,7 @@ const resetAdminAnswers = async (req, res) => {
     .then((user) => {
       const userUpdate = user;
 
-      userUpdate.answers = [];
-      userUpdate.questionsToSkip = [];
-      userUpdate.stoppedAtIndex = -1;
-      userUpdate.startedOn = undefined;
-      userUpdate.finishedOn = undefined;
+      userUpdate.iterations = [];
 
       userUpdate
         .save()

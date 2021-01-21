@@ -21,14 +21,14 @@ router.get(
 // update user
 router.put(
   '/users/:userId',
-  [authJwt.verifyToken, authJwt.authoriseUser, validate.update],
+  [validate.updateUser, authJwt.verifyToken, authJwt.authoriseUser],
   UserCtrl.updateUserById
 );
 
 // reset admin answers
 router.put(
   '/users/:userId/reset',
-  [authJwt.verifyToken, authJwt.isAdmin, validate.reset],
+  [validate.resetAnswers, authJwt.verifyToken, authJwt.isAdmin],
   UserCtrl.resetAdminAnswers
 );
 

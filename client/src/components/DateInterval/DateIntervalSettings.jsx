@@ -11,15 +11,19 @@ import de from 'date-fns/locale/de';
 // components
 import { DeleteButton, AddButton } from '../Button';
 
+// Using custom component works but throws errors.
+// Wait till fixed before using it
+/*
 const CustomDateInput = ({ value, onClick }) => (
   <button type="button" className="btn btn-light px-0 py-1" onClick={onClick}>
     {value}
   </button>
 );
 
-CustomDateInput.propTypes = { value: String.isRequired, onClick: func.isRequired };
+CustomDateInput.propTypes = { value: string.isRequired, onClick: func.isRequired };
+// */
 
-const DateIntervalTable = ({ dateIntervals, setStart, setEnd, remove, add }) => {
+const DateIntervalTable = ({ iterations, setStart, setEnd, remove, add }) => {
   return (
     <div className="table m-0">
       <table className="table table-sm table-borderless m-0 border-top-0">
@@ -40,8 +44,8 @@ const DateIntervalTable = ({ dateIntervals, setStart, setEnd, remove, add }) => 
           </tr>
         </thead>
         <tbody>
-          {dateIntervals.length ? (
-            dateIntervals.map((interval) => {
+          {iterations.length ? (
+            iterations.map((interval) => {
               return (
                 <tr key={interval.id}>
                   <td>
@@ -49,8 +53,7 @@ const DateIntervalTable = ({ dateIntervals, setStart, setEnd, remove, add }) => 
                       selected={moment(interval.start).toDate()}
                       locale={de}
                       dateFormat="dd/MM/yyyy"
-                      onChange={(date) => setStart(interval.id, date)}
-                      customInput={<CustomDateInput />}
+                      onChange={(date) => setStart(interval.id, moment(date).toISOString())}
                       minDate={moment().toDate()}
                       popperModifiers={{
                         offset: {
@@ -65,8 +68,7 @@ const DateIntervalTable = ({ dateIntervals, setStart, setEnd, remove, add }) => 
                       selected={moment(interval.end).toDate()}
                       locale={de}
                       dateFormat="dd/MM/yyyy"
-                      onChange={(date) => setEnd(interval.id, date)}
-                      customInput={<CustomDateInput />}
+                      onChange={(date) => setEnd(interval.id, moment(date).toISOString())}
                       popperPlacement="top-left"
                       minDate={moment(interval.start).toDate()}
                       popperModifiers={{
@@ -99,8 +101,12 @@ const DateIntervalTable = ({ dateIntervals, setStart, setEnd, remove, add }) => 
 };
 
 DateIntervalTable.propTypes = {
-  dateIntervals: arrayOf(
-    shape({ id: String, start: Date, end: Date, setStart: func, setEnd: func })
+  iterations: arrayOf(
+    shape({
+      id: string,
+      start: string,
+      end: string
+    })
   ).isRequired,
   setStart: func.isRequired,
   setEnd: func.isRequired,
@@ -108,9 +114,10 @@ DateIntervalTable.propTypes = {
   add: func.isRequired
 };
 
-const DateIntervalSettings = ({ intervals, setIntervals }) => {
+const DateIntervalSettings = ({ iterations, setIterations }) => {
   const setStart = (id, date) => {
-    const newIntervals = intervals.map((interval) => {
+    console.log('----------', date);
+    const newIntervals = iterations.map((interval) => {
       if (interval.id === id) {
         const updatedInterval = {
           ...interval,
@@ -120,11 +127,11 @@ const DateIntervalSettings = ({ intervals, setIntervals }) => {
       }
       return interval;
     });
-    setIntervals(newIntervals);
+    setIterations(newIntervals);
   };
 
   const setEnd = (id, date) => {
-    const newIntervals = intervals.map((interval) => {
+    const newIntervals = iterations.map((interval) => {
       if (interval.id === id) {
         const updatedInterval = {
           ...interval,
@@ -134,19 +141,19 @@ const DateIntervalSettings = ({ intervals, setIntervals }) => {
       }
       return interval;
     });
-    setIntervals(newIntervals);
+    setIterations(newIntervals);
   };
 
   const addInterval = () => {
-    setIntervals((prevState) => [
+    setIterations((prevState) => [
       ...prevState,
-      { id: nanoid(), start: new Date(), end: new Date() }
+      { id: nanoid(), start: moment().toISOString(), end: moment().toISOString() }
     ]);
   };
 
   const removeInterval = (intervalId) => {
-    const newIntervals = intervals.filter((prevInterval) => prevInterval.id !== intervalId);
-    setIntervals(newIntervals);
+    const newIntervals = iterations.filter((prevInterval) => prevInterval.id !== intervalId);
+    setIterations(newIntervals);
   };
 
   return (
@@ -155,7 +162,7 @@ const DateIntervalSettings = ({ intervals, setIntervals }) => {
         <div className="col p-0">
           <div className="col d-flex justify-content-center p-0">
             <DateIntervalTable
-              dateIntervals={intervals}
+              iterations={iterations}
               setStart={setStart}
               setEnd={setEnd}
               remove={removeInterval}
@@ -169,8 +176,8 @@ const DateIntervalSettings = ({ intervals, setIntervals }) => {
 };
 
 DateIntervalSettings.propTypes = {
-  intervals: arrayOf(shape({ id: string, start: string, end: string })).isRequired,
-  setIntervals: func.isRequired
+  iterations: arrayOf(shape({ id: string, start: string, end: string })).isRequired,
+  setIterations: func.isRequired
 };
 
 export default DateIntervalSettings;

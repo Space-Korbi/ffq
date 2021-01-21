@@ -26,9 +26,10 @@ import {
 import QuestionnaireSettings from '../../components/Settings';
 
 const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
-  const [{ fetchedQuestions, isLoadingQuestions, isErrorQuestions }] = useFetchQuestions(
-    questionnaire._id
-  );
+  const [
+    { fetchedQuestions, isLoadingQuestions, isErrorQuestions },
+    setQuestionniareId
+  ] = useFetchQuestions(questionnaire._id);
 
   const [questions, setQuestions] = useState([]);
   const [data, setData] = useState([]);
@@ -311,6 +312,7 @@ const QuestionnaireEditorPage = () => {
 
   useEffect(() => {
     if (fetchedQuestionnaires) {
+      console.log(fetchedQuestionnaires);
       setQuestionnaires(fetchedQuestionnaires);
     }
   }, [fetchedQuestionnaires]);

@@ -1,9 +1,22 @@
 /* eslint-disable prefer-promise-reject-errors */
 const { body, check, param } = require('express-validator');
 const User = require('../users/user.model');
+const Questionnaire = require('../questionnaires/questionnaire.model');
 
 // Maybe body should be escaped
 
+// helpers
+
+/*
+const isKeyInSchema = (key, model) => {
+  return Object.keys(model).includes(key);
+};
+
+const isNotEmpty = (value) => {};
+
+// */
+
+// User
 const signup = [
   body('firstName').notEmpty().withMessage('First name cannot be empty.'),
   body('lastName').notEmpty().withMessage('Last name cannot be empty.'),
@@ -41,8 +54,8 @@ const login = [
     .withMessage('Password must be at least 5 characters long.')
 ];
 
-const update = [
-  param('userId').notEmpty().withMessage('User ID is required').bail(),
+const updateUser = [
+  param('userId').notEmpty().withMessage('User ID is required.').bail(),
   body('*').custom((data, { req }) => {
     const entries = Object.entries(data);
 
@@ -61,6 +74,46 @@ const update = [
     });
 
     if (!validatedEntries) {
+      return Promise.reject('No valid data for update.');
+    }
+
+    req.body.validated = validatedEntries;
+    delete req.body.data;
+    return Promise.resolve(validatedEntries);
+  })
+];
+
+const resetAnswers = [
+  param('userId').notEmpty().withMessage('User ID is required.').bail(),
+  body('*').custom((data) => {
+    if (data.reset) {
+      return Promise.resolve(data.reset);
+    }
+  })
+];
+
+const updateQuestionnaire = [
+  param('id').notEmpty().withMessage('Questionnaire ID is required.').bail(),
+  body('*').custom((data, { req }) => {
+    const entries = Object.entries(data);
+
+    console.log(entries);
+    const questionnaireModel = Questionnaire.schema.obj;
+
+    const validatedEntries = entries.filter((entry) => {
+      if (entry[0] === 'questions') {
+        const answers = entry[1];
+        if (!answers || !answers.questionId || !answers.answerOption) {
+          return false;
+        }
+      }
+
+      return (
+        Object.keys(questionnaireModel).includes(entry[0]) && (entry[1] !== null || entry[1] !== '')
+      );
+    });
+
+    if (!validatedEntries) {
       return Promise.reject('No valid data for update');
     }
 
@@ -70,18 +123,10 @@ const update = [
   })
 ];
 
-const reset = [
-  param('userId').notEmpty().withMessage('User ID is required').bail(),
-  body('*').custom((data) => {
-    if (data.reset) {
-      return Promise.resolve(data.reset);
-    }
-  })
-];
-
 module.exports = {
   login,
   signup,
-  update,
-  reset
+  updateUser,
+  resetAnswers,
+  updateQuestionnaire
 };

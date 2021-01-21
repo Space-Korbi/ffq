@@ -85,14 +85,14 @@ const dataColumns = [
     text: 'Personal Data'
   },
   {
-    dataField: 'startedOn',
+    dataField: 'startedAt',
     text: 'Started',
     formatter: (cellContent, row) => {
       return dateHelper.applyDateStyle(cellContent);
     }
   },
   {
-    dataField: 'finishedOn',
+    dataField: 'finishedAt',
     text: 'Finished',
     formatter: (cellContent, row) => {
       return dateHelper.applyDateStyle(cellContent);

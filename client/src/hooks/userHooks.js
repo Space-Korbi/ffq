@@ -132,7 +132,7 @@ const useFetchAnswer = (userId) => {
 };
 
 // Custom answer saving hook
-const useSaveAnswer = (userId, questionId) => {
+const useSaveAnswer = (userId, questionId, iterationId) => {
   const [answer, setAnswer] = useState();
 
   const saveAnswerReducer = (state, action) => {
@@ -181,11 +181,9 @@ const useSaveAnswer = (userId, questionId) => {
             answerOption: answer.answerOption
           };
 
-          const savedAnswer = await userService.updateUserAnswer(
-            userId,
-            answers,
-            answer.currentIndex
-          );
+          const savedAnswer = await userService.updateUserAnswer(userId, {
+            iterations: { iterationId, answers, stoppedAtIndex: answer.currentIndex }
+          });
 
           if (!didCancel) {
             dispatch({

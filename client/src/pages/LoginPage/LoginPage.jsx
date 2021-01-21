@@ -35,8 +35,8 @@ const LoginPage = () => {
           <br />
           <Formik
             initialValues={{
-              email: '',
-              password: ''
+              email: 'u@13.de',
+              password: '12345'
             }}
             validationSchema={Yup.object().shape({
               email: Yup.string().required('Email is required'),

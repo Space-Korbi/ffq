@@ -4,12 +4,12 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 /**
- * * Access Interval
+ * * Iteration
  * @param startDate - Date when the Questionnaire is accesible
  * @param endDate - Date when the Questionnaire is no longer accesible
  */
 
-const accessInterval = Schema(
+const Iteration = Schema(
   {
     id: { type: String },
     start: { type: Date },
@@ -36,8 +36,8 @@ const Questionnaire = mongoose.model(
         required: true
       },
       name: { type: String, default: 'New Questionnaire' },
-      consentScript: { type: String },
-      accessIntervals: { type: [accessInterval] },
+      consentScript: { type: String, default: '' },
+      iterations: [Iteration],
       questions: { type: [String] }
     },
     { timestamps: true }

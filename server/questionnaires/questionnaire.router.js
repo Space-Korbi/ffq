@@ -1,7 +1,7 @@
 const express = require('express');
 
 const QuestionnaireCtrl = require('./questionnaire.controller');
-const { authJwt } = require('../middlewares');
+const { authJwt, validate } = require('../middlewares');
 
 /**
  * * Router
@@ -17,7 +17,7 @@ router.post(
 );
 router.put(
   '/questionnaires/:id',
-  [authJwt.verifyToken, authJwt.isAdmin],
+  [validate.updateQuestionnaire, authJwt.verifyToken, authJwt.isAdmin],
   QuestionnaireCtrl.updateQuestionnaire
 );
 router.delete(
@@ -25,7 +25,7 @@ router.delete(
   [authJwt.verifyToken, authJwt.isAdmin],
   QuestionnaireCtrl.deleteQuestionnaire
 );
-router.get('/questionnaires/:id', QuestionnaireCtrl.getQuestionnaireById);
+router.get('/questionnaires/:id', [authJwt.verifyToken], QuestionnaireCtrl.getQuestionnaireById);
 router.get('/questionnaires', [authJwt.verifyToken], QuestionnaireCtrl.getQuestionnaires);
 
 module.exports = router;

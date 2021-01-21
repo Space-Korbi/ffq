@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
-import { arrayOf, bool, shape, string } from 'prop-types';
+import { arrayOf, bool, func, shape, string } from 'prop-types';
 import { useParams } from 'react-router-dom';
 
 // custom hooks
-import { useFetchUsers } from '../../hooks';
+import { useFetchUsers, useFetchQuestionnairesInfo } from '../../hooks';
 
 // subpages
 import AdminPage from './AdminPage';
@@ -12,7 +13,7 @@ import ParticipantPage from './ParticipantPage';
 // components
 import Spinner from '../../components/Spinner';
 
-const HomePage = ({ questionnaireMetaData, isAdmin }) => {
+const HomePage = ({ isAdmin }) => {
   const { userId } = useParams();
   const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers(userId);
 
@@ -28,26 +29,15 @@ const HomePage = ({ questionnaireMetaData, isAdmin }) => {
           <Spinner />
         </div>
       )}
-      {users && users.length > 0 && questionnaireMetaData && (
-        <>
-          {isAdmin ? (
-            <AdminPage />
-          ) : (
-            <ParticipantPage user={users[0]} questionnaireData={questionnaireMetaData} />
-          )}
-        </>
+      {users && users.length > 0 && (
+        <>{isAdmin ? <AdminPage /> : <ParticipantPage user={users[0]} />}</>
       )}
     </div>
   );
 };
 
 HomePage.propTypes = {
-  isAdmin: bool.isRequired,
-  questionnaireMetaData: shape({
-    id: string,
-    name: string,
-    accessIntervals: arrayOf(shape({ id: string, start: string, end: string }))
-  }).isRequired
+  isAdmin: bool.isRequired
 };
 
 export default HomePage;

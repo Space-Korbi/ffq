@@ -10,7 +10,7 @@ import { userService } from '../../services';
 import { dateHelper } from '../../helpers';
 
 // custom hooks
-import { useFetchUsers } from '../../hooks';
+import { useFetchUsers, useFetchQuestionnairesInfo } from '../../hooks';
 
 // components
 import Spinner from '../../components/Spinner';
@@ -26,11 +26,10 @@ const AccountDataPresenter = ({ user, isAdmin, consentScript }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [hasAcceptedConsentForm, setHasAcceptedConsentForm] = useState(user.hasAcceptedConsentForm);
 
-  const { id, email, startedOn, finishedOn, stoppedAtIndex, screeningStatus } = user;
+  const { id, email, startedAt, finishedAt, stoppedAtIndex, screeningStatus } = user;
 
   const handleEdit = () => {
     if (isEditing) {
-      console.log('Heyyy');
       // userService.updateUserData({ firstName, lastName });
     }
     setIsEditing((prevState) => !prevState);
@@ -38,8 +37,7 @@ const AccountDataPresenter = ({ user, isAdmin, consentScript }) => {
 
   const handleChangePassword = () => {
     if (isChangingPassword) {
-      console.log('Hoooo');
-      // userService.updateUserData({ firstName, lastName });
+      // userService.updateUserData({ passwords });
     }
     setIsChangingPassword((prevState) => !prevState);
   };
@@ -169,12 +167,12 @@ const AccountDataPresenter = ({ user, isAdmin, consentScript }) => {
           <hr className="m-0 mb-3" />
           <p>
             <strong>FFQ started:</strong>
-            {dateHelper.applyDateStyle(startedOn)}
+            {dateHelper.applyDateStyle(startedAt)}
           </p>
           <p>
             <strong>FFQ finished:</strong>
-            {finishedOn ? (
-              <span className="badge badge-success mx-1">{dateHelper.toDateDE(finishedOn)}</span>
+            {finishedAt ? (
+              <span className="badge badge-success mx-1">{dateHelper.toDateDE(finishedAt)}</span>
             ) : (
               <span>
                 <span className="badge badge-warning mx-1">Not finished.</span>The last question
@@ -186,14 +184,16 @@ const AccountDataPresenter = ({ user, isAdmin, consentScript }) => {
           <div className="mt-5">
             <div className="d-flex flex-row align-items-end justify-content-between">
               <p className="align-bottom m-0 mb-1 lead">Consent Form</p>
-              <button
-                type="button"
-                className="btn btn-sm btn-outline-primary ml-auto mb-auto"
-                data-toggle="modal"
-                data-target="#staticBackdrop"
-              >
-                View form
-              </button>
+              {consentScript && (
+                <button
+                  type="button"
+                  className="btn btn-sm btn-outline-primary ml-auto mb-auto"
+                  data-toggle="modal"
+                  data-target="#staticBackdrop"
+                >
+                  View Form
+                </button>
+              )}
             </div>
           </div>
           <hr className="m-0 mb-3" />
@@ -234,6 +234,8 @@ const AccountDataPresenter = ({ user, isAdmin, consentScript }) => {
 const AccountPage = ({ isAdmin, consentScript }) => {
   const { userId } = useParams();
   const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers(userId);
+  const [{ questionnairesInfo, isLoadingInfo, isErrorInfo }] = useFetchQuestionnairesInfo();
+  console.log('questionnairesInfo', questionnairesInfo);
 
   return (
     <div>
@@ -248,8 +250,12 @@ const AccountPage = ({ isAdmin, consentScript }) => {
         </div>
       )}
       <div className="px-3 px-md-5">
-        {users && users.length > 0 && (
-          <AccountDataPresenter user={users[0]} isAdmin={isAdmin} consentScript={consentScript} />
+        {users && users.length > 0 && questionnairesInfo && questionnairesInfo.length > 0 && (
+          <AccountDataPresenter
+            user={users[0]}
+            isAdmin={isAdmin}
+            consentScript={questionnairesInfo[0].consentScript}
+          />
         )}
       </div>
     </div>

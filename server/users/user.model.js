@@ -10,6 +10,18 @@ const Answer = Schema(
   { _id: false, default: [] }
 );
 
+const Iteration = Schema(
+  {
+    iterationId: { type: String },
+    startedAt: { type: Date },
+    finishedAt: { type: Date },
+    stoppedAtIndex: { type: Number, default: -1 },
+    questionsToSkip: { type: [String], _id: false, default: [] },
+    answers: [Answer]
+  },
+  { _id: false, default: [] }
+);
+
 const User = mongoose.model(
   'User',
   new mongoose.Schema(
@@ -22,11 +34,7 @@ const User = mongoose.model(
       personalData: { type: Schema.Types.Mixed, default: {} },
       screeningData: { type: Schema.Types.Mixed, default: {} },
       screeningStatus: { type: String, enum: ['accept', 'reject', 'wait'], default: 'accept' },
-      startedOn: { type: Date },
-      finishedOn: { type: Date },
-      stoppedAtIndex: { type: Number, default: -1 },
-      answers: [Answer],
-      questionsToSkip: { type: [String], _id: false, default: [] },
+      iterations: [Iteration],
       roles: [
         {
           type: Schema.Types.ObjectId,

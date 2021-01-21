@@ -38,8 +38,7 @@ const updateUserData = (userId, data) => {
   });
 };
 
-const updateUserAnswer = (userId, answers, stoppedAtIndex) => {
-  const data = { answers, stoppedAtIndex };
+const updateUserAnswer = (userId, data) => {
   return updateUser(userId, { data }).then((res) => {
     return res.data;
   });

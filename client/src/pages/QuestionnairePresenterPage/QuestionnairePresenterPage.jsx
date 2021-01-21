@@ -17,7 +17,13 @@ import { Question } from '../../components/Question';
 import Submit from '../../components/DefaultSegments';
 import ProgressIndicator from '../../components/ProgressIndicator';
 
-const QuestionnairePresenter = ({ questions, previousAnswers, questionsToSkip, isAdmin }) => {
+const QuestionnairePresenter = ({
+  questions,
+  previousAnswers,
+  questionsToSkip,
+  isAdmin,
+  iterationId
+}) => {
   // set inital values
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
@@ -106,6 +112,8 @@ const QuestionnairePresenter = ({ questions, previousAnswers, questionsToSkip, i
   };
 
   const handleSubmitAnswer = (answer) => {
+    console.log('Answer', answer);
+
     const { answerOption, questionId } = answer.data;
 
     if (answersRef.current[currentIndex] && answersRef.current[currentIndex].answerOption) {
@@ -167,7 +175,7 @@ const QuestionnairePresenter = ({ questions, previousAnswers, questionsToSkip, i
         {questions.length > 0 && (
           <>
             {currentIndex >= questions.length ? (
-              <Submit />
+              <Submit iterationId={iterationId} />
             ) : (
               <>
                 <div>
@@ -182,6 +190,7 @@ const QuestionnairePresenter = ({ questions, previousAnswers, questionsToSkip, i
                     onSubmitAnswer={(answer) => handleSubmitAnswer(answer)}
                     currentIndex={currentIndex}
                     isPreview={isAdmin}
+                    iterationId={iterationId}
                   />
                 </div>
               </>
@@ -194,23 +203,46 @@ const QuestionnairePresenter = ({ questions, previousAnswers, questionsToSkip, i
 };
 
 const QuestionnairePresenterPage = ({ isAdmin }) => {
-  const { userId } = useParams();
+  const { userId, iterationId } = useParams();
+
+  console.log('PARAM:', iterationId);
   const [
     { fetchedQuestions, isLoadingQuestions, isErrorQuestions },
     setQuestionniareId
   ] = useFetchQuestions();
   const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers(userId);
+  const [iteration, setIteration] = useState();
 
   useEffect(() => {
     const fetchIds = async () => {
       await questionnaireService.fetchQuestionnaires('_id').then((response) => {
-        console.log('heyyyyy', response.data[0]);
         setQuestionniareId(response.data[0]);
       });
     };
 
     fetchIds();
   }, []);
+
+  useEffect(() => {
+    if (users && users.length) {
+      let answers = [];
+      let questionsToSkip = [];
+      let stoppedAtIndex = -1;
+      console.log(users[0]);
+      const status = users[0].iterations.filter(
+        (prevIteration) => prevIteration.iterationId === iterationId
+      );
+      if (status && status.length) {
+        console.log(status);
+        answers = status[0].answers;
+        questionsToSkip = status[0].questionsToSkip;
+        stoppedAtIndex = status[0].stoppedAtIndex;
+      }
+
+      console.log('++++++++++', questionsToSkip, status);
+      setIteration({ answers, questionsToSkip, stoppedAtIndex });
+    }
+  }, [users]);
 
   console.log(fetchedQuestions);
 
@@ -226,13 +258,14 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
           <Spinner />
         </div>
       )}
-      {users && users.length > 0 && fetchedQuestions && (
+      {users && users.length > 0 && fetchedQuestions && iteration && (
         <QuestionnairePresenter
           questions={fetchedQuestions}
-          previousAnswers={users[0].answers}
-          questionsToSkip={users[0].questionsToSkip}
-          stoppedAtIndex={users[0].stoppedAtIndex + 1}
+          previousAnswers={iteration.answers}
+          questionsToSkip={iteration.questionsToSkip}
+          stoppedAtIndex={iteration.stoppedAtIndex + 1}
           isAdmin={isAdmin}
+          iterationId={iterationId}
         />
       )}
     </div>
