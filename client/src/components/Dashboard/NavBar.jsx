@@ -1,9 +1,12 @@
 import React from 'react';
 import { bool } from 'prop-types';
-import { useRouteMatch, NavLink, Link } from 'react-router-dom';
+import { useRouteMatch, NavLink } from 'react-router-dom';
 
 // services
 import { authService } from '../../services';
+
+// logo
+import { ReactComponent as Logo } from '../../hi-ffq_v8_react.svg';
 
 const adminLinks = [
   {
@@ -57,22 +60,15 @@ function NavBar({ isAdmin }) {
           isAdmin ? 'navbar navbar-expand-md navbar-dark bg-dark' : 'navbar navbar-dark bg-dark'
         }
       >
-        <span
-          className="navbar-text mr-3 p-0"
-          style={{
-            color: 'beige',
-            textOverflow: 'ellipsis',
-            overflow: 'hidden',
-            whiteSpace: 'nowrap'
-          }}
-        >
-          <Link
+        <a className="navbar-brand bg-transparent shadow-none p-0" href={`/users/${params.userId}`}>
+          <Logo className="App-logo" width="36" height="36" />
+        </a>
+        {/* <Link
             className="navbar-brand bg-transparent shadow-none p-0"
             to={`/users/${params.userId}`}
           >
             <img src="../../hi-ffq.png" width="34" height="34" alt="" loading="lazy" />
-          </Link>
-        </span>
+          </Link> */}
         <button
           className="navbar-toggler"
           type="button"

@@ -4,6 +4,9 @@ import * as Yup from 'yup';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import { authService } from '../../services';
 
+// logo
+import { ReactComponent as Logo } from '../../hi-ffq_v8_react.svg';
+
 const LoginPage = () => {
   const history = useHistory();
 
@@ -29,7 +32,7 @@ const LoginPage = () => {
             <strong>User</strong> - Email: user@abc.de PW: 54321
           </div>
           <div className="d-flex justify-content-center">
-            <img className="mb-5" src="../../hi-ffq.png" alt="" width="72" height="72" />
+            <Logo className="App-logo mb-5" width="72" height="72" />
           </div>
           <h2>Login</h2>
           <br />
