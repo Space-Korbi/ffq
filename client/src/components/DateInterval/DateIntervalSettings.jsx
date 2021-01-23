@@ -28,8 +28,7 @@ const DateIntervalTable = ({ iterations, setStart, setEnd, remove, add }) => {
     <div className="table m-0">
       <table className="table table-sm table-borderless m-0 border-top-0">
         <caption className="p-0 pt-2 ml-1">
-          The questionnaire will be accessible in between each interval, start and end date
-          included.
+          The questionnaire can be accessed in between each interval, start and end date included.
         </caption>
         <thead>
           <tr>
@@ -54,7 +53,9 @@ const DateIntervalTable = ({ iterations, setStart, setEnd, remove, add }) => {
                       selected={moment(interval.start).toDate()}
                       locale={de}
                       dateFormat="dd/MM/yyyy"
-                      onChange={(date) => setStart(interval.id, moment(date).toISOString())}
+                      onChange={(date) =>
+                        setStart(interval.id, moment(date).startOf('day').toISOString())
+                      }
                       minDate={moment().toDate()}
                       popperModifiers={{
                         offset: {
@@ -69,7 +70,9 @@ const DateIntervalTable = ({ iterations, setStart, setEnd, remove, add }) => {
                       selected={moment(interval.end).toDate()}
                       locale={de}
                       dateFormat="dd/MM/yyyy"
-                      onChange={(date) => setEnd(interval.id, moment(date).toISOString())}
+                      onChange={(date) =>
+                        setEnd(interval.id, moment(date).endOf('day').toISOString())
+                      }
                       popperPlacement="top-left"
                       minDate={moment(interval.start).toDate()}
                       popperModifiers={{

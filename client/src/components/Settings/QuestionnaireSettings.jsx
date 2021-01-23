@@ -32,7 +32,7 @@ const QuestionnaireSettings = ({ questionnaire, save }) => {
             aria-describedby="inputGroup-name"
           />
 
-          <p className="lead m-0 mb-1 mt-5">Access Intervals</p>
+          <p className="lead m-0 mb-1 mt-5">Iterations</p>
           <hr className="m-0 mb-3" />
           <div className="col d-flex p-0">
             <DateIntervalSettings iterations={iterations} setIterations={setIterations} />

@@ -1,13 +1,11 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
+import moment from 'moment';
 
 // services
 import { userService } from '../../services';
-
-// helpers
-import { dateHelper } from '../../helpers';
 
 // custom hooks
 import { useFetchUsers, useFetchQuestionnairesInfo } from '../../hooks';
@@ -16,7 +14,9 @@ import { useFetchUsers, useFetchQuestionnairesInfo } from '../../hooks';
 import Spinner from '../../components/Spinner';
 import ConsentModal from '../../components/Modals';
 
-const AccountDataPresenter = ({ user, isAdmin, consentScript }) => {
+const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
+  const history = useHistory();
+
   const [isEditing, setIsEditing] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [firstName, setFirstName] = useState(user.firstName);
@@ -26,7 +26,8 @@ const AccountDataPresenter = ({ user, isAdmin, consentScript }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [hasAcceptedConsentForm, setHasAcceptedConsentForm] = useState(user.hasAcceptedConsentForm);
 
-  const { id, email, startedAt, finishedAt, stoppedAtIndex, screeningStatus } = user;
+  const { id, email, stoppedAtIndex, screeningStatus } = user;
+  const { consentScript, iterations } = questionnaireInfo;
 
   const handleEdit = () => {
     if (isEditing) {
@@ -40,6 +41,75 @@ const AccountDataPresenter = ({ user, isAdmin, consentScript }) => {
       // userService.updateUserData({ passwords });
     }
     setIsChangingPassword((prevState) => !prevState);
+  };
+
+  const startQuestionnaire = (userId) => {
+    history.push(`/users/${userId}`);
+  };
+
+  const getCompletedIterations = () => {
+    const completedIterations = user.iterations.filter((iteration) => {
+      return moment(iteration.finishedAt) < moment().toDate();
+    });
+    return completedIterations;
+  };
+
+  const isIncompleteIteration = (currentIteration) => {
+    return user.iterations.some((iteration) => {
+      if (
+        iteration.iterationId === currentIteration.id &&
+        iteration.startedAt &&
+        !iteration.finishedAt
+      ) {
+        return true;
+      }
+      return false;
+    });
+  };
+
+  // const completedIterations = getCompletedIterations();
+  const getIterationStatus = (completedIterations, iteration) => {
+    const now = moment().toDate();
+
+    if (completedIterations && completedIterations.length) {
+      if (
+        completedIterations.some(
+          (completedIteration) => iteration.id === completedIteration.iterationId
+        )
+      ) {
+        return <span className="badge badge-success mx-1">Completed</span>;
+      }
+    }
+    if (isIncompleteIteration(iteration)) {
+      return (
+        <div>
+          <span className="badge badge-warning mx-1">Not completed</span>
+          {moment(now).isBetween(iteration.start, iteration.end, 'day', '[]') && (
+            <button
+              type="button"
+              className="btn btn-sm btn-link mt-1"
+              onClick={() => history.push(`questionnairePresenter/${iteration.id}`)}
+            >
+              Continue now
+            </button>
+          )}
+        </div>
+      );
+    }
+    return (
+      <div>
+        <span className="badge badge-danger mx-1">Not started</span>
+        {moment(now).isBetween(iteration.start, iteration.end, 'day', '[]') && (
+          <button
+            type="button"
+            className="btn btn-sm btn-link mt-1"
+            onClick={() => startQuestionnaire(user.id)}
+          >
+            Start now
+          </button>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -163,24 +233,56 @@ const AccountDataPresenter = ({ user, isAdmin, consentScript }) => {
               </div>
             </div>
           </div>
-          <p className="lead m-0 mb-1 mt-5">Questionnaire</p>
+          <p className="lead m-0 mb-1 mt-5">Questionnaire Iterations</p>
           <hr className="m-0 mb-3" />
-          <p>
-            <strong>FFQ started:</strong>
-            {dateHelper.applyDateStyle(startedAt)}
-          </p>
-          <p>
-            <strong>FFQ finished:</strong>
-            {finishedAt ? (
-              <span className="badge badge-success mx-1">{dateHelper.toDateDE(finishedAt)}</span>
-            ) : (
-              <span>
-                <span className="badge badge-warning mx-1">Not finished.</span>The last question
-                answered is
-                <span className="badge badge-info mx-1">Question {stoppedAtIndex + 1}</span>
-              </span>
-            )}
-          </p>
+          <div className="table m-0">
+            <table className="table  m-0 border-top-0">
+              <caption className="p-0 pt-2 ml-1">
+                The questionnaire can be accessed in between each interval, start and end date
+                included.
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col" className="pt-0">
+                    Start
+                  </th>
+                  <th scope="col" className="pt-0">
+                    End
+                  </th>
+                  <th scope="col" className="pt-0">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {iterations.length ? (
+                  iterations.map((interval) => {
+                    const completedIterations = getCompletedIterations();
+                    return (
+                      <tr key={interval.id}>
+                        <td className="align-middle">
+                          {moment(interval.start).format('DD.MM.YY')}
+                        </td>
+                        <td className="align-middle">{moment(interval.end).format('DD.MM.YY')}</td>
+                        <td className="align-middle">
+                          {getIterationStatus(completedIterations, interval)}
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan="3">
+                      <div className="d-flex flex-column text-center">
+                        <span className="badge badge-warning">No Iterations</span>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
           <div className="mt-5">
             <div className="d-flex flex-row align-items-end justify-content-between">
               <p className="align-bottom m-0 mb-1 lead">Consent Form</p>
@@ -235,7 +337,6 @@ const AccountPage = ({ isAdmin, consentScript }) => {
   const { userId } = useParams();
   const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers(userId);
   const [{ questionnairesInfo, isLoadingInfo, isErrorInfo }] = useFetchQuestionnairesInfo();
-  console.log('questionnairesInfo', questionnairesInfo);
 
   return (
     <div>
@@ -254,7 +355,7 @@ const AccountPage = ({ isAdmin, consentScript }) => {
           <AccountDataPresenter
             user={users[0]}
             isAdmin={isAdmin}
-            consentScript={questionnairesInfo[0].consentScript}
+            questionnaireInfo={questionnairesInfo[0]}
           />
         )}
       </div>

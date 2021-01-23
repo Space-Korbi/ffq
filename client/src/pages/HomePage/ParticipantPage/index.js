@@ -145,11 +145,14 @@ const ParticipantPage = ({ user }) => {
     }
   }, [currentQuestionnaire]);
 
-  const start = () => {
-    userService.updateUserAnswer(userId, {
-      iterations: { iterationId, startedAt: moment().toDate() }
-    });
-    history.push(`${url}/questionnairePresenter/${iterationId}`);
+  const start = async () => {
+    await userService
+      .updateUserAnswer(userId, {
+        iterations: { iterationId, startedAt: moment().toDate() }
+      })
+      .then(() => {
+        history.push(`${url}/questionnairePresenter/${iterationId}`);
+      });
   };
 
   return (
@@ -207,7 +210,7 @@ const ParticipantPage = ({ user }) => {
                     userService.updateUserAnswer(userId, {
                       iterations: { iterationId, startedAt: moment().toDate() }
                     });
-                    history.push(`${url}/questionnairePresenter`);
+                    history.push(`${url}/questionnairePresenter/${iterationId}`);
                   })
               }
             />
