@@ -2,6 +2,7 @@
 import React from 'react';
 import { arrayOf, bool, func, shape, string } from 'prop-types';
 import { useParams } from 'react-router-dom';
+import { authService } from '../../services';
 
 // custom hooks
 import { useFetchUsers, useFetchQuestionnairesInfo } from '../../hooks';
@@ -19,11 +20,7 @@ const HomePage = ({ isAdmin }) => {
 
   return (
     <div>
-      {isErrorUsers && (
-        <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
-          Something went wrong...
-        </div>
-      )}
+      {isErrorUsers && authService.logout()}
       {isLoadingUsers && (
         <div className="d-flex justify-content-center mt-5">
           <Spinner />
