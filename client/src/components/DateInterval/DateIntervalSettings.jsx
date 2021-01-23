@@ -28,7 +28,8 @@ const DateIntervalTable = ({ iterations, setStart, setEnd, remove, add }) => {
     <div className="table m-0">
       <table className="table table-sm table-borderless m-0 border-top-0">
         <caption className="p-0 pt-2 ml-1">
-          The questionnaire will only be accessible between intervals.
+          The questionnaire will be accessible in between each interval, start and end date
+          included.
         </caption>
         <thead>
           <tr>

@@ -312,7 +312,6 @@ const QuestionnaireEditorPage = () => {
 
   useEffect(() => {
     if (fetchedQuestionnaires) {
-      console.log(fetchedQuestionnaires);
       setQuestionnaires(fetchedQuestionnaires);
     }
   }, [fetchedQuestionnaires]);

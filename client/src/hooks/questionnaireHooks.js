@@ -122,8 +122,6 @@ const useFetchQuestions = (initialQuestionnaireId) => {
     };
   }, [questionniareId]);
 
-  console.log(state);
-
   return [state, setQuestionniareId];
 };
 
