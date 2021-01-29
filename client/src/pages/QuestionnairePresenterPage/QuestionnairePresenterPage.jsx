@@ -112,9 +112,7 @@ const QuestionnairePresenter = ({
   };
 
   const handleSubmitAnswer = (answer) => {
-    console.log('Answer', answer);
-
-    const { answerOption, questionId } = answer.data;
+    const { answerOption, questionId } = answer;
 
     if (answersRef.current[currentIndex] && answersRef.current[currentIndex].answerOption) {
       updateSkip(answersRef.current[currentIndex].answerOption, answerOption);
@@ -205,7 +203,6 @@ const QuestionnairePresenter = ({
 const QuestionnairePresenterPage = ({ isAdmin }) => {
   const { userId, iterationId } = useParams();
 
-  console.log('PARAM:', iterationId);
   const [
     { fetchedQuestions, isLoadingQuestions, isErrorQuestions },
     setQuestionniareId
@@ -228,23 +225,18 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
       let answers = [];
       let questionsToSkip = [];
       let stoppedAtIndex = -1;
-      console.log(users[0]);
       const status = users[0].iterations.filter(
         (prevIteration) => prevIteration.iterationId === iterationId
       );
       if (status && status.length) {
-        console.log(status);
         answers = status[0].answers;
         questionsToSkip = status[0].questionsToSkip;
         stoppedAtIndex = status[0].stoppedAtIndex;
       }
 
-      console.log('++++++++++', questionsToSkip, status);
       setIteration({ answers, questionsToSkip, stoppedAtIndex });
     }
   }, [users]);
-
-  console.log(fetchedQuestions);
 
   return (
     <div>

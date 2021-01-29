@@ -71,12 +71,13 @@ const Question = ({
 }) => {
   const { userId } = useParams();
   const [userInput, setUserInput] = useState();
-  const [{ answer, isSaving, isSavingError }, setAnswer] = useSaveAnswer(userId, id, iterationId);
+  const [{ answer, isSaving, isSavingError }, setAnswer] = useSaveAnswer(userId, iterationId, id);
+
   const [latestAnswer, setLatestAnswer] = useState();
 
   useEffect(() => {
     if (!isSaving && !isSavingError && userInput) {
-      setAnswer({ answerOption: userInput, currentIndex });
+      setAnswer({ answerOption: userInput });
     }
   }, [userInput]);
 

@@ -1,14 +1,11 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import moment from 'moment';
 
-// services
-import { userService } from '../../services';
-
 // custom hooks
-import { useFetchUsers, useFetchQuestionnairesInfo } from '../../hooks';
+import { useFetchUsers, useFetchQuestionnairesInfo, useUpdateUser } from '../../hooks';
 
 // components
 import Spinner from '../../components/Spinner';
@@ -16,22 +13,29 @@ import ConsentModal from '../../components/Modals';
 
 const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
   const history = useHistory();
-
+  const [{ update, isUpdatingUser, errorUpdatingUser }, setUpdate] = useUpdateUser(user.id);
   const [isEditing, setIsEditing] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
+  const [email, setEmail] = useState(user.email);
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [hasAcceptedConsentForm, setHasAcceptedConsentForm] = useState(user.hasAcceptedConsentForm);
 
-  const { id, email, stoppedAtIndex, screeningStatus } = user;
+  const { id, screeningStatus } = user;
   const { consentScript, iterations } = questionnaireInfo;
+
+  useEffect(() => {
+    if (update.hasAcceptedConsentForm) {
+      setHasAcceptedConsentForm(true);
+    }
+  }, [update]);
 
   const handleEdit = () => {
     if (isEditing) {
-      // userService.updateUserData({ firstName, lastName });
+      setUpdate({ firstName, lastName, email });
     }
     setIsEditing((prevState) => !prevState);
   };
@@ -169,6 +173,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
                   id="inputEmail"
                   value={email}
                   disabled={!isEditing || !isAdmin}
+                  onChange={(e) => setEmail(e.target.value)}
                   aria-describedby="inputGroup-name"
                 />
               </div>
@@ -282,7 +287,6 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
               </tbody>
             </table>
           </div>
-
           <div className="mt-5">
             <div className="d-flex flex-row align-items-end justify-content-between">
               <p className="align-bottom m-0 mb-1 lead">Consent Form</p>
@@ -306,13 +310,9 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
           )}
           <ConsentModal
             consentScript={consentScript}
-            onAccept={() =>
-              userService
-                .updateUserData(id, { data: { hasAcceptedConsentForm: true } })
-                .then((res) => {
-                  setHasAcceptedConsentForm(true);
-                })
-            }
+            onAccept={() => {
+              setUpdate({ hasAcceptedConsentForm: false });
+            }}
           />
 
           <p className="lead m-0 mb-1 mt-5">Screening Status</p>

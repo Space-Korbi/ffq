@@ -7,15 +7,12 @@ import moment from 'moment';
 import { userService } from '../../services';
 
 const Submit = ({ iterationId }) => {
-  console.log('IterayionId in submit:', iterationId);
   const history = useHistory();
   const { userId } = useParams();
 
   const submit = async () => {
     await userService
-      .updateUserAnswer(userId, {
-        iterations: { iterationId, finishedAt: moment().toDate() }
-      })
+      .updateIterationData(userId, iterationId, { finishedAt: moment().toDate() })
       .then(history.push(`/users/${userId}`));
   };
 

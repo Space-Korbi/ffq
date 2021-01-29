@@ -89,7 +89,7 @@ const Dashboard = ({ isAdmin }) => {
             <div className="col">
               <Switch>
                 <Route
-                  path={`${path}/questionnairePresenter/:iterationId`}
+                  path={`${path}/questionnairePresenter/iteration/:iterationId`}
                   component={() => <QuestionnairePresenterPage isAdmin={isAdmin} />}
                 />
                 <Route exact component={DefaultNavBarContainer} />
