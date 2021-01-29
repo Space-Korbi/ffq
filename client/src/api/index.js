@@ -32,12 +32,21 @@ export const getUsersMetadata = (userId) =>
 api.get(`/users/${userId}/?resource=accountData`); */
 
 export const getAllUsers = () => api.get(`/users`);
-export const getUsersById = (userId) => api.get(`/users/${userId}`);
 export const getAnswerById = (userId, questionId) =>
   api.get(`users/${userId}/questions/${questionId}`);
 
 // user update
 export const updateUser = (userId, payload) => api.put(`users/${userId}`, payload);
+
+// refactored api endpoints
+export const getUsersById = (userId) => api.get(`/users/${userId}`);
+
+export const updateUser2 = (userId, payload) => api.patch(`users/${userId}`, payload);
+export const updateIteration = (userId, iterationId, payload) =>
+  api.patch(`/users/${userId}/iterations/${iterationId}`, payload);
+export const updateUserAnswersByIds = (userId, iterationId, questionId, payload) =>
+  api.patch(`/users/${userId}/iterations/${iterationId}/questions/${questionId}`, payload);
+// end of refacored endpoints
 
 // user reset
 export const resetAdminAnswers = (userId) =>
@@ -80,6 +89,9 @@ const apis = {
   getUsersById,
   getAllUsers,
   updateUser,
+  updateUser2,
+  updateIteration,
+  updateUserAnswersByIds,
   getAllQuestions,
   getAllQuestionsOfQuestionnaire,
   uploadImage

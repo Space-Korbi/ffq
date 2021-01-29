@@ -15,7 +15,7 @@ const Iteration = Schema(
     start: { type: Date },
     end: { type: Date }
   },
-  { _id: false, default: [] }
+  { default: [] }
 );
 
 /**

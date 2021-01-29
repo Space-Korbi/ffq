@@ -4,6 +4,9 @@ import {
   getUsersMetadata,
   // getUsersAccountData,
   updateUser,
+  updateUser2,
+  updateIteration,
+  updateUserAnswersByIds,
   getAnswerById,
   updateAnswerById,
   resetAdminAnswers
@@ -38,15 +41,26 @@ const updateUserData = (userId, data) => {
   });
 };
 
-const updateUserAnswer = (userId, data) => {
-  return updateUser(userId, { data }).then((res) => {
+// refactored api
+const updateUserData2 = (userId, data) => {
+  return updateUser2(userId, data);
+};
+
+const updateIterationData = (userId, iterationId, data) => {
+  console.log(userId, iterationId, data);
+  return updateIteration(userId, iterationId, data).then((res) => {
     return res.data;
   });
 };
 
-/* const getAccountData = (userId) => {
-  return getUsersAccountData(userId, { headers: authHeader() });
-}; */
+const updateUserAnswers = (userId, iterationId, questionId, data) => {
+  return updateUserAnswersByIds(userId, iterationId, questionId, data).then((res) => {
+    console.log('Server response new:', res);
+    return res.data;
+  });
+};
+
+// end of refactored api
 
 const fetchAnswersById = (userId, questionId) => {
   return getAnswerById(userId, questionId);
@@ -65,9 +79,11 @@ const userService = {
   fetchAllUsers,
   fetchUsersById,
   getMetaData,
+  updateUserData2,
+  updateIterationData,
+  updateUserAnswers,
   // getAccountData,
   updateUserData,
-  updateUserAnswer,
   fetchAnswersById,
   saveAnswer,
   resetAnswers

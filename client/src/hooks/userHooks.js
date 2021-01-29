@@ -5,7 +5,7 @@ import { get } from 'lodash';
 import { userService } from '../services';
 
 // custom users fetching hook
-const useFetchUsers = (userId) => {
+const useFetchUsers = (userId, queryParam) => {
   const fetchUserReducer = (state, action) => {
     switch (action.type) {
       case 'FETCH_INIT':
@@ -47,7 +47,7 @@ const useFetchUsers = (userId) => {
       try {
         let fetchedUsers;
         if (userId) {
-          fetchedUsers = await userService.fetchUsersById(userId);
+          fetchedUsers = await userService.fetchUsersById(userId, queryParam);
         } else {
           fetchedUsers = await userService.fetchAllUsers();
         }

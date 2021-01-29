@@ -147,11 +147,9 @@ const ParticipantPage = ({ user }) => {
 
   const start = async () => {
     await userService
-      .updateUserAnswer(userId, {
-        iterations: { iterationId, startedAt: moment().toDate() }
-      })
+      .updateIterationData(userId, iterationId, { startedAt: moment().toDate() })
       .then(() => {
-        history.push(`${url}/questionnairePresenter/${iterationId}`);
+        history.push(`${url}/questionnairePresenter/iteration/${iterationId}`);
       });
   };
 
@@ -204,14 +202,16 @@ const ParticipantPage = ({ user }) => {
             <ConsentModal
               consentScript={currentQuestionnaire.consentScript}
               onAccept={() =>
-                userService
-                  .updateUserData(user.id, { data: { hasAcceptedConsentForm: true } })
-                  .then((res) => {
-                    userService.updateUserAnswer(userId, {
-                      iterations: { iterationId, startedAt: moment().toDate() }
+                userService.updateUserData2(userId, { hasAcceptedConsentForm: true }).then(() => {
+                  userService
+                    .updateIterationData(userId, iterationId, {
+                      iterationId,
+                      startedAt: moment().toDate()
+                    })
+                    .then(() => {
+                      history.push(`${url}/questionnairePresenter/iteration/${iterationId}`);
                     });
-                    history.push(`${url}/questionnairePresenter/${iterationId}`);
-                  })
+                })
               }
             />
           </div>

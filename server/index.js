@@ -67,7 +67,8 @@ db.mongoose
   .connect(dbURI, {
     useNewUrlParser: true,
     useCreateIndex: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
   })
   .then(() => {
     console.log('Successfully connect to MongoDB.');

@@ -19,7 +19,7 @@ const Iteration = Schema(
     questionsToSkip: { type: [String], _id: false, default: [] },
     answers: [Answer]
   },
-  { _id: false, default: [] }
+  { default: [] }
 );
 
 const User = mongoose.model(
