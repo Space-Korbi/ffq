@@ -78,20 +78,20 @@ const useFetchAnswer = (userId) => {
       case 'FETCH_INIT':
         return {
           ...state,
-          isLoadingAnswer: true,
+          isSavingAnswer: true,
           isError: false
         };
       case 'FETCH_SUCCESS':
         return {
           ...state,
-          isLoadingAnswer: false,
+          isSavingAnswer: false,
           isError: false,
           submittedAnswer: action.payload
         };
       case 'FETCH_FAILURE':
         return {
           ...state,
-          isLoadingAnswer: false,
+          isSavingAnswer: false,
           isError: true
         };
       default:
@@ -101,7 +101,7 @@ const useFetchAnswer = (userId) => {
 
   const [state, dispatch] = useReducer(fetchAnswerReducer, {
     submittedAnswer: {},
-    isLoadingAnswer: false,
+    isSavingAnswer: false,
     isError: false
   });
 
@@ -131,8 +131,71 @@ const useFetchAnswer = (userId) => {
   return [state, setQuestionId];
 };
 
+// Update user data
+const useUpdateUser = (userId) => {
+  const [update, setUpdate] = useState();
+
+  const updateUserReducer = (state, action) => {
+    switch (action.type) {
+      case 'UPDATE_INIT':
+        return {
+          ...state,
+          isUpdatingUser: true,
+          errorUpdatingUser: false
+        };
+      case 'UPDATE_SUCCESS':
+        return {
+          ...state,
+          isUpdatingUser: false,
+          errorUpdatingUser: false,
+          update: action.payload
+        };
+      case 'UPDATE_FAILURE':
+        return {
+          ...state,
+          isUpdatingUser: false,
+          errorUpdatingUser: true
+        };
+      default:
+        throw new Error();
+    }
+  };
+
+  const [state, dispatch] = useReducer(updateUserReducer, {
+    update: {},
+    isUpdatingUser: false,
+    errorUpdatingUser: false
+  });
+
+  useEffect(() => {
+    let didCancel = false;
+    const fetchQuestions = async () => {
+      dispatch({ type: 'UPDATE_INIT' });
+      try {
+        if (userId && update) {
+          await userService.updateUserData2(userId, update).then(() => {
+            if (!didCancel) {
+              dispatch({ type: 'UPDATE_SUCCESS', payload: update });
+            }
+          });
+        }
+      } catch (error) {
+        if (!didCancel) {
+          dispatch({ type: 'UPDATE_FAILURE' });
+        }
+      }
+    };
+    fetchQuestions();
+    return () => {
+      didCancel = true;
+    };
+  }, [update]);
+
+  return [state, setUpdate];
+};
+
 // Custom answer saving hook
-const useSaveAnswer = (userId, questionId, iterationId) => {
+const useSaveAnswer = (userId, iterationId, questionId) => {
   const [answer, setAnswer] = useState();
 
   const saveAnswerReducer = (state, action) => {
@@ -140,21 +203,21 @@ const useSaveAnswer = (userId, questionId, iterationId) => {
       case 'SAVE_INIT':
         return {
           ...state,
-          isLoadingAnswer: true,
-          isError: false
+          isSavingAnswer: true,
+          errorSavingAnswer: false
         };
       case 'SAVE_SUCCESS':
         return {
           ...state,
-          isLoadingAnswer: false,
-          isError: false,
+          isSavingAnswer: false,
+          errorSavingAnswer: false,
           answer: action.payload
         };
       case 'SAVE_FAILURE':
         return {
           ...state,
-          isLoadingAnswer: false,
-          isError: true
+          isSavingAnswer: false,
+          errorSavingAnswer: true
         };
       default:
         throw new Error();
@@ -163,8 +226,8 @@ const useSaveAnswer = (userId, questionId, iterationId) => {
 
   const [state, dispatch] = useReducer(saveAnswerReducer, {
     answer: {},
-    isLoadingAnswer: false,
-    isError: false
+    isSavingAnswer: false,
+    errorSavingAnswer: false
   });
 
   useEffect(() => {
@@ -172,6 +235,7 @@ const useSaveAnswer = (userId, questionId, iterationId) => {
     const saveAnswer = async () => {
       dispatch({ type: 'SAVE_INIT' });
       try {
+        // TODO: Refactor lodash part
         if (
           get(answer, 'answerOption.id', false) ||
           get(answer, ['answerOption', '0', 'id'], false)
@@ -181,16 +245,14 @@ const useSaveAnswer = (userId, questionId, iterationId) => {
             answerOption: answer.answerOption
           };
 
-          const savedAnswer = await userService.updateUserAnswer(userId, {
-            iterations: { iterationId, answers, stoppedAtIndex: answer.currentIndex }
+          await userService.updateUserAnswers(userId, iterationId, questionId, answers).then(() => {
+            if (!didCancel) {
+              dispatch({
+                type: 'SAVE_SUCCESS',
+                payload: answers
+              });
+            }
           });
-
-          if (!didCancel) {
-            dispatch({
-              type: 'SAVE_SUCCESS',
-              payload: savedAnswer
-            });
-          }
         }
       } catch (error) {
         if (!didCancel) {
@@ -207,4 +269,4 @@ const useSaveAnswer = (userId, questionId, iterationId) => {
   return [state, setAnswer];
 };
 
-export { useFetchUsers, useFetchAnswer, useSaveAnswer };
+export { useFetchUsers, useFetchAnswer, useUpdateUser, useSaveAnswer };
