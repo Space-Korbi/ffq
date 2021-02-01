@@ -5,7 +5,9 @@ import { get } from 'lodash';
 import { userService } from '../services';
 
 // custom users fetching hook
-const useFetchUsers = (userId, queryParam) => {
+const useFetchUsers = (userId, iterationId) => {
+  const [fields, setFields] = useState();
+
   const fetchUserReducer = (state, action) => {
     switch (action.type) {
       case 'FETCH_INIT':
@@ -45,12 +47,7 @@ const useFetchUsers = (userId, queryParam) => {
       dispatch({ type: 'FETCH_INIT' });
 
       try {
-        let fetchedUsers;
-        if (userId) {
-          fetchedUsers = await userService.fetchUsersById(userId, queryParam);
-        } else {
-          fetchedUsers = await userService.fetchAllUsers();
-        }
+        const fetchedUsers = await userService.fetchUsersById(userId, iterationId, fields);
         if (!didCancel) {
           dispatch({ type: 'FETCH_SUCCESS', payload: fetchedUsers });
         }
@@ -64,9 +61,9 @@ const useFetchUsers = (userId, queryParam) => {
     return () => {
       didCancel = true;
     };
-  }, []);
+  }, [fields]);
 
-  return [state];
+  return [state, setFields];
 };
 
 // Custom answer fetching hook

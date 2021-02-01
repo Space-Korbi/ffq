@@ -25,8 +25,9 @@ const fetchAllUsers = () => {
   });
 };
 
-const fetchUsersById = (userId) => {
-  return getUsersById(userId).then((response) => {
+const fetchUsersById = (userId, iterationId, fields) => {
+  return getUsersById({ userId, iterationId, fields }).then((response) => {
+    console.log('Response', response.data.users[0]);
     return response.data.users;
   });
 };

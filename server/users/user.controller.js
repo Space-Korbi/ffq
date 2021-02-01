@@ -143,6 +143,7 @@ const getUsers = async (req, res) => {
 // refactoring ...
 
 const getUsersById = async (req, res) => {
+  console.log('hello');
   const { userId, iterationId } = req.query;
   let { fields } = req.query;
 
@@ -169,7 +170,6 @@ const getUsersById = async (req, res) => {
         const result = user;
 
         if (iterationId) {
-          console.log('result', result);
           result.iterations = result.iterations.filter((i) => {
             if (!i._id) {
               return false;
@@ -179,11 +179,11 @@ const getUsersById = async (req, res) => {
           });
         }
 
-        console.log('------result', result);
         return result;
       });
 
-      return res.status(200).json({ results });
+      console.log('RESULTS', results);
+      return res.status(200).json({ users: results });
     });
 
   /*  await User.aggregate([

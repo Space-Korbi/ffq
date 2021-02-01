@@ -39,7 +39,7 @@ export const getAnswerById = (userId, questionId) =>
 export const updateUser = (userId, payload) => api.put(`users/${userId}`, payload);
 
 // refactored api endpoints
-export const getUsersById = (userId) => api.get(`/users/${userId}`);
+export const getUsersById = (params) => api.get(`/users`, { params });
 
 export const updateUser2 = (userId, payload) => api.patch(`users/${userId}`, payload);
 export const updateIteration = (userId, iterationId, payload) =>
