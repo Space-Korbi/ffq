@@ -28,10 +28,6 @@ export const updateAnswerById = (userId, payload) => api.put(`users/${userId}`, 
 export const getUsersMetadata = (userId) =>
   api.get(`/users/${userId}/?resource=metaData`, authHeader());
 
-/* export const getUsersAccountData = (userId) =>
-api.get(`/users/${userId}/?resource=accountData`); */
-
-export const getAllUsers = () => api.get(`/users`);
 export const getAnswerById = (userId, questionId) =>
   api.get(`users/${userId}/questions/${questionId}`);
 
@@ -87,7 +83,6 @@ const apis = {
   insertQuestionAt,
   getUsersMetadata,
   getUsersById,
-  getAllUsers,
   updateUser,
   updateUser2,
   updateIteration,

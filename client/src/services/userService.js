@@ -1,8 +1,6 @@
 import {
-  getAllUsers,
   getUsersById,
   getUsersMetadata,
-  // getUsersAccountData,
   updateUser,
   updateUser2,
   updateIteration,
@@ -16,13 +14,6 @@ const updateAction = {
   updateAnswer: 'updateAnswer',
   updateData: 'updateData',
   resetAnswers: 'resetAnswers'
-};
-
-// fetchUsersById and fetchAllUsers can be merged into one function with optional userId parameter
-const fetchAllUsers = () => {
-  return getAllUsers().then((response) => {
-    return response.data.users;
-  });
 };
 
 const fetchUsersById = (userId, iterationId, fields) => {
@@ -77,13 +68,11 @@ const resetAnswers = (userId) => {
 };
 
 const userService = {
-  fetchAllUsers,
   fetchUsersById,
   getMetaData,
   updateUserData2,
   updateIterationData,
   updateUserAnswers,
-  // getAccountData,
   updateUserData,
   fetchAnswersById,
   saveAnswer,
