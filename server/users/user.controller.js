@@ -126,23 +126,9 @@ const loginUser = async (req, res) => {
     });
 };
 
-const getUsers = async (req, res) => {
-  await User.find({}, (err, users) => {
-    if (err) {
-      return res
-        .status(500)
-        .json({ err, title: 'Internal error.', detail: 'Something went wrong.' });
-    }
-    if (!users.length) {
-      return res.status(404).json({ title: 'Users not found', detail: 'No users found.' });
-    }
-    return res.status(200).json({ users });
-  }).catch((err) => console.log(err));
-};
-
 // refactoring ...
 
-const getUsersById = async (req, res) => {
+const getUsers = async (req, res) => {
   console.log('hello');
   const { userId, iterationId } = req.query;
   let { fields } = req.query;
@@ -161,9 +147,10 @@ const getUsersById = async (req, res) => {
   await User.find(filter)
     .select(fields)
     .then((users) => {
-      console.log('Users', users);
       if (!users) {
-        return res.status(404).json({ success: false, error: `No users found.` });
+        return res
+          .status(404)
+          .json({ title: 'Users not found', detail: 'No user could be found.' });
       }
 
       const results = users.map((user) => {
@@ -184,49 +171,13 @@ const getUsersById = async (req, res) => {
 
       console.log('RESULTS', results);
       return res.status(200).json({ users: results });
+    })
+    .catch((err) => {
+      return res
+        .status(500)
+        .json({ err, title: 'Internal error.', detail: 'Something went wrong.' });
     });
-
-  /*  await User.aggregate([
-      // Match the document containing the array element
-      { $match: { _id: mongoose.Types.ObjectId(userId) } },
-
-      // Unwind to "de-normalize" the array content
-      { $unwind: '$iterations' },
-
-      // Match the specific array element
-      { $match: { 'iterations.iterationId': iterationId } },
-
-      // Group back and just return certain fields
-
-      {
-        $group: {
-          _id: '$_id',
-          answers: { $push: '$iterations.answers' }
-        }
-      }
-    ]).then((result) => {
-      console.log('=========', result[0]);
-    });
-
-    await User.find()
-      .where({ _id: userId, 'iterations.iterationId': 'HrxJJR16v4P5h7CyXya-8' })
-      .select({ 'iterations.$': 1 })
-      .select(fields)
-      .then((users) => {
-        console.log('users', users);
-        if (!users) {
-          return res.status(404).json({ success: false, error: `No users found.` });
-        }
-
-        return res.status(200).json({ users });
-      })
-      .catch((err) => {
-        console.log(err);
-        return res.status(400).json({ error: err, message: 'No users found.' });
-      });
-  } */
 };
-
 // ... end refactoring
 
 const getAnswerById = async (req, res) => {
@@ -535,7 +486,6 @@ module.exports = {
   loginUser,
   createUser,
   getUsers,
-  getUsersById,
   getAnswerById,
   updateUserById2,
   updateIteration,

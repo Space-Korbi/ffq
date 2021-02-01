@@ -1,11 +1,8 @@
 import {
-  getUsersById,
-  getUsersMetadata,
-  updateUser,
+  getUsers,
   updateUser2,
   updateIteration,
   updateUserAnswersByIds,
-  getAnswerById,
   updateAnswerById,
   resetAdminAnswers
 } from '../api';
@@ -17,19 +14,9 @@ const updateAction = {
 };
 
 const fetchUsersById = (userId, iterationId, fields) => {
-  return getUsersById({ userId, iterationId, fields }).then((response) => {
+  return getUsers({ userId, iterationId, fields }).then((response) => {
     console.log('Response', response.data.users[0]);
     return response.data.users;
-  });
-};
-
-const getMetaData = (userId) => {
-  return getUsersMetadata(userId);
-};
-
-const updateUserData = (userId, data) => {
-  return updateUser(userId, data).then((res) => {
-    return res.data;
   });
 };
 
@@ -54,10 +41,6 @@ const updateUserAnswers = (userId, iterationId, questionId, data) => {
 
 // end of refactored api
 
-const fetchAnswersById = (userId, questionId) => {
-  return getAnswerById(userId, questionId);
-};
-
 const saveAnswer = (userId, questionId, answer, questionIndex) => {
   const payload = { action: updateAction.updateAnswer, answer, questionIndex, questionId };
   return updateAnswerById(userId, payload);
@@ -69,12 +52,9 @@ const resetAnswers = (userId) => {
 
 const userService = {
   fetchUsersById,
-  getMetaData,
   updateUserData2,
   updateIterationData,
   updateUserAnswers,
-  updateUserData,
-  fetchAnswersById,
   saveAnswer,
   resetAnswers
 };

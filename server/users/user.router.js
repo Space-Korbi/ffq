@@ -10,17 +10,9 @@ router.post('/users/signup', validate.signup, UserCtrl.createUser);
 // login
 router.post('/users/login', validate.login, UserCtrl.loginUser);
 
-// TODO: Refactor into one route with query param
-// router.get('/users', [authJwt.verifyToken, authJwt.isAdmin], UserCtrl.getUsers);
-router.get(
-  '/users/:userId/questions/:questionId',
-  [authJwt.verifyToken, authJwt.authoriseUser],
-  UserCtrl.getAnswerById
-);
-
 // * refactored
 // insert when done [authJwt.verifyToken, authJwt.authoriseUser]
-router.get('/users', UserCtrl.getUsersById);
+router.get('/users', UserCtrl.getUsers);
 
 // update user data
 router.patch(
@@ -47,14 +39,5 @@ router.put(
 );
 
 // * end refactored
-
-/*
-router.put(
-  '/users/:userId',
-  [validate.updateUser, authJwt.verifyToken, authJwt.authoriseUser],
-  UserCtrl.updateUserById
-);
-
-*/
 
 module.exports = router;

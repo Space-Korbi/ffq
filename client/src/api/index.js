@@ -23,26 +23,20 @@ export const signup = (payload) =>
 export const login = (payload) =>
   axios.post(`${process.env.REACT_APP_BASE_URL}/users/login`, payload);
 
+// * REFACTORED
 // user
-export const updateAnswerById = (userId, payload) => api.put(`users/${userId}`, payload);
-export const getUsersMetadata = (userId) =>
-  api.get(`/users/${userId}/?resource=metaData`, authHeader());
-
-export const getAnswerById = (userId, questionId) =>
-  api.get(`users/${userId}/questions/${questionId}`);
-
-// user update
-export const updateUser = (userId, payload) => api.put(`users/${userId}`, payload);
-
-// refactored api endpoints
-export const getUsersById = (params) => api.get(`/users`, { params });
-
+export const getUsers = (params) => api.get(`/users`, { params });
 export const updateUser2 = (userId, payload) => api.patch(`users/${userId}`, payload);
 export const updateIteration = (userId, iterationId, payload) =>
   api.patch(`/users/${userId}/iterations/${iterationId}`, payload);
 export const updateUserAnswersByIds = (userId, iterationId, questionId, payload) =>
   api.patch(`/users/${userId}/iterations/${iterationId}/questions/${questionId}`, payload);
-// end of refacored endpoints
+
+// * END REFACTORED
+export const updateAnswerById = (userId, payload) => api.put(`users/${userId}`, payload);
+
+export const getAnswerById = (userId, questionId) =>
+  api.get(`users/${userId}/questions/${questionId}`);
 
 // user reset
 export const resetAdminAnswers = (userId) =>
@@ -81,9 +75,7 @@ const apis = {
   login,
   insertQuestionnaire,
   insertQuestionAt,
-  getUsersMetadata,
-  getUsersById,
-  updateUser,
+  getUsers,
   updateUser2,
   updateIteration,
   updateUserAnswersByIds,
