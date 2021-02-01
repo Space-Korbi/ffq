@@ -187,11 +187,11 @@ const ParticipantsManagement = ({
   useEffect(() => {
     if (users && users.length) {
       const questionData = users.map((user) => {
-        if (!user.answers || !user.answers.length) {
+        if (!user.iterations || !user.iterations.length || !user.iterations[0].answers) {
           return user;
         }
         const userWithAnswers = { ...user };
-        user.answers.forEach((answer) => {
+        user.iterations[0].answers.forEach((answer) => {
           userWithAnswers[answer.questionId] = extractAnswers(answer.answerOption);
         });
         return userWithAnswers;
