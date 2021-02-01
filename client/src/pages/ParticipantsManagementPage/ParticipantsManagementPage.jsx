@@ -305,7 +305,7 @@ const ParticipantsManagementPage = () => {
   useEffect(() => {
     const fetchIds = async () => {
       await questionnaireService.fetchQuestionnaires('_id').then((response) => {
-        setQuestionniareId(response[0]);
+        setQuestionniareId(response.data[0]);
       });
     };
 

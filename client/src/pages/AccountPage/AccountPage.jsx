@@ -91,7 +91,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
           {moment(now).isBetween(iteration.start, iteration.end, 'day', '[]') && (
             <button
               type="button"
-              className="btn btn-sm btn-link mt-1"
+              className="btn btn-sm btn-link"
               onClick={() => history.push(`questionnairePresenter/${iteration.id}`)}
             >
               Continue now
@@ -106,7 +106,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
         {moment(now).isBetween(iteration.start, iteration.end, 'day', '[]') && (
           <button
             type="button"
-            className="btn btn-sm btn-link mt-1"
+            className="btn btn-sm btn-link"
             onClick={() => startQuestionnaire(user.id)}
           >
             Start now
