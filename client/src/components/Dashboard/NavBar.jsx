@@ -17,7 +17,7 @@ const adminLinks = [
   },
   {
     name: 'Preview',
-    to: '/questionnairePresenter',
+    to: '/questionnairePresenter/iteration/0',
     className: 'nav-link',
     activeClassName: 'nav-link active'
   },

@@ -3,7 +3,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
 import { bool, string } from 'prop-types';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 // services
 import { userService, questionnaireService } from '../../services';
@@ -24,6 +24,7 @@ const QuestionnairePresenter = ({
   isAdmin,
   iterationId
 }) => {
+  const history = useHistory();
   // set inital values
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
@@ -146,19 +147,30 @@ const QuestionnairePresenter = ({
           <ProgressIndicator currentPosition={currentIndex} length={questions.length} />
           <div className="p-1" />
           {isAdmin && (
-            <button
-              type="button"
-              className="btn btn-sm btn-outline-warning"
-              onClick={() => {
-                userService.resetAnswers(userId).then(() => {
-                  setCurrentIndex(0);
-                  setToSkip([]);
-                  setAnswers([]);
-                });
-              }}
-            >
-              Reset answers
-            </button>
+            <>
+              <button
+                type="button"
+                className="btn btn-sm btn-outline-warning"
+                onClick={() => {
+                  userService.resetAnswers(userId).then(() => {
+                    setCurrentIndex(0);
+                    setToSkip([]);
+                    setAnswers([]);
+                  });
+                }}
+              >
+                Reset answers
+              </button>
+              <button
+                type="button"
+                className="btn btn-sm btn-outline-warning ml-2"
+                onClick={() => {
+                  history.push(`/users/${userId}`);
+                }}
+              >
+                Exit
+              </button>
+            </>
           )}
           {/* <button
                 type="button"
