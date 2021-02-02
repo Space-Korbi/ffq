@@ -311,7 +311,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
           <ConsentModal
             consentScript={consentScript}
             onAccept={() => {
-              setUpdate({ hasAcceptedConsentForm: false });
+              setUpdate({ hasAcceptedConsentForm: true });
             }}
           />
 

@@ -33,7 +33,6 @@ export const updateUserAnswersByIds = (userId, iterationId, questionId, payload)
   api.patch(`/users/${userId}/iterations/${iterationId}/questions/${questionId}`, payload);
 
 // * END REFACTORED
-export const updateAnswerById = (userId, payload) => api.put(`users/${userId}`, payload);
 
 export const getAnswerById = (userId, questionId) =>
   api.get(`users/${userId}/questions/${questionId}`);

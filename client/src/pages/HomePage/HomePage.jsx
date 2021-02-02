@@ -20,7 +20,7 @@ const HomePage = ({ isAdmin }) => {
 
   return (
     <div>
-      {isErrorUsers && authService.logout()}
+      {isErrorUsers && authService.logoutUser()}
       {isLoadingUsers && (
         <div className="d-flex justify-content-center mt-5">
           <Spinner />

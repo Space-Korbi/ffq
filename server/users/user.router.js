@@ -11,8 +11,7 @@ router.post('/users/signup', validate.signup, UserCtrl.createUser);
 router.post('/users/login', validate.login, UserCtrl.loginUser);
 
 // * refactored
-// insert when done [authJwt.verifyToken, authJwt.authoriseUser]
-router.get('/users', UserCtrl.getUsers);
+router.get('/users', [authJwt.verifyToken, authJwt.authoriseUser], UserCtrl.getUsers);
 
 // update user data
 router.patch(

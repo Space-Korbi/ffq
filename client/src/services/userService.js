@@ -3,15 +3,8 @@ import {
   updateUser2,
   updateIteration,
   updateUserAnswersByIds,
-  updateAnswerById,
   resetAdminAnswers
 } from '../api';
-
-const updateAction = {
-  updateAnswer: 'updateAnswer',
-  updateData: 'updateData',
-  resetAnswers: 'resetAnswers'
-};
 
 const fetchUsersById = (userId, iterationId, fields) => {
   return getUsers({ userId, iterationId, fields }).then((response) => {
@@ -41,11 +34,6 @@ const updateUserAnswers = (userId, iterationId, questionId, data) => {
 
 // end of refactored api
 
-const saveAnswer = (userId, questionId, answer, questionIndex) => {
-  const payload = { action: updateAction.updateAnswer, answer, questionIndex, questionId };
-  return updateAnswerById(userId, payload);
-};
-
 const resetAnswers = (userId) => {
   return resetAdminAnswers(userId);
 };
@@ -55,7 +43,6 @@ const userService = {
   updateUserData2,
   updateIterationData,
   updateUserAnswers,
-  saveAnswer,
   resetAnswers
 };
 
