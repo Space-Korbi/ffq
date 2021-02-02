@@ -202,7 +202,7 @@ const ParticipantPage = ({ user }) => {
             <ConsentModal
               consentScript={currentQuestionnaire.consentScript}
               onAccept={() =>
-                userService.updateUserData2(userId, { hasAcceptedConsentForm: true }).then(() => {
+                userService.updateUserData(userId, { hasAcceptedConsentForm: true }).then(() => {
                   userService
                     .updateIterationData(userId, iterationId, {
                       iterationId,

@@ -25,7 +25,6 @@ const QuestionnairePresenter = ({
   iterationId
 }) => {
   const history = useHistory();
-  // set inital values
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
   const [answers, setAnswers] = useState([]);

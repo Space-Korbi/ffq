@@ -1,48 +1,39 @@
 import {
   getUsers,
-  updateUser2,
-  updateIteration,
-  updateUserAnswersByIds,
+  updateUser,
+  updateUserIteration,
+  updateUserIterationAnswer,
   resetAdminAnswers
 } from '../api';
 
-const fetchUsersById = (userId, iterationId, fields) => {
-  return getUsers({ userId, iterationId, fields }).then((response) => {
-    console.log('Response', response.data.users[0]);
-    return response.data.users;
-  });
+const fetchUsers = async (userId, iterationId, fields) => {
+  const response = await getUsers({ userId, iterationId, fields });
+  return response.data.users;
 };
 
-// refactored api
-const updateUserData2 = (userId, data) => {
-  return updateUser2(userId, data);
+const updateUserData = (userId, data) => {
+  return updateUser(userId, data);
 };
 
-const updateIterationData = (userId, iterationId, data) => {
-  console.log(userId, iterationId, data);
-  return updateIteration(userId, iterationId, data).then((res) => {
-    return res.data;
-  });
+const updateIterationData = async (userId, iterationId, data) => {
+  const res = await updateUserIteration(userId, iterationId, data);
+  return res.data;
 };
 
-const updateUserAnswers = (userId, iterationId, questionId, data) => {
-  return updateUserAnswersByIds(userId, iterationId, questionId, data).then((res) => {
-    console.log('Server response new:', res);
-    return res.data;
-  });
+const updateAnswer = async (userId, iterationId, questionId, data) => {
+  const res = await updateUserIterationAnswer(userId, iterationId, questionId, data);
+  return res.data;
 };
-
-// end of refactored api
 
 const resetAnswers = (userId) => {
   return resetAdminAnswers(userId);
 };
 
 const userService = {
-  fetchUsersById,
-  updateUserData2,
+  fetchUsers,
+  updateUserData,
   updateIterationData,
-  updateUserAnswers,
+  updateAnswer,
   resetAnswers
 };
 

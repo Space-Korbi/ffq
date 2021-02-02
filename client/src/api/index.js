@@ -17,7 +17,7 @@ api.interceptors.request.use((request) => {
   return request;
 });
 
-// login/signup
+// signup/login
 export const signup = (payload) =>
   axios.post(`${process.env.REACT_APP_BASE_URL}/users/signup`, payload);
 export const login = (payload) =>
@@ -26,20 +26,15 @@ export const login = (payload) =>
 // * REFACTORED
 // user
 export const getUsers = (params) => api.get(`/users`, { params });
-export const updateUser2 = (userId, payload) => api.patch(`users/${userId}`, payload);
-export const updateIteration = (userId, iterationId, payload) =>
+export const updateUser = (userId, payload) => api.patch(`users/${userId}`, payload);
+export const updateUserIteration = (userId, iterationId, payload) =>
   api.patch(`/users/${userId}/iterations/${iterationId}`, payload);
-export const updateUserAnswersByIds = (userId, iterationId, questionId, payload) =>
+export const updateUserIterationAnswer = (userId, iterationId, questionId, payload) =>
   api.patch(`/users/${userId}/iterations/${iterationId}/questions/${questionId}`, payload);
-
-// * END REFACTORED
-
-export const getAnswerById = (userId, questionId) =>
-  api.get(`users/${userId}/questions/${questionId}`);
-
-// user reset
 export const resetAdminAnswers = (userId) =>
   api.put(`/users/${userId}/reset`, { data: { reset: true } });
+
+// * END REFACTORED
 
 // question
 export const insertQuestionAt = (questionnaireId, payload) =>
@@ -75,9 +70,9 @@ const apis = {
   insertQuestionnaire,
   insertQuestionAt,
   getUsers,
-  updateUser2,
-  updateIteration,
-  updateUserAnswersByIds,
+  updateUser,
+  updateUserIteration,
+  updateUserIterationAnswer,
   getAllQuestions,
   getAllQuestionsOfQuestionnaire,
   uploadImage

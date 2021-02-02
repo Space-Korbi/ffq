@@ -47,7 +47,7 @@ const useFetchUsers = (userId, iterationId) => {
       dispatch({ type: 'FETCH_INIT' });
 
       try {
-        const fetchedUsers = await userService.fetchUsersById(userId, iterationId, fields);
+        const fetchedUsers = await userService.fetchUsers(userId, iterationId, fields);
         if (!didCancel) {
           dispatch({ type: 'FETCH_SUCCESS', payload: fetchedUsers });
         }
@@ -108,7 +108,7 @@ const useUpdateUser = (userId) => {
       dispatch({ type: 'UPDATE_INIT' });
       try {
         if (userId && update) {
-          await userService.updateUserData2(userId, update).then(() => {
+          await userService.updateUserData(userId, update).then(() => {
             if (!didCancel) {
               dispatch({ type: 'UPDATE_SUCCESS', payload: update });
             }
@@ -180,7 +180,7 @@ const useSaveAnswer = (userId, iterationId, questionId) => {
             answerOption: answer.answerOption
           };
 
-          await userService.updateUserAnswers(userId, iterationId, questionId, answers).then(() => {
+          await userService.updateAnswer(userId, iterationId, questionId, answers).then(() => {
             if (!didCancel) {
               dispatch({
                 type: 'SAVE_SUCCESS',
