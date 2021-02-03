@@ -265,7 +265,7 @@ const ParticipantsManagement = ({
               <div className="col">
                 <div className="form-group">
                   <select
-                    className="form-control"
+                    className="form-control custom-select"
                     id="intervalSelect"
                     onChange={(e) => setSelectedIteration(e.target.value)}
                   >

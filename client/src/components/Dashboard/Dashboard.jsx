@@ -49,7 +49,6 @@ const Dashboard = ({ isAdmin }) => {
     );
   };
 
-  console.log('USER', user);
   return (
     <div style={{ minWidth: '300px' }}>
       <main role="main" className="col p-0">

@@ -151,11 +151,13 @@ const QuestionnairePresenter = ({
                 type="button"
                 className="btn btn-sm btn-outline-warning"
                 onClick={() => {
-                  userService.resetAnswers(userId).then(() => {
-                    setCurrentIndex(0);
-                    setToSkip([]);
-                    setAnswers([]);
-                  });
+                  userService
+                    .updateUserData(userId, { iterations: [{ iterationId: 0, answers: [] }] })
+                    .then(() => {
+                      setCurrentIndex(0);
+                      setToSkip([]);
+                      setAnswers([]);
+                    });
                 }}
               >
                 Reset answers

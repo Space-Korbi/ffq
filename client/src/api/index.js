@@ -31,8 +31,6 @@ export const updateUserIteration = (userId, iterationId, payload) =>
   api.patch(`/users/${userId}/iterations/${iterationId}`, payload);
 export const updateUserIterationAnswer = (userId, iterationId, questionId, payload) =>
   api.patch(`/users/${userId}/iterations/${iterationId}/questions/${questionId}`, payload);
-export const resetAdminAnswers = (userId) =>
-  api.put(`/users/${userId}/reset`, { data: { reset: true } });
 
 // * END REFACTORED
 

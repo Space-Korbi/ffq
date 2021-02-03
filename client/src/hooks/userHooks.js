@@ -5,8 +5,8 @@ import { get } from 'lodash';
 import { userService } from '../services';
 
 // custom users fetching hook
-const useFetchUsers = (userId, iterationId) => {
-  const [fields, setFields] = useState();
+const useFetchUsers = (userId, iterationId, initialFields) => {
+  const [fields, setFields] = useState(initialFields);
 
   const fetchUserReducer = (state, action) => {
     switch (action.type) {

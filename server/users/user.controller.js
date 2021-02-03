@@ -126,10 +126,7 @@ const loginUser = async (req, res) => {
     });
 };
 
-// refactoring ...
-
 const getUsers = async (req, res) => {
-  console.log('hello');
   const { userId, iterationId } = req.query;
   let { fields } = req.query;
 
@@ -141,8 +138,6 @@ const getUsers = async (req, res) => {
   if (iterationId) {
     fields = `${fields} iterations._id`;
   }
-
-  console.log('Filter:', filter, 'userId', userId, 'iterationId', iterationId);
 
   await User.find(filter)
     .select(fields)
@@ -157,19 +152,17 @@ const getUsers = async (req, res) => {
         const result = user;
 
         if (iterationId) {
-          result.iterations = result.iterations.filter((i) => {
-            if (!i._id) {
+          result.iterations = result.iterations.filter((iteration) => {
+            if (!iteration._id) {
               return false;
             }
-            console.log('???', i._id.toString() === iterationId.toString());
-            return i._id.toString() === iterationId.toString();
+            return iteration._id.toString() === iterationId.toString();
           });
         }
 
         return result;
       });
 
-      console.log('RESULTS', results);
       return res.status(200).json({ users: results });
     })
     .catch((err) => {
@@ -177,32 +170,6 @@ const getUsers = async (req, res) => {
         .status(500)
         .json({ err, title: 'Internal error.', detail: 'Something went wrong.' });
     });
-};
-// ... end refactoring
-
-const getAnswerById = async (req, res) => {
-  await User.findOne({ _id: req.params.userId }, (err, user) => {
-    if (err) {
-      return res.status(404).json({
-        err,
-        message: 'User not found!'
-      });
-    }
-
-    if (!user || !user.answers.length) {
-      return res.status(404).json({ success: false, error: 'No answers found' });
-    }
-
-    const submittedAnswer = user.answers.find(
-      ({ questionId }) => questionId === req.params.questionId
-    );
-
-    if (!submittedAnswer) {
-      return res.status(404).json({ success: false, error: 'No answer found' });
-    }
-
-    return res.status(200).json({ success: true, data: submittedAnswer });
-  }).catch((err) => console.log(err));
 };
 
 const addQuestionIdsSkip = (questionIds, state) => {
@@ -226,11 +193,9 @@ const updateSkip = (prevAnswerOption, newAnswerOption, state) => {
   return newSkip;
 };
 
-const updateUserById2 = async (req, res) => {
+const updateUser = async (req, res) => {
   const { userId } = req.params;
   const { body } = req;
-
-  console.log('========', body);
 
   await User.findByIdAndUpdate({ _id: userId }, body, { new: true })
     .then(() => {
@@ -247,11 +212,6 @@ const updateUserById2 = async (req, res) => {
 const updateIteration = async (req, res) => {
   const { userId, iterationId } = req.params;
   const { body } = req;
-
-  console.log('================');
-  console.log(userId, iterationId);
-  console.log('------', body);
-  console.log('================');
 
   const filter = {
     _id: userId,
@@ -287,9 +247,8 @@ const updateIteration = async (req, res) => {
         },
         { $push: { iterations: { iterationId, startedAt: body.startedAt } } }
       )
-        .then((pushResponse) => {
+        .then(() => {
           // if the uuid is created by the server instead, we need to return the id and object here
-          console.log('Push Response:', pushResponse);
           return res.status(201).send();
         })
         .catch((err) => {
@@ -301,195 +260,43 @@ const updateIteration = async (req, res) => {
     });
 };
 
-const updateUserAnswersByIds2 = async (req, res) => {
+const updateAnswer = async (req, res) => {
   const { userId, iterationId, questionId } = req.params;
   const { answerOption } = req.body;
 
-  console.log('=========================');
-
-  console.log('answerOption', answerOption);
-  console.log('Ids: ', userId, iterationId, questionId);
-
-  /**
-   * Try to update answerOption if it exists.
-   * If it does not exist yet, a new answerOption is pushed.
-   */
-
-  const filter = {
-    _id: userId,
-    'iterations.iterationId': iterationId,
-    'iterations.answers.questionId': questionId
-  };
-
-  const update = {
-    $set: {
-      'iterations.$.answers.$[answer].answerOption': answerOption
-    }
-  };
-
-  const options = {
-    arrayFilters: [{ 'answer.questionId': questionId }],
-    new: true,
-    upsert: true
-  };
-
-  await User.findOneAndUpdate(filter, update, options)
-    .then((user) => {
-      console.log('UPDATED++++++', user.iterations[0].answers);
-      return res.status(204).send();
-    })
-    .catch(() => {
-      User.updateOne(
-        {
-          _id: userId,
-          'iterations.iterationId': iterationId
-        },
-        { $push: { 'iterations.$.answers': { questionId, answerOption } } }
-      )
-        .then((response) => {
-          console.log('Pushed', response);
-          // if the uuid is created by the server instead, we need to return the id and object here
-          return res.status(201).send();
-        })
-        .catch((err) => {
-          return res.status(404).json({
-            err,
-            message: 'Answer not updated!'
-          });
-        });
-    });
-
-  console.log('=========================');
-};
-
-const resetAdminAnswers = async (req, res) => {
-  // Finds the validation errors in this request and wraps them in an object
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const { userId } = req.params;
-
-  const update = {
-    $set: {
-      iterations: []
-    }
-  };
-
-  User.findOneAndUpdate({ _id: userId }, update)
-    .then((user) => {
-      console.log('Admin update: ', user);
-      return res.status(204).send();
-    })
-    .catch((err) => {
-      return res.status(404).json({
-        err,
-        message: 'User not updated!'
-      });
-    });
-};
-
-// To Remove
-/*
-const updateUserById = async (req, res) => {
-  // Finds the validation errors in this request and wraps them in an object
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  const { userId } = req.params;
-  const { body } = req;
-
-  User.findOne({ _id: userId })
+  await User.findOne({ _id: userId })
     .then((user) => {
       const userUpdate = user;
 
-      console.log('HEYYYY+++++++', body.validated);
-      body.validated.forEach((entry) => {
-        const key = entry[0];
-        const value = entry[1];
-
-        if (key === 'iterations') {
-          // find iteration
-          const iterationIndex = userUpdate.iterations.findIndex((iteration) => {
-            return iteration.iterationId === value.iterationId;
-          });
-
-          // if no iteration push entire iteraiton object
-          if (iterationIndex === -1) {
-            userUpdate.iterations.push(value);
-          } else {
-            const iteration = userUpdate.iterations[iterationIndex];
-            if (value.answers) {
-              const answerIndex = iteration.answers.findIndex((answer) => {
-                return answer.questionId === value.answers.questionId;
-              });
-              if (answerIndex !== -1) {
-                iteration.questionsToSkip = updateSkip(
-                  iteration.answers[answerIndex].answerOption,
-                  value.answers.answerOption,
-                  iteration.questionsToSkip
-                );
-                iteration.answers[answerIndex] = value.answers;
-              } else {
-                iteration.questionsToSkip = updateSkip(
-                  null,
-                  value.answers.answerOption,
-                  iteration.questionsToSkip
-                );
-                iteration.answers.push(value.answers);
-              }
-            } else {
-              delete value.answers;
-              const nonAnswerEntries = Object.entries(value);
-              nonAnswerEntries.forEach((entry) => {
-                const nonAnswerKey = entry[0];
-                const nonAnswerValue = entry[1];
-                iteration[nonAnswerKey] = nonAnswerValue;
-              });
-            }
-          }
-        } else {
-          console.log('Hereeee', key, value);
-          userUpdate[key] = value;
-        }
+      const iteration = userUpdate.iterations.find((i) => {
+        return i.iterationId === iterationId;
       });
-
-      console.log('----', userUpdate);
-
-      userUpdate
-        .save()
-        .then(() => {
-          return res.status(200).json({
-            message: 'User updated!'
-          });
-        })
-        .catch((error) => {
-          return res.status(400).json({
-            error,
-            message: 'User not updated!'
-          });
+      let answer;
+      if (iteration.answers && iteration.answers.length) {
+        answer = iteration.answers.find((a) => {
+          return a.questionId === questionId;
         });
-    })
-    .catch((err) => {
-      return res.status(404).json({
-        err,
-        message: 'User not found!'
+      }
+      if (answer) {
+        answer.answerOption = answerOption;
+      } else {
+        iteration.answers.push({ questionId, answerOption });
+      }
+
+      userUpdate.save().then(() => {
+        return res.status(204).send();
       });
+    })
+    .catch(() => {
+      return res.status(404).json({ title: 'Users not found', detail: 'No user could be found.' });
     });
 };
-
-*/
 
 module.exports = {
   loginUser,
   createUser,
   getUsers,
-  getAnswerById,
-  updateUserById2,
+  updateUser,
   updateIteration,
-  updateUserAnswersByIds2,
-  // updateUserById,
-  resetAdminAnswers
+  updateAnswer
 };

@@ -16,7 +16,11 @@ import Spinner from '../../components/Spinner';
 
 const HomePage = ({ isAdmin }) => {
   const { userId } = useParams();
-  const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers(userId);
+  const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers(
+    userId,
+    null,
+    'hasAcceptedConsentForm screeningStatus iterations.startedAt iterations.finishedAt iterations.iterationId'
+  );
 
   return (
     <div>

@@ -1,10 +1,4 @@
-import {
-  getUsers,
-  updateUser,
-  updateUserIteration,
-  updateUserIterationAnswer,
-  resetAdminAnswers
-} from '../api';
+import { getUsers, updateUser, updateUserIteration, updateUserIterationAnswer } from '../api';
 
 const fetchUsers = async (userId, iterationId, fields) => {
   const response = await getUsers({ userId, iterationId, fields });
@@ -15,26 +9,19 @@ const updateUserData = (userId, data) => {
   return updateUser(userId, data);
 };
 
-const updateIterationData = async (userId, iterationId, data) => {
-  const res = await updateUserIteration(userId, iterationId, data);
-  return res.data;
+const updateIterationData = (userId, iterationId, data) => {
+  return updateUserIteration(userId, iterationId, data);
 };
 
-const updateAnswer = async (userId, iterationId, questionId, data) => {
-  const res = await updateUserIterationAnswer(userId, iterationId, questionId, data);
-  return res.data;
-};
-
-const resetAnswers = (userId) => {
-  return resetAdminAnswers(userId);
+const updateAnswer = (userId, iterationId, questionId, data) => {
+  return updateUserIterationAnswer(userId, iterationId, questionId, data);
 };
 
 const userService = {
   fetchUsers,
   updateUserData,
   updateIterationData,
-  updateAnswer,
-  resetAnswers
+  updateAnswer
 };
 
 export default userService;

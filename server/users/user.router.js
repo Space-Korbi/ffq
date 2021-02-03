@@ -10,15 +10,11 @@ router.post('/users/signup', validate.signup, UserCtrl.createUser);
 // login
 router.post('/users/login', validate.login, UserCtrl.loginUser);
 
-// * refactored
+// get users
 router.get('/users', [authJwt.verifyToken, authJwt.authoriseUser], UserCtrl.getUsers);
 
 // update user data
-router.patch(
-  '/users/:userId',
-  [authJwt.verifyToken, authJwt.authoriseUser],
-  UserCtrl.updateUserById2
-);
+router.patch('/users/:userId', [authJwt.verifyToken, authJwt.authoriseUser], UserCtrl.updateUser);
 
 // update users iterations
 router.patch('/users/:userId/iterations/:iterationId', UserCtrl.updateIteration);
@@ -27,16 +23,7 @@ router.patch('/users/:userId/iterations/:iterationId', UserCtrl.updateIteration)
 router.patch(
   '/users/:userId/iterations/:iterationId/questions/:questionId',
   [authJwt.verifyToken, authJwt.authoriseUser],
-  UserCtrl.updateUserAnswersByIds2
+  UserCtrl.updateAnswer
 );
-
-// reset admin answers
-router.put(
-  '/users/:userId/reset',
-  [validate.resetAnswers, authJwt.verifyToken, authJwt.isAdmin],
-  UserCtrl.resetAdminAnswers
-);
-
-// * end refactored
 
 module.exports = router;
