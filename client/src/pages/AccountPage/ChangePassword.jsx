@@ -1,6 +1,5 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
 import React from 'react';
+import { string } from 'prop-types';
 import * as Yup from 'yup';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 
@@ -36,7 +35,7 @@ const ChangePassword = ({ userId }) => {
         onSubmit={({ oldPassword, newPassword, confirmPassword }, { setStatus, setSubmitting }) => {
           userService
             .updateUserData(userId, { oldPassword, newPassword, confirmPassword })
-            .then((res) => {
+            .then(() => {
               setStatus(
                 <div className="alert alert-success mb-5">Password changed successfully.</div>
               );
@@ -63,19 +62,19 @@ const ChangePassword = ({ userId }) => {
                 <p className="align-bottom m-0 mb-1 lead">Password</p>
                 <button
                   type="submit"
-                  className="btn btn-outline-primary btn-sm ml-auto mb-auto"
+                  className="btn btn-outline-primary btn-sm ml-auto mb-1"
                   disabled={isSubmitting}
                 >
-                  <div>
+                  <>
                     {isSubmitting ? (
                       <>
-                        Change Password
+                        Changing...
                         <Spinner className="spinner-border spinner-border-sm ml-1" />
                       </>
                     ) : (
                       'Change Password'
                     )}
-                  </div>
+                  </>
                 </button>
               </div>
             </div>
@@ -127,5 +126,7 @@ const ChangePassword = ({ userId }) => {
     </div>
   );
 };
+
+ChangePassword.propTypes = { userId: string.isRequired };
 
 export default ChangePassword;

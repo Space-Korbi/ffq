@@ -10,21 +10,17 @@ import { useFetchUsers, useFetchQuestionnairesInfo, useUpdateUser } from '../../
 
 // components
 import Spinner from '../../components/Spinner';
+import EditPersonalInfo from './EditPersonalInfo';
 import ChangePassword from './ChangePassword';
 import ConsentModal from '../../components/Modals';
 
 const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
   const history = useHistory();
   const [{ update, isUpdatingUser, errorUpdatingUser }, setUpdate] = useUpdateUser(user.id);
-  const [isEditing, setIsEditing] = useState(false);
-  const [isChangingPassword, setIsChangingPassword] = useState(false);
-  const [firstName, setFirstName] = useState(user.firstName);
-  const [lastName, setLastName] = useState(user.lastName);
-  const [email, setEmail] = useState(user.email);
 
   const [hasAcceptedConsentForm, setHasAcceptedConsentForm] = useState(user.hasAcceptedConsentForm);
 
-  const { id, screeningStatus } = user;
+  const { firstName, lastName, email, screeningStatus } = user;
   const { consentScript, iterations } = questionnaireInfo;
 
   useEffect(() => {
@@ -32,20 +28,6 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
       setHasAcceptedConsentForm(true);
     }
   }, [update]);
-
-  const handleEdit = () => {
-    if (isEditing) {
-      setUpdate({ firstName, lastName, email });
-    }
-    setIsEditing((prevState) => !prevState);
-  };
-
-  const handleChangePassword = () => {
-    if (isChangingPassword) {
-      // updateUserData({ passwords });
-    }
-    setIsChangingPassword((prevState) => !prevState);
-  };
 
   const startQuestionnaire = (userId) => {
     history.push(`/users/${userId}`);
@@ -120,118 +102,68 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
     <div style={{ maxWidth: '1000px' }}>
       <div className="row no-gutters">
         <div className="col">
-          <div className="mt-5">
-            <div className="d-flex flex-row align-items-end justify-content-between">
-              <p className="align-bottom m-0 mb-1 lead">Personal Information</p>
-              <button
-                type="button"
-                className="btn btn-outline-primary btn-sm ml-auto mb-auto"
-                onClick={() => {
-                  handleEdit();
-                }}
-              >
-                {isEditing ? 'Save' : 'Edit'}
-              </button>
-            </div>
-          </div>
-          <hr className="m-0 mb-3" />
-          <div className="row">
-            <div className="col-lg-4 mb-2 mb-lg-0">
-              <div className="form-group mb-lg-0">
-                <label htmlFor="inputFirstName">First Name</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="inputFirstName"
-                  value={firstName}
-                  disabled={!isEditing}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  aria-describedby="inputGroup-name"
-                />
-              </div>
-            </div>
-            <div className="col-lg-4 mb-2 mb-lg-0">
-              <div className="form-group mb-lg-0">
-                <label htmlFor="inputLastName">Last Name</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="inputLastName"
-                  value={lastName}
-                  disabled={!isEditing}
-                  onChange={(e) => setLastName(e.target.value)}
-                  aria-describedby="inputGroup-name"
-                />
-              </div>
-            </div>
-            <div className="col-lg-4 mb-lg-0">
-              <div className="form-group mb-0">
-                <label htmlFor="inputEmail">Email</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="inputEmail"
-                  value={email}
-                  disabled={!isEditing || !isAdmin}
-                  onChange={(e) => setEmail(e.target.value)}
-                  aria-describedby="inputGroup-name"
-                />
-              </div>
-            </div>
-          </div>
+          <EditPersonalInfo
+            userId={user.id}
+            isAdmin={isAdmin}
+            personalInfo={{ firstName, lastName, email }}
+          />
           <ChangePassword userId={user.id} />
           {!isAdmin && (
             <div>
               <p className="lead m-0 mb-1 mt-5">Questionnaire Iterations</p>
               <hr className="m-0 mb-3" />
-              <div className="table m-0">
-                <table className="table  m-0 border-top-0">
-                  <caption className="p-0 pt-2 ml-1">
-                    The questionnaire can be accessed in between each interval, start and end date
-                    included.
-                  </caption>
-                  <thead>
-                    <tr>
-                      <th scope="col" className="pt-0">
-                        Start
-                      </th>
-                      <th scope="col" className="pt-0">
-                        End
-                      </th>
-                      <th scope="col" className="pt-0">
-                        Status
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {iterations.length ? (
-                      iterations.map((interval) => {
-                        const completedIterations = getCompletedIterations();
-                        return (
-                          <tr key={interval.id}>
-                            <td className="align-middle">
-                              {moment(interval.start).format('DD.MM.YY')}
-                            </td>
-                            <td className="align-middle">
-                              {moment(interval.end).format('DD.MM.YY')}
-                            </td>
-                            <td className="align-middle">
-                              {getIterationStatus(completedIterations, interval)}
+              <div className="row no-gutters overflow-auto flex-row flex-nowrap">
+                <div className="col">
+                  <div className="table m-0">
+                    <table className="table  m-0 border-top-0">
+                      <caption className="p-0 pt-2 ml-1">
+                        The questionnaire can be accessed in between each interval, start and end
+                        date included.
+                      </caption>
+                      <thead>
+                        <tr>
+                          <th scope="col" className="pt-0">
+                            Start
+                          </th>
+                          <th scope="col" className="pt-0">
+                            End
+                          </th>
+                          <th scope="col" className="pt-0">
+                            Status
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {iterations.length ? (
+                          iterations.map((interval) => {
+                            const completedIterations = getCompletedIterations();
+                            return (
+                              <tr key={interval.id}>
+                                <td className="align-middle">
+                                  {moment(interval.start).format('DD.MM.YY')}
+                                </td>
+                                <td className="align-middle">
+                                  {moment(interval.end).format('DD.MM.YY')}
+                                </td>
+                                <td className="align-middle">
+                                  {getIterationStatus(completedIterations, interval)}
+                                </td>
+                              </tr>
+                            );
+                          })
+                        ) : (
+                          <tr>
+                            <td colSpan="3">
+                              <div className="d-flex flex-column text-center">
+                                <span className="badge badge-warning">No Iterations</span>
+                              </div>
                             </td>
                           </tr>
-                        );
-                      })
-                    ) : (
-                      <tr>
-                        <td colSpan="3">
-                          <div className="d-flex flex-column text-center">
-                            <span className="badge badge-warning">No Iterations</span>
-                          </div>
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
               <div className="mt-5">
                 <div className="d-flex flex-row align-items-end justify-content-between">
@@ -239,7 +171,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
                   {consentScript && (
                     <button
                       type="button"
-                      className="btn btn-sm btn-outline-primary ml-auto mb-auto"
+                      className="btn btn-sm btn-outline-primary ml-auto mb-1"
                       data-toggle="modal"
                       data-target="#staticBackdrop"
                     >
@@ -281,7 +213,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
   );
 };
 
-const AccountPage = ({ isAdmin, consentScript }) => {
+const AccountPage = ({ isAdmin }) => {
   const { userId } = useParams();
   const [{ users, isLoadingUsers, isErrorUsers }, setFields] = useFetchUsers(
     userId,
@@ -289,8 +221,6 @@ const AccountPage = ({ isAdmin, consentScript }) => {
     'firstName lastName email hasAcceptedConsentForm screeningStatus iterations.startedAt iterations.finishedAt iterations.iterationId'
   );
   const [{ questionnairesInfo, isLoadingInfo, isErrorInfo }] = useFetchQuestionnairesInfo();
-
-  console.log(users);
 
   return (
     <div>

@@ -45,15 +45,17 @@ const login = [
 const updateUser = [
   param('userId').notEmpty().withMessage('User ID is required.').bail(),
   body('oldPassword').if(body('newPassword').exists()).notEmpty(),
-  check('oldPassword').custom((value, { req }) => {
-    const { userId } = req.params;
-    return User.findOne({ _id: userId }).then((user) => {
-      const passwordIsValid = bcrypt.compareSync(req.body.oldPassword, user.password);
-      if (!passwordIsValid) {
-        return Promise.reject('Old Password is incorrect.');
-      }
-    });
-  }),
+  check('oldPassword')
+    .optional()
+    .custom((value, { req }) => {
+      const { userId } = req.params;
+      return User.findOne({ _id: userId }).then((user) => {
+        const passwordIsValid = bcrypt.compareSync(req.body.oldPassword, user.password);
+        if (!passwordIsValid) {
+          return Promise.reject('Old Password is incorrect.');
+        }
+      });
+    }),
   body('newPassword')
     .if(body('confirmPassword').exists())
     .isLength({ min: 5 })

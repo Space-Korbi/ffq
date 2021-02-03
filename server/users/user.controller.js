@@ -205,7 +205,6 @@ const updateUser = async (req, res) => {
 
   const fields = { ...body };
 
-  console.log('NewPassword', newPassword);
   if (newPassword) {
     fields.password = bcrypt.hashSync(newPassword, 8);
   }
