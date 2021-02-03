@@ -32,7 +32,7 @@ function EditPersonalInfo({ userId, isAdmin, personalInfo }) {
               .updateUserData(userId, { firstName, lastName, email })
               .then(() => {
                 setStatus(
-                  <div className="alert alert-success mb-5">Changes saved successfully</div>
+                  <div className="alert alert-success mb-5">Changes saved successfully.</div>
                 );
                 setSubmitting(false);
                 setdidChange(false);

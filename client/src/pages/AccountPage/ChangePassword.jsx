@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { string } from 'prop-types';
 import * as Yup from 'yup';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
@@ -8,6 +8,8 @@ import Spinner from '../../components/Spinner';
 import { userService } from '../../services';
 
 const ChangePassword = ({ userId }) => {
+  const [didChange, setdidChange] = useState(false);
+
   return (
     <div>
       <Formik
@@ -33,30 +35,41 @@ const ChangePassword = ({ userId }) => {
         validateOnChange={false}
         validateOnBlur={false}
         onSubmit={({ oldPassword, newPassword, confirmPassword }, { setStatus, setSubmitting }) => {
-          userService
-            .updateUserData(userId, { oldPassword, newPassword, confirmPassword })
-            .then(() => {
-              setStatus(
-                <div className="alert alert-success mb-5">Password changed successfully.</div>
-              );
-              setSubmitting(false);
-            })
-            .catch((error) => {
-              const errorList = (listElement) => (
-                <div className="alert alert-danger mb-5">
-                  <ul className="list-unstyled content-align-center mb-0">{listElement}</ul>
-                </div>
-              );
-              const errorListElements = error.data.errors.map((err) => {
-                return <li key={err.value}>{err.msg}</li>;
+          if (didChange) {
+            userService
+              .updateUserData(userId, { oldPassword, newPassword, confirmPassword })
+              .then(() => {
+                setStatus(
+                  <div className="alert alert-success mb-5">Password changed successfully.</div>
+                );
+                setSubmitting(false);
+                setdidChange(false);
+              })
+              .catch((error) => {
+                const errorList = (listElement) => (
+                  <div className="alert alert-danger mb-5">
+                    <ul className="list-unstyled content-align-center mb-0">{listElement}</ul>
+                  </div>
+                );
+                const errorListElements = error.data.errors.map((err) => {
+                  return <li key={err.value}>{err.msg}</li>;
+                });
+                setStatus(errorList(errorListElements));
+                setSubmitting(false);
+                setdidChange(false);
               });
-              setStatus(errorList(errorListElements));
-              setSubmitting(false);
-            });
+          } else {
+            setSubmitting(false);
+          }
         }}
       >
-        {({ errors, status, isSubmitting }) => (
-          <Form>
+        {({ errors, status, isSubmitting, setStatus }) => (
+          <Form
+            onChange={() => {
+              setdidChange(true);
+              setStatus();
+            }}
+          >
             <div className="mt-5">
               <div className="d-flex flex-row align-items-end justify-content-between">
                 <p className="align-bottom m-0 mb-1 lead">Password</p>
