@@ -36,7 +36,7 @@ const fetchAllQuestionnaires = async () => {
 
 const fetchQuestionnaires = async (param) => {
   return getQuestionnaires({ param }).then((response) => {
-    return response.data.data;
+    return response.data;
   });
 };
 

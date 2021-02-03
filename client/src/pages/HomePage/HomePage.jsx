@@ -1,9 +1,11 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
-import { bool } from 'prop-types';
+import { arrayOf, bool, func, shape, string } from 'prop-types';
 import { useParams } from 'react-router-dom';
+import { authService } from '../../services';
 
 // custom hooks
-import { useFetchUsers } from '../../hooks';
+import { useFetchUsers, useFetchQuestionnairesInfo } from '../../hooks';
 
 // subpages
 import AdminPage from './AdminPage';
@@ -14,16 +16,15 @@ import Spinner from '../../components/Spinner';
 
 const HomePage = ({ isAdmin }) => {
   const { userId } = useParams();
-  const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers(userId);
+  const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers(
+    userId,
+    null,
+    'hasAcceptedConsentForm screeningStatus iterations.startedAt iterations.finishedAt iterations.iterationId'
+  );
 
-  // Todo: onlu load user metadata or data thats needed
   return (
     <div>
-      {isErrorUsers && (
-        <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
-          Something went wrong...
-        </div>
-      )}
+      {isErrorUsers && authService.logoutUser()}
       {isLoadingUsers && (
         <div className="d-flex justify-content-center mt-5">
           <Spinner />

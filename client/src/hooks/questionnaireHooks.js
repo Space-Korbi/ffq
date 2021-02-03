@@ -125,4 +125,62 @@ const useFetchQuestions = (initialQuestionnaireId) => {
   return [state, setQuestionniareId];
 };
 
-export { useFetchQuestionnaires, useFetchQuestions };
+// Custom data fetching hook
+const useFetchQuestionnairesInfo = () => {
+  const fetchQuestionReducer = (state, action) => {
+    switch (action.type) {
+      case 'FETCH_INIT':
+        return {
+          ...state,
+          isLoadingInfo: true,
+          isErrorInfo: false
+        };
+      case 'FETCH_SUCCESS':
+        return {
+          ...state,
+          isLoadingInfo: false,
+          isErrorInfo: false,
+          questionnairesInfo: action.payload
+        };
+      case 'FETCH_FAILURE':
+        return {
+          ...state,
+          isLoadingInfo: false,
+          isErrorInfo: true
+        };
+      default:
+        throw new Error();
+    }
+  };
+
+  const [state, dispatch] = useReducer(fetchQuestionReducer, {
+    questionnairesInfo: [],
+    isLoadingInfo: false,
+    isErrorInfo: false
+  });
+
+  useEffect(() => {
+    let didCancel = false;
+    const fetchQuestions = async () => {
+      dispatch({ type: 'FETCH_INIT' });
+      try {
+        const questionnaires = await questionnaireService.fetchQuestionnaires('info');
+        if (!didCancel) {
+          dispatch({ type: 'FETCH_SUCCESS', payload: questionnaires.info });
+        }
+      } catch (error) {
+        if (!didCancel) {
+          dispatch({ type: 'FETCH_FAILURE' });
+        }
+      }
+    };
+    fetchQuestions();
+    return () => {
+      didCancel = true;
+    };
+  }, []);
+
+  return [state];
+};
+
+export { useFetchQuestionnaires, useFetchQuestions, useFetchQuestionnairesInfo };

@@ -1,111 +1,226 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
 
-// services
-import { userService } from '../../services';
-
-// helpers
-import { dateHelper } from '../../helpers';
+import moment from 'moment';
 
 // custom hooks
-import { useFetchUsers } from '../../hooks';
+import { useFetchUsers, useFetchQuestionnairesInfo, useUpdateUser } from '../../hooks';
 
 // components
 import Spinner from '../../components/Spinner';
+import EditPersonalInfo from './EditPersonalInfo';
+import ChangePassword from './ChangePassword';
 import ConsentModal from '../../components/Modals';
 
-const AccountDataPresenter = ({ user, isAdmin }) => {
+const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
+  const history = useHistory();
+  const [{ update, isUpdatingUser, errorUpdatingUser }, setUpdate] = useUpdateUser(user.id);
+
   const [hasAcceptedConsentForm, setHasAcceptedConsentForm] = useState(user.hasAcceptedConsentForm);
-  const {
-    id,
-    email,
-    firstName,
-    lastName,
-    startedOn,
-    finishedOn,
-    stoppedAtIndex,
-    screeningStatus
-  } = user;
+
+  const { firstName, lastName, email, screeningStatus } = user;
+  const { consentScript, iterations } = questionnaireInfo;
+
+  useEffect(() => {
+    if (update.hasAcceptedConsentForm) {
+      setHasAcceptedConsentForm(true);
+    }
+  }, [update]);
+
+  const startQuestionnaire = (userId) => {
+    history.push(`/users/${userId}`);
+  };
+
+  const getCompletedIterations = () => {
+    const completedIterations = user.iterations.filter((iteration) => {
+      return moment(iteration.finishedAt) < moment().toDate();
+    });
+    return completedIterations;
+  };
+
+  const isIncompleteIteration = (currentIteration) => {
+    return user.iterations.some((iteration) => {
+      if (
+        iteration.iterationId === currentIteration.id &&
+        iteration.startedAt &&
+        !iteration.finishedAt
+      ) {
+        return true;
+      }
+      return false;
+    });
+  };
+
+  // const completedIterations = getCompletedIterations();
+  const getIterationStatus = (completedIterations, iteration) => {
+    const now = moment().toDate();
+
+    if (completedIterations && completedIterations.length) {
+      if (
+        completedIterations.some(
+          (completedIteration) => iteration.id === completedIteration.iterationId
+        )
+      ) {
+        return <span className="badge badge-success mx-1">Completed</span>;
+      }
+    }
+    if (isIncompleteIteration(iteration)) {
+      return (
+        <div>
+          <span className="badge badge-warning mx-1">Not completed</span>
+          {moment(now).isBetween(iteration.start, iteration.end, 'day', '[]') && (
+            <button
+              type="button"
+              className="btn btn-sm btn-link"
+              onClick={() => history.push(`questionnairePresenter/${iteration.id}`)}
+            >
+              Continue now
+            </button>
+          )}
+        </div>
+      );
+    }
+    return (
+      <div>
+        <span className="badge badge-danger mx-1">Not started</span>
+        {moment(now).isBetween(iteration.start, iteration.end, 'day', '[]') && (
+          <button
+            type="button"
+            className="btn btn-sm btn-link"
+            onClick={() => startQuestionnaire(user.id)}
+          >
+            Start now
+          </button>
+        )}
+      </div>
+    );
+  };
 
   return (
-    <div className="jumbotron">
-      <header className="mb-4">
-        <h3>
-          <strong>{`${firstName} ${lastName}`}</strong>
-        </h3>
-      </header>
-      <p>
-        <strong>Email:</strong> {email}
-      </p>
-      {!isAdmin && (
-        <div>
-          <p>
-            <strong>Consent Form:</strong>
-            {hasAcceptedConsentForm ? (
-              <span className="badge badge-success mx-1">Accepted</span>
-            ) : (
-              <span className="badge badge-danger mx-1">Not accepted</span>
-            )}
-            {!hasAcceptedConsentForm && (
-              <button
-                type="button"
-                className="btn btn-outline-primary "
-                data-toggle="modal"
-                data-target="#staticBackdrop"
-              >
-                View consent form
-              </button>
-            )}
-          </p>
-          <ConsentModal
-            onAccept={() =>
-              userService
-                .updateUserData(id, { data: { hasAcceptedConsentForm: true } })
-                .then((res) => {
-                  setHasAcceptedConsentForm(true);
-                })
-            }
+    <div style={{ maxWidth: '1000px' }}>
+      <div className="row no-gutters">
+        <div className="col">
+          <EditPersonalInfo
+            userId={user.id}
+            isAdmin={isAdmin}
+            personalInfo={{ firstName, lastName, email }}
           />
-          <p>
-            <strong>Screening Status:</strong>
-            {(() => {
-              switch (screeningStatus) {
-                case 'accept':
-                  return <span className="badge badge-success mx-1">Accepted</span>;
-                case 'reject':
-                  return <span className="badge badge-danger mx-1">Rejected</span>;
-                default:
-                  return <span className="badge badge-warning mx-1">Wait</span>;
-              }
-            })()}
-          </p>
-          <p>
-            <strong>FFQ started:</strong>
-            {dateHelper.applyDateStyle(startedOn)}
-          </p>
-          <p>
-            <strong>FFQ finished:</strong>
-            {finishedOn ? (
-              <span className="badge badge-success mx-1">{dateHelper.toDateDE(finishedOn)}</span>
-            ) : (
-              <span>
-                <span className="badge badge-warning mx-1">Not finished.</span>The last question
-                answered is
-                <span className="badge badge-info mx-1">Question {stoppedAtIndex + 1}</span>
-              </span>
-            )}
-          </p>
+          <ChangePassword userId={user.id} />
+          {!isAdmin && (
+            <div>
+              <p className="lead m-0 mb-1 mt-5">Questionnaire Iterations</p>
+              <hr className="m-0 mb-3" />
+              <div className="row no-gutters overflow-auto flex-row flex-nowrap">
+                <div className="col">
+                  <div className="table m-0">
+                    <table className="table  m-0 border-top-0">
+                      <caption className="p-0 pt-2 ml-1">
+                        The questionnaire can be accessed in between each interval, start and end
+                        date included.
+                      </caption>
+                      <thead>
+                        <tr>
+                          <th scope="col" className="pt-0">
+                            Start
+                          </th>
+                          <th scope="col" className="pt-0">
+                            End
+                          </th>
+                          <th scope="col" className="pt-0">
+                            Status
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {iterations.length ? (
+                          iterations.map((interval) => {
+                            const completedIterations = getCompletedIterations();
+                            return (
+                              <tr key={interval.id}>
+                                <td className="align-middle">
+                                  {moment(interval.start).format('DD.MM.YY')}
+                                </td>
+                                <td className="align-middle">
+                                  {moment(interval.end).format('DD.MM.YY')}
+                                </td>
+                                <td className="align-middle">
+                                  {getIterationStatus(completedIterations, interval)}
+                                </td>
+                              </tr>
+                            );
+                          })
+                        ) : (
+                          <tr>
+                            <td colSpan="3">
+                              <div className="d-flex flex-column text-center">
+                                <span className="badge badge-warning">No Iterations</span>
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-5">
+                <div className="d-flex flex-row align-items-end justify-content-between">
+                  <p className="align-bottom m-0 mb-1 lead">Consent Form</p>
+                  {consentScript && (
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-outline-primary ml-auto mb-1"
+                      data-toggle="modal"
+                      data-target="#staticBackdrop"
+                    >
+                      View Form
+                    </button>
+                  )}
+                </div>
+              </div>
+              <hr className="m-0 mb-3" />
+              {hasAcceptedConsentForm ? (
+                <span className="badge badge-success mx-1">Accepted</span>
+              ) : (
+                <span className="badge badge-danger mx-1">Not accepted</span>
+              )}
+              <ConsentModal
+                consentScript={consentScript}
+                onAccept={() => {
+                  setUpdate({ hasAcceptedConsentForm: true });
+                }}
+              />
+
+              <p className="lead m-0 mb-1 mt-5">Screening Status</p>
+              <hr className="m-0 mb-3" />
+              {(() => {
+                switch (screeningStatus) {
+                  case 'accept':
+                    return <span className="badge badge-success mx-1">Accepted</span>;
+                  case 'reject':
+                    return <span className="badge badge-danger mx-1">Rejected</span>;
+                  default:
+                    return <span className="badge badge-warning mx-1">Wait</span>;
+                }
+              })()}
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
 
 const AccountPage = ({ isAdmin }) => {
   const { userId } = useParams();
-  const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers(userId);
+  const [{ users, isLoadingUsers, isErrorUsers }, setFields] = useFetchUsers(
+    userId,
+    null,
+    'firstName lastName email hasAcceptedConsentForm screeningStatus iterations.startedAt iterations.finishedAt iterations.iterationId'
+  );
+  const [{ questionnairesInfo, isLoadingInfo, isErrorInfo }] = useFetchQuestionnairesInfo();
 
   return (
     <div>
@@ -119,8 +234,14 @@ const AccountPage = ({ isAdmin }) => {
           <Spinner />
         </div>
       )}
-      <div className="container">
-        {users && users.length > 0 && <AccountDataPresenter user={users[0]} isAdmin={isAdmin} />}
+      <div className="px-3 px-md-5">
+        {users && users.length > 0 && questionnairesInfo && questionnairesInfo.length > 0 && (
+          <AccountDataPresenter
+            user={users[0]}
+            isAdmin={isAdmin}
+            questionnaireInfo={questionnairesInfo[0]}
+          />
+        )}
       </div>
     </div>
   );

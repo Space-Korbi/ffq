@@ -85,14 +85,14 @@ const dataColumns = [
     text: 'Personal Data'
   },
   {
-    dataField: 'startedOn',
+    dataField: 'startedAt',
     text: 'Started',
     formatter: (cellContent, row) => {
       return dateHelper.applyDateStyle(cellContent);
     }
   },
   {
-    dataField: 'finishedOn',
+    dataField: 'finishedAt',
     text: 'Finished',
     formatter: (cellContent, row) => {
       return dateHelper.applyDateStyle(cellContent);
@@ -103,13 +103,21 @@ const dataColumns = [
 const ParticipantsManagement = ({
   users,
   questions,
+  iterations,
+  name,
   prevSelectionCriteria,
   prevSelectionRules
 }) => {
   const [selectionCriteria, setSelectionCriteria] = useState(prevSelectionCriteria);
   const [selectionRules, setSelectionRules] = useState(prevSelectionRules);
+  const [selectedIteration, setSelectedIteration] = useState();
   const [columns, setColumns] = useState(dataColumns);
   const [data, setData] = useState([]);
+
+  useEffect(() => {
+    // if iterationsArray doesnt contain the data
+    // useFetchIterations to load data and add to array
+  }, [selectedIteration]);
 
   const answerFormatter = (column, colIndex) => {
     if (column && !Array.isArray(column)) {
@@ -179,11 +187,11 @@ const ParticipantsManagement = ({
   useEffect(() => {
     if (users && users.length) {
       const questionData = users.map((user) => {
-        if (!user.answers || !user.answers.length) {
+        if (!user.iterations || !user.iterations.length || !user.iterations[0].answers) {
           return user;
         }
         const userWithAnswers = { ...user };
-        user.answers.forEach((answer) => {
+        user.iterations[0].answers.forEach((answer) => {
           userWithAnswers[answer.questionId] = extractAnswers(answer.answerOption);
         });
         return userWithAnswers;
@@ -239,13 +247,35 @@ const ParticipantsManagement = ({
     );
   };
 
-  const tabNames = ['Participants', 'Selection Criteria', 'Selection Rules'];
-  const tabContents = [
+  const participantsContent = (
     <div>
-      <ToolkitProvider keyField="email" data={data} columns={columns} bootstrap4 exportCSV>
+      <ToolkitProvider
+        keyField="email"
+        data={data}
+        columns={columns}
+        bootstrap4
+        exportCSV={{ fileName: `${name}_${selectedIteration}.csv` }}
+      >
         {(props) => (
           <div>
-            <ExportCSVButton {...props.csvProps}>Export CSV</ExportCSVButton>
+            <div className="row">
+              <div className="col">
+                <ExportCSVButton {...props.csvProps}>Export CSV</ExportCSVButton>
+              </div>
+              <div className="col">
+                <div className="form-group">
+                  <select
+                    className="form-control custom-select"
+                    id="intervalSelect"
+                    onChange={(e) => setSelectedIteration(e.target.value)}
+                  >
+                    {iterations.map((iteration) => {
+                      return <option key={iteration}>{iteration}</option>;
+                    })}
+                  </select>
+                </div>
+              </div>
+            </div>
             <br />
             <div className="row no-gutters overflow-auto flex-row flex-nowrap">
               <div className="col">
@@ -261,19 +291,28 @@ const ParticipantsManagement = ({
           </div>
         )}
       </ToolkitProvider>
-    </div>,
+    </div>
+  );
+
+  const selectionCriteriaContent = (
     <CriteriaEditor
       selectionCriteria={selectionCriteria}
       addSelectionCriteria={saveSelectionCriteria}
       removeSelectionCriteria={removeFromSelectionCriteria}
-    />,
+    />
+  );
+
+  const ruleEditorContent = (
     <RuleEditor
       selectionCriteria={selectionCriteria}
       rules={selectionRules}
       saveRule={saveRule}
       removeRule={removeRule}
     />
-  ];
+  );
+
+  const tabNames = ['Participants', 'Selection Criteria', 'Selection Rules'];
+  const tabContents = [participantsContent, selectionCriteriaContent, ruleEditorContent];
 
   return (
     <div>
@@ -294,10 +333,14 @@ const ParticipantsManagementPage = () => {
     setQuestionniareId
   ] = useFetchQuestions();
 
+  const sampleIterations = ['601333b87e41ce7e7648ec1e', '601333b87e41ce7e7648ec1f'];
+  const sampleName = 'FFQ';
   useEffect(() => {
     const fetchIds = async () => {
+      // TODO fetch iterations and name and pass them along
       await questionnaireService.fetchQuestionnaires('_id').then((response) => {
-        setQuestionniareId(response[0]);
+        console.log(response);
+        setQuestionniareId(response.data[0]);
       });
     };
 
@@ -323,6 +366,8 @@ const ParticipantsManagementPage = () => {
               <ParticipantsManagement
                 users={users}
                 questions={fetchedQuestions}
+                name={sampleName}
+                iterations={sampleIterations}
                 prevSelectionCriteria={mockSelectionCriteria}
                 prevSelectionRules={mockRules}
               />

@@ -5,7 +5,9 @@ import { get } from 'lodash';
 import { userService } from '../services';
 
 // custom users fetching hook
-const useFetchUsers = (userId) => {
+const useFetchUsers = (userId, iterationId, initialFields) => {
+  const [fields, setFields] = useState(initialFields);
+
   const fetchUserReducer = (state, action) => {
     switch (action.type) {
       case 'FETCH_INIT':
@@ -45,12 +47,7 @@ const useFetchUsers = (userId) => {
       dispatch({ type: 'FETCH_INIT' });
 
       try {
-        let fetchedUsers;
-        if (userId) {
-          fetchedUsers = await userService.fetchUsersById(userId);
-        } else {
-          fetchedUsers = await userService.fetchAllUsers();
-        }
+        const fetchedUsers = await userService.fetchUsers(userId, iterationId, fields);
         if (!didCancel) {
           dispatch({ type: 'FETCH_SUCCESS', payload: fetchedUsers });
         }
@@ -64,61 +61,62 @@ const useFetchUsers = (userId) => {
     return () => {
       didCancel = true;
     };
-  }, []);
+  }, [fields]);
 
-  return [state];
+  return [state, setFields];
 };
 
-// Custom answer fetching hook
-const useFetchAnswer = (userId) => {
-  const [questionId, setQuestionId] = useState();
+// Update user data
+const useUpdateUser = (userId) => {
+  const [update, setUpdate] = useState();
 
-  const fetchAnswerReducer = (state, action) => {
+  const updateUserReducer = (state, action) => {
     switch (action.type) {
-      case 'FETCH_INIT':
+      case 'UPDATE_INIT':
         return {
           ...state,
-          isLoadingAnswer: true,
-          isError: false
+          isUpdatingUser: true,
+          errorUpdatingUser: false
         };
-      case 'FETCH_SUCCESS':
+      case 'UPDATE_SUCCESS':
         return {
           ...state,
-          isLoadingAnswer: false,
-          isError: false,
-          submittedAnswer: action.payload
+          isUpdatingUser: false,
+          errorUpdatingUser: false,
+          update: action.payload
         };
-      case 'FETCH_FAILURE':
+      case 'UPDATE_FAILURE':
         return {
           ...state,
-          isLoadingAnswer: false,
-          isError: true
+          isUpdatingUser: false,
+          errorUpdatingUser: true
         };
       default:
         throw new Error();
     }
   };
 
-  const [state, dispatch] = useReducer(fetchAnswerReducer, {
-    submittedAnswer: {},
-    isLoadingAnswer: false,
-    isError: false
+  const [state, dispatch] = useReducer(updateUserReducer, {
+    update: {},
+    isUpdatingUser: false,
+    errorUpdatingUser: false
   });
 
   useEffect(() => {
     let didCancel = false;
     const fetchQuestions = async () => {
-      dispatch({ type: 'FETCH_INIT' });
+      dispatch({ type: 'UPDATE_INIT' });
       try {
-        if (userId && questionId) {
-          const fetchedAnswer = await userService.fetchAnswersById(userId, questionId);
-          if (!didCancel) {
-            dispatch({ type: 'FETCH_SUCCESS', payload: fetchedAnswer.data.data });
-          }
+        if (userId && update) {
+          await userService.updateUserData(userId, update).then(() => {
+            if (!didCancel) {
+              dispatch({ type: 'UPDATE_SUCCESS', payload: update });
+            }
+          });
         }
       } catch (error) {
         if (!didCancel) {
-          dispatch({ type: 'FETCH_FAILURE' });
+          dispatch({ type: 'UPDATE_FAILURE' });
         }
       }
     };
@@ -126,13 +124,13 @@ const useFetchAnswer = (userId) => {
     return () => {
       didCancel = true;
     };
-  }, [questionId]);
+  }, [update]);
 
-  return [state, setQuestionId];
+  return [state, setUpdate];
 };
 
 // Custom answer saving hook
-const useSaveAnswer = (userId, questionId) => {
+const useSaveAnswer = (userId, iterationId, questionId) => {
   const [answer, setAnswer] = useState();
 
   const saveAnswerReducer = (state, action) => {
@@ -140,21 +138,21 @@ const useSaveAnswer = (userId, questionId) => {
       case 'SAVE_INIT':
         return {
           ...state,
-          isLoadingAnswer: true,
-          isError: false
+          isSavingAnswer: true,
+          errorSavingAnswer: false
         };
       case 'SAVE_SUCCESS':
         return {
           ...state,
-          isLoadingAnswer: false,
-          isError: false,
+          isSavingAnswer: false,
+          errorSavingAnswer: false,
           answer: action.payload
         };
       case 'SAVE_FAILURE':
         return {
           ...state,
-          isLoadingAnswer: false,
-          isError: true
+          isSavingAnswer: false,
+          errorSavingAnswer: true
         };
       default:
         throw new Error();
@@ -163,8 +161,8 @@ const useSaveAnswer = (userId, questionId) => {
 
   const [state, dispatch] = useReducer(saveAnswerReducer, {
     answer: {},
-    isLoadingAnswer: false,
-    isError: false
+    isSavingAnswer: false,
+    errorSavingAnswer: false
   });
 
   useEffect(() => {
@@ -172,6 +170,7 @@ const useSaveAnswer = (userId, questionId) => {
     const saveAnswer = async () => {
       dispatch({ type: 'SAVE_INIT' });
       try {
+        // TODO: Refactor lodash part
         if (
           get(answer, 'answerOption.id', false) ||
           get(answer, ['answerOption', '0', 'id'], false)
@@ -181,18 +180,14 @@ const useSaveAnswer = (userId, questionId) => {
             answerOption: answer.answerOption
           };
 
-          const savedAnswer = await userService.updateUserAnswer(
-            userId,
-            answers,
-            answer.currentIndex
-          );
-
-          if (!didCancel) {
-            dispatch({
-              type: 'SAVE_SUCCESS',
-              payload: savedAnswer
-            });
-          }
+          await userService.updateAnswer(userId, iterationId, questionId, answers).then(() => {
+            if (!didCancel) {
+              dispatch({
+                type: 'SAVE_SUCCESS',
+                payload: answers
+              });
+            }
+          });
         }
       } catch (error) {
         if (!didCancel) {
@@ -209,4 +204,4 @@ const useSaveAnswer = (userId, questionId) => {
   return [state, setAnswer];
 };
 
-export { useFetchUsers, useFetchAnswer, useSaveAnswer };
+export { useFetchUsers, useUpdateUser, useSaveAnswer };

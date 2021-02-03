@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
@@ -126,78 +127,49 @@ const loginUser = async (req, res) => {
 };
 
 const getUsers = async (req, res) => {
-  await User.find({}, (err, users) => {
-    if (err) {
+  const { userId, iterationId } = req.query;
+  let { fields } = req.query;
+
+  const filter = {};
+  if (userId) {
+    filter._id = userId;
+  }
+
+  if (iterationId) {
+    fields = `${fields} iterations._id`;
+  }
+
+  await User.find(filter)
+    .select(fields)
+    .then((users) => {
+      if (!users) {
+        return res
+          .status(404)
+          .json({ title: 'Users not found', detail: 'No user could be found.' });
+      }
+
+      const results = users.map((user) => {
+        const result = user;
+
+        if (iterationId) {
+          result.iterations = result.iterations.filter((iteration) => {
+            if (!iteration._id) {
+              return false;
+            }
+            return iteration._id.toString() === iterationId.toString();
+          });
+        }
+
+        return result;
+      });
+
+      return res.status(200).json({ users: results });
+    })
+    .catch((err) => {
       return res
         .status(500)
         .json({ err, title: 'Internal error.', detail: 'Something went wrong.' });
-    }
-    if (!users.length) {
-      return res.status(404).json({ title: 'Users not found', detail: 'No users found.' });
-    }
-    return res.status(200).json({ users });
-  }).catch((err) => console.log(err));
-};
-
-const getUsersById = async (req, res) => {
-  await User.find({ _id: req.params.userId }, (err, users) => {
-    if (err) {
-      return res.status(400).json({ success: false, error: err });
-    }
-    if (!users) {
-      return res.status(404).json({ success: false, error: `No user found` });
-    }
-
-    let returnData;
-
-    if (!req.query) {
-      returnData = users;
-    } else {
-      switch (req.query.resource) {
-        case 'metaData':
-          returnData = {
-            email: users.email,
-            firstName: users.firstName,
-            lastName: users.lastName,
-            hasAcceptedConsentForm: users.hasAcceptedConsentForm,
-            startData: users.startDate,
-            endDate: users.endDate,
-            stoppedAtIndex: users.stoppedAtIndex
-          };
-          break;
-        default:
-          returnData = users;
-      }
-    }
-    console.log(returnData);
-
-    return res.status(200).json({ users });
-  }).catch((err) => console.log(err));
-};
-
-const getAnswerById = async (req, res) => {
-  await User.findOne({ _id: req.params.userId }, (err, user) => {
-    if (err) {
-      return res.status(404).json({
-        err,
-        message: 'User not found!'
-      });
-    }
-
-    if (!user || !user.answers.length) {
-      return res.status(404).json({ success: false, error: 'No answers found' });
-    }
-
-    const submittedAnswer = user.answers.find(
-      ({ questionId }) => questionId === req.params.questionId
-    );
-
-    if (!submittedAnswer) {
-      return res.status(404).json({ success: false, error: 'No answer found' });
-    }
-
-    return res.status(200).json({ success: true, data: submittedAnswer });
-  }).catch((err) => console.log(err));
+    });
 };
 
 const addQuestionIdsSkip = (questionIds, state) => {
@@ -221,107 +193,114 @@ const updateSkip = (prevAnswerOption, newAnswerOption, state) => {
   return newSkip;
 };
 
-const updateUserById = async (req, res) => {
-  // Finds the validation errors in this request and wraps them in an object
+const updateUser = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
+  const { userId } = req.params;
   const { body } = req;
+  const { newPassword } = req.body;
 
-  User.findOne({ _id: req.params.userId })
-    .then((user) => {
-      const userUpdate = user;
+  const fields = { ...body };
 
-      body.validated.forEach((entry) => {
-        const key = entry[0];
-        const value = entry[1];
+  if (newPassword) {
+    fields.password = bcrypt.hashSync(newPassword, 8);
+  }
 
-        if (key === 'answers') {
-          const index = userUpdate.answers.findIndex((answer) => {
-            return answer.questionId === value.questionId;
-          });
-          if (index !== -1) {
-            userUpdate.questionsToSkip = updateSkip(
-              user.answers[index].answerOption,
-              value.answerOption,
-              userUpdate.questionsToSkip
-            );
-            userUpdate.answers[index] = value;
-          } else {
-            userUpdate.questionsToSkip = updateSkip(
-              null,
-              value.answerOption,
-              userUpdate.questionsToSkip
-            );
-            userUpdate.answers.push(value);
-          }
-        } else {
-          userUpdate[key] = value;
-        }
-      });
-
-      console.log('----', userUpdate);
-
-      userUpdate
-        .save()
-        .then(() => {
-          return res.status(200).json({
-            updated: body.validated,
-            data: body.data.answers,
-            message: 'User updated!'
-          });
-        })
-        .catch((error) => {
-          return res.status(404).json({
-            error,
-            message: 'User not updated!'
-          });
-        });
+  await User.findByIdAndUpdate({ _id: userId }, fields, { new: true })
+    .then(() => {
+      return res.status(204).send();
     })
-    .catch((err) => {
-      return res.status(404).json({
-        err,
-        message: 'User not found!'
+    .catch((error) => {
+      return res.status(400).json({
+        error,
+        message: 'User not updated!'
       });
     });
 };
 
-const resetAdminAnswers = async (req, res) => {
-  // Finds the validation errors in this request and wraps them in an object
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+const updateIteration = async (req, res) => {
+  const { userId, iterationId } = req.params;
+  const { body } = req;
 
-  User.findOne({ _id: req.params.userId })
+  const filter = {
+    _id: userId,
+    'iterations.iterationId': iterationId
+  };
+
+  const [entries] = Object.entries(body);
+  const key = entries[0];
+  const value = entries[1];
+
+  const placeholder = {};
+  placeholder[`iterations.$[iteration].${key}`] = value;
+
+  const update = {
+    $set: placeholder
+  };
+
+  const options = {
+    arrayFilters: [{ 'iteration.iterationId': iterationId }],
+    new: true,
+    upsert: true
+  };
+
+  await User.findOneAndUpdate(filter, update, options)
+    .then(() => {
+      return res.status(204).send();
+    })
+    .catch(() => {
+      // If iteration could not be updated (response === null), a new iteration is created and pushed.
+      User.updateOne(
+        {
+          _id: userId
+        },
+        { $push: { iterations: { iterationId, startedAt: body.startedAt } } }
+      )
+        .then(() => {
+          // if the uuid is created by the server instead, we need to return the id and object here
+          return res.status(201).send();
+        })
+        .catch((err) => {
+          return res.status(400).json({
+            err,
+            message: 'Iteration not updated!'
+          });
+        });
+    });
+};
+
+const updateAnswer = async (req, res) => {
+  const { userId, iterationId, questionId } = req.params;
+  const { answerOption } = req.body;
+
+  await User.findOne({ _id: userId })
     .then((user) => {
       const userUpdate = user;
 
-      userUpdate.answers = [];
-      userUpdate.questionsToSkip = [];
-      userUpdate.stoppedAtIndex = -1;
-      userUpdate.startedOn = undefined;
-      userUpdate.finishedOn = undefined;
-
-      userUpdate
-        .save()
-        .then(() => {
-          return res.status(204).send();
-        })
-        .catch((error) => {
-          return res.status(404).json({
-            error,
-            message: 'User not updated!'
-          });
-        });
-    })
-    .catch((err) => {
-      return res.status(404).json({
-        err,
-        message: 'User not found!'
+      const iteration = userUpdate.iterations.find((i) => {
+        return i.iterationId === iterationId;
       });
+      let answer;
+      if (iteration.answers && iteration.answers.length) {
+        answer = iteration.answers.find((a) => {
+          return a.questionId === questionId;
+        });
+      }
+      if (answer) {
+        answer.answerOption = answerOption;
+      } else {
+        iteration.answers.push({ questionId, answerOption });
+      }
+
+      userUpdate.save().then(() => {
+        return res.status(204).send();
+      });
+    })
+    .catch(() => {
+      return res.status(404).json({ title: 'Users not found', detail: 'No user could be found.' });
     });
 };
 
@@ -329,8 +308,7 @@ module.exports = {
   loginUser,
   createUser,
   getUsers,
-  getUsersById,
-  getAnswerById,
-  updateUserById,
-  resetAdminAnswers
+  updateUser,
+  updateIteration,
+  updateAnswer
 };

@@ -3,7 +3,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
 import { bool, string } from 'prop-types';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 // services
 import { userService, questionnaireService } from '../../services';
@@ -17,8 +17,14 @@ import { Question } from '../../components/Question';
 import Submit from '../../components/DefaultSegments';
 import ProgressIndicator from '../../components/ProgressIndicator';
 
-const QuestionnairePresenter = ({ questions, previousAnswers, questionsToSkip, isAdmin }) => {
-  // set inital values
+const QuestionnairePresenter = ({
+  questions,
+  previousAnswers,
+  questionsToSkip,
+  isAdmin,
+  iterationId
+}) => {
+  const history = useHistory();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
   const [answers, setAnswers] = useState([]);
@@ -106,7 +112,7 @@ const QuestionnairePresenter = ({ questions, previousAnswers, questionsToSkip, i
   };
 
   const handleSubmitAnswer = (answer) => {
-    const { answerOption, questionId } = answer.data;
+    const { answerOption, questionId } = answer;
 
     if (answersRef.current[currentIndex] && answersRef.current[currentIndex].answerOption) {
       updateSkip(answersRef.current[currentIndex].answerOption, answerOption);
@@ -123,33 +129,7 @@ const QuestionnairePresenter = ({ questions, previousAnswers, questionsToSkip, i
 
   return (
     <div>
-      <div>
-        {questions.length > 0 && (
-          <>
-            {currentIndex >= questions.length ? (
-              <Submit />
-            ) : (
-              <>
-                <div>
-                  <Question
-                    id={questions[currentIndex]._id}
-                    title={questions[currentIndex].title}
-                    subtitle1={questions[currentIndex].subtitle1}
-                    subtitle2={questions[currentIndex].subtitle2}
-                    help={questions[currentIndex].help}
-                    submittedAnswer={answers[currentIndex]}
-                    answerOptions={questions[currentIndex].answerOptions}
-                    onSubmitAnswer={(answer) => handleSubmitAnswer(answer)}
-                    currentIndex={currentIndex}
-                    isPreview={isAdmin}
-                  />
-                </div>
-              </>
-            )}
-          </>
-        )}
-      </div>
-      <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-bottom questionnaire">
+      <nav className="navbar navbar-expand-md navbar-dark bg-dark questionnaire">
         <div className="d-flex flex-fill align-items-center">
           <button
             type="button"
@@ -166,19 +146,32 @@ const QuestionnairePresenter = ({ questions, previousAnswers, questionsToSkip, i
           <ProgressIndicator currentPosition={currentIndex} length={questions.length} />
           <div className="p-1" />
           {isAdmin && (
-            <button
-              type="button"
-              className="btn btn-sm btn-outline-warning"
-              onClick={() => {
-                userService.resetAnswers(userId).then(() => {
-                  setCurrentIndex(0);
-                  setToSkip([]);
-                  setAnswers([]);
-                });
-              }}
-            >
-              Reset answers
-            </button>
+            <>
+              <button
+                type="button"
+                className="btn btn-sm btn-outline-warning"
+                onClick={() => {
+                  userService
+                    .updateUserData(userId, { iterations: [{ iterationId: 0, answers: [] }] })
+                    .then(() => {
+                      setCurrentIndex(0);
+                      setToSkip([]);
+                      setAnswers([]);
+                    });
+                }}
+              >
+                Reset answers
+              </button>
+              <button
+                type="button"
+                className="btn btn-sm btn-outline-warning ml-2"
+                onClick={() => {
+                  history.push(`/users/${userId}`);
+                }}
+              >
+                Exit
+              </button>
+            </>
           )}
           {/* <button
                 type="button"
@@ -189,27 +182,74 @@ const QuestionnairePresenter = ({ questions, previousAnswers, questionsToSkip, i
               </button> */}
         </div>
       </nav>
+      <div>
+        {questions.length > 0 && (
+          <>
+            {currentIndex >= questions.length ? (
+              <Submit iterationId={iterationId} />
+            ) : (
+              <>
+                <div>
+                  <Question
+                    id={questions[currentIndex]._id}
+                    title={questions[currentIndex].title}
+                    subtitle1={questions[currentIndex].subtitle1}
+                    subtitle2={questions[currentIndex].subtitle2}
+                    help={questions[currentIndex].help}
+                    submittedAnswer={answers[currentIndex]}
+                    answerOptions={questions[currentIndex].answerOptions}
+                    onSubmitAnswer={(answer) => handleSubmitAnswer(answer)}
+                    currentIndex={currentIndex}
+                    isPreview={isAdmin}
+                    iterationId={iterationId}
+                  />
+                </div>
+              </>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 };
 
 const QuestionnairePresenterPage = ({ isAdmin }) => {
-  const { userId } = useParams();
+  const { userId, iterationId } = useParams();
+
   const [
     { fetchedQuestions, isLoadingQuestions, isErrorQuestions },
     setQuestionniareId
   ] = useFetchQuestions();
   const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers(userId);
+  const [iteration, setIteration] = useState();
 
   useEffect(() => {
     const fetchIds = async () => {
       await questionnaireService.fetchQuestionnaires('_id').then((response) => {
-        setQuestionniareId(response[0]);
+        setQuestionniareId(response.data[0]);
       });
     };
 
     fetchIds();
   }, []);
+
+  useEffect(() => {
+    if (users && users.length) {
+      let answers = [];
+      let questionsToSkip = [];
+      let stoppedAtIndex = -1;
+      const status = users[0].iterations.filter(
+        (prevIteration) => prevIteration.iterationId === iterationId
+      );
+      if (status && status.length) {
+        answers = status[0].answers;
+        questionsToSkip = status[0].questionsToSkip;
+        stoppedAtIndex = status[0].stoppedAtIndex;
+      }
+
+      setIteration({ answers, questionsToSkip, stoppedAtIndex });
+    }
+  }, [users]);
 
   return (
     <div>
@@ -223,13 +263,14 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
           <Spinner />
         </div>
       )}
-      {users && users.length > 0 && fetchedQuestions && (
+      {users && users.length > 0 && fetchedQuestions && iteration && (
         <QuestionnairePresenter
           questions={fetchedQuestions}
-          previousAnswers={users[0].answers}
-          questionsToSkip={users[0].questionsToSkip}
-          stoppedAtIndex={users[0].stoppedAtIndex + 1}
+          previousAnswers={iteration.answers}
+          questionsToSkip={iteration.questionsToSkip}
+          stoppedAtIndex={iteration.stoppedAtIndex + 1}
           isAdmin={isAdmin}
+          iterationId={iterationId}
         />
       )}
     </div>

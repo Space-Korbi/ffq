@@ -4,6 +4,9 @@ import * as Yup from 'yup';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import { authService } from '../../services';
 
+// logo
+import { ReactComponent as Logo } from '../../hi-ffq_v8_react.svg';
+
 const SignUpPage = () => {
   const history = useHistory();
 
@@ -15,7 +18,7 @@ const SignUpPage = () => {
       <div className="d-flex col-sm-8 col-md-6 col-lg-5">
         <div className="col">
           <div className="d-flex justify-content-center">
-            <img className="mb-5" src="../../hi-ffq.png" alt="" width="72" height="72" />
+            <Logo className="App-logo mb-5" width="72" height="72" />
           </div>
           <h2>Sign Up</h2>
           <br />

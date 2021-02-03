@@ -1,8 +1,8 @@
 const async = require('async');
+const { validationResult } = require('express-validator');
 const Questionnaire = require('./questionnaire.model');
 const Question = require('../questions/question.model');
 const { deleteImagesOfQuestion } = require('../questions/question.controller');
-const { param } = require('../users/user.router');
 
 /**
  * * Questionnaire controller
@@ -52,6 +52,12 @@ const createQuestionnaire = async (req, res) => {
 };
 
 const updateQuestionnaire = async (req, res) => {
+  // Finds the validation errors in this request and wraps them in an object
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const { body } = req;
 
   if (!body) {
@@ -98,9 +104,10 @@ const updateQuestionnaire = async (req, res) => {
         break;
       }
       case updateAction.changeSettings: {
+        // sort iterations before saving
         questionnaireUpdate.name = body.settings.name;
-        questionnaireUpdate.startDate = body.settings.startDate;
-        questionnaireUpdate.endDate = body.settings.endDate;
+        questionnaireUpdate.iterations = body.settings.iterations;
+        questionnaireUpdate.consentScript = body.settings.consentScript;
         break;
       }
       default:
@@ -112,12 +119,10 @@ const updateQuestionnaire = async (req, res) => {
       .save()
       .then(() => {
         return res.status(200).json({
+          questionnaireUpdate,
           success: true,
           id: questionnaire._id,
           question,
-          name: questionnaireUpdate.name,
-          startDate: questionnaireUpdate.startDate,
-          endDate: questionnaireUpdate.endDate,
           index: body.index,
           message: 'Questionnaire updated!'
         });
@@ -197,13 +202,47 @@ const getQuestionnaires = async (req, res) => {
       return res.status(204).send();
     }
 
-    if (req.query && req.query.param === '_id') {
-      const ids = questionnaires.map((questionnaire) => questionnaire._id);
-      return res.status(200).json({
-        title: 'Questionnaires.',
-        detail: 'Ids of all questionnaires.',
-        data: ids
-      });
+    if (req.query) {
+      if (req.query.param === '_id') {
+        const ids = questionnaires.map((questionnaire) => questionnaire._id);
+        return res.status(200).json({
+          title: 'Questionnaires.',
+          detail: 'Ids of all questionnaires.',
+          data: ids
+        });
+      }
+      if (req.query.param === 'info') {
+        const info = questionnaires.map((questionnaire) => {
+          return {
+            id: questionnaire.id,
+            name: questionnaire.name,
+            consentScript: questionnaire.consentScript,
+            iterations: questionnaire.iterations
+          };
+        });
+        return res.status(200).json({
+          title: 'Questionnaires info.',
+          detail: 'Information of all questionnaires.',
+          info
+        });
+      }
+
+      if (req.query.param === 'metaData') {
+        const metaData = questionnaires.map((questionnaire) => {
+          return {
+            id: questionnaire.id,
+            name: questionnaire.name,
+            consentScript: questionnaire.consentScript,
+            iterations: questionnaire.iterations
+          };
+        });
+        console.log(metaData);
+        return res.status(200).json({
+          title: 'Questionnaires meta data.',
+          detail: 'MetaData of all questionnaires.',
+          metaData
+        });
+      }
     }
 
     return res.status(200).json({

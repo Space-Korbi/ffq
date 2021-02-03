@@ -66,16 +66,18 @@ const Question = ({
   answerOptions,
   submittedAnswer,
   onSubmitAnswer,
-  currentIndex
+  currentIndex,
+  iterationId
 }) => {
   const { userId } = useParams();
   const [userInput, setUserInput] = useState();
-  const [{ answer, isSaving, isSavingError }, setAnswer] = useSaveAnswer(userId, id);
+  const [{ answer, isSaving, isSavingError }, setAnswer] = useSaveAnswer(userId, iterationId, id);
+
   const [latestAnswer, setLatestAnswer] = useState();
 
   useEffect(() => {
     if (!isSaving && !isSavingError && userInput) {
-      setAnswer({ answerOption: userInput, currentIndex });
+      setAnswer({ answerOption: userInput });
     }
   }, [userInput]);
 

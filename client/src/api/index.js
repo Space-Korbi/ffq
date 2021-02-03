@@ -17,31 +17,22 @@ api.interceptors.request.use((request) => {
   return request;
 });
 
-// login/signup
+// signup/login
 export const signup = (payload) =>
   axios.post(`${process.env.REACT_APP_BASE_URL}/users/signup`, payload);
 export const login = (payload) =>
   axios.post(`${process.env.REACT_APP_BASE_URL}/users/login`, payload);
 
+// * REFACTORED
 // user
-export const updateAnswerById = (userId, payload) => api.put(`users/${userId}`, payload);
-export const getUsersMetadata = (userId) =>
-  api.get(`/users/${userId}/?resource=metaData`, authHeader());
+export const getUsers = (params) => api.get(`/users`, { params });
+export const updateUser = (userId, payload) => api.patch(`users/${userId}`, payload);
+export const updateUserIteration = (userId, iterationId, payload) =>
+  api.patch(`/users/${userId}/iterations/${iterationId}`, payload);
+export const updateUserIterationAnswer = (userId, iterationId, questionId, payload) =>
+  api.patch(`/users/${userId}/iterations/${iterationId}/questions/${questionId}`, payload);
 
-/* export const getUsersAccountData = (userId) =>
-api.get(`/users/${userId}/?resource=accountData`); */
-
-export const getAllUsers = () => api.get(`/users`);
-export const getUsersById = (userId) => api.get(`/users/${userId}`);
-export const getAnswerById = (userId, questionId) =>
-  api.get(`users/${userId}/questions/${questionId}`);
-
-// user update
-export const updateUser = (userId, payload) => api.put(`users/${userId}`, payload);
-
-// user reset
-export const resetAdminAnswers = (userId) =>
-  api.put(`/users/${userId}/reset`, { data: { reset: true } });
+// * END REFACTORED
 
 // question
 export const insertQuestionAt = (questionnaireId, payload) =>
@@ -76,10 +67,10 @@ const apis = {
   login,
   insertQuestionnaire,
   insertQuestionAt,
-  getUsersMetadata,
-  getUsersById,
-  getAllUsers,
+  getUsers,
   updateUser,
+  updateUserIteration,
+  updateUserIterationAnswer,
   getAllQuestions,
   getAllQuestionsOfQuestionnaire,
   uploadImage

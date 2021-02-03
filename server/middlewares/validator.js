@@ -1,9 +1,10 @@
 /* eslint-disable prefer-promise-reject-errors */
 const { body, check, param } = require('express-validator');
+const bcrypt = require('bcryptjs');
 const User = require('../users/user.model');
+const Questionnaire = require('../questionnaires/questionnaire.model');
 
-// Maybe body should be escaped
-
+// User
 const signup = [
   body('firstName').notEmpty().withMessage('First name cannot be empty.'),
   body('lastName').notEmpty().withMessage('Last name cannot be empty.'),
@@ -41,23 +42,50 @@ const login = [
     .withMessage('Password must be at least 5 characters long.')
 ];
 
-const update = [
-  param('userId').notEmpty().withMessage('User ID is required').bail(),
+const updateUser = [
+  param('userId').notEmpty().withMessage('User ID is required.').bail(),
+  body('oldPassword').if(body('newPassword').exists()).notEmpty(),
+  check('oldPassword')
+    .optional()
+    .custom((value, { req }) => {
+      const { userId } = req.params;
+      return User.findOne({ _id: userId }).then((user) => {
+        const passwordIsValid = bcrypt.compareSync(req.body.oldPassword, user.password);
+        if (!passwordIsValid) {
+          return Promise.reject('Old Password is incorrect.');
+        }
+      });
+    }),
+  body('newPassword')
+    .if(body('confirmPassword').exists())
+    .isLength({ min: 5 })
+    .withMessage('Password must be at least 5 characters long.'),
+  body('confirmPassword')
+    .custom((value, { req }) => {
+      return value === req.body.newPassword;
+    })
+    .withMessage("Password doesn't match")
+];
+
+const updateQuestionnaire = [
+  param('id').notEmpty().withMessage('Questionnaire ID is required.').bail(),
   body('*').custom((data, { req }) => {
     const entries = Object.entries(data);
 
-    const userModel = User.schema.obj;
-    delete userModel.roles;
+    console.log(entries);
+    const questionnaireModel = Questionnaire.schema.obj;
 
     const validatedEntries = entries.filter((entry) => {
-      if (entry[0] === 'answers') {
+      if (entry[0] === 'questions') {
         const answers = entry[1];
         if (!answers || !answers.questionId || !answers.answerOption) {
           return false;
         }
       }
 
-      return Object.keys(userModel).includes(entry[0]) && (entry[1] !== null || entry[1] !== '');
+      return (
+        Object.keys(questionnaireModel).includes(entry[0]) && (entry[1] !== null || entry[1] !== '')
+      );
     });
 
     if (!validatedEntries) {
@@ -70,18 +98,9 @@ const update = [
   })
 ];
 
-const reset = [
-  param('userId').notEmpty().withMessage('User ID is required').bail(),
-  body('*').custom((data) => {
-    if (data.reset) {
-      return Promise.resolve(data.reset);
-    }
-  })
-];
-
 module.exports = {
   login,
   signup,
-  update,
-  reset
+  updateUser,
+  updateQuestionnaire
 };

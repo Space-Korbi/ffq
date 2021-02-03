@@ -1,4 +1,15 @@
-import { useFetchUsers, useFetchAnswer, useSaveAnswer } from './userHooks';
-import { useFetchQuestionnaires, useFetchQuestions } from './questionnaireHooks';
+import { useFetchUsers, useUpdateUser, useSaveAnswer } from './userHooks';
+import {
+  useFetchQuestionnaires,
+  useFetchQuestions,
+  useFetchQuestionnairesInfo
+} from './questionnaireHooks';
 
-export { useFetchUsers, useFetchAnswer, useSaveAnswer, useFetchQuestionnaires, useFetchQuestions };
+export {
+  useFetchUsers,
+  useUpdateUser,
+  useSaveAnswer,
+  useFetchQuestionnaires,
+  useFetchQuestions,
+  useFetchQuestionnairesInfo
+};

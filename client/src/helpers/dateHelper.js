@@ -29,7 +29,7 @@ const applyDateStyle = (date) => {
     );
   }
   return (
-    <span className="badge badge-danger mx-1">
+    <span className="badge badge-danger mx-1 d-inline-flex flex-column align-items-center">
       <HorizontalRuleIcon size={13} />
     </span>
   );

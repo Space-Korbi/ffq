@@ -3,25 +3,124 @@
 import React, { useState, useEffect } from 'react';
 import { shape } from 'prop-types';
 import { useRouteMatch, useHistory, useParams } from 'react-router-dom';
+import moment from 'moment/min/moment-with-locales';
+import { difference } from 'lodash';
+
+// hooks
+import { useFetchQuestionnairesInfo } from '../../../hooks';
 
 // services
 import { userService } from '../../../services';
 
-// helpers
-import { dateHelper } from '../../../helpers';
-
 // components
+import Spinner from '../../../components/Spinner';
 import ConsentModal from '../../../components/Modals';
 
-const intervals = [
-  { startDate: new Date('2021-01-09 23:00:00.000Z'), endDate: new Date('2021-02-06 23:00:00.000Z') }
-];
+const getNextInterval = (iterations) => {
+  const now = moment().toDate();
+  const upcomingIteration = iterations.filter((iteration) => {
+    if (
+      moment(now).isSameOrBefore(iteration.start, 'day') ||
+      moment(now).isSameOrBefore(iteration.end, 'day')
+    ) {
+      return true;
+    }
+    return false;
+  });
+
+  return upcomingIteration;
+};
+
+const getFinishedIterations = (user) => {
+  const finishedIterations = user.iterations.filter((iteration) => {
+    return moment(iteration.finishedAt) < moment().toDate();
+  });
+  return finishedIterations;
+};
+
+const updateJumbotron = (iterations, user) => {
+  const now = moment().toDate();
+  const updated = {
+    currentIteration: {},
+    title: '',
+    daysTilStart: '',
+    accessInformation: '',
+    disabled: false,
+    buttonTitle: 'Umfrage Starten'
+  };
+
+  const nextIntervals = getNextInterval(iterations);
+  const finishedIterations = getFinishedIterations(user);
+
+  if (!nextIntervals.length) {
+    return {
+      ...updated,
+      title: 'Die Umfrage ist abgeschlossen. Vielen Dank für Ihre Teilnahme.',
+      disabled: true
+    };
+  }
+
+  const userHasFinishedIteration = (interval) => {
+    if (finishedIterations.find((iteration) => iteration.iterationId === interval.id)) {
+      return true;
+    }
+    return false;
+  };
+
+  const nextIteration = nextIntervals.find((interval) => {
+    return !userHasFinishedIteration(interval);
+  });
+
+  if (!nextIteration) {
+    return {
+      ...updated,
+      title: 'Die Umfrage ist abgeschlossen. Vielen Dank für Ihre Teilnahme.',
+      disabled: true
+    };
+  }
+  updated.accessInformation = `Die Umfrage kann vom ${moment(nextIteration.start).format(
+    'DD.MM.YY'
+  )} bis zum ${moment(nextIteration.end).format('DD.MM.YY')} ausgefüllt werden.`;
+
+  if (moment(now).isBefore(nextIteration.start, 'day')) {
+    return {
+      ...updated,
+      title: 'Die nächste Umfrage beginnt',
+      daysTilStart: moment(nextIteration.start).fromNow(),
+      currentIteration: nextIteration,
+      disabled: true
+    };
+  }
+  if (
+    moment(now).isSameOrAfter(nextIteration.start, 'day') &&
+    moment(now).isSameOrBefore(nextIteration.end, 'day')
+  ) {
+    // get current unfinished iteration by getting difference between all iterations and finished iterations
+    const unfinishedIteration = difference(user.iterations, finishedIterations)[0];
+    // check if iteration has been started before
+    if (unfinishedIteration && moment(now).isSameOrAfter(unfinishedIteration.startedAt, 'day')) {
+      updated.buttonTitle = 'Umfrage fortsetzen';
+    }
+    return {
+      ...updated,
+      currentIteration: nextIteration,
+      disabled: false
+    };
+  }
+
+  return updated;
+};
 
 const ParticipantPage = ({ user }) => {
-  const [header, setHeader] = useState('Willkommen');
-  const [title, setTitle] = useState(
-    `Um die Umfrage zu starten klicken Sie bitte auf "Umfrage starten"`
-  );
+  moment.locale('de');
+
+  // fetch data
+  const [{ questionnairesInfo, isLoadingInfo, isErrorInfo }] = useFetchQuestionnairesInfo();
+  const [currentQuestionnaire, setCurrentQuestionnaire] = useState();
+  const [iterationId, setIterationId] = useState();
+  const [title, setTitle] = useState('');
+  const [daysTilStart, setDaysTilStart] = useState('');
+  const [accessInformation, setAccessInformation] = useState('');
   const [buttonTitle, setButtonTitle] = useState('Umfrage starten');
   const [disabled, setDisabled] = useState();
   const history = useHistory();
@@ -29,72 +128,95 @@ const ParticipantPage = ({ user }) => {
   const { url } = useRouteMatch();
 
   useEffect(() => {
-    const { startDate } = intervals[0];
-    const { endDate } = intervals[0];
-
-    if (!dateHelper.hasPassed(startDate)) {
-      setTitle(`Die Umfrage kann am ${dateHelper.toDateDE(startDate)} gestartet werden`);
-      setDisabled(true);
+    if (questionnairesInfo && questionnairesInfo[0]) {
+      setCurrentQuestionnaire(questionnairesInfo[0]);
     }
-    if (dateHelper.isBetween(startDate, endDate)) {
-      if (Date.now > user.finishedOn) {
-        setDisabled(true);
-        setHeader('Die Umfrage ist abgeschlossen.');
-        setTitle('Vielen Dank für Ihre Teilnahme.');
-        setButtonTitle('Umfrage starten');
-      } else if (user.stoppedAtIndex !== -1) {
-        setHeader('Willkommen zurück!');
-        setTitle(`Um die Umfrage fortzusetzen klicken Sie bitte auf "Umfrage fortsetzen"`);
-        setButtonTitle('Umfrage fortsetzen');
-      }
-    }
-  }, []);
+  }, [questionnairesInfo]);
 
-  const start = () => {
-    userService.updateUserData(userId, { data: { startedOn: Date.now() } });
-    history.push(`${url}/questionnairePresenter`);
+  useEffect(() => {
+    if (currentQuestionnaire) {
+      const current = updateJumbotron(currentQuestionnaire.iterations, user);
+      setIterationId(current.currentIteration.id);
+      setDisabled(current.disabled);
+      setTitle(current.title);
+      setDaysTilStart(current.daysTilStart);
+      setAccessInformation(current.accessInformation);
+      setButtonTitle(current.buttonTitle);
+    }
+  }, [currentQuestionnaire]);
+
+  const start = async () => {
+    await userService
+      .updateIterationData(userId, iterationId, { startedAt: moment().toDate() })
+      .then(() => {
+        history.push(`${url}/questionnairePresenter/iteration/${iterationId}`);
+      });
   };
 
   return (
-    <div className="d-flex justify-content-center mt-3">
-      <div className="jumbotron text-center" style={{ maxWidth: '800px' }}>
-        <h1 className="display-4">{header}</h1>
-        <p className="lead">{title}</p>
-        <hr className="my-4" />
-        <div className="text-center">
-          {user.hasAcceptedConsentForm ? (
-            <button
-              disabled={disabled}
-              type="button"
-              className="btn btn-lg btn-primary mt-3"
-              onClick={() => {
-                start();
-              }}
-            >
-              {buttonTitle}
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="btn btn-outline-primary "
-              data-toggle="modal"
-              data-target="#staticBackdrop"
-            >
-              {buttonTitle}
-            </button>
-          )}
+    <div>
+      {isErrorInfo && (
+        <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
+          Something went wrong...
         </div>
-        <ConsentModal
-          onAccept={() =>
-            userService
-              .updateUserData(user.id, { data: { hasAcceptedConsentForm: true } })
-              .then((res) => {
-                userService.updateUserData(userId, { data: { startedOn: Date.now() } });
-                history.push(`${url}/questionnairePresenter`);
-              })
-          }
-        />
-      </div>
+      )}
+      {isLoadingInfo && (
+        <div className="d-flex justify-content-center mt-5">
+          <Spinner />
+        </div>
+      )}
+      {currentQuestionnaire && (
+        <div className="d-flex justify-content-center p-4 p-sm-5">
+          <div className="text-center " style={{ maxWidth: '800px' }}>
+            <p className="display-4 my-5">Willkommen</p>
+            <h4 className="">{title}</h4>
+            <h2 className="my-3">
+              <span className="badge badge-secondary">{daysTilStart}</span>
+            </h2>
+            <p className="lead mt-5">{accessInformation}</p>
+            <hr className="my-4" />
+            <div className="text-center">
+              {user.hasAcceptedConsentForm ? (
+                <button
+                  disabled={disabled}
+                  type="button"
+                  className="btn btn-lg btn-primary mt-3"
+                  onClick={() => {
+                    start();
+                  }}
+                >
+                  {buttonTitle}
+                </button>
+              ) : (
+                <button
+                  disabled={disabled}
+                  type="button"
+                  className="btn btn-lg btn-primary mt-3"
+                  data-toggle="modal"
+                  data-target="#staticBackdrop"
+                >
+                  {buttonTitle}
+                </button>
+              )}
+            </div>
+            <ConsentModal
+              consentScript={currentQuestionnaire.consentScript}
+              onAccept={() =>
+                userService.updateUserData(userId, { hasAcceptedConsentForm: true }).then(() => {
+                  userService
+                    .updateIterationData(userId, iterationId, {
+                      iterationId,
+                      startedAt: moment().toDate()
+                    })
+                    .then(() => {
+                      history.push(`${url}/questionnairePresenter/iteration/${iterationId}`);
+                    });
+                })
+              }
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

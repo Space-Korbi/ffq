@@ -10,26 +10,24 @@ router.post('/users/signup', validate.signup, UserCtrl.createUser);
 // login
 router.post('/users/login', validate.login, UserCtrl.loginUser);
 
-router.get('/users', [authJwt.verifyToken, authJwt.isAdmin], UserCtrl.getUsers);
-router.get('/users/:userId', [authJwt.verifyToken, authJwt.authoriseUser], UserCtrl.getUsersById);
-router.get(
-  '/users/:userId/questions/:questionId',
-  [authJwt.verifyToken, authJwt.authoriseUser],
-  UserCtrl.getAnswerById
-);
+// get users
+router.get('/users', [authJwt.verifyToken, authJwt.authoriseUser], UserCtrl.getUsers);
 
-// update user
-router.put(
+// update user data
+router.patch(
   '/users/:userId',
-  [authJwt.verifyToken, authJwt.authoriseUser, validate.update],
-  UserCtrl.updateUserById
+  [authJwt.verifyToken, authJwt.authoriseUser, validate.updateUser],
+  UserCtrl.updateUser
 );
 
-// reset admin answers
-router.put(
-  '/users/:userId/reset',
-  [authJwt.verifyToken, authJwt.isAdmin, validate.reset],
-  UserCtrl.resetAdminAnswers
+// update users iterations
+router.patch('/users/:userId/iterations/:iterationId', UserCtrl.updateIteration);
+
+// update users answers
+router.patch(
+  '/users/:userId/iterations/:iterationId/questions/:questionId',
+  [authJwt.verifyToken, authJwt.authoriseUser],
+  UserCtrl.updateAnswer
 );
 
 module.exports = router;

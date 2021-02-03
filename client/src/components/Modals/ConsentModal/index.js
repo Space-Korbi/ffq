@@ -1,7 +1,7 @@
 import React from 'react';
-import { func } from 'prop-types';
+import { func, string } from 'prop-types';
 
-function ConsentModal({ onAccept }) {
+const ConsentModal = ({ consentScript, onAccept }) => {
   return (
     <div>
       <div
@@ -23,7 +23,7 @@ function ConsentModal({ onAccept }) {
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div className="modal-body">I consent to... </div>
+            <div className="modal-body text-left">{consentScript}</div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-dismiss="modal">
                 Close
@@ -42,8 +42,8 @@ function ConsentModal({ onAccept }) {
       </div>
     </div>
   );
-}
+};
 
-ConsentModal.propTypes = { onAccept: func.isRequired };
+ConsentModal.propTypes = { consentScript: string.isRequired, onAccept: func.isRequired };
 
 export default ConsentModal;
