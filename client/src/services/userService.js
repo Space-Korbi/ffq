@@ -6,7 +6,9 @@ const fetchUsers = async (userId, iterationId, fields) => {
 };
 
 const updateUserData = (userId, data) => {
-  return updateUser(userId, data);
+  return updateUser(userId, data).catch((error) => {
+    return Promise.reject(error.response);
+  });
 };
 
 const updateIterationData = (userId, iterationId, data) => {

@@ -1,20 +1,8 @@
 /* eslint-disable prefer-promise-reject-errors */
 const { body, check, param } = require('express-validator');
+const bcrypt = require('bcryptjs');
 const User = require('../users/user.model');
 const Questionnaire = require('../questionnaires/questionnaire.model');
-
-// Maybe body should be escaped
-
-// helpers
-
-/*
-const isKeyInSchema = (key, model) => {
-  return Object.keys(model).includes(key);
-};
-
-const isNotEmpty = (value) => {};
-
-// */
 
 // User
 const signup = [
@@ -56,40 +44,25 @@ const login = [
 
 const updateUser = [
   param('userId').notEmpty().withMessage('User ID is required.').bail(),
-  body('*').custom((data, { req }) => {
-    const entries = Object.entries(data);
-
-    const userModel = User.schema.obj;
-    delete userModel.roles;
-
-    const validatedEntries = entries.filter((entry) => {
-      if (entry[0] === 'answers') {
-        const answers = entry[1];
-        if (!answers || !answers.questionId || !answers.answerOption) {
-          return false;
-        }
+  body('oldPassword').if(body('newPassword').exists()).notEmpty(),
+  check('oldPassword').custom((value, { req }) => {
+    const { userId } = req.params;
+    return User.findOne({ _id: userId }).then((user) => {
+      const passwordIsValid = bcrypt.compareSync(req.body.oldPassword, user.password);
+      if (!passwordIsValid) {
+        return Promise.reject('Old Password is incorrect.');
       }
-
-      return Object.keys(userModel).includes(entry[0]) && (entry[1] !== null || entry[1] !== '');
     });
-
-    if (!validatedEntries) {
-      return Promise.reject('No valid data for update.');
-    }
-
-    req.body.validated = validatedEntries;
-    delete req.body.data;
-    return Promise.resolve(validatedEntries);
-  })
-];
-
-const resetAnswers = [
-  param('userId').notEmpty().withMessage('User ID is required.').bail(),
-  body('*').custom((data) => {
-    if (data.reset) {
-      return Promise.resolve(data.reset);
-    }
-  })
+  }),
+  body('newPassword')
+    .if(body('confirmPassword').exists())
+    .isLength({ min: 5 })
+    .withMessage('Password must be at least 5 characters long.'),
+  body('confirmPassword')
+    .custom((value, { req }) => {
+      return value === req.body.newPassword;
+    })
+    .withMessage("Password doesn't match")
 ];
 
 const updateQuestionnaire = [
@@ -127,6 +100,5 @@ module.exports = {
   login,
   signup,
   updateUser,
-  resetAnswers,
   updateQuestionnaire
 };

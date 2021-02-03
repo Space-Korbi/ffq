@@ -194,10 +194,23 @@ const updateSkip = (prevAnswerOption, newAnswerOption, state) => {
 };
 
 const updateUser = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const { userId } = req.params;
   const { body } = req;
+  const { newPassword } = req.body;
 
-  await User.findByIdAndUpdate({ _id: userId }, body, { new: true })
+  const fields = { ...body };
+
+  console.log('NewPassword', newPassword);
+  if (newPassword) {
+    fields.password = bcrypt.hashSync(newPassword, 8);
+  }
+
+  await User.findByIdAndUpdate({ _id: userId }, fields, { new: true })
     .then(() => {
       return res.status(204).send();
     })

@@ -14,7 +14,11 @@ router.post('/users/login', validate.login, UserCtrl.loginUser);
 router.get('/users', [authJwt.verifyToken, authJwt.authoriseUser], UserCtrl.getUsers);
 
 // update user data
-router.patch('/users/:userId', [authJwt.verifyToken, authJwt.authoriseUser], UserCtrl.updateUser);
+router.patch(
+  '/users/:userId',
+  [authJwt.verifyToken, authJwt.authoriseUser, validate.updateUser],
+  UserCtrl.updateUser
+);
 
 // update users iterations
 router.patch('/users/:userId/iterations/:iterationId', UserCtrl.updateIteration);

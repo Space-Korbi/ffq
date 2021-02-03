@@ -2,6 +2,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
+
 import moment from 'moment';
 
 // custom hooks
@@ -9,6 +10,7 @@ import { useFetchUsers, useFetchQuestionnairesInfo, useUpdateUser } from '../../
 
 // components
 import Spinner from '../../components/Spinner';
+import ChangePassword from './ChangePassword';
 import ConsentModal from '../../components/Modals';
 
 const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
@@ -19,9 +21,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
   const [email, setEmail] = useState(user.email);
-  const [oldPassword, setOldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+
   const [hasAcceptedConsentForm, setHasAcceptedConsentForm] = useState(user.hasAcceptedConsentForm);
 
   const { id, screeningStatus } = user;
@@ -179,65 +179,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
               </div>
             </div>
           </div>
-          <div className="mt-5">
-            <div className="d-flex flex-row align-items-end justify-content-between">
-              <p className="align-bottom m-0 mb-1 lead">Password</p>
-              <button
-                type="button"
-                className="btn btn-outline-primary btn-sm ml-auto mb-auto"
-                onClick={() => {
-                  handleChangePassword();
-                }}
-              >
-                {isChangingPassword ? 'Save Password' : 'Change Password'}
-              </button>
-            </div>
-          </div>
-          <hr className="m-0 mb-3" />
-          <div className="row">
-            <div className="col-lg-4 mb-2 mb-lg-0">
-              <div className="form-group mb-lg-0">
-                <label htmlFor="inputOldPassword">Old Password</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="inputOldPassword"
-                  value={oldPassword}
-                  disabled={!isChangingPassword}
-                  onChange={(e) => setOldPassword(e.target.value)}
-                  aria-describedby="inputGroup-name"
-                />
-              </div>
-            </div>
-            <div className="col-lg-4 mb-2 mb-lg-0">
-              <div className="form-group mb-lg-0">
-                <label htmlFor="inputNewPassword">New Password</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="inputNewPassword"
-                  value={newPassword}
-                  disabled={!isChangingPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  aria-describedby="inputGroup-name"
-                />
-              </div>
-            </div>
-            <div className="col-lg-4 mb-lg-0">
-              <div className="form-group mb-0">
-                <label htmlFor="inputConfirmPassword">Repeat Password</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="inputConfirmPassword"
-                  value={confirmPassword}
-                  disabled={!isChangingPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  aria-describedby="inputGroup-name"
-                />
-              </div>
-            </div>
-          </div>
+          <ChangePassword userId={user.id} />
           {!isAdmin && (
             <div>
               <p className="lead m-0 mb-1 mt-5">Questionnaire Iterations</p>
