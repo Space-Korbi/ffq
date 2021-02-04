@@ -147,7 +147,7 @@ const ParticipantPage = ({ user }) => {
 
   const start = async () => {
     await userService
-      .updateIterationData(userId, iterationId, { startedAt: moment().toDate() })
+      .updateUserIteration(userId, iterationId, { startedAt: moment().toDate() })
       .then(() => {
         history.push(`${url}/questionnairePresenter/iteration/${iterationId}`);
       });
@@ -206,7 +206,7 @@ const ParticipantPage = ({ user }) => {
               onAccept={() =>
                 userService.updateUserData(userId, { hasAcceptedConsentForm: true }).then(() => {
                   userService
-                    .updateIterationData(userId, iterationId, {
+                    .updateUserIteration(userId, iterationId, {
                       iterationId,
                       startedAt: moment().toDate()
                     })

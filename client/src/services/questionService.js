@@ -1,12 +1,6 @@
 /* eslint-disable no-alert */
 import { nanoid } from 'nanoid';
-import {
-  insertQuestionAt,
-  updateQuestionById,
-  uploadImage,
-  getAllQuestions,
-  deleteQuestionById
-} from '../api';
+import { insertQuestionAt, updateQuestionById, uploadImage, deleteQuestionById } from '../api';
 import AnswerType from '../types';
 
 /**
@@ -84,16 +78,11 @@ const saveQuestion = async (questionId, questionData, answerOptions) => {
   return updateQuestionById(questionId, payload);
 };
 
-const fetchAllQuestions = async () => {
-  const questions = await getAllQuestions();
-  return questions.data.data;
-};
-
 const deleteQuestion = async (id) => {
   const deletedQuestion = await deleteQuestionById(id);
   return deletedQuestion;
 };
 
-const questionService = { createQuestion, saveQuestion, fetchAllQuestions, deleteQuestion };
+const questionService = { createQuestion, saveQuestion, deleteQuestion };
 
 export default questionService;

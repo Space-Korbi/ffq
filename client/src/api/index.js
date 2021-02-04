@@ -44,7 +44,6 @@ export const insertQuestion = (questionnaireId, payload) =>
 export const insertQuestionAt = (questionnaireId, payload) =>
   api.post(`/questionnaires/${questionnaireId}/questions`, payload);
 export const updateQuestionById = (id, payload) => api.put(`/questions/${id}`, payload);
-export const getAllQuestions = () => api.get(`/questions`);
 export const getAllQuestionsOfQuestionnaire = (questionnaireId) =>
   api.get(`/questionnaires/${questionnaireId}/questions`);
 export const deleteQuestionById = (questionnaireId, questionId) =>

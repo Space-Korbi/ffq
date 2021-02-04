@@ -12,7 +12,7 @@ const Submit = ({ iterationId }) => {
 
   const submit = async () => {
     await userService
-      .updateIterationData(userId, iterationId, { finishedAt: moment().toDate() })
+      .updateUserIteration(userId, iterationId, { finishedAt: moment().toDate() })
       .then(history.push(`/users/${userId}`));
   };
 

@@ -16,7 +16,7 @@ const router = express.Router();
 // create questionnaire
 router.post(
   '/questionnaires',
-  [authJwt.verifyToken, authJwt.isAdmin],
+  /* [authJwt.verifyToken, authJwt.isAdmin], */
   QuestionnaireCtrl.createQuestionnaire
 );
 
@@ -27,10 +27,9 @@ router.post(
   [QuestionCtrl.createQuestion, QuestionnaireCtrl.addQuestion]
 );
 
-// end refactoring
+router.get('/questionnaires', /* [authJwt.verifyToken], */ QuestionnaireCtrl.getQuestionnaires);
 
-router.get('/questionnaires/:id', [authJwt.verifyToken], QuestionnaireCtrl.getQuestionnaireById);
-router.get('/questionnaires', [authJwt.verifyToken], QuestionnaireCtrl.getQuestionnaires);
+// end refactoring
 
 router.get(
   '/questionnaires/:questionnaireId/questions',

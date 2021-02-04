@@ -11,19 +11,11 @@ const updateUserData = (userId, data) => {
   });
 };
 
-const updateIterationData = (userId, iterationId, data) => {
-  return updateUserIteration(userId, iterationId, data);
-};
-
-const updateAnswer = (userId, iterationId, questionId, data) => {
-  return updateUserIterationAnswer(userId, iterationId, questionId, data);
-};
-
 const userService = {
   fetchUsers,
   updateUserData,
-  updateIterationData,
-  updateAnswer
+  updateUserIteration,
+  updateUserIterationAnswer
 };
 
 export default userService;

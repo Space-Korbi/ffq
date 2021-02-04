@@ -23,7 +23,6 @@ router.post(
   [authJwt.verifyToken, authJwt.isAdmin],
   QuestionCtrl.createQuestion
 );
-router.get('/questions', [authJwt.verifyToken], QuestionCtrl.getQuestions);
 router.get(
   '/questionnaires/:questionnaireId/questions',
   [authJwt.verifyToken],

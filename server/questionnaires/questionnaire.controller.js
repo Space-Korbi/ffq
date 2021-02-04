@@ -38,6 +38,33 @@ const createQuestionnaire = async (req, res) => {
     });
 };
 
+const getQuestionnaires = async (req, res) => {
+  const { questionnaireId } = req.query;
+  const { fields } = req.query;
+
+  const filter = {};
+  if (questionnaireId) {
+    filter._id = questionnaireId;
+  }
+
+  await Questionnaire.find(filter)
+    .select(fields)
+    .then((questionnaires) => {
+      if (!questionnaires || !questionnaires.length) {
+        return res
+          .status(404)
+          .json({ title: 'Questionnaire not found', detail: 'No questionnaire could be found.' });
+      }
+
+      return res.status(200).json({ questionnaires });
+    })
+    .catch((err) => {
+      return res
+        .status(500)
+        .json({ err, title: 'Internal error.', detail: 'Something went wrong.' });
+    });
+};
+
 const addQuestion = async (req, res) => {
   const { question } = req;
   const { questionnaireId } = req.params;
@@ -68,6 +95,27 @@ const addQuestion = async (req, res) => {
       return res.status(404).json({
         err,
         message: 'Questionnaire not found!'
+      });
+    });
+};
+
+const updateQuestionnaire2 = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { questionnaireId } = req.params;
+  const { body } = req;
+
+  await Questionnaire.findByIdAndUpdate({ _id: questionnaireId }, body, { new: true })
+    .then(() => {
+      return res.status(204).send();
+    })
+    .catch((error) => {
+      return res.status(400).json({
+        error,
+        message: 'Questionnaire not updated!'
       });
     });
 };
@@ -196,91 +244,13 @@ const deleteQuestionnaire = async (req, res) => {
   });
 };
 
-const getQuestionnaireById = async (req, res) => {
-  await Questionnaire.findOne({ _id: req.params.id }, (err, questionnaire) => {
-    if (err) {
-      return res.status(400).json({ success: false, error: err });
-    }
-
-    if (!questionnaire) {
-      return res.status(404).json({ success: false, error: `Questionnaire not found` });
-    }
-    return res.status(200).json({ success: true, data: questionnaire });
-  }).catch((err) => console.log(err));
-};
-
 // GET
 // http://localhost:3000/api-docs/#/default/get-questionnaires
-const getQuestionnaires = async (req, res) => {
-  await Questionnaire.find({}, null, { sort: 'createdAt' }, (err, questionnaires) => {
-    if (err) {
-      return res.status(400).json({
-        error: err,
-        title: 'Bad request.',
-        detail: 'No questionnaires could fe found.'
-      });
-    }
-
-    if (questionnaires && !questionnaires.length) {
-      return res.status(204).send();
-    }
-
-    if (req.query) {
-      if (req.query.param === '_id') {
-        const ids = questionnaires.map((questionnaire) => questionnaire._id);
-        return res.status(200).json({
-          title: 'Questionnaires.',
-          detail: 'Ids of all questionnaires.',
-          data: ids
-        });
-      }
-      if (req.query.param === 'info') {
-        const info = questionnaires.map((questionnaire) => {
-          return {
-            id: questionnaire.id,
-            name: questionnaire.name,
-            consentScript: questionnaire.consentScript,
-            iterations: questionnaire.iterations
-          };
-        });
-        return res.status(200).json({
-          title: 'Questionnaires info.',
-          detail: 'Information of all questionnaires.',
-          info
-        });
-      }
-
-      if (req.query.param === 'metaData') {
-        const metaData = questionnaires.map((questionnaire) => {
-          return {
-            id: questionnaire.id,
-            name: questionnaire.name,
-            consentScript: questionnaire.consentScript,
-            iterations: questionnaire.iterations
-          };
-        });
-        console.log(metaData);
-        return res.status(200).json({
-          title: 'Questionnaires meta data.',
-          detail: 'MetaData of all questionnaires.',
-          metaData
-        });
-      }
-    }
-
-    return res.status(200).json({
-      title: 'All questionnaires.',
-      detail: 'Data of all questionnaires.',
-      data: questionnaires
-    });
-  }).catch((err) => console.log(err));
-};
 
 module.exports = {
   createQuestionnaire,
   addQuestion,
   updateQuestionnaire,
   deleteQuestionnaire,
-  getQuestionnaireById,
   getQuestionnaires
 };
