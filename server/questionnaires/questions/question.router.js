@@ -10,7 +10,7 @@
 
 const express = require('express');
 const QuestionCtrl = require('./question.controller');
-const { authJwt } = require('../middlewares');
+const { authJwt } = require('../../middlewares');
 
 const router = express.Router();
 

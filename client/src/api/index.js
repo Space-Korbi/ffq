@@ -32,6 +32,12 @@ export const updateUserIteration = (userId, iterationId, payload) =>
 export const updateUserIterationAnswer = (userId, iterationId, questionId, payload) =>
   api.patch(`/users/${userId}/iterations/${iterationId}/questions/${questionId}`, payload);
 
+// questionnaire
+export const createQuestionnaire = (payload) => api.post(`/questionnaires`, payload);
+
+export const insertQuestion = (questionnaireId, payload) =>
+  api.post(`/questionnaires/${questionnaireId}/questions`, payload);
+
 // * END REFACTORED
 
 // question
@@ -45,7 +51,7 @@ export const deleteQuestionById = (questionnaireId, questionId) =>
   api.delete(`/questionnaires/${questionnaireId}/questions/${questionId}`);
 
 // questionnaire
-export const insertQuestionnaire = (payload) => api.post(`/questionnaires`, payload);
+
 export const updateQuestionnaire = (questionnaireId, payload) =>
   api.put(`/questionnaires/${questionnaireId}`, payload);
 export const getAllQuestionnaires = () => api.get(`/questionnaires`);
@@ -65,7 +71,7 @@ export const deleteImageById = (id) => api.delete(`/image/${id}`);
 const apis = {
   signup,
   login,
-  insertQuestionnaire,
+  createQuestionnaire,
   insertQuestionAt,
   getUsers,
   updateUser,

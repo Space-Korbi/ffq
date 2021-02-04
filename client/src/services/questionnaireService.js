@@ -2,7 +2,7 @@ import { nanoid } from 'nanoid';
 import {
   insertQuestionAt,
   getAllQuestionsOfQuestionnaire,
-  insertQuestionnaire,
+  createQuestionnaire,
   getAllQuestionnaires,
   getQuestionnaires,
   updateQuestionnaire,
@@ -17,17 +17,9 @@ const updateAction = {
   move: 'move',
   changeSettings: 'changeSettings'
 };
+// start refactor
 
-const createQuestionnaire = async () => {
-  const payload = {
-    _id: nanoid()
-  };
-
-  return insertQuestionnaire(payload).then((res) => {
-    return res.data;
-  });
-};
-
+// end refactor
 const fetchAllQuestionnaires = async () => {
   return getAllQuestionnaires().then((questionnaires) => {
     return questionnaires.data.data;

@@ -317,8 +317,8 @@ const QuestionnaireEditorPage = () => {
   }, [fetchedQuestionnaires]);
 
   const handleCreateQuestionnaire = async () => {
-    await questionnaireService.createQuestionnaire().then((response) => {
-      setQuestionnaires((state) => [...state, response.data]);
+    await questionnaireService.createQuestionnaire().then((res) => {
+      setQuestionnaires((state) => [...state, res.data.questionnaire]);
     });
   };
 

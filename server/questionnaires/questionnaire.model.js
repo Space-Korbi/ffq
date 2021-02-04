@@ -1,4 +1,3 @@
-const nanoid = require('nanoid');
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
@@ -28,17 +27,12 @@ const Iteration = Schema(
 
 const Questionnaire = mongoose.model(
   'Questionnaire',
-  new mongoose.Schema(
+  new Schema(
     {
-      _id: {
-        type: String,
-        default: nanoid.nanoid(),
-        required: true
-      },
       name: { type: String, default: 'New Questionnaire' },
       consentScript: { type: String, default: '' },
       iterations: [Iteration],
-      questions: { type: [String] }
+      questions: { type: [mongoose.Types.ObjectId], default: [] }
     },
     { timestamps: true }
   )

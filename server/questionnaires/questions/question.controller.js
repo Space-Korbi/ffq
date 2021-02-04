@@ -1,7 +1,7 @@
 const async = require('async');
 const Question = require('./question.model');
-const Questionnaire = require('../questionnaires/questionnaire.model');
-const Images = require('../images/image.controller');
+const Questionnaire = require('../questionnaire.model');
+const Images = require('../../images/image.controller');
 
 /**
  * * Question controller
@@ -9,30 +9,20 @@ const Images = require('../images/image.controller');
  * create, update, delete and get question entries
  */
 
-const createQuestion = async (req, res) => {
-  const { body } = req;
+// refactor start
+const createQuestion = async (req, res, next) => {
+  const { index } = req.body;
+  let title = 'New Question';
 
-  if (!body) {
-    return res.status(400).json({
-      success: false,
-      error: 'You must provide a question'
-    });
+  if (index) {
+    title = `Question ${index}`;
   }
 
-  const question = new Question(body);
-
-  if (!question) {
-    return res.status(400).json({ success: false, error: err });
-  }
-
-  question
+  new Question({ title })
     .save()
-    .then(() => {
-      return res.status(201).json({
-        success: true,
-        id: question._id,
-        message: 'Question created!'
-      });
+    .then((question) => {
+      req.question = question;
+      return next();
     })
     .catch((error) => {
       return res.status(400).json({
@@ -41,6 +31,8 @@ const createQuestion = async (req, res) => {
       });
     });
 };
+
+// refactor end
 
 const getQuestions = async (req, res) => {
   await Question.find({}, (err, questions) => {

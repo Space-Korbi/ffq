@@ -1,8 +1,9 @@
 const async = require('async');
+const mongoose = require('mongoose');
 const { validationResult } = require('express-validator');
 const Questionnaire = require('./questionnaire.model');
-const Question = require('../questions/question.model');
-const { deleteImagesOfQuestion } = require('../questions/question.controller');
+const Question = require('./questions/question.model');
+const { deleteImagesOfQuestion } = require('./questions/question.controller');
 
 /**
  * * Questionnaire controller
@@ -18,28 +19,14 @@ const updateAction = {
   changeSettings: 'changeSettings'
 };
 
+// start refactor
+
 const createQuestionnaire = async (req, res) => {
-  const { body } = req;
-
-  if (!body) {
-    return res.status(400).json({
-      success: false,
-      error: 'You must provide a questionnaire'
-    });
-  }
-
-  const questionnaire = new Questionnaire(body);
-
-  if (!questionnaire) {
-    return res.status(400).json({ success: false, error: err });
-  }
-
-  questionnaire
+  new Questionnaire()
     .save()
-    .then(() => {
+    .then((questionnaire) => {
       return res.status(201).json({
-        success: true,
-        data: questionnaire,
+        questionnaire,
         message: 'Questionnaire created!'
       });
     })
@@ -50,6 +37,42 @@ const createQuestionnaire = async (req, res) => {
       });
     });
 };
+
+const addQuestion = async (req, res) => {
+  const { question } = req;
+  const { questionnaireId } = req.params;
+  const { index } = req.body;
+
+  Questionnaire.findOne({ _id: questionnaireId })
+    .then((questionnaire) => {
+      const id = mongoose.Types.ObjectId(question._id);
+
+      const questionnaireUpdate = questionnaire;
+      if (!index) {
+        questionnaireUpdate.questions.push(id);
+      } else {
+        questionnaireUpdate.questions.push({
+          $each: [id],
+          $position: index
+        });
+      }
+
+      questionnaireUpdate.save().then(() => {
+        return res.status(201).json({
+          question,
+          message: 'Question created!'
+        });
+      });
+    })
+    .catch((err) => {
+      return res.status(404).json({
+        err,
+        message: 'Questionnaire not found!'
+      });
+    });
+};
+
+// end refactor
 
 const updateQuestionnaire = async (req, res) => {
   // Finds the validation errors in this request and wraps them in an object
@@ -255,6 +278,7 @@ const getQuestionnaires = async (req, res) => {
 
 module.exports = {
   createQuestionnaire,
+  addQuestion,
   updateQuestionnaire,
   deleteQuestionnaire,
   getQuestionnaireById,
