@@ -55,7 +55,7 @@ const updateJumbotron = (iterations, user) => {
   if (!nextIntervals.length) {
     return {
       ...updated,
-      title: 'Die Umfrage ist abgeschlossen. Vielen Dank für Ihre Teilnahme.',
+      title: 'Die Umfrage ist abgeschlossen.\n \nVielen Dank für Ihre Teilnahme.',
       disabled: true
     };
   }
@@ -74,7 +74,7 @@ const updateJumbotron = (iterations, user) => {
   if (!nextIteration) {
     return {
       ...updated,
-      title: 'Die Umfrage ist abgeschlossen. Vielen Dank für Ihre Teilnahme.',
+      title: 'Die Umfrage ist abgeschlossen.\n \nVielen Dank für Ihre Teilnahme.',
       disabled: true
     };
   }
@@ -169,7 +169,9 @@ const ParticipantPage = ({ user }) => {
         <div className="d-flex justify-content-center p-4 p-sm-5">
           <div className="text-center " style={{ maxWidth: '800px' }}>
             <p className="display-4 my-5">Willkommen</p>
-            <h4 className="">{title}</h4>
+            <h4 className="" style={{ whiteSpace: 'pre-wrap' }}>
+              {title}
+            </h4>
             <h2 className="my-3">
               <span className="badge badge-secondary">{daysTilStart}</span>
             </h2>
