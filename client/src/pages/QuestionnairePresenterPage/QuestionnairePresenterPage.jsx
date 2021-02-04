@@ -225,8 +225,9 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
 
   useEffect(() => {
     const fetchIds = async () => {
-      await questionnaireService.fetchQuestionnaires('_id').then((response) => {
-        setQuestionniareId(response.data[0]);
+      await questionnaireService.getQuestionnaires({ fields: '_id' }).then((res) => {
+        console.log(res);
+        setQuestionniareId(res.data.questionnaires[0]._id);
       });
     };
 

@@ -53,8 +53,9 @@ export const deleteQuestionById = (questionnaireId, questionId) =>
 
 export const updateQuestionnaire = (questionnaireId, payload) =>
   api.put(`/questionnaires/${questionnaireId}`, payload);
-export const getAllQuestionnaires = () => api.get(`/questionnaires`);
-export const getQuestionnaires = (query) => api.get(`/questionnaires`, { params: query });
+export const getQuestionnaires = (params) => {
+  return api.get(`/questionnaires`, { params });
+};
 
 export const getQuestionnaireById = (questionnaireId) =>
   api.get(`/questionnaires/${questionnaireId}`);
@@ -76,7 +77,6 @@ const apis = {
   updateUser,
   updateUserIteration,
   updateUserIterationAnswer,
-  getAllQuestions,
   getAllQuestionsOfQuestionnaire,
   uploadImage
 };

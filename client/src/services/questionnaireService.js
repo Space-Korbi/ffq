@@ -3,7 +3,6 @@ import {
   insertQuestionAt,
   getAllQuestionsOfQuestionnaire,
   createQuestionnaire,
-  getAllQuestionnaires,
   getQuestionnaires,
   updateQuestionnaire,
   deleteQuestionnaireById,
@@ -20,17 +19,6 @@ const updateAction = {
 // start refactor
 
 // end refactor
-const fetchAllQuestionnaires = async () => {
-  return getAllQuestionnaires().then((questionnaires) => {
-    return questionnaires.data.data;
-  });
-};
-
-const fetchQuestionnaires = async (param) => {
-  return getQuestionnaires({ param }).then((response) => {
-    return response.data;
-  });
-};
 
 const fetchAllQuestionsOfQuestionnaire = async (questionnaireId) => {
   if (!questionnaireId) {
@@ -111,8 +99,7 @@ const deleteQuestionnaire = async (id) => {
 };
 const questionnaireService = {
   createQuestionnaire,
-  fetchAllQuestionnaires,
-  fetchQuestionnaires,
+  getQuestionnaires,
   fetchAllQuestionsOfQuestionnaire,
   createQuestionAt,
   moveQuestionFromTo,

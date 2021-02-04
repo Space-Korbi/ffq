@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { authService } from '../../services';
 
 // custom hooks
-import { useFetchUsers, useFetchQuestionnairesInfo } from '../../hooks';
+import { useFetchUsers } from '../../hooks';
 
 // subpages
 import AdminPage from './AdminPage';

@@ -6,7 +6,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import moment from 'moment';
 
 // custom hooks
-import { useFetchUsers, useFetchQuestionnairesInfo, useUpdateUser } from '../../hooks';
+import { useFetchUsers, useFetchQuestionnaires, useUpdateUser } from '../../hooks';
 
 // components
 import Spinner from '../../components/Spinner';
@@ -220,26 +220,28 @@ const AccountPage = ({ isAdmin }) => {
     null,
     'firstName lastName email hasAcceptedConsentForm screeningStatus iterations.startedAt iterations.finishedAt iterations.iterationId'
   );
-  const [{ questionnairesInfo, isLoadingInfo, isErrorInfo }] = useFetchQuestionnairesInfo();
+  const [
+    { fetchedQuestionnaires, isLoadingQuestionnaires, isErrorQuestionnaires }
+  ] = useFetchQuestionnaires(null, 'consentScript iterations');
 
   return (
     <div>
-      {isErrorUsers && (
+      {(isErrorUsers || isErrorQuestionnaires) && (
         <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
           Something went wrong...
         </div>
       )}
-      {isLoadingUsers && (
+      {(isLoadingUsers || isLoadingQuestionnaires) && (
         <div className="d-flex justify-content-center mt-5">
           <Spinner />
         </div>
       )}
       <div className="px-3 px-md-5">
-        {users && users.length > 0 && questionnairesInfo && questionnairesInfo.length > 0 && (
+        {users && users.length > 0 && fetchedQuestionnaires && fetchedQuestionnaires.length > 0 && (
           <AccountDataPresenter
             user={users[0]}
             isAdmin={isAdmin}
-            questionnaireInfo={questionnairesInfo[0]}
+            questionnaireInfo={fetchedQuestionnaires[0]}
           />
         )}
       </div>

@@ -39,8 +39,13 @@ const createQuestionnaire = async (req, res) => {
 };
 
 const getQuestionnaires = async (req, res) => {
+  console.log(req.query);
   const { questionnaireId } = req.query;
   const { fields } = req.query;
+
+  console.log('id:', questionnaireId);
+  console.log('fields:', fields);
+  console.log('body:', req.body);
 
   const filter = {};
   if (questionnaireId) {
@@ -56,6 +61,7 @@ const getQuestionnaires = async (req, res) => {
           .json({ title: 'Questionnaire not found', detail: 'No questionnaire could be found.' });
       }
 
+      console.log(questionnaires);
       return res.status(200).json({ questionnaires });
     })
     .catch((err) => {

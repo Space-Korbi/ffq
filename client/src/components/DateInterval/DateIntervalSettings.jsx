@@ -120,7 +120,6 @@ DateIntervalTable.propTypes = {
 
 const DateIntervalSettings = ({ iterations, setIterations }) => {
   const setStart = (id, date) => {
-    console.log('----------', date);
     const newIntervals = iterations.map((interval) => {
       if (interval.id === id) {
         const updatedInterval = {

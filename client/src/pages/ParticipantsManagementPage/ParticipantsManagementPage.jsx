@@ -5,6 +5,7 @@
 import React, { useEffect, useState } from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import ToolkitProvider from 'react-bootstrap-table2-toolkit';
+import moment from 'moment';
 
 // services
 import { questionnaireService } from '../../services';
@@ -270,7 +271,10 @@ const ParticipantsManagement = ({
                     onChange={(e) => setSelectedIteration(e.target.value)}
                   >
                     {iterations.map((iteration) => {
-                      return <option key={iteration}>{iteration}</option>;
+                      const interval = `${moment(iteration.start).format('DD.MM.YY')} - ${moment(
+                        iteration.end
+                      ).format('DD.MM.YY')}`;
+                      return <option key={iteration._id}>{interval}</option>;
                     })}
                   </select>
                 </div>
@@ -332,16 +336,20 @@ const ParticipantsManagementPage = () => {
     { fetchedQuestions, isLoadingQuestions, isErrorQuestions },
     setQuestionniareId
   ] = useFetchQuestions();
+  const [questionnaireName, setQuestionnaireName] = useState('');
+  const [questionnaireIterations, setQuestionnaireIterations] = useState([]);
 
-  const sampleIterations = ['601333b87e41ce7e7648ec1e', '601333b87e41ce7e7648ec1f'];
-  const sampleName = 'FFQ';
   useEffect(() => {
     const fetchIds = async () => {
       // TODO fetch iterations and name and pass them along
-      await questionnaireService.fetchQuestionnaires('_id').then((response) => {
-        console.log(response);
-        setQuestionniareId(response.data[0]);
-      });
+      await questionnaireService
+        .getQuestionnaires({ questionnaireId: null, fields: '_id name iterations' })
+        .then((res) => {
+          const { _id, name, iterations } = res.data.questionnaires[0];
+          setQuestionnaireName(name);
+          setQuestionnaireIterations(iterations);
+          setQuestionniareId(_id);
+        });
     };
 
     fetchIds();
@@ -366,8 +374,8 @@ const ParticipantsManagementPage = () => {
               <ParticipantsManagement
                 users={users}
                 questions={fetchedQuestions}
-                name={sampleName}
-                iterations={sampleIterations}
+                name={questionnaireName}
+                iterations={questionnaireIterations}
                 prevSelectionCriteria={mockSelectionCriteria}
                 prevSelectionRules={mockRules}
               />

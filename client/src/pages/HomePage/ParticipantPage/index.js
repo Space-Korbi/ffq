@@ -7,7 +7,7 @@ import moment from 'moment/min/moment-with-locales';
 import { difference } from 'lodash';
 
 // hooks
-import { useFetchQuestionnairesInfo } from '../../../hooks';
+import { useFetchQuestionnaires } from '../../../hooks';
 
 // services
 import { userService } from '../../../services';
@@ -115,7 +115,9 @@ const ParticipantPage = ({ user }) => {
   moment.locale('de');
 
   // fetch data
-  const [{ questionnairesInfo, isLoadingInfo, isErrorInfo }] = useFetchQuestionnairesInfo();
+  const [
+    { fetchedQuestionnaires, isLoadingQuestionnaires, isErrorQuestionnaires }
+  ] = useFetchQuestionnaires(null, 'iterations consentScript');
   const [currentQuestionnaire, setCurrentQuestionnaire] = useState();
   const [iterationId, setIterationId] = useState();
   const [title, setTitle] = useState('');
@@ -128,10 +130,10 @@ const ParticipantPage = ({ user }) => {
   const { url } = useRouteMatch();
 
   useEffect(() => {
-    if (questionnairesInfo && questionnairesInfo[0]) {
-      setCurrentQuestionnaire(questionnairesInfo[0]);
+    if (fetchedQuestionnaires && fetchedQuestionnaires[0]) {
+      setCurrentQuestionnaire(fetchedQuestionnaires[0]);
     }
-  }, [questionnairesInfo]);
+  }, [fetchedQuestionnaires]);
 
   useEffect(() => {
     if (currentQuestionnaire) {
@@ -155,12 +157,12 @@ const ParticipantPage = ({ user }) => {
 
   return (
     <div>
-      {isErrorInfo && (
+      {isErrorQuestionnaires && (
         <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
           Something went wrong...
         </div>
       )}
-      {isLoadingInfo && (
+      {isLoadingQuestionnaires && (
         <div className="d-flex justify-content-center mt-5">
           <Spinner />
         </div>

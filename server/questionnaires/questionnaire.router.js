@@ -29,13 +29,13 @@ router.post(
 
 router.get('/questionnaires', /* [authJwt.verifyToken], */ QuestionnaireCtrl.getQuestionnaires);
 
-// end refactoring
-
 router.get(
   '/questionnaires/:questionnaireId/questions',
-  [authJwt.verifyToken],
+  /* [authJwt.verifyToken], */
   QuestionCtrl.getQuestionsOfQuestionnaire
 );
+
+// end refactoring
 
 router.put(
   '/questionnaires/:id',

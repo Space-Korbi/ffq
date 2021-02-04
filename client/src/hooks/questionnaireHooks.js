@@ -4,8 +4,8 @@ import { useEffect, useState, useReducer } from 'react';
 import { questionnaireService } from '../services';
 
 // custom question fetching hook
-const useFetchQuestionnaires = () => {
-  // const [questionnaires, setQuestionnaires] = useState();
+const useFetchQuestionnaires = (questionnaireId, initialFields) => {
+  const [fields, setFields] = useState(initialFields);
 
   const fetchQuestionnairenReducer = (state, action) => {
     switch (action.type) {
@@ -44,9 +44,12 @@ const useFetchQuestionnaires = () => {
     const fetchQuestionnaires = async () => {
       dispatch({ type: 'FETCH_INIT' });
       try {
-        const fetchedQuestionnaires = await questionnaireService.fetchAllQuestionnaires();
+        const fetchedQuestionnaires = await questionnaireService.getQuestionnaires({
+          questionnaireId,
+          fields
+        });
         if (!didCancel) {
-          dispatch({ type: 'FETCH_SUCCESS', payload: fetchedQuestionnaires });
+          dispatch({ type: 'FETCH_SUCCESS', payload: fetchedQuestionnaires.data.questionnaires });
         }
       } catch (error) {
         if (!didCancel) {
@@ -58,9 +61,9 @@ const useFetchQuestionnaires = () => {
     return () => {
       didCancel = true;
     };
-  }, []);
+  }, [fields]);
 
-  return [state];
+  return [state, setFields];
 };
 
 // Custom question fetching hook
@@ -125,62 +128,4 @@ const useFetchQuestions = (initialQuestionnaireId) => {
   return [state, setQuestionniareId];
 };
 
-// Custom data fetching hook
-const useFetchQuestionnairesInfo = () => {
-  const fetchQuestionReducer = (state, action) => {
-    switch (action.type) {
-      case 'FETCH_INIT':
-        return {
-          ...state,
-          isLoadingInfo: true,
-          isErrorInfo: false
-        };
-      case 'FETCH_SUCCESS':
-        return {
-          ...state,
-          isLoadingInfo: false,
-          isErrorInfo: false,
-          questionnairesInfo: action.payload
-        };
-      case 'FETCH_FAILURE':
-        return {
-          ...state,
-          isLoadingInfo: false,
-          isErrorInfo: true
-        };
-      default:
-        throw new Error();
-    }
-  };
-
-  const [state, dispatch] = useReducer(fetchQuestionReducer, {
-    questionnairesInfo: [],
-    isLoadingInfo: false,
-    isErrorInfo: false
-  });
-
-  useEffect(() => {
-    let didCancel = false;
-    const fetchQuestions = async () => {
-      dispatch({ type: 'FETCH_INIT' });
-      try {
-        const questionnaires = await questionnaireService.fetchQuestionnaires('info');
-        if (!didCancel) {
-          dispatch({ type: 'FETCH_SUCCESS', payload: questionnaires.info });
-        }
-      } catch (error) {
-        if (!didCancel) {
-          dispatch({ type: 'FETCH_FAILURE' });
-        }
-      }
-    };
-    fetchQuestions();
-    return () => {
-      didCancel = true;
-    };
-  }, []);
-
-  return [state];
-};
-
-export { useFetchQuestionnaires, useFetchQuestions, useFetchQuestionnairesInfo };
+export { useFetchQuestionnaires, useFetchQuestions };
