@@ -48,7 +48,7 @@ SelectionCriteriaInput.propTypes = {
 
 const SelectionCriteriaList = ({ selectionCriteria, onClick }) => {
   return (
-    <ul className="list-group mb-3" style={{ minWidth: '15rem' }}>
+    <ul className="w-100 list-group mb-3" style={{ minWidth: '15rem' }}>
       {selectionCriteria.map((criteria) => {
         return (
           <RemovableListItem
@@ -79,46 +79,52 @@ const SelectionCriteria = ({
   const [didChange, setDidChange] = useState(false);
 
   return (
-    <div className="row d-flex justify-content-center">
-      <div className="col">
-        <button
-          type="button"
-          disabled={!didChange}
-          className="btn btn-outline-primary mb-5"
-          onClick={() => {
-            questionnaireService
-              .updateQuestionnaire2(questionnaireId, { selectionCriteria })
-              .then(() => {
-                setStatus(
-                  <div className="alert alert-success mb-5">Changes saved successfully.</div>
-                );
-                setSubmitting(false);
-                setDidChange(false);
-              })
-              .catch((error) => {
-                const errorList = (listElement) => (
-                  <div className="alert alert-danger mb-5">
-                    <ul className="list-unstyled content-align-center mb-0">{listElement}</ul>
-                  </div>
-                );
-                const errorListElements = error.data.errors.map((err) => {
-                  return <li key={err.value}>{err.msg}</li>;
-                });
-                setStatus(errorList(errorListElements));
-                setSubmitting(false);
-                setDidChange(false);
-              });
-          }}
-        >
-          {submitting ? (
-            <>
-              Saving...
-              <Spinner className="spinner-border spinner-border-sm ml-1" />
-            </>
-          ) : (
-            'Save Changes'
-          )}
-        </button>
+    <div className="d-flex justify-content-center">
+      <div className="row no-gutters">
+        <div className="col d-flex flex-wrap">
+          <div className="m-0 mb-3 mb-sm-5">
+            <button
+              type="button"
+              disabled={!didChange}
+              className="btn btn-outline-primary mr-2"
+              onClick={() => {
+                questionnaireService
+                  .updateQuestionnaire2(questionnaireId, { selectionCriteria })
+                  .then(() => {
+                    setStatus(
+                      <div className="alert alert alert-success">Changes saved successfully.</div>
+                    );
+                    setSubmitting(false);
+                    setDidChange(false);
+                  })
+                  .catch((error) => {
+                    const errorList = (listElement) => (
+                      <div className="alert alert-danger">
+                        <ul className="list-unstyled content-align-center mb-0">{listElement}</ul>
+                      </div>
+                    );
+                    const errorListElements = error.data.errors.map((err) => {
+                      return <li key={err.value}>{err.msg}</li>;
+                    });
+                    setStatus(errorList(errorListElements));
+                    setSubmitting(false);
+                    setDidChange(false);
+                  });
+              }}
+            >
+              {submitting ? (
+                <>
+                  Saving...
+                  <Spinner className="spinner-border spinner-border-sm ml-1" />
+                </>
+              ) : (
+                'Save Changes'
+              )}
+            </button>
+          </div>
+          <div className="m-0 mb-3">{status}</div>
+        </div>
+
         {/* <p className="lead m-0 mb-3 mt-5">Selection Criteria</p> */}
 
         <SelectionCriteriaInput
@@ -137,7 +143,6 @@ const SelectionCriteria = ({
             removeSelectionCriteria(criteria);
           }}
         />
-        <div>{status}</div>
       </div>
     </div>
   );

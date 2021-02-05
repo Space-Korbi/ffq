@@ -19,22 +19,6 @@ import { NavTabs, NavContents } from '../../components/Navigation';
 import ParticipantsTable from './ParticipantsTable';
 import { CriteriaEditor, RuleEditor } from '../../components/UserSelection';
 
-const rule1 = {
-  id: '1',
-  criteria: ['Laktose Intolerant', 'Vegan'],
-  operator: 'And',
-  decision: 'Accept'
-};
-
-const rule2 = {
-  id: '2',
-  criteria: ['Taking Medication'],
-  operator: '',
-  decision: 'Wait'
-};
-
-const mockRules = [rule1, rule2];
-
 const questionHeaderFormatter = (column) => {
   return (
     <div>
@@ -99,9 +83,9 @@ const listAnswers = (column) => {
   return '';
 };
 
-const ParticipantsManagement = ({ questions, questionnaire, prevSelectionRules }) => {
+const ParticipantsManagement = ({ questions, questionnaire }) => {
   const [selectionCriteria, setSelectionCriteria] = useState(questionnaire.selectionCriteria);
-  const [selectionRules, setSelectionRules] = useState(prevSelectionRules);
+  const [screeningRules, setScreeningRules] = useState(questionnaire.screeningRules);
   const [selection, setSelection] = useState(0);
   const [selectedIteration, setSelectedIteration] = useState({
     startLabel: 'undefined',
@@ -195,15 +179,15 @@ const ParticipantsManagement = ({ questions, questionnaire, prevSelectionRules }
      * api call to save rules in db
      */
 
-    if (!selectionRules.includes(newRule)) {
-      setSelectionRules((prevRules) => [...prevRules, newRule]);
+    if (!screeningRules.includes(newRule)) {
+      setScreeningRules((prevRules) => [...prevRules, newRule]);
     }
   };
 
   const removeRule = (ruleToRemove) => {
     if (ruleToRemove !== undefined) {
-      setSelectionRules(
-        selectionRules.filter((rule) => {
+      setScreeningRules(
+        screeningRules.filter((rule) => {
           return rule !== ruleToRemove;
         })
       );
@@ -253,8 +237,9 @@ const ParticipantsManagement = ({ questions, questionnaire, prevSelectionRules }
 
   const ruleEditorContent = (
     <RuleEditor
+      questionnaireId={questionnaire._id}
       selectionCriteria={selectionCriteria}
-      rules={selectionRules}
+      screeningRules={screeningRules}
       saveRule={saveRule}
       removeRule={removeRule}
     />
@@ -278,7 +263,7 @@ const ParticipantsManagement = ({ questions, questionnaire, prevSelectionRules }
 const ParticipantsManagementPage = () => {
   const [
     { fetchedQuestionnaires, isLoadingQuestionnaires, isErrorQuestionnaires }
-  ] = useFetchQuestionnaires(null, '_id name iterations selectionCriteria');
+  ] = useFetchQuestionnaires(null, '_id name iterations selectionCriteria screeningRules');
   const [
     { fetchedQuestions, isLoadingQuestions, isErrorQuestions },
     setQuestionniareId
@@ -309,7 +294,6 @@ const ParticipantsManagementPage = () => {
               <ParticipantsManagement
                 questions={fetchedQuestions}
                 questionnaire={fetchedQuestionnaires[0]}
-                prevSelectionRules={mockRules}
               />
             )}
           </div>
