@@ -2,6 +2,16 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
+const ScreeningRule = Schema(
+  {
+    id: { type: String, required: true },
+    criteria: { type: [String], required: true },
+    operator: { type: String, enum: ['and', 'or'], required: true },
+    decision: { type: String, enum: ['accept', 'reject', 'wait'], required: true }
+  },
+  { _id: false, default: [] }
+);
+
 /**
  * * Iteration
  * @param startDate - Date when the Questionnaire is accesible
@@ -33,6 +43,8 @@ const Questionnaire = mongoose.model(
     {
       name: { type: String, default: 'New Questionnaire' },
       consentScript: { type: String, default: '' },
+      screeningRules: [ScreeningRule],
+      selectionCriteria: { type: [String], default: [] },
       iterations: [Iteration],
       questions: { type: [mongoose.Types.ObjectId], default: [] }
     },

@@ -38,6 +38,9 @@ export const createQuestionnaire = (payload) => api.post(`/questionnaires`, payl
 export const insertQuestion = (questionnaireId, payload) =>
   api.post(`/questionnaires/${questionnaireId}/questions`, payload);
 
+export const updateQuestionnaire2 = (questionnaireId, payload) =>
+  api.patch(`/questionnaires/${questionnaireId}`, payload);
+
 // * END REFACTORED
 
 // question
@@ -75,6 +78,7 @@ const apis = {
   insertQuestionAt,
   getUsers,
   updateUser,
+  updateQuestionnaire2,
   updateUserIteration,
   updateUserIterationAnswer,
   getAllQuestionsOfQuestionnaire,

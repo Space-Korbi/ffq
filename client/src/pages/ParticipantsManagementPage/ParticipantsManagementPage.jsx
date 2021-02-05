@@ -33,8 +33,19 @@ const rule2 = {
   decision: 'Wait'
 };
 
-const mockSelectionCriteria = ['Laktose Intolerant', 'Taking Medication', 'Pregnant', 'Vegan'];
 const mockRules = [rule1, rule2];
+
+const questionHeaderFormatter = (column) => {
+  return (
+    <div>
+      {column.questionTitle}
+      <br />
+      {column.subtitle1 ? <small>{column.subtitle1}</small> : <small>-</small>}
+      <br />
+      {column.subtitle2 ? <small>{column.subtitle2}</small> : <small>-</small>}
+    </div>
+  );
+};
 
 const formatAnswer = (answers) => {
   let formattedAnswer;
@@ -88,14 +99,8 @@ const listAnswers = (column) => {
   return '';
 };
 
-const ParticipantsManagement = ({
-  questions,
-  iterations,
-  name,
-  prevSelectionCriteria,
-  prevSelectionRules
-}) => {
-  const [selectionCriteria, setSelectionCriteria] = useState(prevSelectionCriteria);
+const ParticipantsManagement = ({ questions, questionnaire, prevSelectionRules }) => {
+  const [selectionCriteria, setSelectionCriteria] = useState(questionnaire.selectionCriteria);
   const [selectionRules, setSelectionRules] = useState(prevSelectionRules);
   const [selection, setSelection] = useState(0);
   const [selectedIteration, setSelectedIteration] = useState({
@@ -106,22 +111,10 @@ const ParticipantsManagement = ({
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    if (iterations.length) {
-      setSelectedIteration(iterations[selection]);
+    if (questionnaire.iterations.length) {
+      setSelectedIteration(questionnaire.iterations[selection]);
     }
   }, [selection]);
-
-  const questionHeaderFormatter = (column) => {
-    return (
-      <div>
-        {column.questionTitle}
-        <br />
-        {column.subtitle1 ? <small>{column.subtitle1}</small> : <small>-</small>}
-        <br />
-        {column.subtitle2 ? <small>{column.subtitle2}</small> : <small>-</small>}
-      </div>
-    );
-  };
 
   useEffect(() => {
     if (questions && questions.length) {
@@ -228,7 +221,7 @@ const ParticipantsManagement = ({
             setSelection(e.target.value);
           }}
         >
-          {iterations.map((iteration, index) => {
+          {questionnaire.iterations.map((iteration, index) => {
             return (
               <option key={iteration.id} value={index}>
                 {`${iteration.startLabel} - ${iteration.endLabel}`}
@@ -242,7 +235,7 @@ const ParticipantsManagement = ({
 
   const participantsContent = (
     <ParticipantsTable
-      fileName={`${name} ${selectedIteration.startLabel}-${selectedIteration.endLabel}.csv`}
+      fileName={`${questionnaire.name} ${selectedIteration.startLabel}-${selectedIteration.endLabel}.csv`}
       data={data}
       columns={columns}
       iterationSelector={<IterationSelector />}
@@ -251,6 +244,7 @@ const ParticipantsManagement = ({
 
   const selectionCriteriaContent = (
     <CriteriaEditor
+      questionnaireId={questionnaire._id}
       selectionCriteria={selectionCriteria}
       addSelectionCriteria={saveSelectionCriteria}
       removeSelectionCriteria={removeFromSelectionCriteria}
@@ -284,7 +278,7 @@ const ParticipantsManagement = ({
 const ParticipantsManagementPage = () => {
   const [
     { fetchedQuestionnaires, isLoadingQuestionnaires, isErrorQuestionnaires }
-  ] = useFetchQuestionnaires(null, '_id name iterations');
+  ] = useFetchQuestionnaires(null, '_id name iterations selectionCriteria');
   const [
     { fetchedQuestions, isLoadingQuestions, isErrorQuestions },
     setQuestionniareId
@@ -314,9 +308,7 @@ const ParticipantsManagementPage = () => {
             {fetchedQuestionnaires && fetchedQuestionnaires.length > 0 && fetchedQuestions && (
               <ParticipantsManagement
                 questions={fetchedQuestions}
-                name={fetchedQuestionnaires[0].name}
-                iterations={fetchedQuestionnaires[0].iterations}
-                prevSelectionCriteria={mockSelectionCriteria}
+                questionnaire={fetchedQuestionnaires[0]}
                 prevSelectionRules={mockRules}
               />
             )}

@@ -115,6 +115,8 @@ const updateQuestionnaire2 = async (req, res) => {
   const { questionnaireId } = req.params;
   const { body } = req;
 
+  console.log(questionnaireId, '-----', body);
+
   await Questionnaire.findByIdAndUpdate({ _id: questionnaireId }, body, { new: true })
     .then(() => {
       return res.status(204).send();
@@ -257,6 +259,7 @@ const deleteQuestionnaire = async (req, res) => {
 module.exports = {
   createQuestionnaire,
   addQuestion,
+  updateQuestionnaire2,
   updateQuestionnaire,
   deleteQuestionnaire,
   getQuestionnaires

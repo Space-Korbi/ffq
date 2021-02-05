@@ -35,6 +35,11 @@ router.get(
   QuestionCtrl.getQuestionsOfQuestionnaire
 );
 
+router.patch(
+  '/questionnaires/:questionnaireId',
+  /* [authJwt.verifyToken], */ QuestionnaireCtrl.updateQuestionnaire2
+);
+
 // end refactoring
 
 router.put(

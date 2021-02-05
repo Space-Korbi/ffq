@@ -1,8 +1,7 @@
-/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
+/* eslint-disable react/jsx-props-no-spreading */
+
 import React from 'react';
-import PropTypes from 'prop-types';
 import BootstrapTable from 'react-bootstrap-table-next';
 import ToolkitProvider from 'react-bootstrap-table2-toolkit';
 
@@ -25,7 +24,7 @@ const staticColumns = [
   {
     dataField: 'hasAcceptedConsentForm',
     text: 'Consent Form',
-    formatter: (cellContent, row) => {
+    formatter: (cellContent) => {
       if (cellContent) {
         return <span className="badge badge-success">Accepted</span>;
       }
@@ -35,7 +34,7 @@ const staticColumns = [
   {
     dataField: 'screeningStatus',
     text: 'Screening Status',
-    formatter: (cellContent, row) => {
+    formatter: (cellContent) => {
       if (cellContent === 'accept') {
         return <span className="badge badge-success">Accepted</span>;
       }

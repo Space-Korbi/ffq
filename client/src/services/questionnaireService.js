@@ -5,6 +5,7 @@ import {
   createQuestionnaire,
   getQuestionnaires,
   updateQuestionnaire,
+  updateQuestionnaire2,
   deleteQuestionnaireById,
   deleteQuestionById
 } from '../api';
@@ -104,6 +105,7 @@ const questionnaireService = {
   createQuestionAt,
   moveQuestionFromTo,
   updateQuestionnaireSettings,
+  updateQuestionnaire2,
   removeQuestionById,
   deleteQuestionnaire
 };
