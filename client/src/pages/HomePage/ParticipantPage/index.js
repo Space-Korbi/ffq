@@ -61,7 +61,7 @@ const updateJumbotron = (iterations, user) => {
   }
 
   const userHasFinishedIteration = (interval) => {
-    if (finishedIterations.find((iteration) => iteration.iterationId === interval.id)) {
+    if (finishedIterations.find((iteration) => iteration.iterationId === interval._id.toString())) {
       return true;
     }
     return false;
@@ -78,9 +78,7 @@ const updateJumbotron = (iterations, user) => {
       disabled: true
     };
   }
-  updated.accessInformation = `Die Umfrage kann vom ${moment(nextIteration.start).format(
-    'DD.MM.YY'
-  )} bis zum ${moment(nextIteration.end).format('DD.MM.YY')} ausgefüllt werden.`;
+  updated.accessInformation = `Die Umfrage kann vom ${nextIteration.startLabel} bis zum ${nextIteration.endLabel} ausgefüllt werden.`;
 
   if (moment(now).isBefore(nextIteration.start, 'day')) {
     return {
@@ -118,6 +116,8 @@ const ParticipantPage = ({ user }) => {
   const [
     { fetchedQuestionnaires, isLoadingQuestionnaires, isErrorQuestionnaires }
   ] = useFetchQuestionnaires(null, 'iterations consentScript');
+
+  console.log('---------', fetchedQuestionnaires);
   const [currentQuestionnaire, setCurrentQuestionnaire] = useState();
   const [iterationId, setIterationId] = useState();
   const [title, setTitle] = useState('');
@@ -138,7 +138,7 @@ const ParticipantPage = ({ user }) => {
   useEffect(() => {
     if (currentQuestionnaire) {
       const current = updateJumbotron(currentQuestionnaire.iterations, user);
-      setIterationId(current.currentIteration.id);
+      setIterationId(current.currentIteration._id);
       setDisabled(current.disabled);
       setTitle(current.title);
       setDaysTilStart(current.daysTilStart);

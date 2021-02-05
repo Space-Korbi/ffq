@@ -12,7 +12,7 @@ const Answer = Schema(
 
 const Iteration = Schema(
   {
-    iterationId: { type: String },
+    iterationId: { type: mongoose.Types.ObjectId },
     startedAt: { type: Date },
     finishedAt: { type: Date },
     stoppedAtIndex: { type: Number, default: -1 },
@@ -49,7 +49,6 @@ const User = mongoose.model(
     // minimize: false,
     transform(doc, ret) {
       const transformed = ret;
-      delete transformed._id;
       delete transformed.password;
       delete transformed.roles;
       delete transformed.createdAt;

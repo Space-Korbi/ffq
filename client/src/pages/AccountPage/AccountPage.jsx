@@ -43,7 +43,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
   const isIncompleteIteration = (currentIteration) => {
     return user.iterations.some((iteration) => {
       if (
-        iteration.iterationId === currentIteration.id &&
+        iteration.iterationId === currentIteration._id &&
         iteration.startedAt &&
         !iteration.finishedAt
       ) {
@@ -60,7 +60,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
     if (completedIterations && completedIterations.length) {
       if (
         completedIterations.some(
-          (completedIteration) => iteration.id === completedIteration.iterationId
+          (completedIteration) => iteration._id === completedIteration.iterationId
         )
       ) {
         return <span className="badge badge-success mx-1">Completed</span>;
@@ -74,7 +74,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
             <button
               type="button"
               className="btn btn-sm btn-link"
-              onClick={() => history.push(`questionnairePresenter/${iteration.id}`)}
+              onClick={() => history.push(`questionnairePresenter/iteration/${iteration._id}`)}
             >
               Continue now
             </button>
@@ -138,13 +138,9 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
                           iterations.map((interval) => {
                             const completedIterations = getCompletedIterations();
                             return (
-                              <tr key={interval.id}>
-                                <td className="align-middle">
-                                  {moment(interval.start).format('DD.MM.YY')}
-                                </td>
-                                <td className="align-middle">
-                                  {moment(interval.end).format('DD.MM.YY')}
-                                </td>
+                              <tr key={interval._id}>
+                                <td className="align-middle">{interval.startLabel}</td>
+                                <td className="align-middle">{interval.endLabel}</td>
                                 <td className="align-middle">
                                   {getIterationStatus(completedIterations, interval)}
                                 </td>

@@ -101,6 +101,46 @@ const dataColumns = [
   }
 ];
 
+const extractAnswers = (answers) => {
+  let formattedAnswer;
+  if (answers && !Array.isArray(answers)) {
+    if (answers.index) {
+      formattedAnswer = answers.index;
+    } else {
+      formattedAnswer = answers.title;
+    }
+  } else if (answers && Array.isArray(answers)) {
+    formattedAnswer = answers.map((answer) => {
+      if (!answer.hasNumberInput) {
+        return `${answer.title}: ${answer.answer}`;
+      }
+      return `${answer.title}: ${answer.answer} ${answer.numberAnswer} ${answer.numberInputTitle}`;
+    });
+  }
+
+  return formattedAnswer;
+};
+
+const fetchUserAnswers = (users, selectedIteration) => {
+  return users.map((user) => {
+    const index = user.iterations.findIndex((iteration) => {
+      console.log('iteration', iteration.iterationId, selectedIteration._id);
+      return iteration.iterationId === selectedIteration._id.toString();
+    });
+    console.log(index);
+
+    if (!user.iterations || !user.iterations.length || !user.iterations[0].answers || index < 0) {
+      return user;
+    }
+    const userWithAnswers = { ...user };
+
+    user.iterations[index].answers.forEach((answer) => {
+      userWithAnswers[answer.questionId] = extractAnswers(answer.answerOption);
+    });
+    return userWithAnswers;
+  });
+};
+
 const ParticipantsManagement = ({
   users,
   questions,
@@ -111,13 +151,29 @@ const ParticipantsManagement = ({
 }) => {
   const [selectionCriteria, setSelectionCriteria] = useState(prevSelectionCriteria);
   const [selectionRules, setSelectionRules] = useState(prevSelectionRules);
-  const [selectedIteration, setSelectedIteration] = useState();
+  const [selectedIteration, setSelectedIteration] = useState({
+    startLabel: 'undefined',
+    endLabel: 'undefined'
+  });
   const [columns, setColumns] = useState(dataColumns);
   const [data, setData] = useState([]);
 
+  // set initially selected iteration
   useEffect(() => {
+    if (iterations.length) {
+      setSelectedIteration(iterations[0]);
+    }
+  }, [iterations]);
+
+  useEffect(() => {
+    if (!selectedIteration || !selectedIteration._id) {
+      return;
+    }
+
+    const questionData = fetchUserAnswers(users, selectedIteration);
     // if iterationsArray doesnt contain the data
     // useFetchIterations to load data and add to array
+    setData(questionData);
   }, [selectedIteration]);
 
   const answerFormatter = (column, colIndex) => {
@@ -164,42 +220,6 @@ const ParticipantsManagement = ({
       setColumns(allColumns);
     }
   }, [questions]);
-
-  const extractAnswers = (answers) => {
-    let formattedAnswer;
-    if (answers && !Array.isArray(answers)) {
-      if (answers.index) {
-        formattedAnswer = answers.index;
-      } else {
-        formattedAnswer = answers.title;
-      }
-    } else if (answers && Array.isArray(answers)) {
-      formattedAnswer = answers.map((answer) => {
-        if (!answer.hasNumberInput) {
-          return `${answer.title}: ${answer.answer}`;
-        }
-        return `${answer.title}: ${answer.answer} ${answer.numberAnswer} ${answer.numberInputTitle}`;
-      });
-    }
-
-    return formattedAnswer;
-  };
-
-  useEffect(() => {
-    if (users && users.length) {
-      const questionData = users.map((user) => {
-        if (!user.iterations || !user.iterations.length || !user.iterations[0].answers) {
-          return user;
-        }
-        const userWithAnswers = { ...user };
-        user.iterations[0].answers.forEach((answer) => {
-          userWithAnswers[answer.questionId] = extractAnswers(answer.answerOption);
-        });
-        return userWithAnswers;
-      });
-      setData(questionData);
-    }
-  }, [users]);
 
   /**
    * TODO
@@ -255,7 +275,9 @@ const ParticipantsManagement = ({
         data={data}
         columns={columns}
         bootstrap4
-        exportCSV={{ fileName: `${name}_${selectedIteration}.csv` }}
+        exportCSV={{
+          fileName: `${name} ${selectedIteration.startLabel}-${selectedIteration.endLabel}.csv`
+        }}
       >
         {(props) => (
           <div>
@@ -268,13 +290,16 @@ const ParticipantsManagement = ({
                   <select
                     className="form-control custom-select"
                     id="intervalSelect"
-                    onChange={(e) => setSelectedIteration(e.target.value)}
+                    onChange={(e) => {
+                      setSelectedIteration(iterations[e.target.value]);
+                    }}
                   >
-                    {iterations.map((iteration) => {
-                      const interval = `${moment(iteration.start).format('DD.MM.YY')} - ${moment(
-                        iteration.end
-                      ).format('DD.MM.YY')}`;
-                      return <option key={iteration._id}>{interval}</option>;
+                    {iterations.map((iteration, index) => {
+                      return (
+                        <option key={iteration._id} value={index}>
+                          {`${iteration.startLabel} - ${iteration.endLabel}`}
+                        </option>
+                      );
                     })}
                   </select>
                 </div>
@@ -340,8 +365,7 @@ const ParticipantsManagementPage = () => {
   const [questionnaireIterations, setQuestionnaireIterations] = useState([]);
 
   useEffect(() => {
-    const fetchIds = async () => {
-      // TODO fetch iterations and name and pass them along
+    const fetchQuestionnaire = async () => {
       await questionnaireService
         .getQuestionnaires({ questionnaireId: null, fields: '_id name iterations' })
         .then((res) => {
@@ -352,7 +376,7 @@ const ParticipantsManagementPage = () => {
         });
     };
 
-    fetchIds();
+    fetchQuestionnaire();
   }, []);
 
   return (

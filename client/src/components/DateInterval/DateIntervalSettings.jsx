@@ -124,7 +124,8 @@ const DateIntervalSettings = ({ iterations, setIterations }) => {
       if (interval.id === id) {
         const updatedInterval = {
           ...interval,
-          start: date
+          start: date,
+          startLabel: moment(date).format('DD.MM.YY')
         };
         return updatedInterval;
       }
@@ -138,7 +139,8 @@ const DateIntervalSettings = ({ iterations, setIterations }) => {
       if (interval.id === id) {
         const updatedInterval = {
           ...interval,
-          end: date
+          end: date,
+          endLabel: moment(date).format('DD.MM.YY')
         };
         return updatedInterval;
       }
@@ -150,7 +152,13 @@ const DateIntervalSettings = ({ iterations, setIterations }) => {
   const addInterval = () => {
     setIterations((prevState) => [
       ...prevState,
-      { id: nanoid(), start: moment().toISOString(), end: moment().toISOString() }
+      {
+        id: nanoid(),
+        start: moment().toISOString(),
+        startLabel: moment().format('DD.MM.YY'),
+        end: moment().toISOString(),
+        endLabel: moment().format('DD.MM.YY')
+      }
     ]);
   };
 

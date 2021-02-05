@@ -276,12 +276,12 @@ const updateAnswer = async (req, res) => {
   const { userId, iterationId, questionId } = req.params;
   const { answerOption } = req.body;
 
-  await User.findOne({ _id: userId })
+  await User.findById(userId)
     .then((user) => {
       const userUpdate = user;
 
       const iteration = userUpdate.iterations.find((i) => {
-        return i.iterationId === iterationId;
+        return i.iterationId.toString() === iterationId;
       });
       let answer;
       if (iteration.answers && iteration.answers.length) {
@@ -299,8 +299,10 @@ const updateAnswer = async (req, res) => {
         return res.status(204).send();
       });
     })
-    .catch(() => {
-      return res.status(404).json({ title: 'Users not found', detail: 'No user could be found.' });
+    .catch((err) => {
+      return res
+        .status(404)
+        .json({ err, title: 'Users not found', detail: 'No user could be found.' });
     });
 };
 
