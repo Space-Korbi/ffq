@@ -60,15 +60,15 @@ const updateJumbotron = (iterations, user) => {
     };
   }
 
-  const userHasFinishedIteration = (interval) => {
-    if (finishedIterations.find((iteration) => iteration.iterationId === interval._id.toString())) {
+  const userHasFinishedIteration = (iteration) => {
+    if (finishedIterations.find((finishedIteration) => finishedIteration.id === iteration.id)) {
       return true;
     }
     return false;
   };
 
-  const nextIteration = nextIntervals.find((interval) => {
-    return !userHasFinishedIteration(interval);
+  const nextIteration = nextIntervals.find((iteration) => {
+    return !userHasFinishedIteration(iteration);
   });
 
   if (!nextIteration) {
@@ -138,7 +138,7 @@ const ParticipantPage = ({ user }) => {
   useEffect(() => {
     if (currentQuestionnaire) {
       const current = updateJumbotron(currentQuestionnaire.iterations, user);
-      setIterationId(current.currentIteration._id);
+      setIterationId(current.currentIteration.id);
       setDisabled(current.disabled);
       setTitle(current.title);
       setDaysTilStart(current.daysTilStart);

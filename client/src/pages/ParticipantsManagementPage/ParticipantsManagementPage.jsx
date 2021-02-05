@@ -5,13 +5,9 @@
 import React, { useEffect, useState } from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import ToolkitProvider from 'react-bootstrap-table2-toolkit';
-import moment from 'moment';
-
-// services
-import { questionnaireService } from '../../services';
 
 // custom hooks
-import { useFetchUsers, useFetchQuestions } from '../../hooks';
+import { useFetchUsers, useFetchQuestions, useFetchQuestionnaires } from '../../hooks';
 
 // helpers
 import { addValidString, dateHelper } from '../../helpers';
@@ -124,10 +120,8 @@ const extractAnswers = (answers) => {
 const fetchUserAnswers = (users, selectedIteration) => {
   return users.map((user) => {
     const index = user.iterations.findIndex((iteration) => {
-      console.log('iteration', iteration.iterationId, selectedIteration._id);
-      return iteration.iterationId === selectedIteration._id.toString();
+      return iteration.id === selectedIteration.id;
     });
-    console.log(index);
 
     if (!user.iterations || !user.iterations.length || !user.iterations[0].answers || index < 0) {
       return user;
@@ -142,13 +136,16 @@ const fetchUserAnswers = (users, selectedIteration) => {
 };
 
 const ParticipantsManagement = ({
-  users,
   questions,
   iterations,
   name,
   prevSelectionCriteria,
   prevSelectionRules
 }) => {
+  const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers(null, iterations[0].id);
+
+  console.log(iterations);
+  console.log('users', users);
   const [selectionCriteria, setSelectionCriteria] = useState(prevSelectionCriteria);
   const [selectionRules, setSelectionRules] = useState(prevSelectionRules);
   const [selectedIteration, setSelectedIteration] = useState({
@@ -157,6 +154,7 @@ const ParticipantsManagement = ({
   });
   const [columns, setColumns] = useState(dataColumns);
   const [data, setData] = useState([]);
+  const iterationsAnswers = new Set();
 
   // set initially selected iteration
   useEffect(() => {
@@ -166,15 +164,17 @@ const ParticipantsManagement = ({
   }, [iterations]);
 
   useEffect(() => {
-    if (!selectedIteration || !selectedIteration._id) {
+    if (!selectedIteration || !selectedIteration.id || !users || !users.length) {
       return;
     }
-
     const questionData = fetchUserAnswers(users, selectedIteration);
+    iterationsAnswers.add(questionData);
+    console.log('----------', iterationsAnswers);
+
     // if iterationsArray doesnt contain the data
     // useFetchIterations to load data and add to array
     setData(questionData);
-  }, [selectedIteration]);
+  }, [selectedIteration, users]);
 
   const answerFormatter = (column, colIndex) => {
     if (column && !Array.isArray(column)) {
@@ -296,7 +296,7 @@ const ParticipantsManagement = ({
                   >
                     {iterations.map((iteration, index) => {
                       return (
-                        <option key={iteration._id} value={index}>
+                        <option key={iteration.id} value={index}>
                           {`${iteration.startLabel} - ${iteration.endLabel}`}
                         </option>
                       );
@@ -356,50 +356,40 @@ const ParticipantsManagement = ({
 };
 
 const ParticipantsManagementPage = () => {
-  const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers();
+  const [
+    { fetchedQuestionnaires, isLoadingQuestionnaires, isErrorQuestionnaires }
+  ] = useFetchQuestionnaires(null, '_id name iterations');
   const [
     { fetchedQuestions, isLoadingQuestions, isErrorQuestions },
     setQuestionniareId
   ] = useFetchQuestions();
-  const [questionnaireName, setQuestionnaireName] = useState('');
-  const [questionnaireIterations, setQuestionnaireIterations] = useState([]);
 
   useEffect(() => {
-    const fetchQuestionnaire = async () => {
-      await questionnaireService
-        .getQuestionnaires({ questionnaireId: null, fields: '_id name iterations' })
-        .then((res) => {
-          const { _id, name, iterations } = res.data.questionnaires[0];
-          setQuestionnaireName(name);
-          setQuestionnaireIterations(iterations);
-          setQuestionniareId(_id);
-        });
-    };
-
-    fetchQuestionnaire();
-  }, []);
+    if (fetchedQuestionnaires && fetchedQuestionnaires.length) {
+      setQuestionniareId(fetchedQuestionnaires[0]._id);
+    }
+  }, [fetchedQuestionnaires]);
 
   return (
     <div>
       <div>
-        {(isErrorUsers || isErrorQuestions) && (
+        {(isErrorQuestionnaires || isErrorQuestions) && (
           <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
             Something went wrong...
           </div>
         )}
-        {(isLoadingUsers || isLoadingQuestions) && (
+        {(isLoadingQuestionnaires || isLoadingQuestions) && (
           <div className="d-flex justify-content-center mt-5">
             <Spinner />
           </div>
         )}
         <div className="m-4 d-flex justify-content-center">
           <div className="w-100">
-            {users && users.length > 0 && fetchedQuestions && (
+            {fetchedQuestionnaires && fetchedQuestionnaires.length > 0 && fetchedQuestions && (
               <ParticipantsManagement
-                users={users}
                 questions={fetchedQuestions}
-                name={questionnaireName}
-                iterations={questionnaireIterations}
+                name={fetchedQuestionnaires[0].name}
+                iterations={fetchedQuestionnaires[0].iterations}
                 prevSelectionCriteria={mockSelectionCriteria}
                 prevSelectionRules={mockRules}
               />

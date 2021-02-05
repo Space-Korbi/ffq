@@ -12,14 +12,14 @@ const Answer = Schema(
 
 const Iteration = Schema(
   {
-    iterationId: { type: mongoose.Types.ObjectId },
+    id: { type: String },
     startedAt: { type: Date },
     finishedAt: { type: Date },
     stoppedAtIndex: { type: Number, default: -1 },
     questionsToSkip: { type: [String], _id: false, default: [] },
     answers: [Answer]
   },
-  { default: [] }
+  { _id: false, default: [] }
 );
 
 const User = mongoose.model(

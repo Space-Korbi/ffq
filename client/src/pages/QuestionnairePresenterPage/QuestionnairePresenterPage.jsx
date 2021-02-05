@@ -152,7 +152,7 @@ const QuestionnairePresenter = ({
                 className="btn btn-sm btn-outline-warning"
                 onClick={() => {
                   userService
-                    .updateUserData(userId, { iterations: [{ iterationId: 0, answers: [] }] })
+                    .updateUserData(userId, { iterations: [{ id: 0, answers: [] }] })
                     .then(() => {
                       setCurrentIndex(0);
                       setToSkip([]);
@@ -240,7 +240,7 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
       let questionsToSkip = [];
       let stoppedAtIndex = -1;
       const status = users[0].iterations.filter(
-        (prevIteration) => prevIteration.iterationId === iterationId
+        (prevIteration) => prevIteration.id === iterationId
       );
       if (status && status.length) {
         answers = status[0].answers;

@@ -10,12 +10,13 @@ const { Schema } = mongoose;
 
 const Iteration = Schema(
   {
+    id: { type: String, required: true },
     start: { type: Date },
     startLabel: { type: String },
     end: { type: Date },
     endLabel: { type: String }
   },
-  { default: [] }
+  { _id: false, default: [] }
 );
 
 /**

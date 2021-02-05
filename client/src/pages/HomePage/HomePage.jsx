@@ -19,7 +19,7 @@ const HomePage = ({ isAdmin }) => {
   const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers(
     userId,
     null,
-    'hasAcceptedConsentForm screeningStatus iterations.startedAt iterations.finishedAt iterations.iterationId'
+    'hasAcceptedConsentForm screeningStatus iterations.startedAt iterations.finishedAt iterations.id'
   );
 
   return (

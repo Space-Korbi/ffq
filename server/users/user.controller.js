@@ -135,8 +135,8 @@ const getUsers = async (req, res) => {
     filter._id = userId;
   }
 
-  if (iterationId) {
-    fields = `${fields} iterations._id`;
+  if (fields && iterationId) {
+    fields = `${fields} iterations.id`;
   }
 
   await User.find(filter)
@@ -153,10 +153,10 @@ const getUsers = async (req, res) => {
 
         if (iterationId) {
           result.iterations = result.iterations.filter((iteration) => {
-            if (!iteration._id) {
+            if (!iteration.id) {
               return false;
             }
-            return iteration._id.toString() === iterationId.toString();
+            return iteration.id === iterationId;
           });
         }
 
@@ -227,7 +227,7 @@ const updateIteration = async (req, res) => {
 
   const filter = {
     _id: userId,
-    'iterations.iterationId': iterationId
+    'iterations.id': iterationId
   };
 
   const [entries] = Object.entries(body);
@@ -242,7 +242,7 @@ const updateIteration = async (req, res) => {
   };
 
   const options = {
-    arrayFilters: [{ 'iteration.iterationId': iterationId }],
+    arrayFilters: [{ 'iteration.id': iterationId }],
     new: true,
     upsert: true
   };
@@ -257,7 +257,7 @@ const updateIteration = async (req, res) => {
         {
           _id: userId
         },
-        { $push: { iterations: { iterationId, startedAt: body.startedAt } } }
+        { $push: { iterations: { id: iterationId, startedAt: body.startedAt } } }
       )
         .then(() => {
           // if the uuid is created by the server instead, we need to return the id and object here
@@ -281,7 +281,7 @@ const updateAnswer = async (req, res) => {
       const userUpdate = user;
 
       const iteration = userUpdate.iterations.find((i) => {
-        return i.iterationId.toString() === iterationId;
+        return i.id === iterationId;
       });
       let answer;
       if (iteration.answers && iteration.answers.length) {

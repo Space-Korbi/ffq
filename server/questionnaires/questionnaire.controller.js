@@ -39,13 +39,15 @@ const createQuestionnaire = async (req, res) => {
 };
 
 const getQuestionnaires = async (req, res) => {
-  console.log(req.query);
+  // console.log(req.query);
   const { questionnaireId } = req.query;
   const { fields } = req.query;
 
+  /*
   console.log('id:', questionnaireId);
   console.log('fields:', fields);
   console.log('body:', req.body);
+  */
 
   const filter = {};
   if (questionnaireId) {

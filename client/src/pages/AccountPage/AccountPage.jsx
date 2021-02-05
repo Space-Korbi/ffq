@@ -42,11 +42,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
 
   const isIncompleteIteration = (currentIteration) => {
     return user.iterations.some((iteration) => {
-      if (
-        iteration.iterationId === currentIteration._id &&
-        iteration.startedAt &&
-        !iteration.finishedAt
-      ) {
+      if (iteration.id === currentIteration.id && iteration.startedAt && !iteration.finishedAt) {
         return true;
       }
       return false;
@@ -59,9 +55,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
 
     if (completedIterations && completedIterations.length) {
       if (
-        completedIterations.some(
-          (completedIteration) => iteration._id === completedIteration.iterationId
-        )
+        completedIterations.some((completedIteration) => iteration.id === completedIteration.id)
       ) {
         return <span className="badge badge-success mx-1">Completed</span>;
       }
@@ -74,7 +68,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
             <button
               type="button"
               className="btn btn-sm btn-link"
-              onClick={() => history.push(`questionnairePresenter/iteration/${iteration._id}`)}
+              onClick={() => history.push(`questionnairePresenter/iteration/${iteration.id}`)}
             >
               Continue now
             </button>
@@ -135,14 +129,14 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
                       </thead>
                       <tbody>
                         {iterations.length ? (
-                          iterations.map((interval) => {
+                          iterations.map((iteration) => {
                             const completedIterations = getCompletedIterations();
                             return (
-                              <tr key={interval._id}>
-                                <td className="align-middle">{interval.startLabel}</td>
-                                <td className="align-middle">{interval.endLabel}</td>
+                              <tr key={iteration.id}>
+                                <td className="align-middle">{iteration.startLabel}</td>
+                                <td className="align-middle">{iteration.endLabel}</td>
                                 <td className="align-middle">
-                                  {getIterationStatus(completedIterations, interval)}
+                                  {getIterationStatus(completedIterations, iteration)}
                                 </td>
                               </tr>
                             );
@@ -214,7 +208,7 @@ const AccountPage = ({ isAdmin }) => {
   const [{ users, isLoadingUsers, isErrorUsers }, setFields] = useFetchUsers(
     userId,
     null,
-    'firstName lastName email hasAcceptedConsentForm screeningStatus iterations.startedAt iterations.finishedAt iterations.iterationId'
+    'firstName lastName email hasAcceptedConsentForm screeningStatus iterations.startedAt iterations.finishedAt iterations.id'
   );
   const [
     { fetchedQuestionnaires, isLoadingQuestionnaires, isErrorQuestionnaires }
