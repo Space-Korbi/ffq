@@ -267,7 +267,7 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
                 <Spinner />
               </div>
             ) : (
-              <div className="row no-gutters overflow-auto flex-row flex-nowrap my-3">
+              <div className="row no-gutters overflow-auto flex-row flex-nowrap my-4">
                 <BootstrapTable
                   keyField="index"
                   data={data}

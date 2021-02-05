@@ -3,18 +3,20 @@
 /* eslint-disable react/prop-types */
 
 import React, { useEffect, useState } from 'react';
-import BootstrapTable from 'react-bootstrap-table-next';
-import ToolkitProvider from 'react-bootstrap-table2-toolkit';
+
+// services
+import { userService } from '../../services';
 
 // custom hooks
-import { useFetchUsers, useFetchQuestions, useFetchQuestionnaires } from '../../hooks';
+import { useFetchQuestions, useFetchQuestionnaires } from '../../hooks';
 
 // helpers
-import { addValidString, dateHelper } from '../../helpers';
+import { addValidString } from '../../helpers';
 
 // components
 import Spinner from '../../components/Spinner';
 import { NavTabs, NavContents } from '../../components/Navigation';
+import ParticipantsTable from './ParticipantsTable';
 import { CriteriaEditor, RuleEditor } from '../../components/UserSelection';
 
 const rule1 = {
@@ -34,70 +36,7 @@ const rule2 = {
 const mockSelectionCriteria = ['Laktose Intolerant', 'Taking Medication', 'Pregnant', 'Vegan'];
 const mockRules = [rule1, rule2];
 
-const dataColumns = [
-  {
-    dataField: 'email',
-    text: 'Email'
-  },
-  {
-    dataField: 'firstName',
-    text: 'First Name'
-  },
-  {
-    dataField: 'lastName',
-    text: 'Last Name'
-  },
-  {
-    dataField: 'hasAcceptedConsentForm',
-    text: 'Consent Form',
-    formatter: (cellContent, row) => {
-      if (cellContent) {
-        return <span className="badge badge-success">Accepted</span>;
-      }
-      return <span className="badge badge-danger">Not yet accepted</span>;
-    }
-  },
-  {
-    dataField: 'screeningStatus',
-    text: 'Screening Status',
-    formatter: (cellContent, row) => {
-      if (cellContent === 'accept') {
-        return <span className="badge badge-success">Accepted</span>;
-      }
-      if (cellContent === 'reject') {
-        return <span className="badge badge-danger">Rejected</span>;
-      }
-      if (cellContent === 'wait') {
-        return <span className="badge badge-warning">Waiting</span>;
-      }
-      return cellContent;
-    }
-  },
-  {
-    dataField: 'screeningData',
-    text: 'Screening Data'
-  },
-  {
-    dataField: 'personalData',
-    text: 'Personal Data'
-  },
-  {
-    dataField: 'startedAt',
-    text: 'Started',
-    formatter: (cellContent, row) => {
-      return dateHelper.applyDateStyle(cellContent);
-    }
-  },
-  {
-    dataField: 'finishedAt',
-    text: 'Finished',
-    formatter: (cellContent, row) => {
-      return dateHelper.applyDateStyle(cellContent);
-    }
-  }
-];
-
-const extractAnswers = (answers) => {
+const formatAnswer = (answers) => {
   let formattedAnswer;
   if (answers && !Array.isArray(answers)) {
     if (answers.index) {
@@ -117,7 +56,7 @@ const extractAnswers = (answers) => {
   return formattedAnswer;
 };
 
-const fetchUserAnswers = (users, selectedIteration) => {
+const parseAnswers = (users, selectedIteration) => {
   return users.map((user) => {
     const index = user.iterations.findIndex((iteration) => {
       return iteration.id === selectedIteration.id;
@@ -129,10 +68,24 @@ const fetchUserAnswers = (users, selectedIteration) => {
     const userWithAnswers = { ...user };
 
     user.iterations[index].answers.forEach((answer) => {
-      userWithAnswers[answer.questionId] = extractAnswers(answer.answerOption);
+      userWithAnswers[answer.questionId] = formatAnswer(answer.answerOption);
     });
     return userWithAnswers;
   });
+};
+
+const listAnswers = (column) => {
+  if (column && !Array.isArray(column)) {
+    return column;
+  }
+  if (column && Array.isArray(column)) {
+    const formattedAnswer = column.map((answer) => {
+      return <li key={answer}>{answer}</li>;
+    });
+
+    return <ul className="list-unstyled content-align-center mb-0">{formattedAnswer}</ul>;
+  }
+  return '';
 };
 
 const ParticipantsManagement = ({
@@ -142,55 +95,23 @@ const ParticipantsManagement = ({
   prevSelectionCriteria,
   prevSelectionRules
 }) => {
-  const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers(null, iterations[0].id);
-
-  console.log(iterations);
-  console.log('users', users);
   const [selectionCriteria, setSelectionCriteria] = useState(prevSelectionCriteria);
   const [selectionRules, setSelectionRules] = useState(prevSelectionRules);
+  const [selection, setSelection] = useState(0);
   const [selectedIteration, setSelectedIteration] = useState({
     startLabel: 'undefined',
     endLabel: 'undefined'
   });
-  const [columns, setColumns] = useState(dataColumns);
+  const [columns, setColumns] = useState([]);
   const [data, setData] = useState([]);
-  const iterationsAnswers = new Set();
 
-  // set initially selected iteration
   useEffect(() => {
     if (iterations.length) {
-      setSelectedIteration(iterations[0]);
+      setSelectedIteration(iterations[selection]);
     }
-  }, [iterations]);
+  }, [selection]);
 
-  useEffect(() => {
-    if (!selectedIteration || !selectedIteration.id || !users || !users.length) {
-      return;
-    }
-    const questionData = fetchUserAnswers(users, selectedIteration);
-    iterationsAnswers.add(questionData);
-    console.log('----------', iterationsAnswers);
-
-    // if iterationsArray doesnt contain the data
-    // useFetchIterations to load data and add to array
-    setData(questionData);
-  }, [selectedIteration, users]);
-
-  const answerFormatter = (column, colIndex) => {
-    if (column && !Array.isArray(column)) {
-      return column;
-    }
-    if (column && Array.isArray(column)) {
-      const formattedAnswer = column.map((answer) => {
-        return <li key={answer}>{answer}</li>;
-      });
-
-      return <ul className="list-unstyled content-align-center mb-0">{formattedAnswer}</ul>;
-    }
-    return '';
-  };
-
-  const questionHeaderFormatter = (column, colIndex) => {
+  const questionHeaderFormatter = (column) => {
     return (
       <div>
         {column.questionTitle}
@@ -212,14 +133,55 @@ const ParticipantsManagement = ({
           subtitle1: question.subtitle1,
           subtitle2: question.subtitle2,
           csvText: question.title,
-          formatter: answerFormatter,
+          formatter: listAnswers,
           headerFormatter: questionHeaderFormatter
         };
       });
-      const allColumns = dataColumns.concat(questionColumns);
-      setColumns(allColumns);
+      setColumns(questionColumns);
     }
   }, [questions]);
+
+  const onSetResult = (result) => {
+    const iterationData = parseAnswers(result, selectedIteration);
+    localStorage.setItem(selectedIteration.id, JSON.stringify(iterationData));
+    setData(iterationData);
+  };
+
+  useEffect(() => {
+    let didCancel = false;
+
+    if (!selectedIteration || !selectedIteration.id) {
+      return () => {
+        didCancel = true;
+      };
+    }
+
+    const cachedHits = localStorage.getItem(selectedIteration.id);
+
+    if (cachedHits) {
+      setData(JSON.parse(cachedHits));
+    } else {
+      const fetchUsers = async () => {
+        try {
+          await userService.fetchUsers(null, selectedIteration.id, null).then((users) => {
+            if (!didCancel) {
+              const iterationData = parseAnswers(users, selectedIteration);
+              onSetResult(iterationData);
+            }
+          });
+        } catch (error) {
+          if (!didCancel) {
+            // display info that data could not be fetched
+            console.log(error);
+          }
+        }
+      };
+      fetchUsers();
+    }
+    return () => {
+      didCancel = true;
+    };
+  }, [selectedIteration]);
 
   /**
    * TODO
@@ -255,72 +217,36 @@ const ParticipantsManagement = ({
     }
   };
 
-  const ExportCSVButton = (props) => {
-    const handleClick = () => {
-      props.onExport();
-    };
+  const IterationSelector = () => {
     return (
-      <div>
-        <button type="button" className="btn btn-outline-success" onClick={handleClick}>
-          Export to CSV
-        </button>
+      <div className="form-group form-inline m-0">
+        <select
+          className="form-control custom-select"
+          id="iterationSelect"
+          value={selection}
+          onChange={(e) => {
+            setSelection(e.target.value);
+          }}
+        >
+          {iterations.map((iteration, index) => {
+            return (
+              <option key={iteration.id} value={index}>
+                {`${iteration.startLabel} - ${iteration.endLabel}`}
+              </option>
+            );
+          })}
+        </select>
       </div>
     );
   };
 
   const participantsContent = (
-    <div>
-      <ToolkitProvider
-        keyField="email"
-        data={data}
-        columns={columns}
-        bootstrap4
-        exportCSV={{
-          fileName: `${name} ${selectedIteration.startLabel}-${selectedIteration.endLabel}.csv`
-        }}
-      >
-        {(props) => (
-          <div>
-            <div className="row">
-              <div className="col">
-                <ExportCSVButton {...props.csvProps}>Export CSV</ExportCSVButton>
-              </div>
-              <div className="col">
-                <div className="form-group">
-                  <select
-                    className="form-control custom-select"
-                    id="intervalSelect"
-                    onChange={(e) => {
-                      setSelectedIteration(iterations[e.target.value]);
-                    }}
-                  >
-                    {iterations.map((iteration, index) => {
-                      return (
-                        <option key={iteration.id} value={index}>
-                          {`${iteration.startLabel} - ${iteration.endLabel}`}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </div>
-              </div>
-            </div>
-            <br />
-            <div className="row no-gutters overflow-auto flex-row flex-nowrap">
-              <div className="col">
-                <BootstrapTable
-                  {...props.baseProps}
-                  bordered={false}
-                  striped
-                  hover
-                  noDataIndication="No participants data"
-                />
-              </div>
-            </div>
-          </div>
-        )}
-      </ToolkitProvider>
-    </div>
+    <ParticipantsTable
+      fileName={`${name} ${selectedIteration.startLabel}-${selectedIteration.endLabel}.csv`}
+      data={data}
+      columns={columns}
+      iterationSelector={<IterationSelector />}
+    />
   );
 
   const selectionCriteriaContent = (
@@ -348,7 +274,7 @@ const ParticipantsManagement = ({
       <div>
         <NavTabs tabNames={tabNames} />
       </div>
-      <div className="mt-5">
+      <div className="mt-4">
         <NavContents tabNames={tabNames} tabContents={tabContents} />
       </div>
     </div>

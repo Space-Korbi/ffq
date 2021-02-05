@@ -63,7 +63,6 @@ const getQuestionnaires = async (req, res) => {
           .json({ title: 'Questionnaire not found', detail: 'No questionnaire could be found.' });
       }
 
-      console.log(questionnaires);
       return res.status(200).json({ questionnaires });
     })
     .catch((err) => {

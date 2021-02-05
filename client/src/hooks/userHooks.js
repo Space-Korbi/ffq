@@ -6,7 +6,6 @@ import { userService } from '../services';
 
 // custom users fetching hook
 const useFetchUsers = (userId, iterationId, initialFields) => {
-  console.log(userId, iterationId);
   const [fields, setFields] = useState(initialFields);
 
   const fetchUserReducer = (state, action) => {
