@@ -156,13 +156,8 @@ const ParticipantPage = ({ user }) => {
   };
 
   const isMeetingRule = (rule, userSelection) => {
-    console.log(rule.criteria, userSelection);
     if (rule.operator === 'AND') {
-      console.log(rule.criteria, userSelection);
-      const all = rule.criteria.every((criterion) => userSelection.includes(criterion));
-      console.log(all);
-
-      return all;
+      return rule.criteria.every((criterion) => userSelection.includes(criterion));
     }
 
     return userSelection.some((selection) => rule.criteria.includes(selection));
