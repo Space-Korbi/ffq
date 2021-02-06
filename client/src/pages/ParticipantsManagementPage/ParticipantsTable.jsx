@@ -49,7 +49,17 @@ const staticColumns = [
   },
   {
     dataField: 'screeningData',
-    text: 'Screening Data'
+    text: 'Screening Data',
+    formatter: (cellContent) => {
+      const formatted = cellContent.map((content) => {
+        return <li key={content}>{content}</li>;
+      });
+      return (
+        <small>
+          <ul className="list content-align-center mb-0">{formatted}</ul>
+        </small>
+      );
+    }
   },
   {
     dataField: 'personalData',

@@ -115,7 +115,7 @@ const ParticipantPage = ({ user }) => {
   // fetch data
   const [
     { fetchedQuestionnaires, isLoadingQuestionnaires, isErrorQuestionnaires }
-  ] = useFetchQuestionnaires(null, 'iterations consentScript selectionCriteria');
+  ] = useFetchQuestionnaires(null, 'iterations consentScript selectionCriteria screeningRules');
 
   const [currentQuestionnaire, setCurrentQuestionnaire] = useState();
   const [iterationId, setIterationId] = useState();
@@ -124,6 +124,7 @@ const ParticipantPage = ({ user }) => {
   const [accessInformation, setAccessInformation] = useState('');
   const [buttonTitle, setButtonTitle] = useState('Umfrage starten');
   const [disabled, setDisabled] = useState();
+  const [status, setStatus] = useState('');
   const history = useHistory();
   const { userId } = useParams();
   const { url } = useRouteMatch();
@@ -152,6 +153,30 @@ const ParticipantPage = ({ user }) => {
       .then(() => {
         history.push(`${url}/questionnairePresenter/iteration/${iterationId}`);
       });
+  };
+
+  const isMeetingRule = (rule, userSelection) => {
+    if (rule.operator === 'and') {
+      return userSelection.every((selection) => rule.criteria.includes(selection));
+    }
+
+    return userSelection.some((selection) => rule.criteria.includes(selection));
+  };
+
+  const checkRules = (rules, userSelection) => {
+    const metRule = rules.find((rule) => {
+      return isMeetingRule(rule, userSelection);
+    });
+    userService.updateUserData(userId, { screeningStatus: metRule.decision });
+    if (metRule.decision === 'accept') {
+      return true;
+    }
+    setStatus(
+      <div className="alert alert-info text-center m-3" role="alert">
+        Based on your screening data, you might not be suitable for this questionnaire.
+      </div>
+    );
+    return false;
   };
 
   return (
@@ -202,6 +227,8 @@ const ParticipantPage = ({ user }) => {
                 </button>
               )}
             </div>
+            {status}
+
             <ConsentScreeningModal
               consentScript={currentQuestionnaire.consentScript}
               selectionCriteria={currentQuestionnaire.selectionCriteria}
@@ -209,6 +236,11 @@ const ParticipantPage = ({ user }) => {
               onAccept={() => userService.updateUserData(userId, { hasAcceptedConsentForm: true })}
               onDone={(screeningData) => {
                 userService.updateUserData(userId, { screeningData }).then(() => {
+                  checkRules(currentQuestionnaire.screeningRules, screeningData);
+                  if (!checkRules(currentQuestionnaire.screeningRules, screeningData)) {
+                    setDisabled(true);
+                    return;
+                  }
                   userService
                     .updateUserIteration(userId, iterationId, {
                       iterationId,

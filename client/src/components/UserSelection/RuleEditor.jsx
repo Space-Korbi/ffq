@@ -157,7 +157,7 @@ const RuleEditor = ({
             }}
           />
         </div>
-        <div className="col">
+        <div className="col ">
           <h6>
             Rules
             <sup className="text-info ml-1">

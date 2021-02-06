@@ -79,8 +79,8 @@ const SelectionCriteria = ({
   const [didChange, setDidChange] = useState(false);
 
   return (
-    <div className="d-flex justify-content-center">
-      <div className="row no-gutters">
+    <div className="d-flex">
+      <div className="row no-gutters" style={{ maxWidth: '700px' }}>
         <div className="col d-flex flex-wrap">
           <div className="m-0 mb-3 mb-sm-5">
             <button
