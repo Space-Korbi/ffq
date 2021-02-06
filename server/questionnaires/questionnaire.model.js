@@ -6,8 +6,8 @@ const ScreeningRule = Schema(
   {
     id: { type: String, required: true },
     criteria: { type: [String], required: true },
-    operator: { type: String, lowercase: true, enum: ['and', 'or', ''] },
-    decision: { type: String, lowercase: true, enum: ['accept', 'reject', 'wait'], required: true }
+    operator: { type: String, enum: ['AND', 'OR', ''] },
+    decision: { type: String, enum: ['Accept', 'Reject', 'Wait'], required: true }
   },
   { _id: false, default: [] }
 );

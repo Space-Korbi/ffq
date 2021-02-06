@@ -33,7 +33,7 @@ const User = mongoose.model(
       hasAcceptedConsentForm: { type: Boolean, default: false },
       personalData: { type: Schema.Types.Mixed, default: {} },
       screeningData: { type: [String], default: [] },
-      screeningStatus: { type: String, enum: ['accept', 'reject', 'wait'], default: 'accept' },
+      screeningStatus: { type: String, enum: ['Accept', 'Reject', 'Wait'], default: 'Accept' },
       iterations: [Iteration],
       roles: [
         {

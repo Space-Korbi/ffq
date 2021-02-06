@@ -187,9 +187,9 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
               <hr className="m-0 mb-3" />
               {(() => {
                 switch (screeningStatus) {
-                  case 'accept':
+                  case 'Accept':
                     return <span className="badge badge-success mx-1">Accepted</span>;
-                  case 'reject':
+                  case 'Reject':
                     return <span className="badge badge-danger mx-1">Rejected</span>;
                   default:
                     return <span className="badge badge-warning mx-1">Wait</span>;

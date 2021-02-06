@@ -35,13 +35,13 @@ const staticColumns = [
     dataField: 'screeningStatus',
     text: 'Screening Status',
     formatter: (cellContent) => {
-      if (cellContent === 'accept') {
+      if (cellContent === 'Accept') {
         return <span className="badge badge-success">Accepted</span>;
       }
-      if (cellContent === 'reject') {
+      if (cellContent === 'Reject') {
         return <span className="badge badge-danger">Rejected</span>;
       }
-      if (cellContent === 'wait') {
+      if (cellContent === 'Wait') {
         return <span className="badge badge-warning">Waiting</span>;
       }
       return cellContent;

@@ -156,8 +156,13 @@ const ParticipantPage = ({ user }) => {
   };
 
   const isMeetingRule = (rule, userSelection) => {
-    if (rule.operator === 'and') {
-      return userSelection.every((selection) => rule.criteria.includes(selection));
+    console.log(rule.criteria, userSelection);
+    if (rule.operator === 'AND') {
+      console.log(rule.criteria, userSelection);
+      const all = rule.criteria.every((criterion) => userSelection.includes(criterion));
+      console.log(all);
+
+      return all;
     }
 
     return userSelection.some((selection) => rule.criteria.includes(selection));
@@ -167,16 +172,28 @@ const ParticipantPage = ({ user }) => {
     const metRule = rules.find((rule) => {
       return isMeetingRule(rule, userSelection);
     });
-    userService.updateUserData(userId, { screeningStatus: metRule.decision });
-    if (metRule.decision === 'accept') {
-      return true;
+    if (metRule) {
+      userService.updateUserData(userId, { screeningStatus: metRule.decision });
+      if (metRule.decision === 'Reject') {
+        setStatus(
+          <div className="alert alert-info text-center m-3" role="alert">
+            Based on your screening data, you are not suitable for this questionnaire.
+          </div>
+        );
+        return false;
+      }
+      if (metRule.decision === 'Wait') {
+        setStatus(
+          <div className="alert alert-info text-center m-3" role="alert">
+            Based on your screening data, your access needs to be granted manually. Please come back
+            later.
+          </div>
+        );
+        return false;
+      }
     }
-    setStatus(
-      <div className="alert alert-info text-center m-3" role="alert">
-        Based on your screening data, you might not be suitable for this questionnaire.
-      </div>
-    );
-    return false;
+    userService.updateUserData(userId, { screeningStatus: 'Accept' });
+    return true;
   };
 
   return (
@@ -204,7 +221,7 @@ const ParticipantPage = ({ user }) => {
             <p className="lead mt-5">{accessInformation}</p>
             <hr className="my-4" />
             <div className="text-center">
-              {user.hasAcceptedConsentForm && user.screeningStatus === 'accept' ? (
+              {user.hasAcceptedConsentForm && user.screeningStatus === 'Accept' ? (
                 <button
                   disabled={disabled}
                   type="button"
