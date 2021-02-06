@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { arrayOf, func, number, shape, string } from 'prop-types';
 
-// icons
-import { InfoIcon } from '@primer/octicons-react';
-
 // services
 import { questionnaireService } from '../../services';
 
@@ -12,6 +9,7 @@ import AddRule from './AddRule';
 import { CardsGrid } from '../Cards';
 import { DeleteButton } from '../Button';
 import Spinner from '../Spinner';
+import { Info } from '../Popover';
 
 const checkResult = (result) => {
   switch (result) {
@@ -157,11 +155,14 @@ const RuleEditor = ({
             }}
           />
         </div>
-        <div className="col ">
-          <h6>
+        <div className="col">
+          <h6 className="d-inline-flex mb-0">
             Rules
             <sup className="text-info ml-1">
-              <InfoIcon />
+              <Info
+                text="The decision of the first matching rule will be applied. If no rule is met, the user will be accepted."
+                size={20}
+              />
             </sup>
           </h6>
           <CardsGrid Cards={RuleCards} gridColumns="2" />
