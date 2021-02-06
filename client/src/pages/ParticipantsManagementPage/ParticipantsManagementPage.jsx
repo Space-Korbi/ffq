@@ -141,6 +141,10 @@ const ParticipantsManagement = ({ questions, questionnaire }) => {
       const fetchUsers = async () => {
         try {
           await userService.fetchUsers(null, selectedIteration.id, null).then((users) => {
+            // TODO: Refactor, filter in db before sending
+            console.log(users);
+            users.shift();
+            console.log(users);
             if (!didCancel) {
               const iterationData = parseAnswers(users, selectedIteration);
               onSetResult(iterationData);
