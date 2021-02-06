@@ -14,7 +14,7 @@ import { userService } from '../../../services';
 
 // components
 import Spinner from '../../../components/Spinner';
-import ConsentModal from '../../../components/Modals';
+import ConsentScreeningModal from '../../../components/Modals';
 
 const getNextInterval = (iterations) => {
   const now = moment().toDate();
@@ -115,9 +115,8 @@ const ParticipantPage = ({ user }) => {
   // fetch data
   const [
     { fetchedQuestionnaires, isLoadingQuestionnaires, isErrorQuestionnaires }
-  ] = useFetchQuestionnaires(null, 'iterations consentScript');
+  ] = useFetchQuestionnaires(null, 'iterations consentScript selectionCriteria');
 
-  console.log('---------', fetchedQuestionnaires);
   const [currentQuestionnaire, setCurrentQuestionnaire] = useState();
   const [iterationId, setIterationId] = useState();
   const [title, setTitle] = useState('');
@@ -180,7 +179,7 @@ const ParticipantPage = ({ user }) => {
             <p className="lead mt-5">{accessInformation}</p>
             <hr className="my-4" />
             <div className="text-center">
-              {user.hasAcceptedConsentForm ? (
+              {user.hasAcceptedConsentForm && user.screeningStatus === 'accept' ? (
                 <button
                   disabled={disabled}
                   type="button"
@@ -203,10 +202,13 @@ const ParticipantPage = ({ user }) => {
                 </button>
               )}
             </div>
-            <ConsentModal
+            <ConsentScreeningModal
               consentScript={currentQuestionnaire.consentScript}
-              onAccept={() =>
-                userService.updateUserData(userId, { hasAcceptedConsentForm: true }).then(() => {
+              selectionCriteria={currentQuestionnaire.selectionCriteria}
+              hasAcceptedConsentForm={user.hasAcceptedConsentForm}
+              onAccept={() => userService.updateUserData(userId, { hasAcceptedConsentForm: true })}
+              onDone={(screeningData) => {
+                userService.updateUserData(userId, { screeningData }).then(() => {
                   userService
                     .updateUserIteration(userId, iterationId, {
                       iterationId,
@@ -215,8 +217,8 @@ const ParticipantPage = ({ user }) => {
                     .then(() => {
                       history.push(`${url}/questionnairePresenter/iteration/${iterationId}`);
                     });
-                })
-              }
+                });
+              }}
             />
           </div>
         </div>

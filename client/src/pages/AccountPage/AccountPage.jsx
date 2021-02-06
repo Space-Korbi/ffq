@@ -12,7 +12,7 @@ import { useFetchUsers, useFetchQuestionnaires, useUpdateUser } from '../../hook
 import Spinner from '../../components/Spinner';
 import EditPersonalInfo from './EditPersonalInfo';
 import ChangePassword from './ChangePassword';
-import ConsentModal from '../../components/Modals';
+import ConsentScreeningModal from '../../components/Modals';
 
 const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
   const history = useHistory();
@@ -176,7 +176,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
               ) : (
                 <span className="badge badge-danger mx-1">Not accepted</span>
               )}
-              <ConsentModal
+              <ConsentScreeningModal
                 consentScript={consentScript}
                 onAccept={() => {
                   setUpdate({ hasAcceptedConsentForm: true });
