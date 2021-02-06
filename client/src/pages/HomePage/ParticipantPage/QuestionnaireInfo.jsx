@@ -65,6 +65,7 @@ const QuestionnaireInfo = ({
     if (!nextIteration) {
       setTitle('Die Umfrage ist abgeschlossen.\n \nVielen Dank für Ihre Teilnahme.');
       setDisabled(true);
+      return;
     }
     setAccessInformation(
       `Die Umfrage kann vom ${nextIteration.startLabel} bis zum ${nextIteration.endLabel} ausgefüllt werden.`
@@ -86,6 +87,7 @@ const QuestionnaireInfo = ({
       if (unfinishedIteration && moment(now).isSameOrAfter(unfinishedIteration.startedAt, 'day')) {
         setButtonTitle('Umfrage fortsetzen');
       }
+      setIterationId(nextIteration.id);
       setDisabled(false);
     }
   };
