@@ -11,7 +11,7 @@ const ConsentScreeningModal = ({
   const [accepted, setAccepted] = useState(hasAcceptedConsentForm);
   const [selected, setSelected] = useState([]);
 
-  const handleSelect = (event) => {
+  const handleSelection = (event) => {
     const { value } = event.target;
     if (event.target.checked) {
       setSelected((prevSelected) => [...prevSelected, value]);
@@ -54,7 +54,7 @@ const ConsentScreeningModal = ({
     <div className="modal-content">
       <div className="modal-header">
         <h5 className="modal-title" id="staticBackdropLabel">
-          Consent form
+          Screening
         </h5>
         <button type="button" className="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -70,7 +70,7 @@ const ConsentScreeningModal = ({
                   className="custom-control-input"
                   id={`check${index}`}
                   value={criteria}
-                  onChange={(e) => handleSelect(e)}
+                  onChange={(e) => handleSelection(e)}
                 />
                 <label className="custom-control-label" htmlFor={`check${index}`}>
                   {criteria}
