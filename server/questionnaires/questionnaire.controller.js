@@ -43,9 +43,7 @@ const getQuestionnaires = async (req, res) => {
     .select(fields)
     .then((questionnaires) => {
       if (!questionnaires || !questionnaires.length) {
-        return res
-          .status(404)
-          .json({ title: 'Questionnaire not found', detail: 'No questionnaire could be found.' });
+        return res.status(404).json({ detail: 'No questionnaire could be found.' });
       }
 
       return res.status(200).json({ questionnaires });
