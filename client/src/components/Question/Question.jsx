@@ -9,7 +9,7 @@ import { useSaveAnswer } from '../../hooks';
 
 // components
 import Jumbotron from '../Jumbotron';
-import Help from '../Help';
+import { Help } from '../Popover';
 import AnswerButtons from './FrequencyAnswer/AnswerButtons';
 import AmountAnswer from './AmountAnswer/AmountAnswer';
 import UserInputAnswer from './UserInputAnswer/UserInputAnswer';

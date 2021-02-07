@@ -152,7 +152,7 @@ const QuestionnairePresenter = ({
                 className="btn btn-sm btn-outline-warning"
                 onClick={() => {
                   userService
-                    .updateUserData(userId, { iterations: [{ iterationId: 0, answers: [] }] })
+                    .updateUserData(userId, { iterations: [{ id: 0, answers: [] }] })
                     .then(() => {
                       setCurrentIndex(0);
                       setToSkip([]);
@@ -225,8 +225,8 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
 
   useEffect(() => {
     const fetchIds = async () => {
-      await questionnaireService.fetchQuestionnaires('_id').then((response) => {
-        setQuestionniareId(response.data[0]);
+      await questionnaireService.getQuestionnaires({ fields: '_id' }).then((res) => {
+        setQuestionniareId(res.data.questionnaires[0]._id);
       });
     };
 
@@ -239,7 +239,7 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
       let questionsToSkip = [];
       let stoppedAtIndex = -1;
       const status = users[0].iterations.filter(
-        (prevIteration) => prevIteration.iterationId === iterationId
+        (prevIteration) => prevIteration.id === iterationId
       );
       if (status && status.length) {
         answers = status[0].answers;
@@ -272,6 +272,11 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
           isAdmin={isAdmin}
           iterationId={iterationId}
         />
+      )}
+      {!fetchedQuestions.length && (
+        <div className="alert alert-warning d-flex justify-content-center mt-5" role="alert">
+          The questionnaire has no questions.
+        </div>
       )}
     </div>
   );

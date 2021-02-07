@@ -67,40 +67,8 @@ const updateUser = [
     .withMessage("Password doesn't match")
 ];
 
-const updateQuestionnaire = [
-  param('id').notEmpty().withMessage('Questionnaire ID is required.').bail(),
-  body('*').custom((data, { req }) => {
-    const entries = Object.entries(data);
-
-    console.log(entries);
-    const questionnaireModel = Questionnaire.schema.obj;
-
-    const validatedEntries = entries.filter((entry) => {
-      if (entry[0] === 'questions') {
-        const answers = entry[1];
-        if (!answers || !answers.questionId || !answers.answerOption) {
-          return false;
-        }
-      }
-
-      return (
-        Object.keys(questionnaireModel).includes(entry[0]) && (entry[1] !== null || entry[1] !== '')
-      );
-    });
-
-    if (!validatedEntries) {
-      return Promise.reject('No valid data for update');
-    }
-
-    req.body.validated = validatedEntries;
-    delete req.body.data;
-    return Promise.resolve(validatedEntries);
-  })
-];
-
 module.exports = {
   login,
   signup,
-  updateUser,
-  updateQuestionnaire
+  updateUser
 };

@@ -4,181 +4,81 @@ import React, { useState, useEffect } from 'react';
 import { shape } from 'prop-types';
 import { useRouteMatch, useHistory, useParams } from 'react-router-dom';
 import moment from 'moment/min/moment-with-locales';
-import { difference } from 'lodash';
 
 // hooks
-import { useFetchQuestionnairesInfo } from '../../../hooks';
+import { useFetchQuestionnaires } from '../../../hooks';
 
 // services
 import { userService } from '../../../services';
 
 // components
 import Spinner from '../../../components/Spinner';
-import ConsentModal from '../../../components/Modals';
-
-const getNextInterval = (iterations) => {
-  const now = moment().toDate();
-  const upcomingIteration = iterations.filter((iteration) => {
-    if (
-      moment(now).isSameOrBefore(iteration.start, 'day') ||
-      moment(now).isSameOrBefore(iteration.end, 'day')
-    ) {
-      return true;
-    }
-    return false;
-  });
-
-  return upcomingIteration;
-};
-
-const getFinishedIterations = (user) => {
-  const finishedIterations = user.iterations.filter((iteration) => {
-    return moment(iteration.finishedAt) < moment().toDate();
-  });
-  return finishedIterations;
-};
-
-const updateJumbotron = (iterations, user) => {
-  const now = moment().toDate();
-  const updated = {
-    currentIteration: {},
-    title: '',
-    daysTilStart: '',
-    accessInformation: '',
-    disabled: false,
-    buttonTitle: 'Umfrage Starten'
-  };
-
-  const nextIntervals = getNextInterval(iterations);
-  const finishedIterations = getFinishedIterations(user);
-
-  if (!nextIntervals.length) {
-    return {
-      ...updated,
-      title: 'Die Umfrage ist abgeschlossen.\n \nVielen Dank für Ihre Teilnahme.',
-      disabled: true
-    };
-  }
-
-  const userHasFinishedIteration = (interval) => {
-    if (finishedIterations.find((iteration) => iteration.iterationId === interval.id)) {
-      return true;
-    }
-    return false;
-  };
-
-  const nextIteration = nextIntervals.find((interval) => {
-    return !userHasFinishedIteration(interval);
-  });
-
-  if (!nextIteration) {
-    return {
-      ...updated,
-      title: 'Die Umfrage ist abgeschlossen.\n \nVielen Dank für Ihre Teilnahme.',
-      disabled: true
-    };
-  }
-  updated.accessInformation = `Die Umfrage kann vom ${moment(nextIteration.start).format(
-    'DD.MM.YY'
-  )} bis zum ${moment(nextIteration.end).format('DD.MM.YY')} ausgefüllt werden.`;
-
-  if (moment(now).isBefore(nextIteration.start, 'day')) {
-    return {
-      ...updated,
-      title: 'Die nächste Umfrage beginnt',
-      daysTilStart: moment(nextIteration.start).fromNow(),
-      currentIteration: nextIteration,
-      disabled: true
-    };
-  }
-  if (
-    moment(now).isSameOrAfter(nextIteration.start, 'day') &&
-    moment(now).isSameOrBefore(nextIteration.end, 'day')
-  ) {
-    // get current unfinished iteration by getting difference between all iterations and finished iterations
-    const unfinishedIteration = difference(user.iterations, finishedIterations)[0];
-    // check if iteration has been started before
-    if (unfinishedIteration && moment(now).isSameOrAfter(unfinishedIteration.startedAt, 'day')) {
-      updated.buttonTitle = 'Umfrage fortsetzen';
-    }
-    return {
-      ...updated,
-      currentIteration: nextIteration,
-      disabled: false
-    };
-  }
-
-  return updated;
-};
+import QuestionnaireInfo from './QuestionnaireInfo';
+import UserApproval from './UserApproval';
 
 const ParticipantPage = ({ user }) => {
-  moment.locale('de');
+  const [
+    { fetchedQuestionnaires, isLoadingQuestionnaires, isErrorQuestionnaires }
+  ] = useFetchQuestionnaires(null, 'iterations consentScript selectionCriteria screeningRules');
 
-  // fetch data
-  const [{ questionnairesInfo, isLoadingInfo, isErrorInfo }] = useFetchQuestionnairesInfo();
   const [currentQuestionnaire, setCurrentQuestionnaire] = useState();
   const [iterationId, setIterationId] = useState();
-  const [title, setTitle] = useState('');
-  const [daysTilStart, setDaysTilStart] = useState('');
-  const [accessInformation, setAccessInformation] = useState('');
   const [buttonTitle, setButtonTitle] = useState('Umfrage starten');
   const [disabled, setDisabled] = useState();
+  const [screeningStatus, setScreeningStatus] = useState(user.screeningStatus);
+  const [hasAcceptedConsentForm, setHasAcceptedConsentForm] = useState(user.hasAcceptedConsentForm);
   const history = useHistory();
   const { userId } = useParams();
   const { url } = useRouteMatch();
 
-  useEffect(() => {
-    if (questionnairesInfo && questionnairesInfo[0]) {
-      setCurrentQuestionnaire(questionnairesInfo[0]);
-    }
-  }, [questionnairesInfo]);
-
-  useEffect(() => {
-    if (currentQuestionnaire) {
-      const current = updateJumbotron(currentQuestionnaire.iterations, user);
-      setIterationId(current.currentIteration.id);
-      setDisabled(current.disabled);
-      setTitle(current.title);
-      setDaysTilStart(current.daysTilStart);
-      setAccessInformation(current.accessInformation);
-      setButtonTitle(current.buttonTitle);
-    }
-  }, [currentQuestionnaire]);
-
   const start = async () => {
     await userService
-      .updateIterationData(userId, iterationId, { startedAt: moment().toDate() })
+      .updateUserIteration(userId, iterationId, { startedAt: moment().toDate() })
       .then(() => {
         history.push(`${url}/questionnairePresenter/iteration/${iterationId}`);
       });
   };
 
+  useEffect(() => {
+    if (screeningStatus === 'Wait' || screeningStatus === 'Reject') {
+      setDisabled(true);
+    }
+  }, [disabled]);
+
+  useEffect(() => {
+    if (fetchedQuestionnaires && fetchedQuestionnaires[0]) {
+      setCurrentQuestionnaire(fetchedQuestionnaires[0]);
+    }
+  }, [fetchedQuestionnaires]);
+
   return (
     <div>
-      {isErrorInfo && (
+      {isErrorQuestionnaires && (
         <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
           Something went wrong...
         </div>
       )}
-      {isLoadingInfo && (
+      {isLoadingQuestionnaires && (
         <div className="d-flex justify-content-center mt-5">
           <Spinner />
         </div>
       )}
       {currentQuestionnaire && (
-        <div className="d-flex justify-content-center p-4 p-sm-5">
-          <div className="text-center " style={{ maxWidth: '800px' }}>
-            <p className="display-4 my-5">Willkommen</p>
-            <h4 className="" style={{ whiteSpace: 'pre-wrap' }}>
-              {title}
-            </h4>
-            <h2 className="my-3">
-              <span className="badge badge-secondary">{daysTilStart}</span>
-            </h2>
-            <p className="lead mt-5">{accessInformation}</p>
-            <hr className="my-4" />
-            <div className="text-center">
-              {user.hasAcceptedConsentForm ? (
+        <div className="p-4 p-sm-5 d-flex-block">
+          <div className="row text-center">
+            <div className="col d-flex-block">
+              <QuestionnaireInfo
+                iterationsProp={currentQuestionnaire.iterations}
+                userProp={user}
+                setDisabled={setDisabled}
+                setButtonTitle={setButtonTitle}
+                setIterationId={setIterationId}
+              />
+            </div>
+          </div>
+          <div className="row text-center">
+            <div className="col d-flex-block">
+              {hasAcceptedConsentForm && screeningStatus === 'Accept' ? (
                 <button
                   disabled={disabled}
                   type="button"
@@ -201,21 +101,18 @@ const ParticipantPage = ({ user }) => {
                 </button>
               )}
             </div>
-            <ConsentModal
-              consentScript={currentQuestionnaire.consentScript}
-              onAccept={() =>
-                userService.updateUserData(userId, { hasAcceptedConsentForm: true }).then(() => {
-                  userService
-                    .updateIterationData(userId, iterationId, {
-                      iterationId,
-                      startedAt: moment().toDate()
-                    })
-                    .then(() => {
-                      history.push(`${url}/questionnairePresenter/iteration/${iterationId}`);
-                    });
-                })
-              }
-            />
+          </div>
+          <div className="row text-center">
+            <div className="col d-flex-block">
+              <UserApproval
+                user={user}
+                screeningStatus={screeningStatus}
+                setScreeningStatus={setScreeningStatus}
+                setHasAcceptedConsentForm={setHasAcceptedConsentForm}
+                questionnaire={currentQuestionnaire}
+                start={start}
+              />
+            </div>
           </div>
         </div>
       )}

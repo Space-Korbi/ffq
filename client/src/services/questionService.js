@@ -1,12 +1,5 @@
 /* eslint-disable no-alert */
-import { nanoid } from 'nanoid';
-import {
-  insertQuestionAt,
-  updateQuestionById,
-  uploadImage,
-  getAllQuestions,
-  deleteQuestionById
-} from '../api';
+import { updateQuestionById, uploadImage } from '../api';
 import AnswerType from '../types';
 
 /**
@@ -14,18 +7,6 @@ import AnswerType from '../types';
  * Sending a request to the surver to upload the images
  * and return the filename in the DB as well as the path
  */
-
-const createQuestion = async (questionnaireId) => {
-  const questionId = nanoid();
-
-  const payload = {
-    _id: questionId
-  };
-
-  await insertQuestionAt(questionnaireId, payload).then((res) => {
-    return res.data.id;
-  });
-};
 
 const updateAmountOption = (dbResponse, amountOption) => {
   const updatedAmountOption = {
@@ -84,16 +65,6 @@ const saveQuestion = async (questionId, questionData, answerOptions) => {
   return updateQuestionById(questionId, payload);
 };
 
-const fetchAllQuestions = async () => {
-  const questions = await getAllQuestions();
-  return questions.data.data;
-};
-
-const deleteQuestion = async (id) => {
-  const deletedQuestion = await deleteQuestionById(id);
-  return deletedQuestion;
-};
-
-const questionService = { createQuestion, saveQuestion, fetchAllQuestions, deleteQuestion };
+const questionService = { saveQuestion };
 
 export default questionService;

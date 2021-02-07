@@ -3,147 +3,102 @@
 /* eslint-disable react/prop-types */
 
 import React, { useEffect, useState } from 'react';
-import BootstrapTable from 'react-bootstrap-table-next';
-import ToolkitProvider from 'react-bootstrap-table2-toolkit';
 
 // services
-import { questionnaireService } from '../../services';
+import { userService } from '../../services';
 
 // custom hooks
-import { useFetchUsers, useFetchQuestions } from '../../hooks';
+import { useFetchQuestions, useFetchQuestionnaires } from '../../hooks';
 
 // helpers
-import { addValidString, dateHelper } from '../../helpers';
+import { addValidString } from '../../helpers';
 
 // components
 import Spinner from '../../components/Spinner';
 import { NavTabs, NavContents } from '../../components/Navigation';
+import ParticipantsTable from './ParticipantsTable';
 import { CriteriaEditor, RuleEditor } from '../../components/UserSelection';
 
-const rule1 = {
-  id: '1',
-  criteria: ['Laktose Intolerant', 'Vegan'],
-  operator: 'And',
-  decision: 'Accept'
+const questionHeaderFormatter = (column) => {
+  return (
+    <div>
+      {column.questionTitle}
+      <br />
+      {column.subtitle1 ? <small>{column.subtitle1}</small> : <small>-</small>}
+      <br />
+      {column.subtitle2 ? <small>{column.subtitle2}</small> : <small>-</small>}
+    </div>
+  );
 };
 
-const rule2 = {
-  id: '2',
-  criteria: ['Taking Medication'],
-  operator: '',
-  decision: 'Wait'
-};
-
-const mockSelectionCriteria = ['Laktose Intolerant', 'Taking Medication', 'Pregnant', 'Vegan'];
-const mockRules = [rule1, rule2];
-
-const dataColumns = [
-  {
-    dataField: 'email',
-    text: 'Email'
-  },
-  {
-    dataField: 'firstName',
-    text: 'First Name'
-  },
-  {
-    dataField: 'lastName',
-    text: 'Last Name'
-  },
-  {
-    dataField: 'hasAcceptedConsentForm',
-    text: 'Consent Form',
-    formatter: (cellContent, row) => {
-      if (cellContent) {
-        return <span className="badge badge-success">Accepted</span>;
-      }
-      return <span className="badge badge-danger">Not yet accepted</span>;
+const formatAnswer = (answers) => {
+  let formattedAnswer;
+  if (answers && !Array.isArray(answers)) {
+    if (answers.index) {
+      formattedAnswer = answers.index;
+    } else {
+      formattedAnswer = answers.title;
     }
-  },
-  {
-    dataField: 'screeningStatus',
-    text: 'Screening Status',
-    formatter: (cellContent, row) => {
-      if (cellContent === 'accept') {
-        return <span className="badge badge-success">Accepted</span>;
+  } else if (answers && Array.isArray(answers)) {
+    formattedAnswer = answers.map((answer) => {
+      if (!answer.hasNumberInput) {
+        return `${answer.title}: ${answer.answer}`;
       }
-      if (cellContent === 'reject') {
-        return <span className="badge badge-danger">Rejected</span>;
-      }
-      if (cellContent === 'wait') {
-        return <span className="badge badge-warning">Waiting</span>;
-      }
-      return cellContent;
-    }
-  },
-  {
-    dataField: 'screeningData',
-    text: 'Screening Data'
-  },
-  {
-    dataField: 'personalData',
-    text: 'Personal Data'
-  },
-  {
-    dataField: 'startedAt',
-    text: 'Started',
-    formatter: (cellContent, row) => {
-      return dateHelper.applyDateStyle(cellContent);
-    }
-  },
-  {
-    dataField: 'finishedAt',
-    text: 'Finished',
-    formatter: (cellContent, row) => {
-      return dateHelper.applyDateStyle(cellContent);
-    }
+      return `${answer.title}: ${answer.answer} ${answer.numberAnswer} ${answer.numberInputTitle}`;
+    });
   }
-];
 
-const ParticipantsManagement = ({
-  users,
-  questions,
-  iterations,
-  name,
-  prevSelectionCriteria,
-  prevSelectionRules
-}) => {
-  const [selectionCriteria, setSelectionCriteria] = useState(prevSelectionCriteria);
-  const [selectionRules, setSelectionRules] = useState(prevSelectionRules);
-  const [selectedIteration, setSelectedIteration] = useState();
-  const [columns, setColumns] = useState(dataColumns);
+  return formattedAnswer;
+};
+
+const parseAnswers = (users, selectedIteration) => {
+  return users.map((user) => {
+    const index = user.iterations.findIndex((iteration) => {
+      return iteration.id === selectedIteration.id;
+    });
+
+    if (!user.iterations || !user.iterations.length || !user.iterations[0].answers || index < 0) {
+      return user;
+    }
+    const userWithAnswers = { ...user };
+
+    user.iterations[index].answers.forEach((answer) => {
+      userWithAnswers[answer.questionId] = formatAnswer(answer.answerOption);
+    });
+    return userWithAnswers;
+  });
+};
+
+const listAnswers = (column) => {
+  if (column && !Array.isArray(column)) {
+    return column;
+  }
+  if (column && Array.isArray(column)) {
+    const formattedAnswer = column.map((answer) => {
+      return <li key={answer}>{answer}</li>;
+    });
+
+    return <ul className="list-unstyled content-align-center mb-0">{formattedAnswer}</ul>;
+  }
+  return '';
+};
+
+const ParticipantsManagement = ({ questions, questionnaire }) => {
+  const [selectionCriteria, setSelectionCriteria] = useState(questionnaire.selectionCriteria);
+  const [screeningRules, setScreeningRules] = useState(questionnaire.screeningRules);
+  const [selection, setSelection] = useState(0);
+  const [selectedIteration, setSelectedIteration] = useState({
+    startLabel: 'undefined',
+    endLabel: 'undefined'
+  });
+  const [columns, setColumns] = useState([]);
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    // if iterationsArray doesnt contain the data
-    // useFetchIterations to load data and add to array
-  }, [selectedIteration]);
-
-  const answerFormatter = (column, colIndex) => {
-    if (column && !Array.isArray(column)) {
-      return column;
+    if (questionnaire.iterations.length) {
+      setSelectedIteration(questionnaire.iterations[selection]);
     }
-    if (column && Array.isArray(column)) {
-      const formattedAnswer = column.map((answer) => {
-        return <li key={answer}>{answer}</li>;
-      });
-
-      return <ul className="list-unstyled content-align-center mb-0">{formattedAnswer}</ul>;
-    }
-    return '';
-  };
-
-  const questionHeaderFormatter = (column, colIndex) => {
-    return (
-      <div>
-        {column.questionTitle}
-        <br />
-        {column.subtitle1 ? <small>{column.subtitle1}</small> : <small>-</small>}
-        <br />
-        {column.subtitle2 ? <small>{column.subtitle2}</small> : <small>-</small>}
-      </div>
-    );
-  };
+  }, [selection]);
 
   useEffect(() => {
     if (questions && questions.length) {
@@ -155,50 +110,59 @@ const ParticipantsManagement = ({
           subtitle1: question.subtitle1,
           subtitle2: question.subtitle2,
           csvText: question.title,
-          formatter: answerFormatter,
+          formatter: listAnswers,
           headerFormatter: questionHeaderFormatter
         };
       });
-      const allColumns = dataColumns.concat(questionColumns);
-      setColumns(allColumns);
+      setColumns(questionColumns);
     }
   }, [questions]);
 
-  const extractAnswers = (answers) => {
-    let formattedAnswer;
-    if (answers && !Array.isArray(answers)) {
-      if (answers.index) {
-        formattedAnswer = answers.index;
-      } else {
-        formattedAnswer = answers.title;
-      }
-    } else if (answers && Array.isArray(answers)) {
-      formattedAnswer = answers.map((answer) => {
-        if (!answer.hasNumberInput) {
-          return `${answer.title}: ${answer.answer}`;
-        }
-        return `${answer.title}: ${answer.answer} ${answer.numberAnswer} ${answer.numberInputTitle}`;
-      });
-    }
-
-    return formattedAnswer;
+  const onSetResult = (result) => {
+    const iterationData = parseAnswers(result, selectedIteration);
+    localStorage.setItem(selectedIteration.id, JSON.stringify(iterationData));
+    setData(iterationData);
   };
 
   useEffect(() => {
-    if (users && users.length) {
-      const questionData = users.map((user) => {
-        if (!user.iterations || !user.iterations.length || !user.iterations[0].answers) {
-          return user;
-        }
-        const userWithAnswers = { ...user };
-        user.iterations[0].answers.forEach((answer) => {
-          userWithAnswers[answer.questionId] = extractAnswers(answer.answerOption);
-        });
-        return userWithAnswers;
-      });
-      setData(questionData);
+    let didCancel = false;
+
+    if (!selectedIteration || !selectedIteration.id) {
+      return () => {
+        didCancel = true;
+      };
     }
-  }, [users]);
+
+    const cachedHits = localStorage.getItem(selectedIteration.id);
+
+    if (cachedHits) {
+      setData(JSON.parse(cachedHits));
+    } else {
+      const fetchUsers = async () => {
+        try {
+          await userService.fetchUsers(null, selectedIteration.id, null).then((users) => {
+            // TODO: Refactor, filter in db before sending
+            console.log(users);
+            users.shift();
+            console.log(users);
+            if (!didCancel) {
+              const iterationData = parseAnswers(users, selectedIteration);
+              onSetResult(iterationData);
+            }
+          });
+        } catch (error) {
+          if (!didCancel) {
+            // display info that data could not be fetched
+            console.log(error);
+          }
+        }
+      };
+      fetchUsers();
+    }
+    return () => {
+      didCancel = true;
+    };
+  }, [selectedIteration]);
 
   /**
    * TODO
@@ -219,83 +183,56 @@ const ParticipantsManagement = ({
      * api call to save rules in db
      */
 
-    if (!selectionRules.includes(newRule)) {
-      setSelectionRules((prevRules) => [...prevRules, newRule]);
+    if (!screeningRules.includes(newRule)) {
+      setScreeningRules((prevRules) => [...prevRules, newRule]);
     }
   };
 
   const removeRule = (ruleToRemove) => {
     if (ruleToRemove !== undefined) {
-      setSelectionRules(
-        selectionRules.filter((rule) => {
+      setScreeningRules(
+        screeningRules.filter((rule) => {
           return rule !== ruleToRemove;
         })
       );
     }
   };
 
-  const ExportCSVButton = (props) => {
-    const handleClick = () => {
-      props.onExport();
-    };
+  const IterationSelector = () => {
     return (
-      <div>
-        <button type="button" className="btn btn-outline-success" onClick={handleClick}>
-          Export to CSV
-        </button>
+      <div className="form-group form-inline m-0">
+        <select
+          className="form-control custom-select"
+          id="iterationSelect"
+          value={selection}
+          onChange={(e) => {
+            setSelection(e.target.value);
+          }}
+        >
+          {questionnaire.iterations.map((iteration, index) => {
+            return (
+              <option key={iteration.id} value={index}>
+                {`${iteration.startLabel} - ${iteration.endLabel}`}
+              </option>
+            );
+          })}
+        </select>
       </div>
     );
   };
 
   const participantsContent = (
-    <div>
-      <ToolkitProvider
-        keyField="email"
-        data={data}
-        columns={columns}
-        bootstrap4
-        exportCSV={{ fileName: `${name}_${selectedIteration}.csv` }}
-      >
-        {(props) => (
-          <div>
-            <div className="row">
-              <div className="col">
-                <ExportCSVButton {...props.csvProps}>Export CSV</ExportCSVButton>
-              </div>
-              <div className="col">
-                <div className="form-group">
-                  <select
-                    className="form-control custom-select"
-                    id="intervalSelect"
-                    onChange={(e) => setSelectedIteration(e.target.value)}
-                  >
-                    {iterations.map((iteration) => {
-                      return <option key={iteration}>{iteration}</option>;
-                    })}
-                  </select>
-                </div>
-              </div>
-            </div>
-            <br />
-            <div className="row no-gutters overflow-auto flex-row flex-nowrap">
-              <div className="col">
-                <BootstrapTable
-                  {...props.baseProps}
-                  bordered={false}
-                  striped
-                  hover
-                  noDataIndication="No participants data"
-                />
-              </div>
-            </div>
-          </div>
-        )}
-      </ToolkitProvider>
-    </div>
+    <ParticipantsTable
+      fileName={`${questionnaire.name} ${selectedIteration.startLabel}-${selectedIteration.endLabel}.csv`}
+      data={data}
+      columns={columns}
+      iterationSelector={<IterationSelector />}
+    />
   );
 
   const selectionCriteriaContent = (
     <CriteriaEditor
+      questionnaireId={questionnaire._id}
       selectionCriteria={selectionCriteria}
       addSelectionCriteria={saveSelectionCriteria}
       removeSelectionCriteria={removeFromSelectionCriteria}
@@ -304,8 +241,9 @@ const ParticipantsManagement = ({
 
   const ruleEditorContent = (
     <RuleEditor
+      questionnaireId={questionnaire._id}
       selectionCriteria={selectionCriteria}
-      rules={selectionRules}
+      screeningRules={screeningRules}
       saveRule={saveRule}
       removeRule={removeRule}
     />
@@ -319,7 +257,7 @@ const ParticipantsManagement = ({
       <div>
         <NavTabs tabNames={tabNames} />
       </div>
-      <div className="mt-5">
+      <div className="mt-4">
         <NavContents tabNames={tabNames} tabContents={tabContents} />
       </div>
     </div>
@@ -327,49 +265,39 @@ const ParticipantsManagement = ({
 };
 
 const ParticipantsManagementPage = () => {
-  const [{ users, isLoadingUsers, isErrorUsers }] = useFetchUsers();
+  const [
+    { fetchedQuestionnaires, isLoadingQuestionnaires, isErrorQuestionnaires }
+  ] = useFetchQuestionnaires(null, '_id name iterations selectionCriteria screeningRules');
   const [
     { fetchedQuestions, isLoadingQuestions, isErrorQuestions },
     setQuestionniareId
   ] = useFetchQuestions();
 
-  const sampleIterations = ['601333b87e41ce7e7648ec1e', '601333b87e41ce7e7648ec1f'];
-  const sampleName = 'FFQ';
   useEffect(() => {
-    const fetchIds = async () => {
-      // TODO fetch iterations and name and pass them along
-      await questionnaireService.fetchQuestionnaires('_id').then((response) => {
-        console.log(response);
-        setQuestionniareId(response.data[0]);
-      });
-    };
-
-    fetchIds();
-  }, []);
+    if (fetchedQuestionnaires && fetchedQuestionnaires.length) {
+      setQuestionniareId(fetchedQuestionnaires[0]._id);
+    }
+  }, [fetchedQuestionnaires]);
 
   return (
     <div>
       <div>
-        {(isErrorUsers || isErrorQuestions) && (
+        {(isErrorQuestionnaires || isErrorQuestions) && (
           <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
             Something went wrong...
           </div>
         )}
-        {(isLoadingUsers || isLoadingQuestions) && (
+        {(isLoadingQuestionnaires || isLoadingQuestions) && (
           <div className="d-flex justify-content-center mt-5">
             <Spinner />
           </div>
         )}
-        <div className="m-4 d-flex justify-content-center">
+        <div className="m-2 m-sm-4 d-flex justify-content-center">
           <div className="w-100">
-            {users && users.length > 0 && fetchedQuestions && (
+            {fetchedQuestionnaires && fetchedQuestionnaires.length > 0 && fetchedQuestions && (
               <ParticipantsManagement
-                users={users}
                 questions={fetchedQuestions}
-                name={sampleName}
-                iterations={sampleIterations}
-                prevSelectionCriteria={mockSelectionCriteria}
-                prevSelectionRules={mockRules}
+                questionnaire={fetchedQuestionnaires[0]}
               />
             )}
           </div>

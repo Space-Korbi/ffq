@@ -23,7 +23,7 @@ const CustomDateInput = ({ value, onClick }) => (
 CustomDateInput.propTypes = { value: string.isRequired, onClick: func.isRequired };
 // */
 
-const DateIntervalTable = ({ iterations, setStart, setEnd, remove, add }) => {
+const IterationsTable = ({ iterations, setStart, setEnd, remove, add }) => {
   return (
     <div className="table m-0">
       <table className="table table-sm table-borderless m-0 border-top-0">
@@ -45,16 +45,16 @@ const DateIntervalTable = ({ iterations, setStart, setEnd, remove, add }) => {
         </thead>
         <tbody>
           {iterations.length ? (
-            iterations.map((interval) => {
+            iterations.map((iteration) => {
               return (
-                <tr key={interval.id}>
+                <tr key={iteration.id}>
                   <td>
                     <DatePicker
-                      selected={moment(interval.start).toDate()}
+                      selected={moment(iteration.start).toDate()}
                       locale={de}
                       dateFormat="dd/MM/yyyy"
                       onChange={(date) =>
-                        setStart(interval.id, moment(date).startOf('day').toISOString())
+                        setStart(iteration.id, moment(date).startOf('day').toISOString())
                       }
                       minDate={moment().toDate()}
                       popperModifiers={{
@@ -67,14 +67,14 @@ const DateIntervalTable = ({ iterations, setStart, setEnd, remove, add }) => {
                   </td>
                   <td>
                     <DatePicker
-                      selected={moment(interval.end).toDate()}
+                      selected={moment(iteration.end).toDate()}
                       locale={de}
                       dateFormat="dd/MM/yyyy"
                       onChange={(date) =>
-                        setEnd(interval.id, moment(date).endOf('day').toISOString())
+                        setEnd(iteration.id, moment(date).endOf('day').toISOString())
                       }
                       popperPlacement="top-left"
-                      minDate={moment(interval.start).toDate()}
+                      minDate={moment(iteration.start).toDate()}
                       popperModifiers={{
                         offset: {
                           enabled: true,
@@ -84,7 +84,7 @@ const DateIntervalTable = ({ iterations, setStart, setEnd, remove, add }) => {
                     />
                   </td>
                   <td className="align-middle">
-                    <DeleteButton onClick={() => remove(interval.id)} styling="float-right" />
+                    <DeleteButton onClick={() => remove(iteration.id)} styling="float-right" />
                   </td>
                 </tr>
               );
@@ -104,12 +104,14 @@ const DateIntervalTable = ({ iterations, setStart, setEnd, remove, add }) => {
   );
 };
 
-DateIntervalTable.propTypes = {
+IterationsTable.propTypes = {
   iterations: arrayOf(
     shape({
       id: string,
       start: string,
-      end: string
+      startLabel: string,
+      end: string,
+      endLabel: string
     })
   ).isRequired,
   setStart: func.isRequired,
@@ -118,46 +120,53 @@ DateIntervalTable.propTypes = {
   add: func.isRequired
 };
 
-const DateIntervalSettings = ({ iterations, setIterations }) => {
+const IterationsSettings = ({ iterations, setIterations }) => {
   const setStart = (id, date) => {
-    console.log('----------', date);
-    const newIntervals = iterations.map((interval) => {
-      if (interval.id === id) {
-        const updatedInterval = {
-          ...interval,
-          start: date
+    const newIterations = iterations.map((iteration) => {
+      if (iteration.id === id) {
+        const updatedIteration = {
+          ...iteration,
+          start: date,
+          startLabel: moment(date).format('DD.MM.YY')
         };
-        return updatedInterval;
+        return updatedIteration;
       }
-      return interval;
+      return iteration;
     });
-    setIterations(newIntervals);
+    setIterations(newIterations);
   };
 
   const setEnd = (id, date) => {
-    const newIntervals = iterations.map((interval) => {
-      if (interval.id === id) {
-        const updatedInterval = {
-          ...interval,
-          end: date
+    const newIterations = iterations.map((iteration) => {
+      if (iteration.id === id) {
+        const updatedIteration = {
+          ...iteration,
+          end: date,
+          endLabel: moment(date).format('DD.MM.YY')
         };
-        return updatedInterval;
+        return updatedIteration;
       }
-      return interval;
+      return iteration;
     });
-    setIterations(newIntervals);
+    setIterations(newIterations);
   };
 
-  const addInterval = () => {
+  const addIteration = () => {
     setIterations((prevState) => [
       ...prevState,
-      { id: nanoid(), start: moment().toISOString(), end: moment().toISOString() }
+      {
+        id: nanoid(),
+        start: moment().toISOString(),
+        startLabel: moment().format('DD.MM.YY'),
+        end: moment().toISOString(),
+        endLabel: moment().format('DD.MM.YY')
+      }
     ]);
   };
 
-  const removeInterval = (intervalId) => {
-    const newIntervals = iterations.filter((prevInterval) => prevInterval.id !== intervalId);
-    setIterations(newIntervals);
+  const removeIteration = (iterationId) => {
+    const newIterations = iterations.filter((prevIteration) => prevIteration.id !== iterationId);
+    setIterations(newIterations);
   };
 
   return (
@@ -165,12 +174,12 @@ const DateIntervalSettings = ({ iterations, setIterations }) => {
       <div className="col p-0">
         <div className="col p-0">
           <div className="col d-flex justify-content-center p-0">
-            <DateIntervalTable
+            <IterationsTable
               iterations={iterations}
               setStart={setStart}
               setEnd={setEnd}
-              remove={removeInterval}
-              add={addInterval}
+              remove={removeIteration}
+              add={addIteration}
             />
           </div>
         </div>
@@ -179,9 +188,9 @@ const DateIntervalSettings = ({ iterations, setIterations }) => {
   );
 };
 
-DateIntervalSettings.propTypes = {
+IterationsSettings.propTypes = {
   iterations: arrayOf(shape({ id: string, start: string, end: string })).isRequired,
   setIterations: func.isRequired
 };
 
-export default DateIntervalSettings;
+export default IterationsSettings;

@@ -1,7 +1,16 @@
-const nanoid = require('nanoid');
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
+
+const ScreeningRule = Schema(
+  {
+    id: { type: String, required: true },
+    criteria: { type: [String], required: true },
+    operator: { type: String, enum: ['AND', 'OR', ''] },
+    decision: { type: String, enum: ['Accept', 'Reject', 'Wait'], required: true }
+  },
+  { _id: false, default: [] }
+);
 
 /**
  * * Iteration
@@ -11,11 +20,13 @@ const { Schema } = mongoose;
 
 const Iteration = Schema(
   {
-    id: { type: String },
+    id: { type: String, required: true },
     start: { type: Date },
-    end: { type: Date }
+    startLabel: { type: String },
+    end: { type: Date },
+    endLabel: { type: String }
   },
-  { default: [] }
+  { _id: false, default: [] }
 );
 
 /**
@@ -28,17 +39,14 @@ const Iteration = Schema(
 
 const Questionnaire = mongoose.model(
   'Questionnaire',
-  new mongoose.Schema(
+  new Schema(
     {
-      _id: {
-        type: String,
-        default: nanoid.nanoid(),
-        required: true
-      },
       name: { type: String, default: 'New Questionnaire' },
       consentScript: { type: String, default: '' },
+      screeningRules: [ScreeningRule],
+      selectionCriteria: { type: [String], default: [] },
       iterations: [Iteration],
-      questions: { type: [String] }
+      questions: [{ type: mongoose.Types.ObjectId, ref: 'questions', default: [] }]
     },
     { timestamps: true }
   )

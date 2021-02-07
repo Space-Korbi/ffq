@@ -4,7 +4,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 import PropTypes from 'prop-types';
-import BootstrapTable from 'react-bootstrap-table-next';
 
 // services
 import { questionnaireService } from '../../services';
@@ -16,14 +15,9 @@ import { useFetchQuestionnaires, useFetchQuestions } from '../../hooks';
 import Spinner from '../../components/Spinner';
 import { NavTabs, NavContents } from '../../components/Navigation';
 import QuestionEditor from '../../components/QuestionEditor';
-import {
-  AddButton,
-  DeleteButton,
-  EditButton,
-  MoveButton,
-  OutlineButton
-} from '../../components/Button';
+import { OutlineButton } from '../../components/Button';
 import QuestionnaireSettings from '../../components/Settings';
+import QuestionTable from './QuestionTable';
 
 const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
   const [
@@ -73,150 +67,11 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
     }
   }, [questions, isEditing]);
 
-  const handleCreateQuestionAt = async (index) => {
-    await questionnaireService.createQuestionAt(questionnaire._id, index).then((response) => {
-      const questionsCopy = [...questionsRef.current];
-      if (index >= 0) {
-        questionsCopy.splice(index, 0, response.question);
-      } else {
-        questionsCopy.push(response.question);
-      }
-      setQuestions(questionsCopy);
+  const saveSettings = async (settings) => {
+    await questionnaireService.updateQuestionnaire(questionnaire._id, settings).then((res) => {
+      console.log(res);
     });
   };
-
-  const handleMoveQuestionFromTo = async (question, fromIndex, toIndex) => {
-    if (toIndex >= 0 && toIndex < questionsRef.current.length) {
-      await questionnaireService
-        .moveQuestionFromTo(questionnaire._id, question, fromIndex, toIndex)
-        .then((response) => {
-          if (response.success) {
-            const questionsCopy = [...questionsRef.current];
-            if (toIndex > fromIndex) {
-              questionsCopy.splice(fromIndex, 1);
-              questionsCopy.splice(toIndex, 0, question);
-            } else if (toIndex < fromIndex) {
-              questionsCopy.splice(toIndex, 0, question);
-              questionsCopy.splice(fromIndex + 1, 1);
-            }
-            setQuestions(questionsCopy);
-          }
-        });
-    }
-  };
-
-  const handleRemoveQuestion = async (question, index) => {
-    await questionnaireService
-      .removeQuestionById(questionnaire._id, question._id)
-      .then((response) => {
-        if (response.success) {
-          const questionsCopy = [...questionsRef.current];
-          if (index > -1) {
-            questionsCopy.splice(index, 1);
-          }
-          setQuestions(questionsCopy);
-        }
-      });
-  };
-
-  const saveSettings = async (settings) => {
-    await questionnaireService
-      .updateQuestionnaireSettings(questionnaire._id, settings)
-      .then((response) => {
-        console.log(response);
-      });
-  };
-
-  const deleteButton = (cell, row) => {
-    return (
-      <div className="d-flex justify-content-center">
-        <DeleteButton isTrashCan onClick={() => handleRemoveQuestion(row.question, row.index)} />
-      </div>
-    );
-  };
-
-  const moveButtons = (cell, row) => {
-    const { index } = row;
-    return (
-      <div className="d-flex">
-        <MoveButton up onClick={() => handleMoveQuestionFromTo(row.question, index, index - 1)} />
-
-        <MoveButton onClick={() => handleMoveQuestionFromTo(row.question, index, index + 1)} />
-      </div>
-    );
-  };
-
-  const editButton = (cell, row) => {
-    return (
-      <div>
-        <EditButton
-          onClick={() => setSelectedQuestion({ question: row.question, index: row.index })}
-        />
-      </div>
-    );
-  };
-
-  const addButton = (column, colIndex) => {
-    return (
-      <AddButton
-        styling="btn-primary "
-        onClick={() => {
-          handleCreateQuestionAt();
-        }}
-      />
-    );
-  };
-
-  const columns = [
-    {
-      text: '',
-      dataField: 'index',
-      align: 'center',
-      headerFormatter: addButton,
-      style: { width: '8px' }
-    },
-    {
-      dataField: 'edit',
-      text: 'Edit',
-      editable: false,
-      align: 'center',
-      formatter: editButton,
-      style: { width: '45px' }
-    },
-    {
-      dataField: 'move',
-      text: 'Move',
-      editable: false,
-      align: 'center',
-      style: { width: '12px' },
-      formatter: moveButtons
-    },
-    {
-      text: 'Title',
-      dataField: 'question.title'
-    },
-    {
-      text: 'Subtitle1',
-      dataField: 'question.subtitle1'
-    },
-    {
-      text: 'Subtitle2',
-      dataField: 'question.subtitle2'
-    },
-    {
-      text: 'Help',
-      dataField: 'question.help'
-    },
-
-    {
-      dataField: 'delete',
-      text: '',
-      editable: false,
-      align: 'center',
-      style: { width: '12px' },
-      formatter: deleteButton
-    }
-  ];
 
   const modalTableColumns = [
     {
@@ -267,14 +122,13 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
                 <Spinner />
               </div>
             ) : (
-              <div className="row no-gutters overflow-auto flex-row flex-nowrap my-3">
-                <BootstrapTable
-                  keyField="index"
+              <div className="row no-gutters overflow-auto flex-row flex-nowrap my-4">
+                <QuestionTable
                   data={data}
-                  columns={columns}
-                  bordered={false}
-                  hover
-                  noDataIndication="No Data"
+                  setSelectedQuestion={setSelectedQuestion}
+                  setQuestions={setQuestions}
+                  questionnaire={questionnaire}
+                  questionsRef={questionsRef}
                 />
               </div>
             )}
@@ -317,8 +171,8 @@ const QuestionnaireEditorPage = () => {
   }, [fetchedQuestionnaires]);
 
   const handleCreateQuestionnaire = async () => {
-    await questionnaireService.createQuestionnaire().then((response) => {
-      setQuestionnaires((state) => [...state, response.data]);
+    await questionnaireService.createQuestionnaire().then((res) => {
+      setQuestionnaires((state) => [...state, res.data.questionnaire]);
     });
   };
 
@@ -352,11 +206,11 @@ const QuestionnaireEditorPage = () => {
           )}
         </div>
       ) : (
-        <div className="px-3">
+        <div className="m-2 m-sm-4">
           {questionnaires.map((questionnaire) => {
             return (
               <div key={questionnaire._id} className="my-3">
-                <div className="px-2">
+                <div className="">
                   <QuestionnaireEditor
                     questionnaire={questionnaire}
                     deleteQuestionnaire={() => handleDeleteQuestionnaire}

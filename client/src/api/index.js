@@ -32,24 +32,38 @@ export const updateUserIteration = (userId, iterationId, payload) =>
 export const updateUserIterationAnswer = (userId, iterationId, questionId, payload) =>
   api.patch(`/users/${userId}/iterations/${iterationId}/questions/${questionId}`, payload);
 
+// questionnaire
+export const createQuestionnaire = (payload) => api.post(`/questionnaires`, payload);
+
+export const getQuestions = (questionnaireId) =>
+  api.get(`/questionnaires/${questionnaireId}/questions`);
+
+export const updateQuestionnaire = (questionnaireId, payload) =>
+  api.patch(`/questionnaires/${questionnaireId}`, payload);
+
+export const insertQuestion = (questionnaireId, payload) =>
+  api.post(`/questionnaires/${questionnaireId}/questions`, payload);
+
+export const updateQuestion = (questionId, payload) =>
+  api.patch(`/questions/${questionId}`, payload);
+
+export const moveQuestion = (questionnaireId, questionId, position) =>
+  api.patch(`/questionnaires/${questionnaireId}/questions/${questionId}/position/${position}`);
+
+export const deleteQuestion = (questionnaireId, questionId) =>
+  api.delete(`/questionnaires/${questionnaireId}/questions/${questionId}`);
+
 // * END REFACTORED
 
 // question
-export const insertQuestionAt = (questionnaireId, payload) =>
-  api.post(`/questionnaires/${questionnaireId}/questions`, payload);
+
 export const updateQuestionById = (id, payload) => api.put(`/questions/${id}`, payload);
-export const getAllQuestions = () => api.get(`/questions`);
-export const getAllQuestionsOfQuestionnaire = (questionnaireId) =>
-  api.get(`/questionnaires/${questionnaireId}/questions`);
-export const deleteQuestionById = (questionnaireId, questionId) =>
-  api.delete(`/questionnaires/${questionnaireId}/questions/${questionId}`);
 
 // questionnaire
-export const insertQuestionnaire = (payload) => api.post(`/questionnaires`, payload);
-export const updateQuestionnaire = (questionnaireId, payload) =>
-  api.put(`/questionnaires/${questionnaireId}`, payload);
-export const getAllQuestionnaires = () => api.get(`/questionnaires`);
-export const getQuestionnaires = (query) => api.get(`/questionnaires`, { params: query });
+
+export const getQuestionnaires = (params) => {
+  return api.get(`/questionnaires`, { params });
+};
 
 export const getQuestionnaireById = (questionnaireId) =>
   api.get(`/questionnaires/${questionnaireId}`);
@@ -65,14 +79,13 @@ export const deleteImageById = (id) => api.delete(`/image/${id}`);
 const apis = {
   signup,
   login,
-  insertQuestionnaire,
-  insertQuestionAt,
+  createQuestionnaire,
   getUsers,
   updateUser,
+  updateQuestionnaire,
   updateUserIteration,
   updateUserIterationAnswer,
-  getAllQuestions,
-  getAllQuestionsOfQuestionnaire,
+  getQuestions,
   uploadImage
 };
 

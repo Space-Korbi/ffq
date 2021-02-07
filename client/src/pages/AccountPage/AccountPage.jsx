@@ -6,13 +6,13 @@ import { useParams, useHistory } from 'react-router-dom';
 import moment from 'moment';
 
 // custom hooks
-import { useFetchUsers, useFetchQuestionnairesInfo, useUpdateUser } from '../../hooks';
+import { useFetchUsers, useFetchQuestionnaires, useUpdateUser } from '../../hooks';
 
 // components
 import Spinner from '../../components/Spinner';
 import EditPersonalInfo from './EditPersonalInfo';
 import ChangePassword from './ChangePassword';
-import ConsentModal from '../../components/Modals';
+import ConsentScreeningModal from '../../components/Modals';
 
 const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
   const history = useHistory();
@@ -42,11 +42,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
 
   const isIncompleteIteration = (currentIteration) => {
     return user.iterations.some((iteration) => {
-      if (
-        iteration.iterationId === currentIteration.id &&
-        iteration.startedAt &&
-        !iteration.finishedAt
-      ) {
+      if (iteration.id === currentIteration.id && iteration.startedAt && !iteration.finishedAt) {
         return true;
       }
       return false;
@@ -59,9 +55,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
 
     if (completedIterations && completedIterations.length) {
       if (
-        completedIterations.some(
-          (completedIteration) => iteration.id === completedIteration.iterationId
-        )
+        completedIterations.some((completedIteration) => iteration.id === completedIteration.id)
       ) {
         return <span className="badge badge-success mx-1">Completed</span>;
       }
@@ -74,7 +68,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
             <button
               type="button"
               className="btn btn-sm btn-link"
-              onClick={() => history.push(`questionnairePresenter/${iteration.id}`)}
+              onClick={() => history.push(`questionnairePresenter/iteration/${iteration.id}`)}
             >
               Continue now
             </button>
@@ -135,18 +129,14 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
                       </thead>
                       <tbody>
                         {iterations.length ? (
-                          iterations.map((interval) => {
+                          iterations.map((iteration) => {
                             const completedIterations = getCompletedIterations();
                             return (
-                              <tr key={interval.id}>
+                              <tr key={iteration.id}>
+                                <td className="align-middle">{iteration.startLabel}</td>
+                                <td className="align-middle">{iteration.endLabel}</td>
                                 <td className="align-middle">
-                                  {moment(interval.start).format('DD.MM.YY')}
-                                </td>
-                                <td className="align-middle">
-                                  {moment(interval.end).format('DD.MM.YY')}
-                                </td>
-                                <td className="align-middle">
-                                  {getIterationStatus(completedIterations, interval)}
+                                  {getIterationStatus(completedIterations, iteration)}
                                 </td>
                               </tr>
                             );
@@ -186,7 +176,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
               ) : (
                 <span className="badge badge-danger mx-1">Not accepted</span>
               )}
-              <ConsentModal
+              <ConsentScreeningModal
                 consentScript={consentScript}
                 onAccept={() => {
                   setUpdate({ hasAcceptedConsentForm: true });
@@ -197,9 +187,9 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
               <hr className="m-0 mb-3" />
               {(() => {
                 switch (screeningStatus) {
-                  case 'accept':
+                  case 'Accept':
                     return <span className="badge badge-success mx-1">Accepted</span>;
-                  case 'reject':
+                  case 'Reject':
                     return <span className="badge badge-danger mx-1">Rejected</span>;
                   default:
                     return <span className="badge badge-warning mx-1">Wait</span>;
@@ -218,28 +208,30 @@ const AccountPage = ({ isAdmin }) => {
   const [{ users, isLoadingUsers, isErrorUsers }, setFields] = useFetchUsers(
     userId,
     null,
-    'firstName lastName email hasAcceptedConsentForm screeningStatus iterations.startedAt iterations.finishedAt iterations.iterationId'
+    'firstName lastName email hasAcceptedConsentForm screeningStatus iterations.startedAt iterations.finishedAt iterations.id'
   );
-  const [{ questionnairesInfo, isLoadingInfo, isErrorInfo }] = useFetchQuestionnairesInfo();
+  const [
+    { fetchedQuestionnaires, isLoadingQuestionnaires, isErrorQuestionnaires }
+  ] = useFetchQuestionnaires(null, 'consentScript iterations');
 
   return (
     <div>
-      {isErrorUsers && (
+      {(isErrorUsers || isErrorQuestionnaires) && (
         <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
           Something went wrong...
         </div>
       )}
-      {isLoadingUsers && (
+      {(isLoadingUsers || isLoadingQuestionnaires) && (
         <div className="d-flex justify-content-center mt-5">
           <Spinner />
         </div>
       )}
       <div className="px-3 px-md-5">
-        {users && users.length > 0 && questionnairesInfo && questionnairesInfo.length > 0 && (
+        {users && users.length > 0 && fetchedQuestionnaires && fetchedQuestionnaires.length > 0 && (
           <AccountDataPresenter
             user={users[0]}
             isAdmin={isAdmin}
-            questionnaireInfo={questionnairesInfo[0]}
+            questionnaireInfo={fetchedQuestionnaires[0]}
           />
         )}
       </div>

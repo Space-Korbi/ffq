@@ -1,6 +1,7 @@
 const express = require('express');
 
 const QuestionnaireCtrl = require('./questionnaire.controller');
+const QuestionCtrl = require('./questions/question.controller');
 const { authJwt, validate } = require('../middlewares');
 
 /**
@@ -10,22 +11,59 @@ const { authJwt, validate } = require('../middlewares');
  */
 const router = express.Router();
 
+// start refactoring
+
+// create questionnaire
 router.post(
   '/questionnaires',
-  [authJwt.verifyToken, authJwt.isAdmin],
+  /* [authJwt.verifyToken, authJwt.isAdmin], */
   QuestionnaireCtrl.createQuestionnaire
 );
-router.put(
-  '/questionnaires/:id',
-  [validate.updateQuestionnaire, authJwt.verifyToken, authJwt.isAdmin],
-  QuestionnaireCtrl.updateQuestionnaire
+
+// create question
+router.post(
+  '/questionnaires/:questionnaireId/questions',
+  /* [authJwt.verifyToken, authJwt.isAdmin], */
+  [QuestionCtrl.createQuestion, QuestionnaireCtrl.addQuestion]
 );
+
+// get questionnaire
+router.get('/questionnaires', /* [authJwt.verifyToken], */ QuestionnaireCtrl.getQuestionnaires);
+
+// get questions
+router.get(
+  '/questionnaires/:questionnaireId/questions',
+  /* [authJwt.verifyToken], */
+  QuestionnaireCtrl.getQuestions
+);
+
+// update questionnaire
+router.patch(
+  '/questionnaires/:questionnaireId',
+  /* [authJwt.verifyToken], */ QuestionnaireCtrl.updateQuestionnaire
+);
+
+// update question
+router.patch(
+  '/questions/:questionId',
+  /* [authJwt.verifyToken, authJwt.isAdmin], */
+  QuestionCtrl.updateQuestion
+);
+
+// move question
+router.patch(
+  `/questionnaires/:questionnaireId/questions/:questionId/position/:position`,
+  /* [authJwt.verifyToken, authJwt.isAdmin], */
+  QuestionnaireCtrl.moveQuestion
+);
+
+// deleteQuestion
 router.delete(
-  '/questionnaires/:id',
-  [authJwt.verifyToken, authJwt.isAdmin],
-  QuestionnaireCtrl.deleteQuestionnaire
+  '/questionnaires/:questionnaireId/questions/:questionId',
+  /* [authJwt.verifyToken, authJwt.isAdmin], */
+  [QuestionCtrl.deleteQuestion, QuestionnaireCtrl.removeQuestion]
 );
-router.get('/questionnaires/:id', [authJwt.verifyToken], QuestionnaireCtrl.getQuestionnaireById);
-router.get('/questionnaires', [authJwt.verifyToken], QuestionnaireCtrl.getQuestionnaires);
+
+// end refactoring
 
 module.exports = router;

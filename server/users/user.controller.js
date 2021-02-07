@@ -27,9 +27,9 @@ const createUser = (req, res) => {
     lastName
   });
 
-  newUser.save((err, user) => {
-    if (err) {
-      return res.status(500).json({ err, title: 'User was not saved.' });
+  newUser.save((error, user) => {
+    if (error) {
+      return res.status(500).json({ error, title: 'User was not saved.' });
     }
 
     if (req.body.roles) {
@@ -37,15 +37,15 @@ const createUser = (req, res) => {
         {
           name: { $in: req.body.roles }
         },
-        (err, roles) => {
-          if (err) {
-            return res.status(500).json({ err, message: 'Role not found' });
+        (error, roles) => {
+          if (error) {
+            return res.status(500).json({ error, message: 'Role not found' });
           }
 
           user.roles = roles.map((role) => role._id);
-          user.save((err) => {
-            if (err) {
-              return res.status(500).json({ err, message: 'User was not saved' });
+          user.save((error) => {
+            if (error) {
+              return res.status(500).json({ error, message: 'User was not saved' });
             }
 
             return res.status(201).json({ success: true, message: 'User registered successfully' });
@@ -53,15 +53,15 @@ const createUser = (req, res) => {
         }
       );
     } else {
-      Role.findOne({ name: 'user' }, (err, role) => {
-        if (err) {
-          return res.status(404).json({ err, message: 'Role not found' });
+      Role.findOne({ name: 'user' }, (error, role) => {
+        if (error) {
+          return res.status(404).json({ error, message: 'Role not found' });
         }
 
         user.roles = [role._id];
-        user.save((err) => {
-          if (err) {
-            return res.status(500).json({ err, message: 'User was not saved' });
+        user.save((error) => {
+          if (error) {
+            return res.status(500).json({ error, message: 'User was not saved' });
           }
 
           return res.json({ success: true, message: 'User was registered successfully!' });
@@ -84,10 +84,10 @@ const loginUser = async (req, res) => {
     email: req.body.email
   })
     .populate('roles', '-__v')
-    .exec((err, user) => {
-      if (err) {
+    .exec((error, user) => {
+      if (error) {
         return res.status(500).json({
-          err,
+          error,
           title: 'Internal error.',
           detail: 'Something went wrong.'
         });
@@ -135,8 +135,8 @@ const getUsers = async (req, res) => {
     filter._id = userId;
   }
 
-  if (iterationId) {
-    fields = `${fields} iterations._id`;
+  if (fields && iterationId) {
+    fields = `${fields} iterations.id`;
   }
 
   await User.find(filter)
@@ -153,10 +153,10 @@ const getUsers = async (req, res) => {
 
         if (iterationId) {
           result.iterations = result.iterations.filter((iteration) => {
-            if (!iteration._id) {
+            if (!iteration.id) {
               return false;
             }
-            return iteration._id.toString() === iterationId.toString();
+            return iteration.id === iterationId;
           });
         }
 
@@ -165,10 +165,10 @@ const getUsers = async (req, res) => {
 
       return res.status(200).json({ users: results });
     })
-    .catch((err) => {
+    .catch((error) => {
       return res
         .status(500)
-        .json({ err, title: 'Internal error.', detail: 'Something went wrong.' });
+        .json({ error, title: 'Internal error.', detail: 'Something went wrong.' });
     });
 };
 
@@ -227,7 +227,7 @@ const updateIteration = async (req, res) => {
 
   const filter = {
     _id: userId,
-    'iterations.iterationId': iterationId
+    'iterations.id': iterationId
   };
 
   const [entries] = Object.entries(body);
@@ -242,7 +242,7 @@ const updateIteration = async (req, res) => {
   };
 
   const options = {
-    arrayFilters: [{ 'iteration.iterationId': iterationId }],
+    arrayFilters: [{ 'iteration.id': iterationId }],
     new: true,
     upsert: true
   };
@@ -257,15 +257,15 @@ const updateIteration = async (req, res) => {
         {
           _id: userId
         },
-        { $push: { iterations: { iterationId, startedAt: body.startedAt } } }
+        { $push: { iterations: { id: iterationId, startedAt: body.startedAt } } }
       )
         .then(() => {
           // if the uuid is created by the server instead, we need to return the id and object here
           return res.status(201).send();
         })
-        .catch((err) => {
+        .catch((error) => {
           return res.status(400).json({
-            err,
+            error,
             message: 'Iteration not updated!'
           });
         });
@@ -276,12 +276,15 @@ const updateAnswer = async (req, res) => {
   const { userId, iterationId, questionId } = req.params;
   const { answerOption } = req.body;
 
-  await User.findOne({ _id: userId })
+  await User.findById(userId)
     .then((user) => {
       const userUpdate = user;
 
+      if (!userUpdate.iterations || !userUpdate.iterations.length) {
+        userUpdate.iterations.push({ id: iterationId });
+      }
       const iteration = userUpdate.iterations.find((i) => {
-        return i.iterationId === iterationId;
+        return i.id === iterationId;
       });
       let answer;
       if (iteration.answers && iteration.answers.length) {
@@ -299,8 +302,10 @@ const updateAnswer = async (req, res) => {
         return res.status(204).send();
       });
     })
-    .catch(() => {
-      return res.status(404).json({ title: 'Users not found', detail: 'No user could be found.' });
+    .catch((error) => {
+      return res
+        .status(404)
+        .json({ error, title: 'Users not found', detail: 'No user could be found.' });
     });
 };
 

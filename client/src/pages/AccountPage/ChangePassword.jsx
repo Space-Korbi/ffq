@@ -8,7 +8,7 @@ import Spinner from '../../components/Spinner';
 import { userService } from '../../services';
 
 const ChangePassword = ({ userId }) => {
-  const [didChange, setdidChange] = useState(false);
+  const [didChange, setDidChange] = useState(false);
 
   return (
     <div>
@@ -43,7 +43,7 @@ const ChangePassword = ({ userId }) => {
                   <div className="alert alert-success mb-5">Password changed successfully.</div>
                 );
                 setSubmitting(false);
-                setdidChange(false);
+                setDidChange(false);
               })
               .catch((error) => {
                 const errorList = (listElement) => (
@@ -56,7 +56,7 @@ const ChangePassword = ({ userId }) => {
                 });
                 setStatus(errorList(errorListElements));
                 setSubmitting(false);
-                setdidChange(false);
+                setDidChange(false);
               });
           } else {
             setSubmitting(false);
@@ -66,7 +66,7 @@ const ChangePassword = ({ userId }) => {
         {({ errors, status, isSubmitting, setStatus }) => (
           <Form
             onChange={() => {
-              setdidChange(true);
+              setDidChange(true);
               setStatus();
             }}
           >

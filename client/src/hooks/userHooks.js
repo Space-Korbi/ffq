@@ -180,14 +180,16 @@ const useSaveAnswer = (userId, iterationId, questionId) => {
             answerOption: answer.answerOption
           };
 
-          await userService.updateAnswer(userId, iterationId, questionId, answers).then(() => {
-            if (!didCancel) {
-              dispatch({
-                type: 'SAVE_SUCCESS',
-                payload: answers
-              });
-            }
-          });
+          await userService
+            .updateUserIterationAnswer(userId, iterationId, questionId, answers)
+            .then(() => {
+              if (!didCancel) {
+                dispatch({
+                  type: 'SAVE_SUCCESS',
+                  payload: answers
+                });
+              }
+            });
         }
       } catch (error) {
         if (!didCancel) {
