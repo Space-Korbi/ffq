@@ -280,6 +280,9 @@ const updateAnswer = async (req, res) => {
     .then((user) => {
       const userUpdate = user;
 
+      if (!userUpdate.iterations || !userUpdate.iterations.length) {
+        userUpdate.iterations.push({ id: iterationId });
+      }
       const iteration = userUpdate.iterations.find((i) => {
         return i.id === iterationId;
       });
