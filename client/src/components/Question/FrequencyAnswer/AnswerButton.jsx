@@ -1,8 +1,8 @@
 import React from 'react';
 import { string, bool, func } from 'prop-types';
 
-const AnswerButton = ({ title, isSelectedAnswer, onClick }) => {
-  let buttonStyle = 'btn btn-outline-primary btn-block btn-frequency my-4';
+const AnswerButton = ({ title, isSelectedAnswer, color, onClick }) => {
+  let buttonStyle = `btn btn-outline-${color} btn-block btn-frequency my-4`;
   if (isSelectedAnswer) {
     buttonStyle = 'btn btn-success btn-block btn-frequency my-4';
   }
@@ -15,8 +15,13 @@ const AnswerButton = ({ title, isSelectedAnswer, onClick }) => {
 
 AnswerButton.propTypes = {
   title: string.isRequired,
+  color: string,
   isSelectedAnswer: bool.isRequired,
   onClick: func.isRequired
+};
+
+AnswerButton.defaultProps = {
+  color: 'primary'
 };
 
 export default AnswerButton;

@@ -99,7 +99,7 @@ const QuestionnaireInfo = ({
   }, [userProp, iterationsProp]);
 
   return (
-    <div className="text-center " style={{ maxWidth: '800px' }}>
+    <>
       <p className="display-4 my-5">Willkommen</p>
       <h4 className="" style={{ whiteSpace: 'pre-wrap' }}>
         {title}
@@ -108,8 +108,8 @@ const QuestionnaireInfo = ({
         <span className="badge badge-secondary">{daysTilStart}</span>
       </h2>
       <p className="lead mt-5">{accessInformation}</p>
-      <hr className="my-4" />
-    </div>
+      <hr className="my-4" style={{ maxWidth: '800px' }} />
+    </>
   );
 };
 
