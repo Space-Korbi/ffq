@@ -77,8 +77,6 @@ const addQuestion = async (req, res) => {
   const { questionnaireId } = req.params;
   const { index } = req.body;
 
-  console.log('-------', req.body);
-
   Questionnaire.findOne({ _id: questionnaireId })
     .then((questionnaire) => {
       const id = mongoose.Types.ObjectId(question._id);
@@ -135,7 +133,6 @@ const removeQuestion = (req, res) => {
   const { questionnaireId, questionId } = req.params;
   Questionnaire.findById(questionnaireId)
     .then((questionnaire) => {
-      console.log('Questions', questionnaire.questions);
       questionnaire.questions.pull({ _id: questionId });
       questionnaire.save().then(() => {
         return res.status(204).send();
@@ -148,7 +145,6 @@ const removeQuestion = (req, res) => {
         message: 'Questionnaire or Question not found!'
       });
     });
-  console.log('QuestionId', questionId);
 };
 
 // end refactor
@@ -226,7 +222,7 @@ const updateQuestionnaire = async (req, res) => {
 const deleteQuestionnaire = async (req, res) => {
   await Questionnaire.findById({ _id: req.params.id }, (error, questionnaire) => {
     if (error) {
-      return res.status(400).json({ success: false, error: error });
+      return res.status(400).json({ success: false, error });
     }
 
     if (!questionnaire) {

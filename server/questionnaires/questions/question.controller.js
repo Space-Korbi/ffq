@@ -38,7 +38,6 @@ const updateQuestion = async (req, res, next) => {
 
   Question.findByIdAndUpdate(questionId, body)
     .then((question) => {
-      console.log(question);
       // TODO: Test image removal
       if (body.answerOptions && body.answerOptions.type === 'Amount') {
         const removedImages = question.answerOptions.options.filter((prevOption) => {
