@@ -26,7 +26,7 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
   return (
     <>
       <div className="row no-gutters my-3">
-        <div className="col-lg mx-3">
+        <div className="col-lg">
           <div className="my-2">
             <Select onChange={setAnswerType} dispatch={dispatch} />
           </div>

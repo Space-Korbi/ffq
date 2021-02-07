@@ -206,11 +206,11 @@ const QuestionnaireEditorPage = () => {
           )}
         </div>
       ) : (
-        <div className="px-3">
+        <div className="m-2 m-sm-4">
           {questionnaires.map((questionnaire) => {
             return (
               <div key={questionnaire._id} className="my-3">
-                <div className="px-2">
+                <div className="">
                   <QuestionnaireEditor
                     questionnaire={questionnaire}
                     deleteQuestionnaire={() => handleDeleteQuestionnaire}

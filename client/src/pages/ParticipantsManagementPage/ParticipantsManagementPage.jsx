@@ -292,7 +292,7 @@ const ParticipantsManagementPage = () => {
             <Spinner />
           </div>
         )}
-        <div className="m-4 d-flex justify-content-center">
+        <div className="m-2 m-sm-4 d-flex justify-content-center">
           <div className="w-100">
             {fetchedQuestionnaires && fetchedQuestionnaires.length > 0 && fetchedQuestions && (
               <ParticipantsManagement

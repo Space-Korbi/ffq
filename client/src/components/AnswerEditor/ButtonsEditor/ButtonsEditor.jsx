@@ -74,7 +74,7 @@ const ButtonsEditor = ({ answerOptions, dispatch, modalTable }) => {
         </div>
         <div className="row no-gutters ">
           {answerOptions.left && (
-            <div className="col-12 col-sm-6">
+            <div className="col">
               <ButtonColumn
                 answerOptions={answerOptions.left}
                 position="left"
