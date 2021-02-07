@@ -32,6 +32,38 @@ const createQuestion = async (req, res, next) => {
     });
 };
 
+const updateQuestion = async (req, res, next) => {
+  const { questionId } = req.params;
+  const { body } = req;
+
+  Question.findByIdAndUpdate(questionId, body)
+    .then((question) => {
+      console.log(question);
+      // TODO: Test image removal
+      if (body.answerOptions && body.answerOptions.type === 'Amount') {
+        const removedImages = question.answerOptions.options.filter((prevOption) => {
+          let found = false;
+          body.answerOptions.options.forEach((updatedOption) => {
+            if (prevOption.imageName === updatedOption.imageName) {
+              found = true;
+            }
+          });
+          return !found;
+        });
+        Images.deleteImagesOfQuestion(removedImages);
+      }
+    })
+    .then(() => {
+      return res.status(204).json({});
+    })
+    .catch((error) => {
+      return res.status(404).json({
+        error,
+        message: 'Question not updated!'
+      });
+    });
+};
+
 // refactor end
 
 const getQuestionsOfQuestionnaire = async (req, res) => {
@@ -144,6 +176,7 @@ const deleteQuestion = async (req, res) => {
 
 module.exports = {
   createQuestion,
+  updateQuestion,
   updateQuestionById,
   deleteQuestion,
   getQuestionsOfQuestionnaire

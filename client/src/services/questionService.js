@@ -1,6 +1,5 @@
 /* eslint-disable no-alert */
-import { nanoid } from 'nanoid';
-import { insertQuestionAt, updateQuestionById, uploadImage, deleteQuestionById } from '../api';
+import { updateQuestionById, uploadImage, deleteQuestionById } from '../api';
 import AnswerType from '../types';
 
 /**
@@ -8,18 +7,6 @@ import AnswerType from '../types';
  * Sending a request to the surver to upload the images
  * and return the filename in the DB as well as the path
  */
-
-const createQuestion = async (questionnaireId) => {
-  const questionId = nanoid();
-
-  const payload = {
-    _id: questionId
-  };
-
-  await insertQuestionAt(questionnaireId, payload).then((res) => {
-    return res.data.id;
-  });
-};
 
 const updateAmountOption = (dbResponse, amountOption) => {
   const updatedAmountOption = {
@@ -83,6 +70,6 @@ const deleteQuestion = async (id) => {
   return deletedQuestion;
 };
 
-const questionService = { createQuestion, saveQuestion, deleteQuestion };
+const questionService = { saveQuestion, deleteQuestion };
 
 export default questionService;

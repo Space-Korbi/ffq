@@ -41,11 +41,13 @@ export const insertQuestion = (questionnaireId, payload) =>
 export const updateQuestionnaire2 = (questionnaireId, payload) =>
   api.patch(`/questionnaires/${questionnaireId}`, payload);
 
+export const updateQuestion = (questionId, payload) =>
+  api.patch(`/questions/${questionId}`, payload);
+
 // * END REFACTORED
 
 // question
-export const insertQuestionAt = (questionnaireId, payload) =>
-  api.post(`/questionnaires/${questionnaireId}/questions`, payload);
+
 export const updateQuestionById = (id, payload) => api.put(`/questions/${id}`, payload);
 export const getAllQuestionsOfQuestionnaire = (questionnaireId) =>
   api.get(`/questionnaires/${questionnaireId}/questions`);
@@ -75,7 +77,6 @@ const apis = {
   signup,
   login,
   createQuestionnaire,
-  insertQuestionAt,
   getUsers,
   updateUser,
   updateQuestionnaire2,

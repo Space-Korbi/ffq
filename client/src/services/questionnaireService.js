@@ -1,11 +1,11 @@
-import { nanoid } from 'nanoid';
 import {
-  insertQuestionAt,
+  insertQuestion,
   getAllQuestionsOfQuestionnaire,
   createQuestionnaire,
   getQuestionnaires,
   updateQuestionnaire,
   updateQuestionnaire2,
+  updateQuestion,
   deleteQuestionnaireById,
   deleteQuestionById
 } from '../api';
@@ -27,36 +27,6 @@ const fetchAllQuestionsOfQuestionnaire = async (questionnaireId) => {
   }
   return getAllQuestionsOfQuestionnaire(questionnaireId).then((response) => {
     return response.data.data;
-  });
-};
-
-const createQuestionAt = async (questionnaireId, index) => {
-  const questionId = nanoid();
-
-  const questionPayload = {
-    _id: questionId,
-    title: `New Question`,
-    subtitle1: '',
-    subtitle2: '',
-    help: '',
-    answerOptions: {
-      type: '',
-      options: []
-    }
-  };
-
-  return insertQuestionAt(questionnaireId, questionPayload).then(async (question) => {
-    const questionnairePayload = {
-      action: updateAction.insert,
-      questionId: question.data.id
-    };
-    if (index >= 0) {
-      questionnairePayload.action = updateAction.insertAt;
-      questionnairePayload.index = index;
-    }
-    return updateQuestionnaire(questionnaireId, questionnairePayload).then((res) => {
-      return res.data;
-    });
   });
 };
 
@@ -100,12 +70,13 @@ const deleteQuestionnaire = async (id) => {
 };
 const questionnaireService = {
   createQuestionnaire,
+  insertQuestion,
+  updateQuestionnaire2,
+  updateQuestion,
   getQuestionnaires,
   fetchAllQuestionsOfQuestionnaire,
-  createQuestionAt,
   moveQuestionFromTo,
   updateQuestionnaireSettings,
-  updateQuestionnaire2,
   removeQuestionById,
   deleteQuestionnaire
 };

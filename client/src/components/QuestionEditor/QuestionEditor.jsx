@@ -11,7 +11,7 @@ import QuestionPreview from './QuestionPreview';
 import Select from '../Select';
 import { answerReducer } from '../../helpers';
 
-import { questionService } from '../../services';
+import { updateQuestion } from '../../api';
 import AnswerEditor from '../AnswerEditor/AnswerEditor';
 
 const QuestionEditor = ({ question, onExit, modalTable }) => {
@@ -54,11 +54,15 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
               type="button"
               className="btn btn-outline-primary mr-2"
               onClick={() =>
-                questionService
-                  .saveQuestion(question._id, { title, subtitle1, subtitle2, help }, answerOptions)
-                  .then((res) => {
-                    onExit(res.data.question);
-                  })
+                updateQuestion(question._id, {
+                  title,
+                  subtitle1,
+                  subtitle2,
+                  help,
+                  answerOptions
+                }).then(() => {
+                  onExit({ _id: question._id, title, subtitle1, subtitle2, help, answerOptions });
+                })
               }
             >
               Save and Exit

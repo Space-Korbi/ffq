@@ -77,6 +77,8 @@ const addQuestion = async (req, res) => {
   const { questionnaireId } = req.params;
   const { index } = req.body;
 
+  console.log('-------', req.body);
+
   Questionnaire.findOne({ _id: questionnaireId })
     .then((questionnaire) => {
       const id = mongoose.Types.ObjectId(question._id);
@@ -138,6 +140,8 @@ const updateQuestionnaire = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
+  console.log('+++++++++');
+
   const { body } = req;
 
   if (!body) {
@@ -158,17 +162,6 @@ const updateQuestionnaire = async (req, res) => {
     const questionnaireUpdate = questionnaire;
 
     switch (body.action) {
-      case updateAction.insert: {
-        questionnaireUpdate.questions.push(body.questionId);
-        break;
-      }
-      case updateAction.insertAt: {
-        questionnaireUpdate.questions.push({
-          $each: [body.questionId],
-          $position: body.index
-        });
-        break;
-      }
       case updateAction.removeById: {
         questionnaire.questions.pull({ _id: body.questionId });
         break;
@@ -183,13 +176,7 @@ const updateQuestionnaire = async (req, res) => {
         }
         break;
       }
-      case updateAction.changeSettings: {
-        // sort iterations before saving
-        questionnaireUpdate.name = body.settings.name;
-        questionnaireUpdate.iterations = body.settings.iterations;
-        questionnaireUpdate.consentScript = body.settings.consentScript;
-        break;
-      }
+
       default:
         break;
     }
