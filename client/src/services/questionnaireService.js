@@ -4,19 +4,12 @@ import {
   createQuestionnaire,
   getQuestionnaires,
   updateQuestionnaire,
-  updateQuestionnaire2,
   updateQuestion,
   deleteQuestionnaireById,
-  deleteQuestion
+  deleteQuestion,
+  moveQuestion
 } from '../api';
 
-const updateAction = {
-  insert: 'insert',
-  insertAt: 'insertAt',
-  removeById: 'removeById',
-  move: 'move',
-  changeSettings: 'changeSettings'
-};
 // start refactor
 
 // end refactor
@@ -30,28 +23,6 @@ const fetchAllQuestionsOfQuestionnaire = async (questionnaireId) => {
   });
 };
 
-const moveQuestionFromTo = async (questionnaireId, questionId, fromIndex, toIndex) => {
-  const questionnairePayload = {
-    action: updateAction.move,
-    questionId,
-    fromIndex,
-    toIndex
-  };
-  return updateQuestionnaire(questionnaireId, questionnairePayload).then((res) => {
-    return res.data;
-  });
-};
-
-const updateQuestionnaireSettings = (questionnaireId, settings) => {
-  const questionnairePayload = {
-    action: updateAction.changeSettings,
-    settings
-  };
-  return updateQuestionnaire(questionnaireId, questionnairePayload).then((res) => {
-    return res.data;
-  });
-};
-
 const deleteQuestionnaire = async (id) => {
   const deletedQuestionnaire = await deleteQuestionnaireById(id);
   return deletedQuestionnaire.data.data;
@@ -59,12 +30,11 @@ const deleteQuestionnaire = async (id) => {
 const questionnaireService = {
   createQuestionnaire,
   insertQuestion,
-  updateQuestionnaire2,
+  updateQuestionnaire,
   updateQuestion,
   getQuestionnaires,
   fetchAllQuestionsOfQuestionnaire,
-  moveQuestionFromTo,
-  updateQuestionnaireSettings,
+  moveQuestion,
   deleteQuestion,
   deleteQuestionnaire
 };

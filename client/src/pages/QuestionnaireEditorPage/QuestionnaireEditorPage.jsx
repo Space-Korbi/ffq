@@ -68,7 +68,7 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
   }, [questions, isEditing]);
 
   const saveSettings = async (settings) => {
-    await questionnaireService.updateQuestionnaire2(questionnaire._id, settings).then((res) => {
+    await questionnaireService.updateQuestionnaire(questionnaire._id, settings).then((res) => {
       console.log(res);
     });
   };

@@ -35,7 +35,7 @@ export const updateUserIterationAnswer = (userId, iterationId, questionId, paylo
 // questionnaire
 export const createQuestionnaire = (payload) => api.post(`/questionnaires`, payload);
 
-export const updateQuestionnaire2 = (questionnaireId, payload) =>
+export const updateQuestionnaire = (questionnaireId, payload) =>
   api.patch(`/questionnaires/${questionnaireId}`, payload);
 
 export const insertQuestion = (questionnaireId, payload) =>
@@ -43,6 +43,9 @@ export const insertQuestion = (questionnaireId, payload) =>
 
 export const updateQuestion = (questionId, payload) =>
   api.patch(`/questions/${questionId}`, payload);
+
+export const moveQuestion = (questionnaireId, questionId, position) =>
+  api.patch(`/questionnaires/${questionnaireId}/questions/${questionId}/position/${position}`);
 
 export const deleteQuestion = (questionnaireId, questionId) =>
   api.delete(`/questionnaires/${questionnaireId}/questions/${questionId}`);
@@ -57,8 +60,6 @@ export const getAllQuestionsOfQuestionnaire = (questionnaireId) =>
 
 // questionnaire
 
-export const updateQuestionnaire = (questionnaireId, payload) =>
-  api.put(`/questionnaires/${questionnaireId}`, payload);
 export const getQuestionnaires = (params) => {
   return api.get(`/questionnaires`, { params });
 };
@@ -80,7 +81,7 @@ const apis = {
   createQuestionnaire,
   getUsers,
   updateUser,
-  updateQuestionnaire2,
+  updateQuestionnaire,
   updateUserIteration,
   updateUserIterationAnswer,
   getAllQuestionsOfQuestionnaire,

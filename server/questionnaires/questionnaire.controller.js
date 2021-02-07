@@ -11,14 +11,6 @@ const { deleteImagesOfQuestion } = require('./questions/question.controller');
  * create, update, delete and get questionnaire entries
  */
 
-const updateAction = {
-  insert: 'insert',
-  insertAt: 'insertAt',
-  removeById: 'removeById',
-  move: 'move',
-  changeSettings: 'changeSettings'
-};
-
 // start refactor
 
 const createQuestionnaire = async (req, res) => {
@@ -106,7 +98,7 @@ const addQuestion = async (req, res) => {
     });
 };
 
-const updateQuestionnaire2 = async (req, res) => {
+const updateQuestionnaire = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -114,8 +106,6 @@ const updateQuestionnaire2 = async (req, res) => {
 
   const { questionnaireId } = req.params;
   const { body } = req;
-
-  console.log(questionnaireId, '-----', body);
 
   await Questionnaire.findByIdAndUpdate({ _id: questionnaireId }, body, { new: true })
     .then(() => {
@@ -125,6 +115,30 @@ const updateQuestionnaire2 = async (req, res) => {
       return res.status(400).json({
         error,
         message: 'Questionnaire not updated!'
+      });
+    });
+};
+
+const moveQuestion = (req, res) => {
+  const { questionnaireId, questionId, position } = req.params;
+
+  Questionnaire.findById(questionnaireId)
+    .then((questionnaire) => {
+      questionnaire.questions.pull({ _id: questionId });
+
+      questionnaire.questions.push({
+        $each: [questionId],
+        $position: position
+      });
+
+      questionnaire.save().then(() => {
+        return res.status(204).send();
+      });
+    })
+    .catch((error) => {
+      return res.status(400).json({
+        error,
+        message: 'Questionnaire or Question not found!'
       });
     });
 };
@@ -148,76 +162,6 @@ const removeQuestion = (req, res) => {
 };
 
 // end refactor
-
-const updateQuestionnaire = async (req, res) => {
-  // Finds the validation errors in this request and wraps them in an object
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  console.log('+++++++++');
-
-  const { body } = req;
-
-  if (!body) {
-    return res.status(400).json({
-      success: false,
-      error: 'You must provide a body to update'
-    });
-  }
-
-  Questionnaire.findOne({ _id: req.params.id }, async (error, questionnaire) => {
-    if (error) {
-      return res.status(404).json({
-        error,
-        message: 'Questionnaire not found!'
-      });
-    }
-
-    const questionnaireUpdate = questionnaire;
-
-    switch (body.action) {
-      case updateAction.removeById: {
-        questionnaire.questions.pull({ _id: body.questionId });
-        break;
-      }
-      case updateAction.move: {
-        if (body.toIndex > body.fromIndex) {
-          questionnaire.questions.splice(body.fromIndex, 1);
-          questionnaire.questions.splice(body.toIndex, 0, body.questionId);
-        } else if (body.toIndex < body.fromIndex) {
-          questionnaire.questions.splice(body.toIndex, 0, body.questionId);
-          questionnaire.questions.splice(body.fromIndex + 1, 1);
-        }
-        break;
-      }
-
-      default:
-        break;
-    }
-
-    const question = await Question.findById(body.questionId);
-    questionnaireUpdate
-      .save()
-      .then(() => {
-        return res.status(200).json({
-          questionnaireUpdate,
-          success: true,
-          id: questionnaire._id,
-          question,
-          index: body.index,
-          message: 'Questionnaire updated!'
-        });
-      })
-      .catch((error) => {
-        return res.status(404).json({
-          error,
-          message: 'Questionnaire not updated!'
-        });
-      });
-  });
-};
 
 const deleteQuestionnaire = async (req, res) => {
   await Questionnaire.findById({ _id: req.params.id }, (error, questionnaire) => {
@@ -262,9 +206,9 @@ const deleteQuestionnaire = async (req, res) => {
 module.exports = {
   createQuestionnaire,
   addQuestion,
-  updateQuestionnaire2,
   updateQuestionnaire,
   deleteQuestionnaire,
+  moveQuestion,
   removeQuestion,
   getQuestionnaires
 };

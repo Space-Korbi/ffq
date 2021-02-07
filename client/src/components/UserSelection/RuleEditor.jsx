@@ -108,7 +108,7 @@ const RuleEditor = ({
               className="btn btn-outline-primary mr-2"
               onClick={() => {
                 questionnaireService
-                  .updateQuestionnaire2(questionnaireId, { screeningRules })
+                  .updateQuestionnaire(questionnaireId, { screeningRules })
                   .then(() => {
                     setStatus(
                       <div className="alert alert alert-success">Changes saved successfully.</div>

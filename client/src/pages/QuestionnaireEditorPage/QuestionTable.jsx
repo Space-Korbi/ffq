@@ -19,21 +19,17 @@ const QuestionTable = ({
 }) => {
   const handleMoveQuestionFromTo = async (question, fromIndex, toIndex) => {
     if (toIndex >= 0 && toIndex < questionsRef.current.length) {
-      await questionnaireService
-        .moveQuestionFromTo(questionnaire._id, question, fromIndex, toIndex)
-        .then((response) => {
-          if (response.success) {
-            const questionsCopy = [...questionsRef.current];
-            if (toIndex > fromIndex) {
-              questionsCopy.splice(fromIndex, 1);
-              questionsCopy.splice(toIndex, 0, question);
-            } else if (toIndex < fromIndex) {
-              questionsCopy.splice(toIndex, 0, question);
-              questionsCopy.splice(fromIndex + 1, 1);
-            }
-            setQuestions(questionsCopy);
-          }
-        });
+      await questionnaireService.moveQuestion(questionnaire._id, question._id, toIndex).then(() => {
+        const questionsCopy = [...questionsRef.current];
+        if (toIndex > fromIndex) {
+          questionsCopy.splice(fromIndex, 1);
+          questionsCopy.splice(toIndex, 0, question);
+        } else if (toIndex < fromIndex) {
+          questionsCopy.splice(toIndex, 0, question);
+          questionsCopy.splice(fromIndex + 1, 1);
+        }
+        setQuestions(questionsCopy);
+      });
     }
   };
 

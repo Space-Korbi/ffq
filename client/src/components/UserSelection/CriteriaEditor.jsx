@@ -89,7 +89,7 @@ const SelectionCriteria = ({
               className="btn btn-outline-primary mr-2"
               onClick={() => {
                 questionnaireService
-                  .updateQuestionnaire2(questionnaireId, { selectionCriteria })
+                  .updateQuestionnaire(questionnaireId, { selectionCriteria })
                   .then(() => {
                     setStatus(
                       <div className="alert alert alert-success">Changes saved successfully.</div>

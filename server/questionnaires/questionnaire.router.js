@@ -38,7 +38,7 @@ router.get(
 // update questionnaire
 router.patch(
   '/questionnaires/:questionnaireId',
-  /* [authJwt.verifyToken], */ QuestionnaireCtrl.updateQuestionnaire2
+  /* [authJwt.verifyToken], */ QuestionnaireCtrl.updateQuestionnaire
 );
 
 // update question
@@ -48,6 +48,14 @@ router.patch(
   QuestionCtrl.updateQuestion
 );
 
+// move question
+
+router.patch(
+  `/questionnaires/:questionnaireId/questions/:questionId/position/:position`,
+  /* [authJwt.verifyToken, authJwt.isAdmin], */
+  QuestionnaireCtrl.moveQuestion
+);
+
 router.delete(
   '/questionnaires/:questionnaireId/questions/:questionId',
   /* [authJwt.verifyToken, authJwt.isAdmin], */
@@ -55,17 +63,5 @@ router.delete(
 );
 
 // end refactoring
-
-router.put(
-  '/questionnaires/:id',
-  [validate.updateQuestionnaire, authJwt.verifyToken, authJwt.isAdmin],
-  QuestionnaireCtrl.updateQuestionnaire
-);
-
-router.put(
-  '/questions/:id',
-  [authJwt.verifyToken, authJwt.isAdmin],
-  QuestionCtrl.updateQuestionById
-);
 
 module.exports = router;
