@@ -64,46 +64,56 @@ const ParticipantPage = ({ user }) => {
         </div>
       )}
       {currentQuestionnaire && (
-        <div className="p-4 p-sm-5">
-          <QuestionnaireInfo
-            iterationsProp={currentQuestionnaire.iterations}
-            userProp={user}
-            setDisabled={setDisabled}
-            setButtonTitle={setButtonTitle}
-            setIterationId={setIterationId}
-          />
-          <div className="text-center">
-            {hasAcceptedConsentForm && screeningStatus === 'Accept' ? (
-              <button
-                disabled={disabled}
-                type="button"
-                className="btn btn-lg btn-primary mt-3"
-                onClick={() => {
-                  start();
-                }}
-              >
-                {buttonTitle}
-              </button>
-            ) : (
-              <button
-                disabled={disabled}
-                type="button"
-                className="btn btn-lg btn-primary mt-3"
-                data-toggle="modal"
-                data-target="#staticBackdrop"
-              >
-                {buttonTitle}
-              </button>
-            )}
+        <div className="p-4 p-sm-5 d-flex-block">
+          <div className="row text-center">
+            <div className="col d-flex-block">
+              <QuestionnaireInfo
+                iterationsProp={currentQuestionnaire.iterations}
+                userProp={user}
+                setDisabled={setDisabled}
+                setButtonTitle={setButtonTitle}
+                setIterationId={setIterationId}
+              />
+            </div>
           </div>
-          <UserApproval
-            user={user}
-            screeningStatus={screeningStatus}
-            setScreeningStatus={setScreeningStatus}
-            setHasAcceptedConsentForm={setHasAcceptedConsentForm}
-            questionnaire={currentQuestionnaire}
-            start={start}
-          />
+          <div className="row text-center">
+            <div className="col d-flex-block">
+              {hasAcceptedConsentForm && screeningStatus === 'Accept' ? (
+                <button
+                  disabled={disabled}
+                  type="button"
+                  className="btn btn-lg btn-primary mt-3"
+                  onClick={() => {
+                    start();
+                  }}
+                >
+                  {buttonTitle}
+                </button>
+              ) : (
+                <button
+                  disabled={disabled}
+                  type="button"
+                  className="btn btn-lg btn-primary mt-3"
+                  data-toggle="modal"
+                  data-target="#staticBackdrop"
+                >
+                  {buttonTitle}
+                </button>
+              )}
+            </div>
+          </div>
+          <div className="row text-center">
+            <div className="col d-flex-block">
+              <UserApproval
+                user={user}
+                screeningStatus={screeningStatus}
+                setScreeningStatus={setScreeningStatus}
+                setHasAcceptedConsentForm={setHasAcceptedConsentForm}
+                questionnaire={currentQuestionnaire}
+                start={start}
+              />
+            </div>
+          </div>
         </div>
       )}
     </div>
