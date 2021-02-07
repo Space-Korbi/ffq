@@ -48,6 +48,12 @@ router.patch(
   QuestionCtrl.updateQuestion
 );
 
+router.delete(
+  '/questionnaires/:questionnaireId/questions/:questionId',
+  /* [authJwt.verifyToken, authJwt.isAdmin], */
+  [QuestionCtrl.deleteQuestion, QuestionnaireCtrl.removeQuestion]
+);
+
 // end refactoring
 
 router.put(
@@ -60,17 +66,6 @@ router.put(
   '/questions/:id',
   [authJwt.verifyToken, authJwt.isAdmin],
   QuestionCtrl.updateQuestionById
-);
-router.delete(
-  '/questionnaires/:questionnaireId/questions/:id',
-  [authJwt.verifyToken, authJwt.isAdmin],
-  QuestionCtrl.deleteQuestion
-);
-
-router.delete(
-  '/questionnaires/:id',
-  [authJwt.verifyToken, authJwt.isAdmin],
-  QuestionnaireCtrl.deleteQuestionnaire
 );
 
 module.exports = router;

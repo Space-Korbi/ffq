@@ -65,10 +65,10 @@ const getQuestionnaires = async (req, res) => {
 
       return res.status(200).json({ questionnaires });
     })
-    .catch((err) => {
+    .catch((error) => {
       return res
         .status(500)
-        .json({ err, title: 'Internal error.', detail: 'Something went wrong.' });
+        .json({ error, title: 'Internal error.', detail: 'Something went wrong.' });
     });
 };
 
@@ -100,9 +100,9 @@ const addQuestion = async (req, res) => {
         });
       });
     })
-    .catch((err) => {
+    .catch((error) => {
       return res.status(404).json({
-        err,
+        error,
         message: 'Questionnaire not found!'
       });
     });
@@ -131,6 +131,26 @@ const updateQuestionnaire2 = async (req, res) => {
     });
 };
 
+const removeQuestion = (req, res) => {
+  const { questionnaireId, questionId } = req.params;
+  Questionnaire.findById(questionnaireId)
+    .then((questionnaire) => {
+      console.log('Questions', questionnaire.questions);
+      questionnaire.questions.pull({ _id: questionId });
+      questionnaire.save().then(() => {
+        return res.status(204).send();
+      });
+    })
+
+    .catch((error) => {
+      return res.status(400).json({
+        error,
+        message: 'Questionnaire or Question not found!'
+      });
+    });
+  console.log('QuestionId', questionId);
+};
+
 // end refactor
 
 const updateQuestionnaire = async (req, res) => {
@@ -151,10 +171,10 @@ const updateQuestionnaire = async (req, res) => {
     });
   }
 
-  Questionnaire.findOne({ _id: req.params.id }, async (err, questionnaire) => {
-    if (err) {
+  Questionnaire.findOne({ _id: req.params.id }, async (error, questionnaire) => {
+    if (error) {
       return res.status(404).json({
-        err,
+        error,
         message: 'Questionnaire not found!'
       });
     }
@@ -204,9 +224,9 @@ const updateQuestionnaire = async (req, res) => {
 };
 
 const deleteQuestionnaire = async (req, res) => {
-  await Questionnaire.findById({ _id: req.params.id }, (err, questionnaire) => {
-    if (err) {
-      return res.status(400).json({ success: false, error: err });
+  await Questionnaire.findById({ _id: req.params.id }, (error, questionnaire) => {
+    if (error) {
+      return res.status(400).json({ success: false, error: error });
     }
 
     if (!questionnaire) {
@@ -228,15 +248,15 @@ const deleteQuestionnaire = async (req, res) => {
       });
     });
 
-    async.parallel(removeQuestionCalls, (err, results) => {
-      console.log(err);
+    async.parallel(removeQuestionCalls, (error, results) => {
+      console.log(error);
     });
 
     return res.status(200).json({ success: true, data: questionnaire });
-  }).catch((err) => console.log(err));
+  }).catch((error) => console.log(error));
 
-  await Questionnaire.findByIdAndDelete({ _id: req.params.id }, (err, questionnaire) => {
-    console.log(err);
+  await Questionnaire.findByIdAndDelete({ _id: req.params.id }, (error, questionnaire) => {
+    console.log(error);
   });
 };
 
@@ -249,5 +269,6 @@ module.exports = {
   updateQuestionnaire2,
   updateQuestionnaire,
   deleteQuestionnaire,
+  removeQuestion,
   getQuestionnaires
 };

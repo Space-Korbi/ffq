@@ -64,6 +64,22 @@ const updateQuestion = async (req, res, next) => {
     });
 };
 
+const deleteQuestion = async (req, res, next) => {
+  const { questionId } = req.params;
+
+  await Question.findByIdAndDelete(questionId)
+    .then((question) => {
+      // Todo: Check if images are removed
+      if (question.answerOptions.type === 'Amount') {
+        Images.deleteImagesOfQuestion(question.answerOptions.options);
+      }
+      next();
+    })
+    .catch((error) => {
+      return res.status(404).json({ error, message: 'Question not found!' });
+    });
+};
+
 // refactor end
 
 const getQuestionsOfQuestionnaire = async (req, res) => {
@@ -153,25 +169,6 @@ const updateQuestionById = async (req, res) => {
         });
       });
   });
-};
-
-const deleteQuestion = async (req, res) => {
-  await Question.findById({ _id: req.params.id }, (err, question) => {
-    if (err) {
-      return res.status(400).json({ success: false, error: err });
-    }
-
-    if (!question) {
-      return res.status(404).json({ success: false, error: `Question not found` });
-    }
-
-    if (question.answerOptions.type === 'Amount') {
-      Images.deleteImagesOfQuestion(question.answerOptions.options);
-    }
-    return res.status(200).json({ success: true, data: question });
-  }).catch((err) => console.log(err));
-
-  await Question.findByIdAndDelete({ _id: req.params.id }, (err, question) => {});
 };
 
 module.exports = {

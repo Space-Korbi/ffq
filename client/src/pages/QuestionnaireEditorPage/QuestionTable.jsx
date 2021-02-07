@@ -39,15 +39,17 @@ const QuestionTable = ({
 
   const handleRemoveQuestion = async (question, index) => {
     await questionnaireService
-      .removeQuestionById(questionnaire._id, question._id)
-      .then((response) => {
-        if (response.success) {
-          const questionsCopy = [...questionsRef.current];
-          if (index > -1) {
-            questionsCopy.splice(index, 1);
-          }
-          setQuestions(questionsCopy);
+      .deleteQuestion(questionnaire._id, question._id)
+      .then(() => {
+        const questionsCopy = [...questionsRef.current];
+        if (index > -1) {
+          questionsCopy.splice(index, 1);
         }
+        setQuestions(questionsCopy);
+      })
+      .catch((error) => {
+        // TODO: Show error to user
+        console.log(error);
       });
   };
 

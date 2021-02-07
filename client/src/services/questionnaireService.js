@@ -7,7 +7,7 @@ import {
   updateQuestionnaire2,
   updateQuestion,
   deleteQuestionnaireById,
-  deleteQuestionById
+  deleteQuestion
 } from '../api';
 
 const updateAction = {
@@ -27,18 +27,6 @@ const fetchAllQuestionsOfQuestionnaire = async (questionnaireId) => {
   }
   return getAllQuestionsOfQuestionnaire(questionnaireId).then((response) => {
     return response.data.data;
-  });
-};
-
-const removeQuestionById = (questionnaireId, questionId) => {
-  return deleteQuestionById(questionnaireId, questionId).then(() => {
-    const questionnairePayload = {
-      action: updateAction.removeById,
-      questionId
-    };
-    return updateQuestionnaire(questionnaireId, questionnairePayload).then((res) => {
-      return res.data;
-    });
   });
 };
 
@@ -77,7 +65,7 @@ const questionnaireService = {
   fetchAllQuestionsOfQuestionnaire,
   moveQuestionFromTo,
   updateQuestionnaireSettings,
-  removeQuestionById,
+  deleteQuestion,
   deleteQuestionnaire
 };
 

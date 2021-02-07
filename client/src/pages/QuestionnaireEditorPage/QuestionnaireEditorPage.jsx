@@ -68,11 +68,9 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
   }, [questions, isEditing]);
 
   const saveSettings = async (settings) => {
-    await questionnaireService
-      .updateQuestionnaireSettings(questionnaire._id, settings)
-      .then((res) => {
-        console.log(res);
-      });
+    await questionnaireService.updateQuestionnaire2(questionnaire._id, settings).then((res) => {
+      console.log(res);
+    });
   };
 
   const modalTableColumns = [

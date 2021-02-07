@@ -1,5 +1,5 @@
 /* eslint-disable no-alert */
-import { updateQuestionById, uploadImage, deleteQuestionById } from '../api';
+import { updateQuestionById, uploadImage } from '../api';
 import AnswerType from '../types';
 
 /**
@@ -65,11 +65,6 @@ const saveQuestion = async (questionId, questionData, answerOptions) => {
   return updateQuestionById(questionId, payload);
 };
 
-const deleteQuestion = async (id) => {
-  const deletedQuestion = await deleteQuestionById(id);
-  return deletedQuestion;
-};
-
-const questionService = { saveQuestion, deleteQuestion };
+const questionService = { saveQuestion };
 
 export default questionService;
