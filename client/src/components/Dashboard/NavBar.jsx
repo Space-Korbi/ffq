@@ -120,7 +120,11 @@ function NavBar({ isAdmin }) {
           </div>
           <ul className="navbar-nav">
             <li className="nav-item">
-              <a className="nav-link ml-auto" href="/login" onClick={() => authService.logout()}>
+              <a
+                className="nav-link ml-auto"
+                href="/login"
+                onClick={() => authService.logoutUser()}
+              >
                 Logout
               </a>
             </li>
