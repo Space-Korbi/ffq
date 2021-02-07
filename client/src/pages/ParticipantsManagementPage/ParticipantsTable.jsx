@@ -27,10 +27,8 @@ const ExportCSVButton = (props) => {
 
 const ScreeningStatusCell = ({ content, userId }) => {
   const [status, setStatus] = useState(content);
-  console.log(userId);
 
   const handleStatusSelection = async (selection) => {
-    console.log(selection);
     await userService.updateUserData(userId, { screeningStatus: selection }).then(() => {
       setStatus(selection);
     });
@@ -76,7 +74,6 @@ const ScreeningStatusCell = ({ content, userId }) => {
 };
 
 const ParticipantsTable = ({ fileName, data, columns, iterationSelector }) => {
-  console.log(data);
   const staticColumns = [
     {
       dataField: 'email',
