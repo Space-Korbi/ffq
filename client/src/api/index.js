@@ -35,6 +35,9 @@ export const updateUserIterationAnswer = (userId, iterationId, questionId, paylo
 // questionnaire
 export const createQuestionnaire = (payload) => api.post(`/questionnaires`, payload);
 
+export const getQuestions = (questionnaireId) =>
+  api.get(`/questionnaires/${questionnaireId}/questions`);
+
 export const updateQuestionnaire = (questionnaireId, payload) =>
   api.patch(`/questionnaires/${questionnaireId}`, payload);
 
@@ -55,8 +58,6 @@ export const deleteQuestion = (questionnaireId, questionId) =>
 // question
 
 export const updateQuestionById = (id, payload) => api.put(`/questions/${id}`, payload);
-export const getAllQuestionsOfQuestionnaire = (questionnaireId) =>
-  api.get(`/questionnaires/${questionnaireId}/questions`);
 
 // questionnaire
 
@@ -84,7 +85,7 @@ const apis = {
   updateQuestionnaire,
   updateUserIteration,
   updateUserIterationAnswer,
-  getAllQuestionsOfQuestionnaire,
+  getQuestions,
   uploadImage
 };
 

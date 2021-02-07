@@ -1,6 +1,4 @@
-const async = require('async');
 const Question = require('./question.model');
-const Questionnaire = require('../questionnaire.model');
 const Images = require('../../images/image.controller');
 
 /**
@@ -81,42 +79,8 @@ const deleteQuestion = async (req, res, next) => {
 
 // refactor end
 
-const getQuestionsOfQuestionnaire = async (req, res) => {
-  await Questionnaire.findById(req.params.questionnaireId, (err, questionnaire) => {
-    if (err) {
-      return res.status(404).json({ success: false, error: err });
-    }
-
-    if (!questionnaire || !questionnaire.questions) {
-      return res.status(404).json({ success: false, error: `No questions found` });
-    }
-
-    const findQuestionCalls = [];
-
-    questionnaire.questions.forEach((questionId) => {
-      findQuestionCalls.push((callback) => {
-        Question.findById(questionId).then((result) => {
-          if (result === null) {
-            const placeholder = {
-              _id: 'Undefined'
-            };
-            callback(null, placeholder);
-          } else {
-            callback(null, result);
-          }
-        });
-      });
-    });
-
-    async.parallel(findQuestionCalls, (err, results) => {
-      return res.status(200).json({ success: true, data: results });
-    });
-  });
-};
-
 module.exports = {
   createQuestion,
   updateQuestion,
-  deleteQuestion,
-  getQuestionsOfQuestionnaire
+  deleteQuestion
 };

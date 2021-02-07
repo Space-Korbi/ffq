@@ -31,15 +31,8 @@ const createQuestionnaire = async (req, res) => {
 };
 
 const getQuestionnaires = async (req, res) => {
-  // console.log(req.query);
   const { questionnaireId } = req.query;
   const { fields } = req.query;
-
-  /*
-  console.log('id:', questionnaireId);
-  console.log('fields:', fields);
-  console.log('body:', req.body);
-  */
 
   const filter = {};
   if (questionnaireId) {
@@ -61,6 +54,40 @@ const getQuestionnaires = async (req, res) => {
       return res
         .status(500)
         .json({ error, title: 'Internal error.', detail: 'Something went wrong.' });
+    });
+};
+
+const getQuestions = async (req, res) => {
+  const { questionnaireId } = req.params;
+
+  await Questionnaire.findById(questionnaireId)
+    .then((questionnaire) => {
+      const findQuestionCalls = [];
+
+      questionnaire.questions.forEach((questionId) => {
+        findQuestionCalls.push((callback) => {
+          Question.findById(questionId).then((result) => {
+            if (result === null) {
+              const placeholder = {
+                _id: 'Undefined'
+              };
+              callback(null, placeholder);
+            } else {
+              callback(null, result);
+            }
+          });
+        });
+      });
+
+      async.parallel(findQuestionCalls, (error, questions) => {
+        if (error) {
+          return res.status(404).json({ error, message: 'No question could be found.' });
+        }
+        return res.status(200).json({ questions });
+      });
+    })
+    .catch((error) => {
+      return res.status(404).json({ error, message: 'No questionnaire could be found.' });
     });
 };
 
@@ -206,9 +233,10 @@ const deleteQuestionnaire = async (req, res) => {
 module.exports = {
   createQuestionnaire,
   addQuestion,
+  getQuestionnaires,
+  getQuestions,
   updateQuestionnaire,
-  deleteQuestionnaire,
   moveQuestion,
-  removeQuestion,
-  getQuestionnaires
+  deleteQuestionnaire,
+  removeQuestion
 };

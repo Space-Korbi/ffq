@@ -27,12 +27,14 @@ router.post(
   [QuestionCtrl.createQuestion, QuestionnaireCtrl.addQuestion]
 );
 
+// get questionnaire
 router.get('/questionnaires', /* [authJwt.verifyToken], */ QuestionnaireCtrl.getQuestionnaires);
 
+// get questions
 router.get(
   '/questionnaires/:questionnaireId/questions',
   /* [authJwt.verifyToken], */
-  QuestionCtrl.getQuestionsOfQuestionnaire
+  QuestionnaireCtrl.getQuestions
 );
 
 // update questionnaire
@@ -49,13 +51,13 @@ router.patch(
 );
 
 // move question
-
 router.patch(
   `/questionnaires/:questionnaireId/questions/:questionId/position/:position`,
   /* [authJwt.verifyToken, authJwt.isAdmin], */
   QuestionnaireCtrl.moveQuestion
 );
 
+// deleteQuestion
 router.delete(
   '/questionnaires/:questionnaireId/questions/:questionId',
   /* [authJwt.verifyToken, authJwt.isAdmin], */

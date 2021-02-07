@@ -1,6 +1,6 @@
 import {
   insertQuestion,
-  getAllQuestionsOfQuestionnaire,
+  getQuestions,
   createQuestionnaire,
   getQuestionnaires,
   updateQuestionnaire,
@@ -14,15 +14,6 @@ import {
 
 // end refactor
 
-const fetchAllQuestionsOfQuestionnaire = async (questionnaireId) => {
-  if (!questionnaireId) {
-    return [];
-  }
-  return getAllQuestionsOfQuestionnaire(questionnaireId).then((response) => {
-    return response.data.data;
-  });
-};
-
 const deleteQuestionnaire = async (id) => {
   const deletedQuestionnaire = await deleteQuestionnaireById(id);
   return deletedQuestionnaire.data.data;
@@ -33,7 +24,7 @@ const questionnaireService = {
   updateQuestionnaire,
   updateQuestion,
   getQuestionnaires,
-  fetchAllQuestionsOfQuestionnaire,
+  getQuestions,
   moveQuestion,
   deleteQuestion,
   deleteQuestionnaire

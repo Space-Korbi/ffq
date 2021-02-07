@@ -226,7 +226,6 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
   useEffect(() => {
     const fetchIds = async () => {
       await questionnaireService.getQuestionnaires({ fields: '_id' }).then((res) => {
-        console.log(res);
         setQuestionniareId(res.data.questionnaires[0]._id);
       });
     };
@@ -273,6 +272,11 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
           isAdmin={isAdmin}
           iterationId={iterationId}
         />
+      )}
+      {!fetchedQuestions.length && (
+        <div className="alert alert-warning d-flex justify-content-center mt-5" role="alert">
+          The questionnaire has no questions.
+        </div>
       )}
     </div>
   );

@@ -107,11 +107,9 @@ const useFetchQuestions = (initialQuestionnaireId) => {
     const fetchQuestions = async () => {
       dispatch({ type: 'FETCH_INIT' });
       try {
-        const fetchedQuestions = await questionnaireService.fetchAllQuestionsOfQuestionnaire(
-          questionniareId
-        );
+        const result = await questionnaireService.getQuestions(questionniareId);
         if (!didCancel) {
-          dispatch({ type: 'FETCH_SUCCESS', payload: fetchedQuestions });
+          dispatch({ type: 'FETCH_SUCCESS', payload: result.data.questions });
         }
       } catch (error) {
         if (!didCancel) {
