@@ -72,6 +72,9 @@ export const deleteQuestionnaireById = (questionnaireId) =>
 
 // image
 export const uploadImage = (payload) => api.post(`/upload`, payload);
+
+export const uploadImageToCloudinary = (payload) => api.post(`/uploadToCloudinary`, payload);
+
 export const getAllImages = () => api.get(`/images`);
 export const getImageById = (id) => api.get(`/image/${id}`);
 export const deleteImageById = (id) => api.delete(`/image/${id}`);
