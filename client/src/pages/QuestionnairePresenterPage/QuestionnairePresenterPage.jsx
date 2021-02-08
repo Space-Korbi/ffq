@@ -130,23 +130,20 @@ const QuestionnairePresenter = ({
   return (
     <div>
       <nav className="navbar navbar-expand-md navbar-dark bg-dark questionnaire">
-        <div className="d-flex flex-fill align-items-center">
-          <button
-            type="button"
-            className="btn btn btn-light"
-            disabled={isDisabled}
-            onClick={() => {
-              const prevQuestionIndex = prevUnskippedQuestionAt(currentIndex - 1);
-              setCurrentIndex(prevQuestionIndex);
-            }}
-          >
-            Back
-          </button>
-          <div className="p-1" />
-          <ProgressIndicator currentPosition={currentIndex} length={questions.length} />
-          <div className="p-1" />
-          {isAdmin && (
-            <>
+        {isAdmin ? (
+          <div className="row no-gutters flex-row w-100 ">
+            <div className="col d-flex justify-content-between my-2">
+              <button
+                type="button"
+                className="btn btn-sm btn-light"
+                disabled={isDisabled}
+                onClick={() => {
+                  const prevQuestionIndex = prevUnskippedQuestionAt(currentIndex - 1);
+                  setCurrentIndex(prevQuestionIndex);
+                }}
+              >
+                Back
+              </button>
               <button
                 type="button"
                 className="btn btn-sm btn-outline-warning"
@@ -164,23 +161,45 @@ const QuestionnairePresenter = ({
               </button>
               <button
                 type="button"
-                className="btn btn-sm btn-outline-warning ml-2"
+                className="btn btn-sm btn-outline-warning"
                 onClick={() => {
                   history.push(`/users/${userId}`);
                 }}
               >
                 Exit
               </button>
-            </>
-          )}
-          {/* <button
+            </div>
+            <div className="row no-gutters flex-row w-100">
+              <div className="py-1" />
+              <ProgressIndicator currentPosition={currentIndex} length={questions.length} />
+            </div>
+          </div>
+        ) : (
+          <div className="row no-gutters flex-row w-100">
+            <div className="col d-flex justify-content-between align-items-center">
+              <button
+                type="button"
+                className="btn btn-light d-none d-sm-block"
+                disabled={isDisabled}
+                onClick={() => {
+                  const prevQuestionIndex = prevUnskippedQuestionAt(currentIndex - 1);
+                  setCurrentIndex(prevQuestionIndex);
+                }}
+              >
+                Back
+              </button>
+              <div className="pl-2" />
+              <ProgressIndicator currentPosition={currentIndex} length={questions.length} />
+            </div>
+            {/* <button
                 type="button"
                 className="btn btn btn-light"
                 onClick={() => setCurrentIndex(currentIndex + 1)}
               >
                 Weiter
               </button> */}
-        </div>
+          </div>
+        )}
       </nav>
       <div>
         {questions.length > 0 && (

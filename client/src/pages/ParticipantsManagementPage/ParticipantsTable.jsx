@@ -145,7 +145,7 @@ const ParticipantsTable = ({ fileName, data, columns, iterationSelector }) => {
       >
         {(props) => (
           <div>
-            <div className="row">
+            <div className="row no-gutters">
               <div className="col d-inline-flex">
                 <div className="mr-3">
                   <ExportCSVButton {...props.csvProps} />
