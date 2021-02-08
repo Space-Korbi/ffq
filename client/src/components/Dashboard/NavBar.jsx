@@ -10,13 +10,13 @@ import { ReactComponent as Logo } from '../../hi-ffq_v9_react.svg';
 
 const adminLinks = [
   {
-    name: 'Editor',
+    name: 'FFQ Editor',
     to: '/questionnaireEditor',
     className: 'nav-link',
     activeClassName: 'nav-link active'
   },
   {
-    name: 'Preview',
+    name: 'FFQ Preview',
     to: '/questionnairePresenter/iteration/0',
     className: 'nav-link',
     activeClassName: 'nav-link active'

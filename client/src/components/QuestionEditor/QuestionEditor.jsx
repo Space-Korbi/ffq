@@ -78,7 +78,47 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
       <div className="row no-gutters my-3">
         <div className="col-lg">
           <div className="my-2">
-            <Select onChange={setAnswerType} dispatch={dispatch} />
+            <div className="row no-gutters flex-row d-flex flex-wrap-reverse">
+              <div className="col col-md-6 d-flex">
+                <Select onChange={setAnswerType} dispatch={dispatch} />
+              </div>
+
+              <div className="col-12 col-md-6 d-flex">
+                <div className="my-2 ml-auto">
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary mr-2"
+                    disabled={saving}
+                    onClick={() => onSaveAndExit()}
+                  >
+                    {saving ? (
+                      <>
+                        Saving...
+                        <Spinner className="spinner-border spinner-border-sm ml-1" />
+                      </>
+                    ) : (
+                      'Save and Exit'
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    disabled={saving}
+                    onClick={() => onExit(question)}
+                  >
+                    Exit
+                  </button>
+                  {/* TODO: link to or create next question" 
+                      <button
+                      type="button"
+                      className="btn btn-outline-primary"
+                      onClick={() => onExit(question)}
+                        >
+                      Save and Next
+                    </button> */}
+                </div>
+              </div>
+            </div>
           </div>
           <div className="my-4">
             <JumbotronInputs
@@ -99,40 +139,6 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
           />
         </div>
         <div className="col col-lg-5 px-0 mx-lg-3">
-          <div className="text-center my-2">
-            <button
-              type="button"
-              className="btn btn-outline-primary mr-2"
-              disabled={saving}
-              onClick={() => onSaveAndExit()}
-            >
-              {saving ? (
-                <>
-                  Saving...
-                  <Spinner className="spinner-border spinner-border-sm ml-1" />
-                </>
-              ) : (
-                'Save and Exit'
-              )}
-            </button>
-            <button
-              type="button"
-              className="btn btn-outline-primary mr-2"
-              disabled={saving}
-              onClick={() => onExit(question)}
-            >
-              Exit
-            </button>
-            {/* TODO: link to or create next question" 
-            <button
-              type="button"
-              className="btn btn-outline-primary"
-              onClick={() => onExit(question)}
-            >
-              Save and Next
-            </button> */}
-          </div>
-
           <QuestionPreview
             title={title}
             subtitle1={subtitle1}

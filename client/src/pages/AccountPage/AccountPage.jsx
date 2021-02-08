@@ -110,19 +110,19 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
                 <div className="col">
                   <div className="table m-0">
                     <table className="table  m-0 border-top-0">
-                      <caption className="p-0 pt-2 ml-1">
+                      <caption className="p-0 pt-2 ">
                         The questionnaire can be accessed in between each interval, start and end
                         date included.
                       </caption>
                       <thead>
                         <tr>
-                          <th scope="col" className="pt-0">
+                          <th scope="col" className="pt-0 pl-0">
                             Start
                           </th>
-                          <th scope="col" className="pt-0">
+                          <th scope="col" className="pt-0 pl-0">
                             End
                           </th>
-                          <th scope="col" className="pt-0">
+                          <th scope="col" className="pt-0 pl-0">
                             Status
                           </th>
                         </tr>
@@ -133,9 +133,9 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
                             const completedIterations = getCompletedIterations();
                             return (
                               <tr key={iteration.id}>
-                                <td className="align-middle">{iteration.startLabel}</td>
-                                <td className="align-middle">{iteration.endLabel}</td>
-                                <td className="align-middle">
+                                <td className="align-middle pl-0">{iteration.startLabel}</td>
+                                <td className="align-middle pl-0">{iteration.endLabel}</td>
+                                <td className="align-middle pl-0">
                                   {getIterationStatus(completedIterations, iteration)}
                                 </td>
                               </tr>
