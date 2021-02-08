@@ -62,22 +62,23 @@ const ConsentScreeningModal = ({
       </div>
       <div className="modal-body text-left">
         <ul className="list-group list-group-flush">
-          {selectionCriteria.map((criteria, index) => (
-            <li key={criteria} className="list-group-item">
-              <div className="custom-control custom-checkbox">
-                <input
-                  type="checkbox"
-                  className="custom-control-input"
-                  id={`check${index}`}
-                  value={criteria}
-                  onChange={(e) => handleSelection(e)}
-                />
-                <label className="custom-control-label" htmlFor={`check${index}`}>
-                  {criteria}
-                </label>
-              </div>
-            </li>
-          ))}
+          {selectionCriteria &&
+            selectionCriteria.map((criteria, index) => (
+              <li key={criteria} className="list-group-item">
+                <div className="custom-control custom-checkbox">
+                  <input
+                    type="checkbox"
+                    className="custom-control-input"
+                    id={`check${index}`}
+                    value={criteria}
+                    onChange={(e) => handleSelection(e)}
+                  />
+                  <label className="custom-control-label" htmlFor={`check${index}`}>
+                    {criteria}
+                  </label>
+                </div>
+              </li>
+            ))}
         </ul>
       </div>
 

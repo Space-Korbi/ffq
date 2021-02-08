@@ -1,3 +1,4 @@
 import ConsentScreeningModal from './ConsentScreeningModal';
+import ConsentModal from './ConsentModal';
 
-export default ConsentScreeningModal;
+export { ConsentScreeningModal, ConsentModal };

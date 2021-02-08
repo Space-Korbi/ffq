@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { userService } from '../../../services';
 
 // components
-import ConsentScreeningModal from '../../../components/Modals';
+import { ConsentScreeningModal } from '../../../components/Modals';
 
 const UserApproval = ({
   user,
