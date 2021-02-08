@@ -1,4 +1,3 @@
-const nanoid = require('nanoid');
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
@@ -15,18 +14,13 @@ const { Schema } = mongoose;
 
 const Question = new Schema(
   {
-    _id: {
-      type: String,
-      default: nanoid.nanoid(),
-      required: true
-    },
-    title: { type: String },
-    subtitle1: { type: String },
-    subtitle2: { type: String },
-    help: { type: String },
+    title: { type: String, default: '' },
+    subtitle1: { type: String, default: '' },
+    subtitle2: { type: String, default: '' },
+    help: { type: String, default: '' },
     answerOptions: {
-      type: { type: String },
-      options: { type: Schema.Types.Mixed }
+      type: { type: String, default: '' },
+      options: { type: Schema.Types.Mixed, default: [] }
     }
   },
   { timestamps: true }

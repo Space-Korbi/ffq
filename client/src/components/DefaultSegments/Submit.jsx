@@ -1,16 +1,19 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import moment from 'moment';
 
 // services
 import { userService } from '../../services';
 
-const Submit = () => {
+const Submit = ({ iterationId }) => {
   const history = useHistory();
   const { userId } = useParams();
 
-  const submit = () => {
-    userService.updateUserData(userId, { data: { finishedOn: Date.now(), stoppedAtIndex: -1 } });
-    history.push(`/users/${userId}`);
+  const submit = async () => {
+    await userService
+      .updateUserIteration(userId, iterationId, { finishedAt: moment().toDate() })
+      .then(history.push(`/users/${userId}`));
   };
 
   return (

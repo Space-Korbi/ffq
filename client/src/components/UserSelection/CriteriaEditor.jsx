@@ -2,10 +2,15 @@ import React, { useState } from 'react';
 import { func, string, arrayOf } from 'prop-types';
 
 // icons
+// eslint-disable-next-line no-unused-vars
 import { InfoIcon, PlusIcon } from '@primer/octicons-react';
+
+// services
+import { questionnaireService } from '../../services';
 
 // components
 import RemovableListItem from '../List';
+import Spinner from '../Spinner';
 
 const SelectionCriteriaInput = ({ onClick }) => {
   const [newCriteriaInput, setNewCriteriaInput] = useState('');
@@ -18,7 +23,7 @@ const SelectionCriteriaInput = ({ onClick }) => {
         id="newCriteria"
         className="form-control"
         value={newCriteriaInput}
-        placeholder="i.e. Lactose Intolerant"
+        placeholder="Enter new criteria"
         onChange={(e) => setNewCriteriaInput(e.target.value)}
       />
       <div className="input-group-append">
@@ -43,7 +48,7 @@ SelectionCriteriaInput.propTypes = {
 
 const SelectionCriteriaList = ({ selectionCriteria, onClick }) => {
   return (
-    <ul className="list-group mb-3" style={{ minWidth: '15rem' }}>
+    <ul className="w-100 list-group mb-3" style={{ minWidth: '15rem' }}>
       {selectionCriteria.map((criteria) => {
         return (
           <RemovableListItem
@@ -64,28 +69,79 @@ SelectionCriteriaList.propTypes = {
 };
 
 const SelectionCriteria = ({
+  questionnaireId,
   selectionCriteria,
   addSelectionCriteria,
   removeSelectionCriteria
 }) => {
+  const [status, setStatus] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [didChange, setDidChange] = useState(false);
+
   return (
-    <div className="row d-flex justify-content-center">
-      <div className="col">
-        <div className="alert alert-warning" role="alert">
-          Diese Daten werden noch nicht auf dem Server gespeicher. Wenn die Seite neu geladen wird,
-          wird die `Selection Criteria` zurückgesetzt.
+    <div className="d-flex">
+      <div className="row no-gutters" style={{ maxWidth: '700px' }}>
+        <div className="col d-flex flex-wrap">
+          <div className="m-0 mb-3 mb-sm-5">
+            <button
+              type="button"
+              disabled={!didChange}
+              className="btn btn-outline-primary mr-2"
+              onClick={() => {
+                questionnaireService
+                  .updateQuestionnaire(questionnaireId, { selectionCriteria })
+                  .then(() => {
+                    setStatus(
+                      <div className="alert alert alert-success">Changes saved successfully.</div>
+                    );
+                    setSubmitting(false);
+                    setDidChange(false);
+                  })
+                  .catch((error) => {
+                    const errorList = (listElement) => (
+                      <div className="alert alert-danger">
+                        <ul className="list-unstyled content-align-center mb-0">{listElement}</ul>
+                      </div>
+                    );
+                    const errorListElements = error.data.errors.map((err) => {
+                      return <li key={err.value}>{err.msg}</li>;
+                    });
+                    setStatus(errorList(errorListElements));
+                    setSubmitting(false);
+                    setDidChange(false);
+                  });
+              }}
+            >
+              {submitting ? (
+                <>
+                  Saving...
+                  <Spinner className="spinner-border spinner-border-sm ml-1" />
+                </>
+              ) : (
+                'Save Changes'
+              )}
+            </button>
+          </div>
+          <div className="m-0 mb-3">{status}</div>
         </div>
-        <h6>
-          Selection Criteria
-          <sup className="text-info ml-1">
-            <InfoIcon />
-          </sup>
-        </h6>
-        <SelectionCriteriaInput onClick={addSelectionCriteria} />
+
+        {/* <p className="lead m-0 mb-3 mt-5">Selection Criteria</p> */}
+
+        <SelectionCriteriaInput
+          onClick={(criteria) => {
+            setDidChange(true);
+            setStatus('');
+            addSelectionCriteria(criteria);
+          }}
+        />
 
         <SelectionCriteriaList
           selectionCriteria={selectionCriteria}
-          onClick={removeSelectionCriteria}
+          onClick={(criteria) => {
+            setDidChange(true);
+            setStatus('');
+            removeSelectionCriteria(criteria);
+          }}
         />
       </div>
     </div>
@@ -93,6 +149,7 @@ const SelectionCriteria = ({
 };
 
 SelectionCriteria.propTypes = {
+  questionnaireId: string.isRequired,
   selectionCriteria: arrayOf(string).isRequired,
   addSelectionCriteria: func.isRequired,
   removeSelectionCriteria: func.isRequired

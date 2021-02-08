@@ -3,98 +3,119 @@
 import React, { useState, useEffect } from 'react';
 import { shape } from 'prop-types';
 import { useRouteMatch, useHistory, useParams } from 'react-router-dom';
+import moment from 'moment/min/moment-with-locales';
+
+// hooks
+import { useFetchQuestionnaires } from '../../../hooks';
 
 // services
 import { userService } from '../../../services';
 
-// helpers
-import { dateHelper } from '../../../helpers';
-
 // components
-import ConsentModal from '../../../components/Modals';
-
-const intervals = [
-  { startDate: new Date('2021-01-09 23:00:00.000Z'), endDate: new Date('2021-02-06 23:00:00.000Z') }
-];
+import Spinner from '../../../components/Spinner';
+import QuestionnaireInfo from './QuestionnaireInfo';
+import UserApproval from './UserApproval';
 
 const ParticipantPage = ({ user }) => {
-  const [header, setHeader] = useState('Willkommen');
-  const [title, setTitle] = useState(
-    `Um die Umfrage zu starten klicken Sie bitte auf "Umfrage starten"`
-  );
+  const [
+    { fetchedQuestionnaires, isLoadingQuestionnaires, isErrorQuestionnaires }
+  ] = useFetchQuestionnaires(null, 'iterations consentScript selectionCriteria screeningRules');
+
+  const [currentQuestionnaire, setCurrentQuestionnaire] = useState();
+  const [iterationId, setIterationId] = useState();
   const [buttonTitle, setButtonTitle] = useState('Umfrage starten');
   const [disabled, setDisabled] = useState();
+  const [screeningStatus, setScreeningStatus] = useState(user.screeningStatus);
+  const [hasAcceptedConsentForm, setHasAcceptedConsentForm] = useState(user.hasAcceptedConsentForm);
   const history = useHistory();
   const { userId } = useParams();
   const { url } = useRouteMatch();
 
-  useEffect(() => {
-    const { startDate } = intervals[0];
-    const { endDate } = intervals[0];
-
-    if (!dateHelper.hasPassed(startDate)) {
-      setTitle(`Die Umfrage kann am ${dateHelper.toDateDE(startDate)} gestartet werden`);
-      setDisabled(true);
-    }
-    if (dateHelper.isBetween(startDate, endDate)) {
-      if (Date.now > user.finishedOn) {
-        setDisabled(true);
-        setHeader('Die Umfrage ist abgeschlossen.');
-        setTitle('Vielen Dank für Ihre Teilnahme.');
-        setButtonTitle('Umfrage starten');
-      } else if (user.stoppedAtIndex !== -1) {
-        setHeader('Willkommen zurück!');
-        setTitle(`Um die Umfrage fortzusetzen klicken Sie bitte auf "Umfrage fortsetzen"`);
-        setButtonTitle('Umfrage fortsetzen');
-      }
-    }
-  }, []);
-
-  const start = () => {
-    userService.updateUserData(userId, { data: { startedOn: Date.now() } });
-    history.push(`${url}/questionnairePresenter`);
+  const start = async () => {
+    await userService
+      .updateUserIteration(userId, iterationId, { startedAt: moment().toDate() })
+      .then(() => {
+        history.push(`${url}/questionnairePresenter/iteration/${iterationId}`);
+      });
   };
 
+  useEffect(() => {
+    if (screeningStatus === 'Wait' || screeningStatus === 'Reject') {
+      setDisabled(true);
+    }
+  }, [disabled]);
+
+  useEffect(() => {
+    if (fetchedQuestionnaires && fetchedQuestionnaires[0]) {
+      setCurrentQuestionnaire(fetchedQuestionnaires[0]);
+    }
+  }, [fetchedQuestionnaires]);
+
   return (
-    <div className="d-flex justify-content-center mt-3">
-      <div className="jumbotron text-center" style={{ maxWidth: '800px' }}>
-        <h1 className="display-4">{header}</h1>
-        <p className="lead">{title}</p>
-        <hr className="my-4" />
-        <div className="text-center">
-          {user.hasAcceptedConsentForm ? (
-            <button
-              disabled={disabled}
-              type="button"
-              className="btn btn-lg btn-primary mt-3"
-              onClick={() => {
-                start();
-              }}
-            >
-              {buttonTitle}
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="btn btn-outline-primary "
-              data-toggle="modal"
-              data-target="#staticBackdrop"
-            >
-              {buttonTitle}
-            </button>
-          )}
+    <div>
+      {isErrorQuestionnaires && (
+        <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
+          Something went wrong...
         </div>
-        <ConsentModal
-          onAccept={() =>
-            userService
-              .updateUserData(user.id, { data: { hasAcceptedConsentForm: true } })
-              .then((res) => {
-                userService.updateUserData(userId, { data: { startedOn: Date.now() } });
-                history.push(`${url}/questionnairePresenter`);
-              })
-          }
-        />
-      </div>
+      )}
+      {isLoadingQuestionnaires && (
+        <div className="d-flex justify-content-center mt-5">
+          <Spinner />
+        </div>
+      )}
+      {currentQuestionnaire && (
+        <div className="p-4 p-sm-5 d-flex-block">
+          <div className="row text-center">
+            <div className="col d-flex-block">
+              <QuestionnaireInfo
+                iterationsProp={currentQuestionnaire.iterations}
+                userProp={user}
+                setDisabled={setDisabled}
+                setButtonTitle={setButtonTitle}
+                setIterationId={setIterationId}
+              />
+            </div>
+          </div>
+          <div className="row text-center">
+            <div className="col d-flex-block">
+              {hasAcceptedConsentForm && screeningStatus === 'Accept' ? (
+                <button
+                  disabled={disabled}
+                  type="button"
+                  className="btn btn-lg btn-primary mt-3"
+                  onClick={() => {
+                    start();
+                  }}
+                >
+                  {buttonTitle}
+                </button>
+              ) : (
+                <button
+                  disabled={disabled}
+                  type="button"
+                  className="btn btn-lg btn-primary mt-3"
+                  data-toggle="modal"
+                  data-target="#staticBackdrop"
+                >
+                  {buttonTitle}
+                </button>
+              )}
+            </div>
+          </div>
+          <div className="row text-center">
+            <div className="col d-flex-block">
+              <UserApproval
+                user={user}
+                screeningStatus={screeningStatus}
+                setScreeningStatus={setScreeningStatus}
+                setHasAcceptedConsentForm={setHasAcceptedConsentForm}
+                questionnaire={currentQuestionnaire}
+                start={start}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

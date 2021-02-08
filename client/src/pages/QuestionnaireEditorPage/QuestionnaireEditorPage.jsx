@@ -2,10 +2,8 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
-import DatePicker from 'react-date-picker';
 
 import PropTypes from 'prop-types';
-import BootstrapTable from 'react-bootstrap-table-next';
 
 // services
 import { questionnaireService } from '../../services';
@@ -15,22 +13,22 @@ import { useFetchQuestionnaires, useFetchQuestions } from '../../hooks';
 
 // components
 import Spinner from '../../components/Spinner';
+import { NavTabs, NavContents } from '../../components/Navigation';
 import QuestionEditor from '../../components/QuestionEditor';
-import { DeleteButton, EditButton, MoveButton, OutlineButton } from '../../components/Button';
+import { OutlineButton } from '../../components/Button';
+import QuestionnaireSettings from '../../components/Settings';
+import QuestionTable from './QuestionTable';
 
 const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
-  const [{ fetchedQuestions, isLoadingQuestions, isErrorQuestions }] = useFetchQuestions(
-    questionnaire._id
-  );
+  const [
+    { fetchedQuestions, isLoadingQuestions, isErrorQuestions },
+    setQuestionniareId
+  ] = useFetchQuestions(questionnaire._id);
 
   const [questions, setQuestions] = useState([]);
   const [data, setData] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState();
-
-  const [questionnaireName, setQuestionnnaireName] = useState(questionnaire.name);
-  const [startDate, setStartDate] = useState(new Date(questionnaire.startDate));
-  const [endDate, setEndDate] = useState(new Date(questionnaire.endDate));
 
   const questionsRef = useRef(questions);
 
@@ -69,141 +67,11 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
     }
   }, [questions, isEditing]);
 
-  const handleCreateQuestionAt = async (index) => {
-    await questionnaireService.createQuestionAt(questionnaire._id, index).then((response) => {
-      const questionsCopy = [...questionsRef.current];
-      if (index >= 0) {
-        questionsCopy.splice(index, 0, response.question);
-      } else {
-        questionsCopy.push(response.question);
-      }
-      setQuestions(questionsCopy);
+  const saveSettings = async (settings) => {
+    await questionnaireService.updateQuestionnaire(questionnaire._id, settings).then((res) => {
+      console.log(res);
     });
   };
-
-  const handleMoveQuestionFromTo = async (question, fromIndex, toIndex) => {
-    if (toIndex >= 0 && toIndex < questionsRef.current.length) {
-      await questionnaireService
-        .moveQuestionFromTo(questionnaire._id, question, fromIndex, toIndex)
-        .then((response) => {
-          if (response.success) {
-            const questionsCopy = [...questionsRef.current];
-            if (toIndex > fromIndex) {
-              questionsCopy.splice(fromIndex, 1);
-              questionsCopy.splice(toIndex, 0, question);
-            } else if (toIndex < fromIndex) {
-              questionsCopy.splice(toIndex, 0, question);
-              questionsCopy.splice(fromIndex + 1, 1);
-            }
-            setQuestions(questionsCopy);
-          }
-        });
-    }
-  };
-
-  const handleRemoveQuestion = async (question, index) => {
-    await questionnaireService
-      .removeQuestionById(questionnaire._id, question._id)
-      .then((response) => {
-        if (response.success) {
-          const questionsCopy = [...questionsRef.current];
-          if (index > -1) {
-            questionsCopy.splice(index, 1);
-          }
-          setQuestions(questionsCopy);
-        }
-      });
-  };
-
-  const handleChangeSettings = async () => {
-    const settings = { name: questionnaireName, startDate, endDate };
-    await questionnaireService
-      .updateQuestionnaireSettings(questionnaire._id, settings)
-      .then((response) => {
-        setQuestionnnaireName(response.name);
-        setStartDate(new Date(response.startDate));
-        setEndDate(new Date(response.endDate));
-      });
-  };
-
-  const deleteButton = (cell, row) => {
-    return (
-      <div className="d-flex justify-content-center">
-        <DeleteButton isTrashCan onClick={() => handleRemoveQuestion(row.question, row.index)} />
-      </div>
-    );
-  };
-
-  const moveButtons = (cell, row) => {
-    const { index } = row;
-    return (
-      <div className="d-flex">
-        <MoveButton up onClick={() => handleMoveQuestionFromTo(row.question, index, index - 1)} />
-
-        <MoveButton onClick={() => handleMoveQuestionFromTo(row.question, index, index + 1)} />
-      </div>
-    );
-  };
-
-  const editButton = (cell, row) => {
-    return (
-      <div>
-        <EditButton
-          onClick={() => setSelectedQuestion({ question: row.question, index: row.index })}
-        />
-      </div>
-    );
-  };
-
-  const columns = [
-    {
-      text: '',
-      dataField: 'index',
-      align: 'center',
-      style: { width: '8px' }
-    },
-    {
-      dataField: 'edit',
-      text: 'Edit',
-      editable: false,
-      align: 'center',
-      formatter: editButton,
-      style: { width: '45px' }
-    },
-    {
-      dataField: 'move',
-      text: 'Move',
-      editable: false,
-      align: 'center',
-      style: { width: '12px' },
-      formatter: moveButtons
-    },
-    {
-      text: 'Title',
-      dataField: 'question.title'
-    },
-    {
-      text: 'Subtitle1',
-      dataField: 'question.subtitle1'
-    },
-    {
-      text: 'Subtitle2',
-      dataField: 'question.subtitle2'
-    },
-    {
-      text: 'Help',
-      dataField: 'question.help'
-    },
-
-    {
-      dataField: 'delete',
-      text: '',
-      editable: false,
-      align: 'center',
-      style: { width: '12px' },
-      formatter: deleteButton
-    }
-  ];
 
   const modalTableColumns = [
     {
@@ -233,7 +101,7 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
     setIsEditing(false);
   };
 
-  return (
+  const questionsContent = (
     <div>
       {isEditing ? (
         <QuestionEditor
@@ -243,64 +111,6 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
         />
       ) : (
         <div>
-          <div className="row d-flex no-gutters">
-            <div className="col align-items-center">
-              {/* <div className="mb-4 d-flex justify-content-end">
-                    <DeleteButton isTrashCan onClick={() => deleteQuestionnaire(questionnaireId)} />
-                  </div> */}
-              <div className="my-1 d-inline-flex">
-                <div className="input-group">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text" id="inputGroup-name">
-                      Name
-                    </span>
-                  </div>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={questionnaireName}
-                    onChange={(e) => setQuestionnnaireName(e.target.value)}
-                    aria-describedby="inputGroup-name"
-                  />
-                </div>
-              </div>
-              <div className="my-1 d-flex">
-                <label className="form-check-label mx-1" htmlFor="inlineFormCheck">
-                  Start Date
-                </label>
-                <DatePicker onChange={setStartDate} value={startDate} />
-              </div>
-              <div className="my-1 d-flex">
-                <label className="form-check-label mx-1" htmlFor="inlineFormCheck">
-                  End Date
-                </label>
-                <DatePicker onChange={setEndDate} value={endDate} />
-              </div>
-            </div>
-          </div>
-          <div className="row d-flex no-gutters mt-3">
-            <div className="col d-flex justify-content-between align-items-center">
-              <button
-                type="button"
-                className="btn btn-outline-primary"
-                onClick={() => {
-                  handleChangeSettings();
-                }}
-              >
-                Save Settings
-              </button>
-
-              <button
-                type="button"
-                className="btn btn-outline-primary"
-                onClick={() => {
-                  handleCreateQuestionAt();
-                }}
-              >
-                Add Question
-              </button>
-            </div>
-          </div>
           <div>
             {isErrorQuestions && (
               <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
@@ -312,20 +122,37 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
                 <Spinner />
               </div>
             ) : (
-              <div className="row no-gutters overflow-auto flex-row flex-nowrap my-3">
-                <BootstrapTable
-                  keyField="index"
+              <div className="row no-gutters overflow-auto flex-row flex-nowrap my-4">
+                <QuestionTable
                   data={data}
-                  columns={columns}
-                  bordered={false}
-                  hover
-                  noDataIndication="No Data"
+                  setSelectedQuestion={setSelectedQuestion}
+                  setQuestions={setQuestions}
+                  questionnaire={questionnaire}
+                  questionsRef={questionsRef}
                 />
               </div>
             )}
           </div>
         </div>
       )}
+    </div>
+  );
+
+  const settingsContent = (
+    <QuestionnaireSettings questionnaire={questionnaire} save={saveSettings} />
+  );
+
+  const tabNames = ['Questions', 'Settings'];
+  const tabContents = [questionsContent, settingsContent];
+
+  return (
+    <div>
+      <div>
+        <NavTabs tabNames={tabNames} />
+      </div>
+      <div>
+        <NavContents tabNames={tabNames} tabContents={tabContents} />
+      </div>
     </div>
   );
 };
@@ -344,8 +171,8 @@ const QuestionnaireEditorPage = () => {
   }, [fetchedQuestionnaires]);
 
   const handleCreateQuestionnaire = async () => {
-    await questionnaireService.createQuestionnaire().then((response) => {
-      setQuestionnaires((state) => [...state, response.data]);
+    await questionnaireService.createQuestionnaire().then((res) => {
+      setQuestionnaires((state) => [...state, res.data.questionnaire]);
     });
   };
 
@@ -379,11 +206,11 @@ const QuestionnaireEditorPage = () => {
           )}
         </div>
       ) : (
-        <div className="m-lg-5">
+        <div className="m-2 m-sm-4">
           {questionnaires.map((questionnaire) => {
             return (
               <div key={questionnaire._id} className="my-3">
-                <div className="px-2">
+                <div className="">
                   <QuestionnaireEditor
                     questionnaire={questionnaire}
                     deleteQuestionnaire={() => handleDeleteQuestionnaire}

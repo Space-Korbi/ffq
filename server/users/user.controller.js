@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
@@ -26,9 +27,9 @@ const createUser = (req, res) => {
     lastName
   });
 
-  newUser.save((err, user) => {
-    if (err) {
-      return res.status(500).json({ err, title: 'User was not saved.' });
+  newUser.save((error, user) => {
+    if (error) {
+      return res.status(500).json({ error, title: 'User was not saved.' });
     }
 
     if (req.body.roles) {
@@ -36,15 +37,15 @@ const createUser = (req, res) => {
         {
           name: { $in: req.body.roles }
         },
-        (err, roles) => {
-          if (err) {
-            return res.status(500).json({ err, message: 'Role not found' });
+        (error, roles) => {
+          if (error) {
+            return res.status(500).json({ error, message: 'Role not found' });
           }
 
           user.roles = roles.map((role) => role._id);
-          user.save((err) => {
-            if (err) {
-              return res.status(500).json({ err, message: 'User was not saved' });
+          user.save((error) => {
+            if (error) {
+              return res.status(500).json({ error, message: 'User was not saved' });
             }
 
             return res.status(201).json({ success: true, message: 'User registered successfully' });
@@ -52,15 +53,15 @@ const createUser = (req, res) => {
         }
       );
     } else {
-      Role.findOne({ name: 'user' }, (err, role) => {
-        if (err) {
-          return res.status(404).json({ err, message: 'Role not found' });
+      Role.findOne({ name: 'user' }, (error, role) => {
+        if (error) {
+          return res.status(404).json({ error, message: 'Role not found' });
         }
 
         user.roles = [role._id];
-        user.save((err) => {
-          if (err) {
-            return res.status(500).json({ err, message: 'User was not saved' });
+        user.save((error) => {
+          if (error) {
+            return res.status(500).json({ error, message: 'User was not saved' });
           }
 
           return res.json({ success: true, message: 'User was registered successfully!' });
@@ -83,10 +84,10 @@ const loginUser = async (req, res) => {
     email: req.body.email
   })
     .populate('roles', '-__v')
-    .exec((err, user) => {
-      if (err) {
+    .exec((error, user) => {
+      if (error) {
         return res.status(500).json({
-          err,
+          error,
           title: 'Internal error.',
           detail: 'Something went wrong.'
         });
@@ -126,78 +127,49 @@ const loginUser = async (req, res) => {
 };
 
 const getUsers = async (req, res) => {
-  await User.find({}, (err, users) => {
-    if (err) {
+  const { userId, iterationId } = req.query;
+  let { fields } = req.query;
+
+  const filter = {};
+  if (userId) {
+    filter._id = userId;
+  }
+
+  if (fields && iterationId) {
+    fields = `${fields} iterations.id`;
+  }
+
+  await User.find(filter)
+    .select(fields)
+    .then((users) => {
+      if (!users) {
+        return res
+          .status(404)
+          .json({ title: 'Users not found', detail: 'No user could be found.' });
+      }
+
+      const results = users.map((user) => {
+        const result = user;
+
+        if (iterationId) {
+          result.iterations = result.iterations.filter((iteration) => {
+            if (!iteration.id) {
+              return false;
+            }
+            return iteration.id === iterationId;
+          });
+        }
+
+        return result;
+      });
+
+      return res.status(200).json({ users: results });
+    })
+    .catch((error) => {
       return res
         .status(500)
-        .json({ err, title: 'Internal error.', detail: 'Something went wrong.' });
-    }
-    if (!users.length) {
-      return res.status(404).json({ title: 'Users not found', detail: 'No users found.' });
-    }
-    return res.status(200).json({ users });
-  }).catch((err) => console.log(err));
-};
-
-const getUsersById = async (req, res) => {
-  await User.find({ _id: req.params.userId }, (err, users) => {
-    if (err) {
-      return res.status(400).json({ success: false, error: err });
-    }
-    if (!users) {
-      return res.status(404).json({ success: false, error: `No user found` });
-    }
-
-    let returnData;
-
-    if (!req.query) {
-      returnData = users;
-    } else {
-      switch (req.query.resource) {
-        case 'metaData':
-          returnData = {
-            email: users.email,
-            firstName: users.firstName,
-            lastName: users.lastName,
-            hasAcceptedConsentForm: users.hasAcceptedConsentForm,
-            startData: users.startDate,
-            endDate: users.endDate,
-            stoppedAtIndex: users.stoppedAtIndex
-          };
-          break;
-        default:
-          returnData = users;
-      }
-    }
-    console.log(returnData);
-
-    return res.status(200).json({ users });
-  }).catch((err) => console.log(err));
-};
-
-const getAnswerById = async (req, res) => {
-  await User.findOne({ _id: req.params.userId }, (err, user) => {
-    if (err) {
-      return res.status(404).json({
-        err,
-        message: 'User not found!'
-      });
-    }
-
-    if (!user || !user.answers.length) {
-      return res.status(404).json({ success: false, error: 'No answers found' });
-    }
-
-    const submittedAnswer = user.answers.find(
-      ({ questionId }) => questionId === req.params.questionId
-    );
-
-    if (!submittedAnswer) {
-      return res.status(404).json({ success: false, error: 'No answer found' });
-    }
-
-    return res.status(200).json({ success: true, data: submittedAnswer });
-  }).catch((err) => console.log(err));
+        .json({ error, title: 'Internal error.', detail: 'Something went wrong.' });
+    });
 };
 
 const addQuestionIdsSkip = (questionIds, state) => {
@@ -221,107 +193,119 @@ const updateSkip = (prevAnswerOption, newAnswerOption, state) => {
   return newSkip;
 };
 
-const updateUserById = async (req, res) => {
-  // Finds the validation errors in this request and wraps them in an object
+const updateUser = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
+  const { userId } = req.params;
   const { body } = req;
+  const { newPassword } = req.body;
 
-  User.findOne({ _id: req.params.userId })
-    .then((user) => {
-      const userUpdate = user;
+  const fields = { ...body };
 
-      body.validated.forEach((entry) => {
-        const key = entry[0];
-        const value = entry[1];
+  if (newPassword) {
+    fields.password = bcrypt.hashSync(newPassword, 8);
+  }
 
-        if (key === 'answers') {
-          const index = userUpdate.answers.findIndex((answer) => {
-            return answer.questionId === value.questionId;
-          });
-          if (index !== -1) {
-            userUpdate.questionsToSkip = updateSkip(
-              user.answers[index].answerOption,
-              value.answerOption,
-              userUpdate.questionsToSkip
-            );
-            userUpdate.answers[index] = value;
-          } else {
-            userUpdate.questionsToSkip = updateSkip(
-              null,
-              value.answerOption,
-              userUpdate.questionsToSkip
-            );
-            userUpdate.answers.push(value);
-          }
-        } else {
-          userUpdate[key] = value;
-        }
-      });
-
-      console.log('----', userUpdate);
-
-      userUpdate
-        .save()
-        .then(() => {
-          return res.status(200).json({
-            updated: body.validated,
-            data: body.data.answers,
-            message: 'User updated!'
-          });
-        })
-        .catch((error) => {
-          return res.status(404).json({
-            error,
-            message: 'User not updated!'
-          });
-        });
+  await User.findByIdAndUpdate({ _id: userId }, fields, { new: true })
+    .then(() => {
+      return res.status(204).send();
     })
-    .catch((err) => {
-      return res.status(404).json({
-        err,
-        message: 'User not found!'
+    .catch((error) => {
+      return res.status(400).json({
+        error,
+        message: 'User not updated!'
       });
     });
 };
 
-const resetAdminAnswers = async (req, res) => {
-  // Finds the validation errors in this request and wraps them in an object
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+const updateIteration = async (req, res) => {
+  const { userId, iterationId } = req.params;
+  const { body } = req;
 
-  User.findOne({ _id: req.params.userId })
+  const filter = {
+    _id: userId,
+    'iterations.id': iterationId
+  };
+
+  const [entries] = Object.entries(body);
+  const key = entries[0];
+  const value = entries[1];
+
+  const placeholder = {};
+  placeholder[`iterations.$[iteration].${key}`] = value;
+
+  const update = {
+    $set: placeholder
+  };
+
+  const options = {
+    arrayFilters: [{ 'iteration.id': iterationId }],
+    new: true,
+    upsert: true
+  };
+
+  await User.findOneAndUpdate(filter, update, options)
+    .then(() => {
+      return res.status(204).send();
+    })
+    .catch(() => {
+      // If iteration could not be updated (response === null), a new iteration is created and pushed.
+      User.updateOne(
+        {
+          _id: userId
+        },
+        { $push: { iterations: { id: iterationId, startedAt: body.startedAt } } }
+      )
+        .then(() => {
+          // if the uuid is created by the server instead, we need to return the id and object here
+          return res.status(201).send();
+        })
+        .catch((error) => {
+          return res.status(400).json({
+            error,
+            message: 'Iteration not updated!'
+          });
+        });
+    });
+};
+
+const updateAnswer = async (req, res) => {
+  const { userId, iterationId, questionId } = req.params;
+  const { answerOption } = req.body;
+
+  await User.findById(userId)
     .then((user) => {
       const userUpdate = user;
 
-      userUpdate.answers = [];
-      userUpdate.questionsToSkip = [];
-      userUpdate.stoppedAtIndex = -1;
-      userUpdate.startedOn = undefined;
-      userUpdate.finishedOn = undefined;
-
-      userUpdate
-        .save()
-        .then(() => {
-          return res.status(204).send();
-        })
-        .catch((error) => {
-          return res.status(404).json({
-            error,
-            message: 'User not updated!'
-          });
-        });
-    })
-    .catch((err) => {
-      return res.status(404).json({
-        err,
-        message: 'User not found!'
+      if (!userUpdate.iterations || !userUpdate.iterations.length) {
+        userUpdate.iterations.push({ id: iterationId });
+      }
+      const iteration = userUpdate.iterations.find((i) => {
+        return i.id === iterationId;
       });
+      let answer;
+      if (iteration.answers && iteration.answers.length) {
+        answer = iteration.answers.find((a) => {
+          return a.questionId === questionId;
+        });
+      }
+      if (answer) {
+        answer.answerOption = answerOption;
+      } else {
+        iteration.answers.push({ questionId, answerOption });
+      }
+
+      userUpdate.save().then(() => {
+        return res.status(204).send();
+      });
+    })
+    .catch((error) => {
+      return res
+        .status(404)
+        .json({ error, title: 'Users not found', detail: 'No user could be found.' });
     });
 };
 
@@ -329,8 +313,7 @@ module.exports = {
   loginUser,
   createUser,
   getUsers,
-  getUsersById,
-  getAnswerById,
-  updateUserById,
-  resetAdminAnswers
+  updateUser,
+  updateIteration,
+  updateAnswer
 };

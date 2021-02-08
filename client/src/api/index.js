@@ -17,48 +17,53 @@ api.interceptors.request.use((request) => {
   return request;
 });
 
-// login/signup
+// signup/login
 export const signup = (payload) =>
   axios.post(`${process.env.REACT_APP_BASE_URL}/users/signup`, payload);
 export const login = (payload) =>
   axios.post(`${process.env.REACT_APP_BASE_URL}/users/login`, payload);
 
+// * REFACTORED
 // user
-export const updateAnswerById = (userId, payload) => api.put(`users/${userId}`, payload);
-export const getUsersMetadata = (userId) =>
-  api.get(`/users/${userId}/?resource=metaData`, authHeader());
-
-/* export const getUsersAccountData = (userId) =>
-api.get(`/users/${userId}/?resource=accountData`); */
-
-export const getAllUsers = () => api.get(`/users`);
-export const getUsersById = (userId) => api.get(`/users/${userId}`);
-export const getAnswerById = (userId, questionId) =>
-  api.get(`users/${userId}/questions/${questionId}`);
-
-// user update
-export const updateUser = (userId, payload) => api.put(`users/${userId}`, payload);
-
-// user reset
-export const resetAdminAnswers = (userId) =>
-  api.put(`/users/${userId}/reset`, { data: { reset: true } });
-
-// question
-export const insertQuestionAt = (questionnaireId, payload) =>
-  api.post(`/questionnaires/${questionnaireId}/questions`, payload);
-export const updateQuestionById = (id, payload) => api.put(`/questions/${id}`, payload);
-export const getAllQuestions = () => api.get(`/questions`);
-export const getAllQuestionsOfQuestionnaire = (questionnaireId) =>
-  api.get(`/questionnaires/${questionnaireId}/questions`);
-export const deleteQuestionById = (questionnaireId, questionId) =>
-  api.delete(`/questionnaires/${questionnaireId}/questions/${questionId}`);
+export const getUsers = (params) => api.get(`/users`, { params });
+export const updateUser = (userId, payload) => api.patch(`users/${userId}`, payload);
+export const updateUserIteration = (userId, iterationId, payload) =>
+  api.patch(`/users/${userId}/iterations/${iterationId}`, payload);
+export const updateUserIterationAnswer = (userId, iterationId, questionId, payload) =>
+  api.patch(`/users/${userId}/iterations/${iterationId}/questions/${questionId}`, payload);
 
 // questionnaire
-export const insertQuestionnaire = (payload) => api.post(`/questionnaires`, payload);
+export const createQuestionnaire = (payload) => api.post(`/questionnaires`, payload);
+
+export const getQuestions = (questionnaireId) =>
+  api.get(`/questionnaires/${questionnaireId}/questions`);
+
 export const updateQuestionnaire = (questionnaireId, payload) =>
-  api.put(`/questionnaires/${questionnaireId}`, payload);
-export const getAllQuestionnaires = () => api.get(`/questionnaires`);
-export const getQuestionnaires = (query) => api.get(`/questionnaires`, { params: query });
+  api.patch(`/questionnaires/${questionnaireId}`, payload);
+
+export const insertQuestion = (questionnaireId, payload) =>
+  api.post(`/questionnaires/${questionnaireId}/questions`, payload);
+
+export const updateQuestion = (questionId, payload) =>
+  api.patch(`/questions/${questionId}`, payload);
+
+export const moveQuestion = (questionnaireId, questionId, position) =>
+  api.patch(`/questionnaires/${questionnaireId}/questions/${questionId}/position/${position}`);
+
+export const deleteQuestion = (questionnaireId, questionId) =>
+  api.delete(`/questionnaires/${questionnaireId}/questions/${questionId}`);
+
+// * END REFACTORED
+
+// question
+
+export const updateQuestionById = (id, payload) => api.put(`/questions/${id}`, payload);
+
+// questionnaire
+
+export const getQuestionnaires = (params) => {
+  return api.get(`/questionnaires`, { params });
+};
 
 export const getQuestionnaireById = (questionnaireId) =>
   api.get(`/questionnaires/${questionnaireId}`);
@@ -67,6 +72,9 @@ export const deleteQuestionnaireById = (questionnaireId) =>
 
 // image
 export const uploadImage = (payload) => api.post(`/upload`, payload);
+
+export const uploadImageToCloudinary = (payload) => api.post(`/uploadToCloudinary`, payload);
+
 export const getAllImages = () => api.get(`/images`);
 export const getImageById = (id) => api.get(`/image/${id}`);
 export const deleteImageById = (id) => api.delete(`/image/${id}`);
@@ -74,14 +82,13 @@ export const deleteImageById = (id) => api.delete(`/image/${id}`);
 const apis = {
   signup,
   login,
-  insertQuestionnaire,
-  insertQuestionAt,
-  getUsersMetadata,
-  getUsersById,
-  getAllUsers,
+  createQuestionnaire,
+  getUsers,
   updateUser,
-  getAllQuestions,
-  getAllQuestionsOfQuestionnaire,
+  updateQuestionnaire,
+  updateUserIteration,
+  updateUserIterationAnswer,
+  getQuestions,
   uploadImage
 };
 

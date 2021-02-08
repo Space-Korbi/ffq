@@ -4,8 +4,8 @@ import { useEffect, useState, useReducer } from 'react';
 import { questionnaireService } from '../services';
 
 // custom question fetching hook
-const useFetchQuestionnaires = () => {
-  // const [questionnaires, setQuestionnaires] = useState();
+const useFetchQuestionnaires = (questionnaireId, initialFields) => {
+  const [fields, setFields] = useState(initialFields);
 
   const fetchQuestionnairenReducer = (state, action) => {
     switch (action.type) {
@@ -44,9 +44,12 @@ const useFetchQuestionnaires = () => {
     const fetchQuestionnaires = async () => {
       dispatch({ type: 'FETCH_INIT' });
       try {
-        const fetchedQuestionnaires = await questionnaireService.fetchAllQuestionnaires();
+        const fetchedQuestionnaires = await questionnaireService.getQuestionnaires({
+          questionnaireId,
+          fields
+        });
         if (!didCancel) {
-          dispatch({ type: 'FETCH_SUCCESS', payload: fetchedQuestionnaires });
+          dispatch({ type: 'FETCH_SUCCESS', payload: fetchedQuestionnaires.data.questionnaires });
         }
       } catch (error) {
         if (!didCancel) {
@@ -58,9 +61,9 @@ const useFetchQuestionnaires = () => {
     return () => {
       didCancel = true;
     };
-  }, []);
+  }, [fields]);
 
-  return [state];
+  return [state, setFields];
 };
 
 // Custom question fetching hook
@@ -104,11 +107,11 @@ const useFetchQuestions = (initialQuestionnaireId) => {
     const fetchQuestions = async () => {
       dispatch({ type: 'FETCH_INIT' });
       try {
-        const fetchedQuestions = await questionnaireService.fetchAllQuestionsOfQuestionnaire(
-          questionniareId
-        );
-        if (!didCancel) {
-          dispatch({ type: 'FETCH_SUCCESS', payload: fetchedQuestions });
+        if (questionniareId) {
+          const result = await questionnaireService.getQuestions(questionniareId);
+          if (!didCancel) {
+            dispatch({ type: 'FETCH_SUCCESS', payload: result.data.questions });
+          }
         }
       } catch (error) {
         if (!didCancel) {

@@ -1,12 +1,5 @@
 /* eslint-disable no-alert */
-import { nanoid } from 'nanoid';
-import {
-  insertQuestionAt,
-  updateQuestionById,
-  uploadImage,
-  getAllQuestions,
-  deleteQuestionById
-} from '../api';
+import { updateQuestionById, uploadImage, uploadImageToCloudinary } from '../api';
 import AnswerType from '../types';
 
 /**
@@ -15,23 +8,13 @@ import AnswerType from '../types';
  * and return the filename in the DB as well as the path
  */
 
-const createQuestion = async (questionnaireId) => {
-  const questionId = nanoid();
-
-  const payload = {
-    _id: questionId
-  };
-
-  await insertQuestionAt(questionnaireId, payload).then((res) => {
-    return res.data.id;
-  });
-};
-
-const updateAmountOption = (dbResponse, amountOption) => {
+const updateAmountOption = (dbResponse, amountOption, cloudinaryURL) => {
+  console.log(cloudinaryURL);
   const updatedAmountOption = {
     id: amountOption.id,
     title: amountOption.title,
-    imageName: dbResponse.data.filename
+    imageName: dbResponse.data.filename,
+    imageURL: cloudinaryURL
   };
   return updatedAmountOption;
 };
@@ -41,6 +24,19 @@ const saveImageInDB = async (amountOption) => {
   data.append('imageData', amountOption.imageData);
   const dbImageNameAndPath = await uploadImage(data);
   return dbImageNameAndPath;
+};
+
+const uploadToCloudinary = async (amountOption) => {
+  const data = new FormData();
+  data.append('image', amountOption.imageData);
+  await uploadImageToCloudinary
+    .then((url) => {
+      console.log(url);
+      return url;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 
 /**
@@ -56,7 +52,8 @@ const updateAmountOptions = async (amountOptions) => {
         return Promise.resolve(amountOption);
       }
       const dbImageData = await saveImageInDB(amountOption);
-      const updatedAmountOption = updateAmountOption(dbImageData, amountOption);
+      const cloudinaryURL = await uploadToCloudinary(amountOption);
+      const updatedAmountOption = updateAmountOption(dbImageData, amountOption, cloudinaryURL);
       return Promise.resolve(updatedAmountOption);
     })
   );
@@ -77,6 +74,7 @@ const saveQuestion = async (questionId, questionData, answerOptions) => {
   payload.answerOptions = answerOptions;
 
   if (answerOptions.type === AnswerType.Amount) {
+    console.log('heyyy');
     const updatedAmountOptions = await updateAmountOptions(answerOptions.options);
     payload.answerOptions.options = updatedAmountOptions;
   }
@@ -84,16 +82,6 @@ const saveQuestion = async (questionId, questionData, answerOptions) => {
   return updateQuestionById(questionId, payload);
 };
 
-const fetchAllQuestions = async () => {
-  const questions = await getAllQuestions();
-  return questions.data.data;
-};
-
-const deleteQuestion = async (id) => {
-  const deletedQuestion = await deleteQuestionById(id);
-  return deletedQuestion;
-};
-
-const questionService = { createQuestion, saveQuestion, fetchAllQuestions, deleteQuestion };
+const questionService = { saveQuestion };
 
 export default questionService;

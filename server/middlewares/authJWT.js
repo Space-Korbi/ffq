@@ -29,7 +29,9 @@ const verifyToken = (req, res, next) => {
 };
 
 const authoriseUser = (req, res, next) => {
-  if (req.userId !== req.params.userId) {
+  if (!req.userId || !req.query.userId) {
+    // TODO if isAdmin -> next()
+  } else if (req.userId !== req.query.userId) {
     return res.status(401).send({
       title: 'User unauthorized.',
       detail: 'You are not authorized to access this resource.'

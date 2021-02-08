@@ -4,11 +4,7 @@ import { arrayOf, func, string } from 'prop-types';
 const CardNavTabs = ({ cardId, tabNames, selectedTab, setSelectedTab }) => {
   return (
     <>
-      <ul
-        className="nav nav-tabs card-header-tabs card-header-tabs flex-nowrap ml-4"
-        id="tab"
-        role="tablist"
-      >
+      <ul className="nav nav-tabs card-header-tabs card-header-tabs  ml-4" id="tab" role="tablist">
         {tabNames.map((tabName, tabIndex) => {
           const tabNameLowerCase = tabName.toLowerCase();
           return (

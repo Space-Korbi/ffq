@@ -3,9 +3,9 @@ import { login, signup } from '../api';
 
 const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('user')));
 
-function logout() {
+function logoutUser() {
   // remove user from local storage to log user out
-  localStorage.removeItem('user');
+  localStorage.clear();
   currentUserSubject.next(null);
 }
 
@@ -34,7 +34,7 @@ const signupUser = (firstName, lastName, email, password) => {
 
 const authService = {
   loginUser,
-  logout,
+  logoutUser,
   signupUser,
   currentUser: currentUserSubject.asObservable(),
   get currentUserValue() {

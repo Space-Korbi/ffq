@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { arrayOf, func, number, shape, string } from 'prop-types';
 
-// icons
-import { InfoIcon } from '@primer/octicons-react';
+// services
+import { questionnaireService } from '../../services';
 
 // components
 import AddRule from './AddRule';
 import { CardsGrid } from '../Cards';
 import { DeleteButton } from '../Button';
+import Spinner from '../Spinner';
+import { Info } from '../Popover';
 
 const checkResult = (result) => {
   switch (result) {
@@ -69,36 +71,111 @@ RuleCard.propTypes = {
   removeRule: func.isRequired
 };
 
-const RuleEditor = ({ selectionCriteria, rules, saveRule, removeRule }) => {
-  const RuleCards = rules.map((rule, index) => {
-    return <RuleCard key={rule.id} index={index} rule={rule} removeRule={removeRule} />;
+const RuleEditor = ({
+  selectionCriteria,
+  screeningRules,
+  saveRule,
+  removeRule,
+  questionnaireId
+}) => {
+  const [status, setStatus] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [didChange, setDidChange] = useState(false);
+
+  const RuleCards = screeningRules.map((rule, index) => {
+    return (
+      <RuleCard
+        key={rule.id}
+        index={index}
+        rule={rule}
+        removeRule={(r) => {
+          setDidChange(true);
+          setStatus('');
+          removeRule(r);
+        }}
+      />
+    );
   });
 
   return (
-    <div className="row">
-      <div className="col-md-6 col-lg-5 mb-3">
-        <div className="alert alert-warning" role="alert">
-          Diese Daten werden noch nicht auf dem Server gespeicher. Wenn die Seite neu geladen wird,
-          werden die `Selection Criteria` und die `Rules` zurückgesetzt.
+    <div>
+      <div className="row no-gutters">
+        <div className="col d-flex flex-wrap">
+          <div className="m-0 mb-3 mb-sm-5">
+            <button
+              type="button"
+              disabled={!didChange}
+              className="btn btn-outline-primary mr-2"
+              onClick={() => {
+                questionnaireService
+                  .updateQuestionnaire(questionnaireId, { screeningRules })
+                  .then(() => {
+                    setStatus(
+                      <div className="alert alert alert-success">Changes saved successfully.</div>
+                    );
+                    setSubmitting(false);
+                    setDidChange(false);
+                  })
+                  .catch((error) => {
+                    const errorList = (listElement) => (
+                      <div className="alert alert-danger">
+                        <ul className="list-unstyled content-align-center mb-0">{listElement}</ul>
+                      </div>
+                    );
+                    const errorListElements = error.data.errors.map((err) => {
+                      return <li key={err.value}>{err.msg}</li>;
+                    });
+                    setStatus(errorList(errorListElements));
+                    setSubmitting(false);
+                    setDidChange(false);
+                  });
+              }}
+            >
+              {submitting ? (
+                <>
+                  Saving...
+                  <Spinner className="spinner-border spinner-border-sm ml-1" />
+                </>
+              ) : (
+                'Save Changes'
+              )}
+            </button>
+          </div>
+          <div className="m-0 mb-3">{status}</div>
         </div>
-        <AddRule selectionCriteria={selectionCriteria} saveRule={saveRule} />
       </div>
-      <div className="col">
-        <h6>
-          Rules
-          <sup className="text-info ml-1">
-            <InfoIcon />
-          </sup>
-        </h6>
-        <CardsGrid Cards={RuleCards} gridColumns="2" />
+      <div className="row">
+        <div className="col-md-6 col-lg-5 mb-3">
+          <AddRule
+            selectionCriteria={selectionCriteria}
+            saveRule={(rule) => {
+              setDidChange(true);
+              setStatus('');
+              saveRule(rule);
+            }}
+          />
+        </div>
+        <div className="col">
+          <h6 className="d-inline-flex mb-0">
+            Rules
+            <sup className="text-info ml-1">
+              <Info
+                text="The decision of the first matching rule will be applied. If no rule is met, the user will be accepted."
+                size={20}
+              />
+            </sup>
+          </h6>
+          <CardsGrid Cards={RuleCards} gridColumns="2" />
+        </div>
       </div>
     </div>
   );
 };
 
 RuleEditor.propTypes = {
+  questionnaireId: string.isRequired,
   selectionCriteria: arrayOf(string).isRequired,
-  rules: arrayOf(
+  screeningRules: arrayOf(
     shape({
       id: string.isRequired,
       criteria: arrayOf(string).isRequired,

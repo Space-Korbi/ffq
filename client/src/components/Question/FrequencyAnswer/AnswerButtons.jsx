@@ -19,6 +19,7 @@ const AnswerButtons = ({ leftAnswerOptions, rightAnswerOptions, submittedAnswer,
           <div key={answerOption.id}>
             <AnswerButton
               title={answerOption.title}
+              color={answerOption.color}
               isSelectedAnswer={isSelectedAnswer(answerOption.id)}
               onClick={() => onClick(answerOption)}
             />
@@ -31,6 +32,7 @@ const AnswerButtons = ({ leftAnswerOptions, rightAnswerOptions, submittedAnswer,
           <div key={answerOption.id}>
             <AnswerButton
               title={answerOption.title}
+              color={answerOption.color}
               isSelectedAnswer={isSelectedAnswer(answerOption.id)}
               onClick={() => onClick(answerOption)}
             />

@@ -6,7 +6,7 @@ import TextEditor from '../../TextEditor';
 import { EditorCard } from '../../Cards';
 
 const ButtonEditor = ({ dispatch, position, answerOption, index, modalTable }) => {
-  const tabNames = ['Text', 'Action'];
+  const tabNames = ['Text', 'Action', 'Color'];
 
   const setPrevSelection = () => {
     let prevSelected = [];
@@ -61,6 +61,34 @@ const ButtonEditor = ({ dispatch, position, answerOption, index, modalTable }) =
     </div>
   );
 
+  const handleColorChange = (color) => {
+    dispatch({
+      type: 'changeButtonColor',
+      payload: { id: answerOption.id, position, color }
+    });
+  };
+
+  const colors = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'];
+
+  const colorTabContent = (
+    <div
+      className="d-flex justify-content-between align-content-stretch flex-wrap"
+      style={{ height: '30px' }}
+    >
+      {colors.map((color) => {
+        return (
+          <button
+            type="button"
+            className={`btn btn-${color}`}
+            onClick={() => handleColorChange(color)}
+          >
+            {' '}
+          </button>
+        );
+      })}
+    </div>
+  );
+
   const removeCard = () => {
     dispatch({
       type: 'removeButton',
@@ -93,7 +121,7 @@ const ButtonEditor = ({ dispatch, position, answerOption, index, modalTable }) =
       <EditorCard
         index={index}
         tabNames={tabNames}
-        tabContents={[textTabContent, actionTabContent]}
+        tabContents={[textTabContent, actionTabContent, colorTabContent]}
         removeCard={removeCard}
       />
       <div

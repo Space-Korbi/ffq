@@ -5,13 +5,17 @@
 import React, { useState, useReducer } from 'react';
 import { string, shape, arrayOf, bool, exact, oneOfType } from 'prop-types';
 
+import AnswerType from '../../types';
+
 import JumbotronInputs from './JumbotronInputs';
 import HelpTextInput from './HelpTextInput';
 import QuestionPreview from './QuestionPreview';
 import Select from '../Select';
 import { answerReducer } from '../../helpers';
 
-import { questionService } from '../../services';
+import Spinner from '../Spinner';
+
+import { updateQuestion, uploadImageToCloudinary } from '../../api';
 import AnswerEditor from '../AnswerEditor/AnswerEditor';
 
 const QuestionEditor = ({ question, onExit, modalTable }) => {
@@ -20,13 +24,59 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
   const [subtitle2, setSubtitle2] = useState(question.subtitle2);
   const [help, setHelp] = useState(question.help);
 
+  const [saving, setSaving] = useState(false);
   const [answerType, setAnswerType] = useState(question.answerOptions.type);
   const [answerOptions, dispatch] = useReducer(answerReducer, question.answerOptions);
+
+  const uploadToCloudinary = async (amountOption) => {
+    const data = new FormData();
+    data.append('image', amountOption.imageData);
+    const url = await uploadImageToCloudinary(data)
+      .then((response) => {
+        console.log(response.data.url);
+        return response.data.url;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    return url;
+  };
+
+  const updateAmountOptions = async (amountOptions) => {
+    const updatedAmountOptions = await Promise.all(
+      amountOptions.map(async (amountOption) => {
+        if (!amountOption.imageData) {
+          return Promise.resolve(amountOption);
+        }
+        const cloudinaryURL = await uploadToCloudinary(amountOption);
+        const updatedAmountOption = { ...amountOption, imageURL: cloudinaryURL };
+        return Promise.resolve(updatedAmountOption);
+      })
+    );
+    console.log('updatedAmountOptions', updatedAmountOptions);
+    return updatedAmountOptions;
+  };
+
+  const onSaveAndExit = async () => {
+    setSaving(true);
+    const updatedQuestion = { title, subtitle1, subtitle2, help, answerOptions };
+
+    if (answerType === AnswerType.Amount) {
+      console.log(answerOptions.options);
+      updatedQuestion.answerOptions.options = await updateAmountOptions(answerOptions.options);
+    }
+
+    console.log('updatedQuestion', updatedQuestion);
+    updateQuestion(question._id, updatedQuestion).then(() => {
+      setSaving(false);
+      onExit({ ...updatedQuestion, _id: question._id });
+    });
+  };
 
   return (
     <>
       <div className="row no-gutters my-3">
-        <div className="col-lg mx-3">
+        <div className="col-lg">
           <div className="my-2">
             <Select onChange={setAnswerType} dispatch={dispatch} />
           </div>
@@ -53,15 +103,25 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
             <button
               type="button"
               className="btn btn-outline-primary mr-2"
-              onClick={() =>
-                questionService
-                  .saveQuestion(question._id, { title, subtitle1, subtitle2, help }, answerOptions)
-                  .then((res) => {
-                    onExit(res.data.question);
-                  })
-              }
+              disabled={saving}
+              onClick={() => onSaveAndExit()}
             >
-              Save and Exit
+              {saving ? (
+                <>
+                  Saving...
+                  <Spinner className="spinner-border spinner-border-sm ml-1" />
+                </>
+              ) : (
+                'Save and Exit'
+              )}
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline-primary mr-2"
+              disabled={saving}
+              onClick={() => onExit(question)}
+            >
+              Exit
             </button>
             {/* TODO: link to or create next question" 
             <button

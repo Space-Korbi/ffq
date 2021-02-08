@@ -155,7 +155,7 @@ const AddRule = ({ selectionCriteria, saveRule }) => {
 
   return (
     <>
-      <div className="col mb-3">
+      <div className="col p-0 mb-3">
         <h6>Selection Criteria</h6>
         <RuleCriteriaSelect criteria={selectionCriteria} onChange={addCriteriaToCard} />
         <NewRuleCard
