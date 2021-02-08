@@ -6,7 +6,7 @@ import { useRouteMatch, NavLink } from 'react-router-dom';
 import { authService } from '../../services';
 
 // logo
-import { ReactComponent as Logo } from '../../hi-ffq_v8_react.svg';
+import { ReactComponent as Logo } from '../../hi-ffq_v9_react.svg';
 
 const adminLinks = [
   {

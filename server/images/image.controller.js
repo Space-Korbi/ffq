@@ -37,7 +37,13 @@ const getImageName = (req, res) => {
    * Returns the image name in the filesystem
    * in order to save it in the corresponding question document.
    */
-  return res.status(200).json({ success: true, filename: req.file.filename, path: req.file.path });
+  return res.status(200).json({ filename: req.file.filename, path: req.file.path });
+};
+
+const getImageURL = (req, res) => {
+  console.log(req.url);
+
+  return res.status(200).json({ url: req.url });
 };
 
 const deleteImages = (imageNames) => {
@@ -65,5 +71,6 @@ const deleteImagesOfQuestion = (options) => {
 module.exports = {
   upload,
   getImageName,
+  getImageURL,
   deleteImagesOfQuestion
 };
