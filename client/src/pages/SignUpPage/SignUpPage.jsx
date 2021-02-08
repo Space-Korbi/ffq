@@ -5,7 +5,7 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import { authService } from '../../services';
 
 // logo
-import { ReactComponent as Logo } from '../../hi-ffq_v8_react.svg';
+import { ReactComponent as Logo } from '../../hi-ffq_v9_react.svg';
 
 const SignUpPage = () => {
   const history = useHistory();
