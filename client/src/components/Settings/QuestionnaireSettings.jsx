@@ -1,13 +1,29 @@
 import React, { useState } from 'react';
 import { arrayOf, func, shape, string } from 'prop-types';
+import { nanoid } from 'nanoid';
+import moment from 'moment';
 
 // components
 import DateIntervalSettings from '../DateInterval';
+import { AddButton } from '../Button';
 
 const QuestionnaireSettings = ({ questionnaire, save }) => {
   const [name, setName] = useState(questionnaire.name);
   const [consentScript, setConsentScript] = useState(questionnaire.consentScript);
   const [iterations, setIterations] = useState(questionnaire.iterations);
+
+  const addIteration = () => {
+    setIterations((prevState) => [
+      ...prevState,
+      {
+        id: nanoid(),
+        start: moment().toISOString(),
+        startLabel: moment().format('DD.MM.YY'),
+        end: moment().toISOString(),
+        endLabel: moment().format('DD.MM.YY')
+      }
+    ]);
+  };
 
   return (
     <div>
@@ -32,11 +48,19 @@ const QuestionnaireSettings = ({ questionnaire, save }) => {
             aria-describedby="inputGroup-name"
           />
 
-          <p className="lead m-0 mb-1 mt-5">Iterations</p>
-          <hr className="m-0 mb-3" />
-          <div className="col d-flex p-0">
-            <DateIntervalSettings iterations={iterations} setIterations={setIterations} />
+          <div className="mt-5">
+            <div className="d-flex flex-row align-items-end justify-content-between">
+              <p className="align-bottom m-0 mb-1 lead">Iterations</p>
+              <AddButton
+                onClick={() => addIteration()}
+                styling="btn btn-outline-primary ml-auto mb-1"
+              />
+            </div>
           </div>
+
+          <hr className="m-0 mb-3" />
+          <DateIntervalSettings iterations={iterations} setIterations={setIterations} />
+
           <p className="lead m-0 mb-1 mt-5">Consent Script</p>
           <hr className="m-0 mb-3" />
           <textarea

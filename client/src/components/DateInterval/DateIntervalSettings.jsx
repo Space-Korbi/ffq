@@ -1,6 +1,5 @@
 import React from 'react';
 import { arrayOf, func, shape, string } from 'prop-types';
-import { nanoid } from 'nanoid';
 import moment from 'moment';
 
 // date picker
@@ -9,7 +8,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import de from 'date-fns/locale/de';
 
 // components
-import { DeleteButton, AddButton } from '../Button';
+import { DeleteButton } from '../Button';
 
 // Using custom component works but throws errors.
 // Wait till fixed before using it
@@ -23,7 +22,99 @@ const CustomDateInput = ({ value, onClick }) => (
 CustomDateInput.propTypes = { value: string.isRequired, onClick: func.isRequired };
 // */
 
-const IterationsTable = ({ iterations, setStart, setEnd, remove, add }) => {
+const IterationsTableXs = ({ iterations, setStart, setEnd, remove }) => {
+  return (
+    <div className="table m-0">
+      <table className="table table-sm table-borderless m-0 border-top-0">
+        <caption className="p-0 pt-2 ml-1">
+          The questionnaire can be accessed in between each interval, start and end date included.
+        </caption>
+
+        <tbody>
+          {iterations.length ? (
+            iterations.map((iteration, index) => {
+              return (
+                <div
+                  className={index === iterations.length - 1 ? '' : 'border-bottom'}
+                  key={iteration.id}
+                  style={{ overflowX: 'visible' }}
+                >
+                  <tr>
+                    <td className="align-middle m-0 p-0">
+                      <b>Start</b>
+                    </td>
+                    <td className="m-0">
+                      <div className="col d-flex align-items-start flex-column px-0">
+                        <DatePicker
+                          selected={moment(iteration.start).toDate()}
+                          locale={de}
+                          dateFormat="dd/MM/yyyy"
+                          onChange={(date) =>
+                            setStart(iteration.id, moment(date).startOf('day').toISOString())
+                          }
+                          minDate={moment().toDate()}
+                          popperPlacement="top-left"
+                        />
+                      </div>
+                    </td>
+                    <td rowSpan="2" className="align-middle text-right w-100 p-0">
+                      <DeleteButton onClick={() => remove(iteration.id)} styling="float-right" />
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td className="align-middle m-0 p-0">
+                      <b>End</b>
+                    </td>
+                    <td className="m-0">
+                      <div className="col d-flex align-items-start flex-column px-0">
+                        <DatePicker
+                          selected={moment(iteration.end).toDate()}
+                          locale={de}
+                          dateFormat="dd/MM/yyyy"
+                          onChange={(date) =>
+                            setEnd(iteration.id, moment(date).endOf('day').toISOString())
+                          }
+                          popperPlacement="top-left"
+                          minDate={moment(iteration.start).toDate()}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                </div>
+              );
+            })
+          ) : (
+            <tr>
+              <td colSpan="3">
+                <div className="d-flex flex-column text-center">
+                  <span className="badge badge-warning">Empty</span>
+                </div>
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+IterationsTableXs.propTypes = {
+  iterations: arrayOf(
+    shape({
+      id: string,
+      start: string,
+      startLabel: string,
+      end: string,
+      endLabel: string
+    })
+  ).isRequired,
+  setStart: func.isRequired,
+  setEnd: func.isRequired,
+  remove: func.isRequired
+};
+
+const IterationsTableLg = ({ iterations, setStart, setEnd, remove }) => {
   return (
     <div className="table m-0">
       <table className="table table-sm table-borderless m-0 border-top-0">
@@ -32,14 +123,11 @@ const IterationsTable = ({ iterations, setStart, setEnd, remove, add }) => {
         </caption>
         <thead>
           <tr>
-            <th scope="col" className="pt-0">
+            <th scope="col" className="pt-0 pl-0">
               Start
             </th>
-            <th scope="col" className="pt-0">
+            <th scope="col" className="pt-0 pl-0">
               End
-            </th>
-            <th scope="col" className="pt-0">
-              <AddButton onClick={() => add()} styling="float-right btn-outline-primary" />
             </th>
           </tr>
         </thead>
@@ -48,7 +136,7 @@ const IterationsTable = ({ iterations, setStart, setEnd, remove, add }) => {
             iterations.map((iteration) => {
               return (
                 <tr key={iteration.id}>
-                  <td>
+                  <td className="pl-0">
                     <DatePicker
                       selected={moment(iteration.start).toDate()}
                       locale={de}
@@ -57,15 +145,9 @@ const IterationsTable = ({ iterations, setStart, setEnd, remove, add }) => {
                         setStart(iteration.id, moment(date).startOf('day').toISOString())
                       }
                       minDate={moment().toDate()}
-                      popperModifiers={{
-                        offset: {
-                          enabled: true,
-                          offset: '10px'
-                        }
-                      }}
                     />
                   </td>
-                  <td>
+                  <td className="pl-0">
                     <DatePicker
                       selected={moment(iteration.end).toDate()}
                       locale={de}
@@ -75,15 +157,9 @@ const IterationsTable = ({ iterations, setStart, setEnd, remove, add }) => {
                       }
                       popperPlacement="top-left"
                       minDate={moment(iteration.start).toDate()}
-                      popperModifiers={{
-                        offset: {
-                          enabled: true,
-                          offset: '-40px'
-                        }
-                      }}
                     />
                   </td>
-                  <td className="align-middle">
+                  <td className="align-middle p-0">
                     <DeleteButton onClick={() => remove(iteration.id)} styling="float-right" />
                   </td>
                 </tr>
@@ -104,7 +180,7 @@ const IterationsTable = ({ iterations, setStart, setEnd, remove, add }) => {
   );
 };
 
-IterationsTable.propTypes = {
+IterationsTableLg.propTypes = {
   iterations: arrayOf(
     shape({
       id: string,
@@ -116,8 +192,7 @@ IterationsTable.propTypes = {
   ).isRequired,
   setStart: func.isRequired,
   setEnd: func.isRequired,
-  remove: func.isRequired,
-  add: func.isRequired
+  remove: func.isRequired
 };
 
 const IterationsSettings = ({ iterations, setIterations }) => {
@@ -151,19 +226,6 @@ const IterationsSettings = ({ iterations, setIterations }) => {
     setIterations(newIterations);
   };
 
-  const addIteration = () => {
-    setIterations((prevState) => [
-      ...prevState,
-      {
-        id: nanoid(),
-        start: moment().toISOString(),
-        startLabel: moment().format('DD.MM.YY'),
-        end: moment().toISOString(),
-        endLabel: moment().format('DD.MM.YY')
-      }
-    ]);
-  };
-
   const removeIteration = (iterationId) => {
     const newIterations = iterations.filter((prevIteration) => prevIteration.id !== iterationId);
     setIterations(newIterations);
@@ -171,17 +233,22 @@ const IterationsSettings = ({ iterations, setIterations }) => {
 
   return (
     <div className="d-flex w-100 p-0">
-      <div className="col p-0">
-        <div className="col p-0">
-          <div className="col d-flex justify-content-center p-0">
-            <IterationsTable
-              iterations={iterations}
-              setStart={setStart}
-              setEnd={setEnd}
-              remove={removeIteration}
-              add={addIteration}
-            />
-          </div>
+      <div className="row no-gutters w-100 flex-row flex-nowrap">
+        <div className="col d-none d-sm-block w-100 justify-content-center p-0">
+          <IterationsTableLg
+            iterations={iterations}
+            setStart={setStart}
+            setEnd={setEnd}
+            remove={removeIteration}
+          />
+        </div>
+        <div className="col d-block d-sm-none justify-content-center p-0 ">
+          <IterationsTableXs
+            iterations={iterations}
+            setStart={setStart}
+            setEnd={setEnd}
+            remove={removeIteration}
+          />
         </div>
       </div>
     </div>
