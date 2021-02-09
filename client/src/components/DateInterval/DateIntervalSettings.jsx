@@ -34,17 +34,16 @@ const IterationsTableXs = ({ iterations, setStart, setEnd, remove }) => {
           {iterations.length ? (
             iterations.map((iteration, index) => {
               return (
-                <div
-                  className={index === iterations.length - 1 ? '' : 'border-bottom'}
+                <tr
                   key={iteration.id}
-                  style={{ overflowX: 'visible' }}
+                  className={index === iterations.length - 1 ? '' : 'border-bottom'}
                 >
-                  <tr>
-                    <td className="align-middle m-0 p-0">
-                      <b>Start</b>
-                    </td>
-                    <td className="m-0">
-                      <div className="col d-flex align-items-start flex-column px-0">
+                  <td className="align-middle p-0">
+                    <div className="row row-cols-2 mb-2">
+                      <div className="col-2">
+                        <b>Start</b>
+                      </div>
+                      <div className="col-auto">
                         <DatePicker
                           selected={moment(iteration.start).toDate()}
                           locale={de}
@@ -56,18 +55,13 @@ const IterationsTableXs = ({ iterations, setStart, setEnd, remove }) => {
                           popperPlacement="top-left"
                         />
                       </div>
-                    </td>
-                    <td rowSpan="2" className="align-middle text-right w-100 p-0">
-                      <DeleteButton onClick={() => remove(iteration.id)} styling="float-right" />
-                    </td>
-                  </tr>
+                    </div>
 
-                  <tr>
-                    <td className="align-middle m-0 p-0">
-                      <b>End</b>
-                    </td>
-                    <td className="m-0">
-                      <div className="col d-flex align-items-start flex-column px-0">
+                    <div className="row row-cols-2 mb-2">
+                      <div className="col-2">
+                        <b>End</b>
+                      </div>
+                      <div className="col-auto">
                         <DatePicker
                           selected={moment(iteration.end).toDate()}
                           locale={de}
@@ -79,9 +73,12 @@ const IterationsTableXs = ({ iterations, setStart, setEnd, remove }) => {
                           minDate={moment(iteration.start).toDate()}
                         />
                       </div>
-                    </td>
-                  </tr>
-                </div>
+                    </div>
+                  </td>
+                  <td className="m-0 pr-0 align-middle">
+                    <DeleteButton onClick={() => remove(iteration.id)} styling="float-right" />
+                  </td>
+                </tr>
               );
             })
           ) : (
