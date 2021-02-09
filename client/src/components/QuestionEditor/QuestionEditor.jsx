@@ -76,7 +76,7 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
   return (
     <>
       <div className="row no-gutters my-3">
-        <div className="col-lg">
+        <div className="col-lg mr-lg-3">
           <div className="my-2">
             <div className="row no-gutters flex-row d-flex flex-wrap-reverse">
               <div className="col col-md-6 d-flex">
@@ -138,7 +138,7 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
             modalTable={modalTable}
           />
         </div>
-        <div className="col col-lg-5 px-0 mx-lg-3">
+        <div className="col col-lg-5 px-0">
           <QuestionPreview
             title={title}
             subtitle1={subtitle1}
