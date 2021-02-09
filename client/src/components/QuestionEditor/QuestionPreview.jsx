@@ -5,7 +5,7 @@ import { Question } from '../Question';
 
 const QuestionPreview = ({ title, subtitle1, subtitle2, help, answerOptions }) => {
   return (
-    <div className="mt-4">
+    <div className="mt-n2">
       <span className="badge badge-info">Preview</span>
       <div
         className="border border-info "
