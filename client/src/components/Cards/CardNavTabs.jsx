@@ -4,24 +4,23 @@ import { arrayOf, func, string } from 'prop-types';
 const CardNavTabs = ({ cardId, tabNames, selectedTab, setSelectedTab }) => {
   return (
     <>
-      <ul className="nav flex-nowrap text-nowrap d-inline-flex" id="tab" role="tablist">
+      <ul className="nav nav-justified text-nowrap d-inline-flex" id="tab" role="tablist">
         {tabNames.map((tabName, tabIndex) => {
           const tabNameLowerCase = tabName.toLowerCase();
           return (
-            <li key={tabName + cardId} className="nav-item">
-              <a
-                className={tabNameLowerCase === selectedTab ? 'nav-link active' : 'nav-link'}
-                id={`${tabNameLowerCase}-tab${cardId}`}
-                data-toggle="tab"
-                href={`#${tabNameLowerCase}${cardId}`}
-                role="tab"
-                aria-controls={`${tabNameLowerCase}${cardId}`}
-                aria-selected={tabIndex === 0 ? 'true' : 'false'}
-                onClick={() => setSelectedTab(tabNameLowerCase)}
-              >
-                {tabName}
-              </a>
-            </li>
+            <a
+              key={tabName + cardId}
+              className={tabNameLowerCase === selectedTab ? 'nav-link active' : 'nav-link'}
+              id={`${tabNameLowerCase}-tab${cardId}`}
+              data-toggle="tab"
+              href={`#${tabNameLowerCase}${cardId}`}
+              role="tab"
+              aria-controls={`${tabNameLowerCase}${cardId}`}
+              aria-selected={tabIndex === 0 ? 'true' : 'false'}
+              onClick={() => setSelectedTab(tabNameLowerCase)}
+            >
+              {tabName}
+            </a>
           );
         })}
       </ul>

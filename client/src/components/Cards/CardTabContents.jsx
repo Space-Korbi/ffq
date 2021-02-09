@@ -10,7 +10,9 @@ function CardTabContents({ cardId, tabNames, tabContents, selectedTab }) {
           <Fragment key={tabName}>
             <div
               className={
-                tabNameLowerCase === selectedTab ? 'tab-pane fade show active' : 'tab-pane fade'
+                tabNameLowerCase === selectedTab.toLowerCase()
+                  ? 'tab-pane fade show active'
+                  : 'tab-pane fade'
               }
               id={`${tabNameLowerCase}${cardId}`}
               role="tabpanel"

@@ -68,24 +68,41 @@ const ButtonEditor = ({ dispatch, position, answerOption, index, modalTable }) =
     });
   };
 
-  const colors = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'];
+  const colors1 = ['primary', 'warning', 'success', 'danger'];
+  const colors2 = ['secondary', 'info', 'light', 'dark'];
 
   const colorTabContent = (
-    <div
-      className="d-flex justify-content-between align-content-stretch flex-wrap"
-      style={{ height: '30px' }}
-    >
-      {colors.map((color) => {
-        return (
-          <button
-            type="button"
-            className={`btn btn-${color}`}
-            onClick={() => handleColorChange(color)}
-          >
-            {' '}
-          </button>
-        );
-      })}
+    <div className="row flex-row no-gutters">
+      <div className="col p-0 w-100 d-flex justify-content-between flex-nowrap">
+        {colors1.map((color) => {
+          return (
+            <button
+              key={color}
+              type="button"
+              className={`btn btn-${color} m-1`}
+              style={{ minHeight: '30px' }}
+              onClick={() => handleColorChange(color)}
+            >
+              {' '}
+            </button>
+          );
+        })}
+      </div>
+      <div className="col p-0 w-100 d-flex justify-content-between flex-nowrap">
+        {colors2.map((color) => {
+          return (
+            <button
+              key={color}
+              type="button"
+              className={`btn btn-${color} m-1`}
+              style={{ minHeight: '30px' }}
+              onClick={() => handleColorChange(color)}
+            >
+              {' '}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 

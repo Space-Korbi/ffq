@@ -21,7 +21,7 @@ const EditorCard = ({ index, tabNames, tabContents, removeCard }) => {
       <div className="card-header">
         <div className="row no-gutters flex-row d-flex flex-nowrap">
           <div className="mr-auto align-self-center text-left">{index}</div>
-          <div className="mx-1 text-nowrap" style={{ overflowX: 'auto', overflowY: 'hidden' }}>
+          <div className="mx-1">
             <CardNavTabs
               tabNames={tabNames}
               cardId={cardId}
