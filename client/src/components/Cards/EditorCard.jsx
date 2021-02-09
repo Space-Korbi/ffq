@@ -19,15 +19,17 @@ const EditorCard = ({ index, tabNames, tabContents, removeCard }) => {
   return (
     <div className="card mx-2">
       <div className="card-header">
-        <div className="d-flex align-items-center">
-          {index}
-          <CardNavTabs
-            tabNames={tabNames}
-            cardId={cardId}
-            selectedTab={selectedTab}
-            setSelectedTab={setSelectedTab}
-          />
-          <div className="ml-auto">
+        <div className="row no-gutters flex-row d-flex flex-nowrap">
+          <div className="mr-auto align-self-center text-left">{index}</div>
+          <div className="mx-1 text-nowrap" style={{ overflowX: 'auto', overflowY: 'hidden' }}>
+            <CardNavTabs
+              tabNames={tabNames}
+              cardId={cardId}
+              selectedTab={selectedTab}
+              setSelectedTab={setSelectedTab}
+            />
+          </div>
+          <div className="ml-auto align-self-center">
             <DeleteButton onClick={() => removeCard()} />
           </div>
         </div>
