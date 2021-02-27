@@ -17,6 +17,7 @@ import { NavTabs, NavContents } from '../../components/Navigation';
 import QuestionEditor from '../../components/QuestionEditor';
 import { OutlineButton } from '../../components/Button';
 import QuestionnaireSettings from '../../components/Settings';
+import QuestionnaireImages from '../../components/Images';
 import QuestionTable from './QuestionTable';
 
 const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
@@ -142,8 +143,10 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
     <QuestionnaireSettings questionnaire={questionnaire} save={saveSettings} />
   );
 
-  const tabNames = ['Questions', 'Settings'];
-  const tabContents = [questionsContent, settingsContent];
+  const imagesContent = <QuestionnaireImages questionnaire={questionnaire} save={saveSettings} />;
+
+  const tabNames = ['Questions', 'Settings', 'Images'];
+  const tabContents = [questionsContent, settingsContent, imagesContent];
 
   return (
     <div>
