@@ -45,14 +45,12 @@ function QuestionnaireImages(props) {
   const [images, setImages] = useState(IMAGES);
 
   useEffect(() => {
-    console.log('hey');
     if (images[currentIndex]) {
       setCurrentSrc(images[currentIndex].src);
     }
   }, [currentIndex]);
 
   useEffect(() => {
-    console.log('ho');
     if (currentSrc === '...') {
       return;
     }
@@ -75,7 +73,6 @@ function QuestionnaireImages(props) {
   };
 
   const onClickDelete = () => {
-    console.log('-------', currentIndex);
     $('#exampleModal').modal('toggle');
     setCurrentIndex('...');
     setImages((prevState) => {
@@ -83,7 +80,11 @@ function QuestionnaireImages(props) {
       remainingImages.splice(currentIndex, 1);
       return remainingImages;
     });
-    setSelectedImages([]);
+    if (selectedImages.includes(currentIndex)) {
+      setSelectedImages((prevState) =>
+        prevState.filter((prevSelected) => prevSelected !== currentIndex)
+      );
+    }
   };
 
   const deleteSelected = () => {
@@ -107,18 +108,7 @@ function QuestionnaireImages(props) {
     setSelectedImages([newIndex]);
   };
 
-  const setImageSrc = () => {
-    let imageSrc = '...';
-    if (images[currentIndex]) {
-      imageSrc = images[currentIndex].src;
-      $('#exampleModal').modal('toggle');
-    }
-
-    setCurrentSrc(imageSrc);
-    return imageSrc;
-  };
-
-  console.log('current ', currentIndex);
+  console.log('selected ', selectedImages);
 
   return (
     <div>
