@@ -92,6 +92,7 @@ function QuestionnaireImages(props) {
       const remainingImages = prevState.filter((image, index) => !selectedImages.includes(index));
       return remainingImages;
     });
+    setCurrentIndex('...');
     setSelectedImages([]);
   };
 
