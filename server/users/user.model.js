@@ -15,6 +15,7 @@ const Iteration = Schema(
     id: { type: String },
     startedAt: { type: Date },
     finishedAt: { type: Date },
+    pausedAt: { type: [Number], default: [] },
     stoppedAtIndex: { type: Number, default: -1 },
     questionsToSkip: { type: [String], _id: false, default: [] },
     answers: [Answer]

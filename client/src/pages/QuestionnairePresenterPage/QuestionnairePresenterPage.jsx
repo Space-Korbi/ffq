@@ -6,7 +6,7 @@ import { bool, string } from 'prop-types';
 import { useParams, useHistory } from 'react-router-dom';
 
 // services
-import { userService, questionnaireService } from '../../services';
+import { userService, questionnaireService, authService } from '../../services';
 
 // custom hooks
 import { useFetchQuestions, useFetchUsers } from '../../hooks';
@@ -20,6 +20,7 @@ import ProgressIndicator from '../../components/ProgressIndicator';
 const QuestionnairePresenter = ({
   questions,
   previousAnswers,
+  previousPauses,
   questionsToSkip,
   isAdmin,
   iterationId
@@ -28,6 +29,7 @@ const QuestionnairePresenter = ({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
   const [answers, setAnswers] = useState([]);
+  const [pauses, setPauses] = useState(previousPauses);
   const [toSkip, setToSkip] = useState(questionsToSkip);
   const { userId } = useParams();
   const answersRef = useRef(answers);
@@ -127,6 +129,18 @@ const QuestionnairePresenter = ({
     });
   };
 
+  const handleOnPause = () => {
+    console.log('pauses', pauses);
+
+    if (pauses.indexOf(currentIndex) !== -1) {
+      return;
+    }
+    userService.updateUserData(userId, {
+      iterations: [{ id: iterationId, pausedAt: [...pauses, currentIndex] }]
+    });
+    setPauses((prevState) => [...prevState, currentIndex]);
+  };
+
   return (
     <div>
       <nav className="navbar navbar-expand-md navbar-dark bg-dark questionnaire">
@@ -179,7 +193,7 @@ const QuestionnairePresenter = ({
             <div className="col d-flex justify-content-between align-items-center">
               <button
                 type="button"
-                className="btn btn-light d-none d-sm-block"
+                className="btn btn-light"
                 disabled={isDisabled}
                 onClick={() => {
                   const prevQuestionIndex = prevUnskippedQuestionAt(currentIndex - 1);
@@ -190,14 +204,17 @@ const QuestionnairePresenter = ({
               </button>
               <div className="pl-2" />
               <ProgressIndicator currentPosition={currentIndex} length={questions.length} />
-            </div>
-            {/* <button
+              <div className="pl-2" />
+              <button
                 type="button"
                 className="btn btn btn-light"
-                onClick={() => setCurrentIndex(currentIndex + 1)}
+                onClick={() => handleOnPause()}
+                data-toggle="modal"
+                data-target="#staticBackdrop"
               >
-                Weiter
-              </button> */}
+                Pause
+              </button>
+            </div>
           </div>
         )}
       </nav>
@@ -226,6 +243,45 @@ const QuestionnairePresenter = ({
             )}
           </>
         )}
+      </div>
+      <div
+        className="modal fade"
+        id="staticBackdrop"
+        data-backdrop="static"
+        data-keyboard="false"
+        tabIndex="-1"
+        aria-labelledby="staticBackdropLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="staticBackdropLabel">
+                Frage {currentIndex + 1}
+              </h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              Alle antworten wurden gespeichert. Sie können sich jederzeit ausloggen und das
+              Ausfüllen des Fragebogens zu einem späteren Zeitpunkt fortsetzen.
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-dismiss="modal"
+                onClick={() => authService.logoutUser()}
+              >
+                Ausloggen
+              </button>
+              <button type="button" className="btn btn-primary" data-dismiss="modal">
+                Umfrage Fortsetzen
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -256,6 +312,7 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
       let answers = [];
       let questionsToSkip = [];
       let stoppedAtIndex = -1;
+      let pauses = [];
       const status = users[0].iterations.filter(
         (prevIteration) => prevIteration.id === iterationId
       );
@@ -263,9 +320,10 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
         answers = status[0].answers;
         questionsToSkip = status[0].questionsToSkip;
         stoppedAtIndex = status[0].stoppedAtIndex;
+        pauses = status[0].pausedAt;
       }
 
-      setIteration({ answers, questionsToSkip, stoppedAtIndex });
+      setIteration({ answers, questionsToSkip, stoppedAtIndex, pauses });
     }
   }, [users]);
 
@@ -287,6 +345,7 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
           previousAnswers={iteration.answers}
           questionsToSkip={iteration.questionsToSkip}
           stoppedAtIndex={iteration.stoppedAtIndex + 1}
+          previousPauses={iteration.pauses}
           isAdmin={isAdmin}
           iterationId={iterationId}
         />

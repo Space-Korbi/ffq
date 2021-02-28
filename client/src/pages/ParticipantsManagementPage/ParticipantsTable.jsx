@@ -131,6 +131,23 @@ const ParticipantsTable = ({ fileName, data, columns, iterationSelector }) => {
       formatter: (cellContent) => {
         return dateHelper.applyDateStyle(cellContent);
       }
+    },
+    {
+      dataField: 'iterations[0].pausedAt',
+      text: 'Paused at',
+      formatter: (cellContent) => {
+        if (!cellContent) {
+          return '';
+        }
+        const formatted = cellContent.map((content) => {
+          return <li key={content}>{content}</li>;
+        });
+        return (
+          <small>
+            <ul className="list content-align-center mb-0">{formatted}</ul>
+          </small>
+        );
+      }
     }
   ];
 
