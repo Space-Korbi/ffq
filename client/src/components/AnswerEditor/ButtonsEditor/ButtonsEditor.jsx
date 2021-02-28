@@ -72,9 +72,9 @@ const ButtonsEditor = ({ answerOptions, dispatch, modalTable }) => {
             <AddButton position="right" dispatch={dispatch} />
           </div>
         </div>
-        <div className="row no-gutters ">
+        <div className="row no-gutters row-cols-1 row-cols-sm-2">
           {answerOptions.left && (
-            <div className="col">
+            <div className="col pr-sm-2 pr-0">
               <ButtonColumn
                 answerOptions={answerOptions.left}
                 position="left"
@@ -85,7 +85,7 @@ const ButtonsEditor = ({ answerOptions, dispatch, modalTable }) => {
             </div>
           )}
           {answerOptions.right && (
-            <div className="col">
+            <div className="col pl-sm-2 pl-0">
               <ButtonColumn
                 answerOptions={answerOptions.right}
                 position="right"

@@ -46,9 +46,9 @@ const UserInputAnswer = ({ answerOptions, submittedAnswer, onSubmit }) => {
         {userInputs.map((userInput) => {
           return (
             <div key={userInput.id} className="my-4 mx-2 mx-md-4">
-              <div className="row row-cols-1 row-cols-sm-2 no-gutters">
-                <div className="col col-sm-8 pr-sm-1">
-                  <div className="input-group input-group-lg">
+              <div className="row flex-row">
+                <div className="col-auto flex-fill mb-2">
+                  <div className="input-group input-group-lg flex-nowrap">
                     <div className="input-group-prepend">
                       <span className="input-group-text" id="inputGroup-sizing-lg">
                         {userInput.title}
@@ -68,8 +68,8 @@ const UserInputAnswer = ({ answerOptions, submittedAnswer, onSubmit }) => {
                   </div>
                 </div>
                 {userInput.hasNumberInput && (
-                  <div className="col col-sm-4 pl-sm-1">
-                    <div className="input-group input-group-lg mt-2 mt-sm-0">
+                  <div className="col" style={{ minWidth: '250px' }}>
+                    <div className="input-group input-group-lg flex-nowrap">
                       <input
                         type="number"
                         id={`${userInput.id}-numberInput`}

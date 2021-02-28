@@ -66,8 +66,8 @@ const Question = ({
   answerOptions,
   submittedAnswer,
   onSubmitAnswer,
-  currentIndex,
-  iterationId
+  iterationId,
+  isPreview
 }) => {
   const { userId } = useParams();
   const [userInput, setUserInput] = useState();
@@ -75,8 +75,10 @@ const Question = ({
 
   const [latestAnswer, setLatestAnswer] = useState();
 
+  console.log(isPreview);
+
   useEffect(() => {
-    if (!isSaving && !isSavingError && userInput) {
+    if (!isSaving && !isSavingError && userInput && !isPreview) {
       setAnswer({ answerOption: userInput });
     }
   }, [userInput]);
@@ -164,7 +166,8 @@ Question.propTypes = {
     shape({ questionId: string, answer: shape({ id: string, value: string }) }),
     shape({ questionId: string, answer: arrayOf(shape({ id: string, value: string })) })
   ]),
-  onSubmitAnswer: func.isRequired
+  onSubmitAnswer: func.isRequired,
+  isPreview: bool
 };
 
 Question.defaultProps = {
@@ -172,7 +175,8 @@ Question.defaultProps = {
   subtitle1: '',
   subtitle2: '',
   help: '',
-  submittedAnswer: undefined
+  submittedAnswer: undefined,
+  isPreview: false
 };
 
 export default Question;

@@ -219,7 +219,6 @@ const QuestionnairePresenter = ({
                     answerOptions={questions[currentIndex].answerOptions}
                     onSubmitAnswer={(answer) => handleSubmitAnswer(answer)}
                     currentIndex={currentIndex}
-                    isPreview={isAdmin}
                     iterationId={iterationId}
                   />
                 </div>

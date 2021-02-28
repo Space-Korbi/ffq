@@ -24,25 +24,31 @@ const InputEditor = ({ index, answerOption, dispatch }) => {
   const optionalTabContent = (
     <div>
       {answerOption.hasNumberInput ? (
-        <div className="d-flex">
-          <TextEditor
-            placeholder="Number Input Title"
-            value={answerOption.numberInputTitle}
-            onChange={(value) => {
-              dispatch({
-                type: 'changeNumberInputTitle',
-                payload: { id: answerOption.id, numberInputTitle: value }
-              });
-            }}
-          />
-          <DeleteButton
-            onClick={() =>
-              dispatch({
-                type: 'removeNumberInput',
-                payload: { id: answerOption.id }
-              })
-            }
-          />
+        <div className="row d-flex no-gutters flex-row">
+          <div className="d-flex flex-fill">
+            <div className="flex-grow-1">
+              <TextEditor
+                placeholder="Number Input Title"
+                value={answerOption.numberInputTitle}
+                onChange={(value) => {
+                  dispatch({
+                    type: 'changeNumberInputTitle',
+                    payload: { id: answerOption.id, numberInputTitle: value }
+                  });
+                }}
+              />
+            </div>
+            <div className="align-self-center ml-2">
+              <DeleteButton
+                onClick={() =>
+                  dispatch({
+                    type: 'removeNumberInput',
+                    payload: { id: answerOption.id }
+                  })
+                }
+              />
+            </div>
+          </div>
         </div>
       ) : (
         <button
@@ -72,7 +78,7 @@ const InputEditor = ({ index, answerOption, dispatch }) => {
   };
 
   return (
-    <div className="col my-3">
+    <div className="col my-3 px-2">
       <EditorCard
         index={index}
         tabNames={tabNames}

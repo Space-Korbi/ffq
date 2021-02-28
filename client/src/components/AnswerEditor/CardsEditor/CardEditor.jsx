@@ -117,7 +117,7 @@ const CardEditor = ({ index, answerOption, dispatch }) => {
   };
 
   return (
-    <div className="col my-3">
+    <div className="col my-3 px-2">
       <EditorCard
         index={index}
         tabNames={tabNames}

@@ -17,20 +17,22 @@ const EditorCard = ({ index, tabNames, tabContents, removeCard }) => {
   const cardId = nanoid();
 
   return (
-    <div className="card mx-2">
+    <div className="card">
       <div className="card-header">
-        <div className="row no-gutters flex-row d-flex flex-nowrap">
-          <div className="mr-auto align-self-center text-left">{index}</div>
-          <div className="mx-1">
+        <div className="row no-gutters flex-row d-flex flex-nowrap justify-content-between mb-1">
+          <div className="col d-flex p-0 mr-auto">{index}</div>
+          <div className="col d-flex p-0 justify-content-end">
+            <DeleteButton onClick={() => removeCard()} />
+          </div>
+        </div>
+        <div className="no-gutters flex-row d-flex flex-nowrap">
+          <div className="col">
             <CardNavTabs
               tabNames={tabNames}
               cardId={cardId}
               selectedTab={selectedTab}
               setSelectedTab={setSelectedTab}
             />
-          </div>
-          <div className="ml-auto align-self-center">
-            <DeleteButton onClick={() => removeCard()} />
           </div>
         </div>
       </div>

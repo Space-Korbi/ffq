@@ -31,7 +31,10 @@ const InputsEditor = ({ answerOptions, dispatch }) => {
           }
         />
         <div>
-          <CardsGrid Cards={InputEditors} gridColumns="row-cols-1 row-cols-md-2" />
+          <CardsGrid
+            Cards={InputEditors}
+            gridColumns="row justify-content-between row-cols-1 row-cols-md-2 mx-n2"
+          />
         </div>
       </div>
     </div>
