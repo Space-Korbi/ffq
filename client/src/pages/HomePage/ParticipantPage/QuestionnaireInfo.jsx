@@ -85,7 +85,7 @@ const QuestionnaireInfo = ({
       const unfinishedIteration = difference(user.iterations, finishedIterations)[0];
       // check if iteration has been started before
       if (unfinishedIteration && moment(now).isSameOrAfter(unfinishedIteration.startedAt, 'day')) {
-        setButtonTitle('Umfrage fortsetzen');
+        setButtonTitle('Fragebogen fortsetzen');
       }
       setIterationId(nextIteration.id);
       setDisabled(false);
