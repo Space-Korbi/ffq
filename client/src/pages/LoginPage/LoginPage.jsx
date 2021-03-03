@@ -112,10 +112,93 @@ const LoginPage = () => {
                     />
                   )}
                 </div>
+                <button
+                  type="button"
+                  className="btn btn-link px-0 mt-n5"
+                  data-toggle="modal"
+                  data-target="#staticBackdrop"
+                >
+                  Forgot Password
+                </button>
                 {status && <div className="alert alert-danger mb-5">{status}</div>}
               </Form>
             )}
           </Formik>
+        </div>
+      </div>
+      <div
+        className="modal fade"
+        id="staticBackdrop"
+        data-backdrop="static"
+        data-keyboard="false"
+        tabIndex="-1"
+        aria-labelledby="staticBackdropLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="staticBackdropLabel">
+                Forgot Password
+              </h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <Formik
+                initialValues={{
+                  email: ''
+                }}
+                validationSchema={Yup.object().shape({
+                  email: Yup.string().required('Email is required')
+                })}
+                onSubmit={({ email }, { setStatus }) => {
+                  console.log('email', email);
+                  authService.resetUserPassword(email).then(
+                    () => {
+                      console.log('geyeyeyeye');
+                      setStatus(
+                        'The email is on its way. You should recieve it within the next 10 minutes.'
+                      );
+                    },
+                    (error) => {
+                      console.log(error);
+                      setStatus('Email is incorrect');
+                    }
+                  );
+                }}
+              >
+                {({ errors, status, touched }) => (
+                  <Form>
+                    {`If you have forgotten your password, enter your email address and click 'Request
+                      link'. You will recieve an email containing a link to reset your password.`}
+                    <div className="form-group mt-4">
+                      <label htmlFor="email">Email</label>
+                      <Field
+                        id="email"
+                        name="email"
+                        type="email"
+                        className={`form-control${
+                          errors.email && touched.email ? ' is-invalid' : ''
+                        }`}
+                      />
+                      <ErrorMessage name="email" component="div" className="invalid-feedback" />
+                    </div>
+                    <button type="submit" className="btn btn-primary">
+                      Request link
+                    </button>
+                    {status && <div className="alert alert-primary my-3">{status}</div>}
+                  </Form>
+                )}
+              </Formik>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-dismiss="modal">
+                Close
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

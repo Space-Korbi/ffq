@@ -1,4 +1,5 @@
 require('dotenv').config();
+const AWS = require('aws-sdk');
 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
@@ -124,6 +125,33 @@ const loginUser = async (req, res) => {
         accessToken: token
       });
     });
+};
+
+const resetPassword = async (req, res) => {
+  const { email } = req.body;
+  console.log('email', email);
+
+  User.findOne({
+    email
+  })
+    .then((user) => {
+      console.log('user', user);
+      if (!user) {
+        return res.status(404).send();
+      }
+      return res.status(204).send();
+    })
+    .catch((error) => {
+      return res.status(500).json(error);
+    });
+
+  AWS.config.getCredentials(function (err) {
+    if (err) console.log(err.stack);
+    // credentials not loaded
+    else {
+      console.log('Access key:', AWS.config.credentials.accessKeyId);
+    }
+  });
 };
 
 const getUsers = async (req, res) => {
@@ -312,6 +340,7 @@ const updateAnswer = async (req, res) => {
 module.exports = {
   loginUser,
   createUser,
+  resetPassword,
   getUsers,
   updateUser,
   updateIteration,

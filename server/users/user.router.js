@@ -10,6 +10,9 @@ router.post('/users/signup', validate.signup, UserCtrl.createUser);
 // login
 router.post('/users/login', validate.login, UserCtrl.loginUser);
 
+// reset password
+router.post('/users/resetpassword', UserCtrl.resetPassword);
+
 // get users
 router.get('/users', [authJwt.verifyToken, authJwt.authoriseUser], UserCtrl.getUsers);
 

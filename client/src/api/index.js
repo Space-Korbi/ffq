@@ -23,6 +23,10 @@ export const signup = (payload) =>
 export const login = (payload) =>
   axios.post(`${process.env.REACT_APP_BASE_URL}/users/login`, payload);
 
+// password reset
+export const resetPassword = (payload) =>
+  axios.post(`${process.env.REACT_APP_BASE_URL}/users/resetpassword`, payload);
+
 // * REFACTORED
 // user
 export const getUsers = (params) => api.get(`/users`, { params });

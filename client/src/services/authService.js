@@ -1,5 +1,5 @@
 import { BehaviorSubject } from 'rxjs';
-import { login, signup } from '../api';
+import { login, signup, resetPassword } from '../api';
 
 const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('user')));
 
@@ -32,10 +32,18 @@ const signupUser = (firstName, lastName, email, password) => {
   });
 };
 
+const resetUserPassword = (email) => {
+  const payload = { email };
+  return resetPassword(payload).catch((error) => {
+    return Promise.reject(error.response);
+  });
+};
+
 const authService = {
   loginUser,
   logoutUser,
   signupUser,
+  resetUserPassword,
   currentUser: currentUserSubject.asObservable(),
   get currentUserValue() {
     return currentUserSubject.value;
