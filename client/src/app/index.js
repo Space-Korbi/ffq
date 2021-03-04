@@ -5,6 +5,7 @@ import { Role } from '../helpers';
 import PrivateRoute from '../components/PrivateRoute';
 import SignUpPage from '../pages/SignUpPage';
 import LoginPage from '../pages/LoginPage';
+import ResetPasswordPage from '../pages/ResetPasswordPage';
 import Dashboard from '../components/Dashboard';
 
 /**
@@ -42,6 +43,7 @@ class App extends React.Component {
           <PrivateRoute path="/users/:userId" isAdmin={isAdmin} component={Dashboard} />
           <Route path="/signup" exact component={SignUpPage} />
           <Route path="/login" exact component={LoginPage} />
+          <Route path="/passwordreset/:token" exact component={ResetPasswordPage} />
           <Route path="*" component={LoginPage} />
         </Switch>
       </Router>
