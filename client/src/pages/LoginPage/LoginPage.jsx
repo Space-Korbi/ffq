@@ -154,12 +154,10 @@ const LoginPage = () => {
                   email: Yup.string().required('Email is required')
                 })}
                 onSubmit={({ email }, { setStatus }) => {
-                  console.log('email', email);
-                  authService.resetUserPassword(email).then(
+                  authService.requestPasswordReset({ email }).then(
                     () => {
-                      console.log('geyeyeyeye');
                       setStatus(
-                        'The email is on its way. You should recieve it within the next 10 minutes.'
+                        `You will soon recieve an email. Please check your spam folder too.`
                       );
                     },
                     (error) => {

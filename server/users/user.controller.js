@@ -127,7 +127,7 @@ const loginUser = async (req, res) => {
     });
 };
 
-const resetPassword = async (req, res) => {
+const requestPasswordReset = async (req, res) => {
   const { email } = req.body;
   console.log('email', email);
 
@@ -135,11 +135,58 @@ const resetPassword = async (req, res) => {
     email
   })
     .then((user) => {
-      console.log('user', user);
       if (!user) {
         return res.status(404).send();
       }
-      return res.status(204).send();
+
+      const token = jwt.sign({ id: user.id }, process.env.SECRET || 'localDevSecret', {
+        expiresIn: '2h'
+      });
+
+      // Create sendEmail params
+      const params = {
+        Destination: {
+          /* required */
+          ToAddresses: ['korbinian.baumer@web.de']
+        },
+        Message: {
+          /* required */
+          Body: {
+            /* required */
+            Html: {
+              Charset: 'UTF-8',
+              Data: `<p> Click the link or copy it into a browser to reset your password. <br /><br /> <a href="localhost:8000/passwordreset/${token}"> localhost:8000/passwordreset/${token} </a> </p>`
+            }
+          },
+          Subject: {
+            Charset: 'UTF-8',
+            Data: 'Test email'
+          }
+        },
+        Source: 'hiffq.app@gmail.com',
+        ReplyToAddresses: ['hiffq.app@gmail.com']
+      };
+
+      const SESConfig = {
+        apiVersion: '2010-12-01',
+        accessKeyId: process.env.AWS_SES_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SES_SECRET_ACCESS_KEY,
+        region: process.env.AWS_SES_REGION
+      };
+
+      // Create the promise and SES service object
+      const sendPromise = new AWS.SES(SESConfig).sendEmail(params).promise();
+
+      // Handle promise's fulfilled/rejected states
+      sendPromise
+        .then(function (data) {
+          console.log(data.MessageId);
+          return res.status(204).send();
+        })
+        .catch(function (err) {
+          console.error(err, err.stack);
+          return res.status(500).json(err);
+        });
     })
     .catch((error) => {
       return res.status(500).json(error);
@@ -152,6 +199,25 @@ const resetPassword = async (req, res) => {
       console.log('Access key:', AWS.config.credentials.accessKeyId);
     }
   });
+};
+
+const resetPassword = async (req, res) => {
+  const { userId } = req;
+  const { password } = req.body;
+
+  console.log('----------', userId, password);
+  console.log('--body', req.body);
+
+  const filter = { _id: userId };
+  const update = { password: bcrypt.hashSync(password, 8) };
+
+  User.findOneAndUpdate(filter, update)
+    .then(() => {
+      return res.status(204).send();
+    })
+    .catch((error) => {
+      return res.status(500).json(error);
+    });
 };
 
 const getUsers = async (req, res) => {
@@ -340,6 +406,7 @@ const updateAnswer = async (req, res) => {
 module.exports = {
   loginUser,
   createUser,
+  requestPasswordReset,
   resetPassword,
   getUsers,
   updateUser,
