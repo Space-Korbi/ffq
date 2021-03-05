@@ -153,21 +153,23 @@ const LoginPage = () => {
                 validationSchema={Yup.object().shape({
                   email: Yup.string().required('Email is required')
                 })}
-                onSubmit={({ email }, { setStatus }) => {
+                onSubmit={({ email }, { setStatus, setSubmitting }) => {
                   authService.requestPasswordReset({ email }).then(
                     () => {
+                      setSubmitting(false);
                       setStatus(
                         `You will soon recieve an email. Please check your spam folder too.`
                       );
                     },
                     (error) => {
+                      setSubmitting(false);
                       console.log(error);
                       setStatus('Email is incorrect');
                     }
                   );
                 }}
               >
-                {({ errors, status, touched }) => (
+                {({ errors, status, touched, isSubmitting }) => (
                   <Form>
                     {`If you have forgotten your password, enter your email address and click 'Request
                       link'. You will recieve an email containing a link to reset your password.`}
@@ -186,6 +188,12 @@ const LoginPage = () => {
                     <button type="submit" className="btn btn-primary">
                       Request link
                     </button>
+                    {isSubmitting && (
+                      <img
+                        src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                        alt=""
+                      />
+                    )}
                     {status && <div className="alert alert-primary my-3">{status}</div>}
                   </Form>
                 )}
