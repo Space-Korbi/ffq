@@ -6,6 +6,7 @@ import ButtonsEditor from './ButtonsEditor/ButtonsEditor';
 import CardsEditor from './CardsEditor/CardsEditor';
 import InputsEditor from './InputsEditor/InputsEditor';
 import AnswerType from '../../types';
+import QuestionnaireImages from '../Images';
 
 const AnswerEditor = ({ answerOptions, dispatch, answerType, modalTable }) => {
   const [editor, setEditor] = useState(<div />);
@@ -34,6 +35,13 @@ const AnswerEditor = ({ answerOptions, dispatch, answerType, modalTable }) => {
         setEditor(
           <div>
             <InputsEditor answerOptions={answerOptions.options} dispatch={dispatch} />
+          </div>
+        );
+        break;
+      case 'images':
+        setEditor(
+          <div>
+            <QuestionnaireImages />
           </div>
         );
         break;

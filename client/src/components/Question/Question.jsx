@@ -13,6 +13,7 @@ import { Help } from '../Popover';
 import AnswerButtons from './FrequencyAnswer/AnswerButtons';
 import AmountAnswer from './AmountAnswer/AmountAnswer';
 import UserInputAnswer from './UserInputAnswer/UserInputAnswer';
+import Carousel from '../Carousel';
 
 // global constants
 import AnswerType from '../../types';
@@ -67,15 +68,15 @@ const Question = ({
   submittedAnswer,
   onSubmitAnswer,
   iterationId,
-  isPreview
+  isPreview,
+  isImage,
+  imageURLs
 }) => {
   const { userId } = useParams();
   const [userInput, setUserInput] = useState();
   const [{ answer, isSaving, isSavingError }, setAnswer] = useSaveAnswer(userId, iterationId, id);
 
   const [latestAnswer, setLatestAnswer] = useState();
-
-  console.log(isPreview);
 
   useEffect(() => {
     if (!isSaving && !isSavingError && userInput && !isPreview) {
@@ -100,33 +101,41 @@ const Question = ({
 
   return (
     <div>
-      <div>
-        <Jumbotron title={title} subtitle1={subtitle1} subtitle2={subtitle2} />
-      </div>
-      {help && (
-        <div className="row no-gutters">
-          <div className="col d-flex justify-content-end">
-            <Help infoText={help} />
-          </div>
+      {isImage ? (
+        <div>
+          <Carousel imageURLs={imageURLs} />
         </div>
-      )}
-      <div>
-        {isSavingError ? (
-          'Something went wrong...'
-        ) : (
-          <>
-            {isSaving ? (
-              'Saving...'
+      ) : (
+        <>
+          <div>
+            <Jumbotron title={title} subtitle1={subtitle1} subtitle2={subtitle2} />
+          </div>
+          {help && (
+            <div className="row no-gutters">
+              <div className="col d-flex justify-content-end">
+                <Help infoText={help} />
+              </div>
+            </div>
+          )}
+          <div>
+            {isSavingError ? (
+              'Something went wrong...'
             ) : (
-              <Answers
-                answerOptions={answerOptions}
-                setUserInput={setUserInput}
-                submittedAnswer={latestAnswer}
-              />
+              <>
+                {isSaving ? (
+                  'Saving...'
+                ) : (
+                  <Answers
+                    answerOptions={answerOptions}
+                    setUserInput={setUserInput}
+                    submittedAnswer={latestAnswer}
+                  />
+                )}
+              </>
             )}
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
@@ -167,7 +176,9 @@ Question.propTypes = {
     shape({ questionId: string, answer: arrayOf(shape({ id: string, value: string })) })
   ]),
   onSubmitAnswer: func.isRequired,
-  isPreview: bool
+  isPreview: bool,
+  isImage: bool,
+  imageURLs: arrayOf(string)
 };
 
 Question.defaultProps = {
@@ -176,7 +187,13 @@ Question.defaultProps = {
   subtitle2: '',
   help: '',
   submittedAnswer: undefined,
-  isPreview: false
+  isPreview: false,
+  isImage: false,
+  imageURLs: [
+    'https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg',
+    'https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_b.jpg',
+    'https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_b.jpg'
+  ]
 };
 
 export default Question;

@@ -21,6 +21,7 @@ const QuestionPreview = ({ title, subtitle1, subtitle2, help, answerOptions }) =
           // eslint-disable-next-line no-console
           onSubmitAnswer={() => console.log('Answer submitted')}
           isPreview
+          isImage={answerOptions.type === 'images'}
         />
       </div>
     </div>
