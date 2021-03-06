@@ -112,11 +112,7 @@ function QuestionnaireImages(props) {
   console.log('selected ', selectedImages);
 
   return (
-    <div>
-      <p className="lead mb-5 mt-3">
-        Images will be presented to the user before the questionnaire is started.
-      </p>
-
+    <div className="mt-5">
       <div className="row no-gutters d-flex justify-content-start">
         <div className="col-auto mb-3 mr-3">
           <div className="input-group" style={{ maxWidth: '500px' }}>

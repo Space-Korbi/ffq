@@ -80,7 +80,7 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
           <div className="my-2">
             <div className="row no-gutters flex-row d-flex flex-wrap-reverse">
               <div className="col col-md-6 d-flex">
-                <Select onChange={setAnswerType} dispatch={dispatch} />
+                <Select onChange={setAnswerType} dispatch={dispatch} value={answerType} />
               </div>
 
               <div className="col-12 col-md-6 d-flex">
