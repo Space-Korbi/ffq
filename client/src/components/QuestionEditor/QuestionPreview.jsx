@@ -11,18 +11,29 @@ const QuestionPreview = ({ title, subtitle1, subtitle2, help, answerOptions }) =
         className="border border-info "
         style={{ minHeight: '760px', minWidth: '270px', maxWidth: '100%' }}
       >
-        <Question
-          id=""
-          title={title}
-          subtitle1={subtitle1}
-          subtitle2={subtitle2}
-          help={help}
-          answerOptions={answerOptions}
-          // eslint-disable-next-line no-console
-          onSubmitAnswer={() => console.log('Answer submitted')}
-          isPreview
-          isImage={answerOptions.type === 'images'}
-        />
+        {answerOptions.type === 'images' ? (
+          <div className="jumbotron jumbotron-fluid">
+            <div className="container">
+              <h1 className="display-4">Images</h1>
+              <p className="lead">
+                A live preview of images is currently not possible. Go to &apos;FFQ Preview&apos; to
+                see what it looks like.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <Question
+            id=""
+            title={title}
+            subtitle1={subtitle1}
+            subtitle2={subtitle2}
+            help={help}
+            answerOptions={answerOptions}
+            // eslint-disable-next-line no-console
+            onSubmitAnswer={() => console.log('Answer submitted')}
+            isPreview
+          />
+        )}
       </div>
     </div>
   );

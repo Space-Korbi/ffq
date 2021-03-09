@@ -69,8 +69,7 @@ const Question = ({
   onSubmitAnswer,
   iterationId,
   isPreview,
-  isImage,
-  imageURLs
+  isImage
 }) => {
   const { userId } = useParams();
   const [userInput, setUserInput] = useState();
@@ -103,7 +102,14 @@ const Question = ({
     <div>
       {isImage ? (
         <div>
-          <Carousel imageURLs={imageURLs} />
+          <Carousel
+            imageURLs={answerOptions.options.map((option) => {
+              return option.imageURL;
+            })}
+            onSubmitAnswer={() =>
+              onSubmitAnswer({ questionId: id, answerOption: [{ id: 'images' }] })
+            }
+          />
         </div>
       ) : (
         <>
@@ -177,8 +183,7 @@ Question.propTypes = {
   ]),
   onSubmitAnswer: func.isRequired,
   isPreview: bool,
-  isImage: bool,
-  imageURLs: arrayOf(string)
+  isImage: bool
 };
 
 Question.defaultProps = {
@@ -188,12 +193,7 @@ Question.defaultProps = {
   help: '',
   submittedAnswer: undefined,
   isPreview: false,
-  isImage: false,
-  imageURLs: [
-    'https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg',
-    'https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_b.jpg',
-    'https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_b.jpg'
-  ]
+  isImage: false
 };
 
 export default Question;

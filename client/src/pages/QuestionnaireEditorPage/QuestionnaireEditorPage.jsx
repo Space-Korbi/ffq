@@ -143,10 +143,8 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
     <QuestionnaireSettings questionnaire={questionnaire} save={saveSettings} />
   );
 
-  const imagesContent = <QuestionnaireImages questionnaire={questionnaire} save={saveSettings} />;
-
-  const tabNames = ['Questions', 'Settings', 'Images'];
-  const tabContents = [questionsContent, settingsContent, imagesContent];
+  const tabNames = ['Questions', 'Settings'];
+  const tabContents = [questionsContent, settingsContent];
 
   return (
     <div>

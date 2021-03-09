@@ -1,48 +1,47 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { arrayOf, func, string, shape } from 'prop-types';
 import Gallery from 'react-grid-gallery';
 import $ from 'jquery';
+import { nanoid } from 'nanoid';
 
 // components
 import { ArrowRightIcon, ArrowLeftIcon } from '@primer/octicons-react';
 
 // icons
 
-const IMAGES = [
-  {
-    src: 'https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg',
-    thumbnail: 'https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_n.jpg',
-    thumbnailWidth: 320,
-    thumbnailHeight: 210,
-    isSelected: false,
-    caption: 'After Rain (Jeshu John - designerspics.com)'
-  },
-  {
-    src: 'https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_b.jpg',
-    thumbnail: 'https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_n.jpg',
-    thumbnailWidth: 320,
-    thumbnailHeight: 212,
-    tags: [
-      { value: 'Ocean', title: 'Ocean' },
-      { value: 'People', title: 'People' }
-    ],
-    caption: 'Boats (Jeshu John - designerspics.com)'
-  },
-
-  {
-    src: 'https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_b.jpg',
-    thumbnail: 'https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_n.jpg',
-    thumbnailWidth: 320,
-    thumbnailHeight: 212
-  }
-];
-
-function QuestionnaireImages(props) {
+function QuestionnaireImages({ prevUploads, dispatch }) {
   const [selectedImages, setSelectedImages] = useState([]);
   const [currentIndex, setCurrentIndex] = useState();
   const [currentSrc, setCurrentSrc] = useState('...');
-  const [images, setImages] = useState(IMAGES);
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    if (!prevUploads) {
+      return;
+    }
+    setImages(
+      prevUploads.map((upload) => {
+        if (upload.imageData) {
+          return {
+            id: upload.id,
+            imageData: upload.imageData,
+            src: upload.imageURL,
+            thumbnail: upload.imageURL,
+            thumbnailWidth: 320,
+            thumbnailHeight: 210
+          };
+        }
+        return {
+          id: upload.id,
+          src: upload.imageURL,
+          thumbnail: upload.imageURL,
+          thumbnailWidth: 320,
+          thumbnailHeight: 210
+        };
+      })
+    );
+  }, [prevUploads]);
 
   useEffect(() => {
     if (images[currentIndex]) {
@@ -75,6 +74,12 @@ function QuestionnaireImages(props) {
   const onClickDelete = () => {
     $('#exampleModal').modal('toggle');
     setCurrentIndex('...');
+    dispatch({
+      type: 'removeImage',
+      payload: {
+        id: images[currentIndex].id
+      }
+    });
     setImages((prevState) => {
       const remainingImages = [...prevState];
       remainingImages.splice(currentIndex, 1);
@@ -88,6 +93,15 @@ function QuestionnaireImages(props) {
   };
 
   const deleteSelected = () => {
+    selectedImages.forEach((index) => {
+      dispatch({
+        type: 'removeImage',
+        payload: {
+          id: images[index].id
+        }
+      });
+    });
+
     setImages((prevState) => {
       const remainingImages = prevState.filter((image, index) => !selectedImages.includes(index));
       return remainingImages;
@@ -100,16 +114,18 @@ function QuestionnaireImages(props) {
     if (newIndex >= images.length || newIndex < 0) {
       return;
     }
-    setImages((prevState) => {
-      const newState = [...prevState];
-      newState.splice(newIndex, 0, newState.splice(oldIndex, 1)[0]);
-      console.log('------', newState);
-      return newState;
+
+    const newState = [...images];
+    newState.splice(newIndex, 0, newState.splice(oldIndex, 1)[0]);
+    dispatch({
+      type: 'moveImages',
+      payload: {
+        movedImages: newState
+      }
     });
+
     setSelectedImages([newIndex]);
   };
-
-  console.log('selected ', selectedImages);
 
   return (
     <div className="mt-5">
@@ -127,6 +143,17 @@ function QuestionnaireImages(props) {
                 className="custom-file-input"
                 id="inputGroupFile01"
                 aria-describedby="inputGroupFileAddon01"
+                onChange={(e) => {
+                  const image = e.target.files[0];
+                  dispatch({
+                    type: 'addImage',
+                    payload: {
+                      id: nanoid(),
+                      imageData: image,
+                      imageURL: URL.createObjectURL(image)
+                    }
+                  });
+                }}
               />
               <label className="custom-file-label" htmlFor="inputGroupFile01">
                 Choose file
@@ -223,6 +250,9 @@ function QuestionnaireImages(props) {
   );
 }
 
-QuestionnaireImages.propTypes = {};
+QuestionnaireImages.propTypes = {
+  prevUploads: arrayOf(shape({ id: string, imageURL: string })).isRequired,
+  dispatch: func.isRequired
+};
 
 export default QuestionnaireImages;

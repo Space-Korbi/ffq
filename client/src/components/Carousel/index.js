@@ -1,19 +1,68 @@
-import React, { useState, useEffect } from 'react';
-import { string, arrayOf } from 'prop-types';
+import React, { useState, useEffect, useRef } from 'react';
+import { string, arrayOf, func } from 'prop-types';
 import $ from 'jquery';
 
-const Carousel = ({ imageURLs }) => {
+const Carousel = ({ imageURLs, onSubmitAnswer }) => {
   const [currentIndex, setCurrentIndex] = useState(1);
+  const [transitioning, setTransitioning] = useState(false);
 
-  console.log(imageURLs);
+  const indexRef = useRef(currentIndex);
+
   useEffect(() => {
     $('.carousel').carousel('pause');
   }, []);
 
+  useEffect(() => {
+    if (currentIndex > indexRef.current) {
+      $('.carousel').carousel('next');
+    } else if (currentIndex < indexRef.current) {
+      $('.carousel').carousel('prev');
+    }
+
+    $('.carousel').on('slid.bs.carousel', () => {
+      setTransitioning(false);
+      indexRef.current = currentIndex;
+    });
+  }, [currentIndex]);
+
   return (
     <div>
-      <nav className="navbar bg-light  fixed-top text-white" style={{ height: '80px' }} />
-      <div className="container mt-3">
+      <nav className="navbar bg-light  fixed-top text-white" style={{ height: '98px' }}>
+        <div className="row no-gutters flex-row w-100">
+          <div className="col d-flex justify-content-between align-items-center">
+            <button
+              type="button"
+              className="btn btn-primary"
+              disabled={transitioning || currentIndex <= 1}
+              onClick={() => {
+                setTransitioning(true);
+                setCurrentIndex((prevState) => prevState - 1);
+              }}
+            >
+              Back
+            </button>
+            <div className="pl-2" />
+            <h5 className="text-dark">{`Teil ${currentIndex} von ${imageURLs.length}`}</h5>
+            <div className="pl-2" />
+            <button
+              type="button"
+              className="btn btn-primary"
+              disabled={transitioning}
+              onClick={() => {
+                setTransitioning(true);
+                if (currentIndex >= imageURLs.length) {
+                  onSubmitAnswer();
+                } else {
+                  setCurrentIndex((prevState) => prevState + 1);
+                }
+              }}
+            >
+              {currentIndex >= imageURLs.length ? 'To the questions' : 'Continue'}
+            </button>
+          </div>
+        </div>
+      </nav>
+      <div className="container mt-4">
         <div id="carouselExampleControls" className="carousel slide">
           <div className="carousel-inner">
             {imageURLs.map((url, index) => {
@@ -23,52 +72,10 @@ const Carousel = ({ imageURLs }) => {
                   className={`carousel-item ${index === 0 && 'active'}`}
                   data-interval=""
                 >
-                  <img
-                    src={url}
-                    className="d-block mx-auto"
-                    alt="..."
-                    style={{ maxHeight: '800px', maxWidth: '100%' }}
-                  />
+                  <img src={url} className="d-block mx-auto my-auto w-100" alt="..." />
                 </div>
               );
             })}
-          </div>
-        </div>
-      </div>
-      <div className="container fixed-bottom mb-5">
-        <div className="row no-gutters flex-row w-100">
-          <div className="col d-flex justify-content-between align-items-center">
-            <button
-              type="button"
-              className="btn btn-lg btn-primary"
-              onClick={() => {
-                if (currentIndex === 1) {
-                  console.log('prev');
-                } else {
-                  setCurrentIndex((prevState) => prevState - 1);
-                  $('.carousel').carousel('prev');
-                }
-              }}
-            >
-              Back
-            </button>
-            <div className="pl-2" />
-            <h5>{`Teil ${currentIndex} von ${imageURLs.length}`}</h5>
-            <div className="pl-2" />
-            <button
-              type="button"
-              className="btn btn-lg btn-primary"
-              onClick={() => {
-                if (currentIndex >= imageURLs.length) {
-                  console.log('next');
-                } else {
-                  setCurrentIndex((prevState) => prevState + 1);
-                  $('.carousel').carousel('next');
-                }
-              }}
-            >
-              {currentIndex >= imageURLs.length ? 'To the questions' : 'Continue'}
-            </button>
           </div>
         </div>
       </div>
@@ -77,7 +84,8 @@ const Carousel = ({ imageURLs }) => {
 };
 
 Carousel.propTypes = {
-  imageURLs: arrayOf(string).isRequired
+  imageURLs: arrayOf(string).isRequired,
+  onSubmitAnswer: func.isRequired
 };
 
 export default Carousel;

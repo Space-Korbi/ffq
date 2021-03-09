@@ -53,7 +53,6 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
         return Promise.resolve(updatedAmountOption);
       })
     );
-    console.log('updatedAmountOptions', updatedAmountOptions);
     return updatedAmountOptions;
   };
 
@@ -61,12 +60,10 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
     setSaving(true);
     const updatedQuestion = { title, subtitle1, subtitle2, help, answerOptions };
 
-    if (answerType === AnswerType.Amount) {
-      console.log(answerOptions.options);
+    if (answerType === AnswerType.Amount || answerType === 'images') {
       updatedQuestion.answerOptions.options = await updateAmountOptions(answerOptions.options);
     }
 
-    console.log('updatedQuestion', updatedQuestion);
     updateQuestion(question._id, updatedQuestion).then(() => {
       setSaving(false);
       onExit({ ...updatedQuestion, _id: question._id });
@@ -181,7 +178,8 @@ QuestionEditor.propTypes = {
             hasNumberInput: bool,
             numberInputTitle: string
           })
-        )
+        ),
+        arrayOf(string)
       ])
     })
   }).isRequired

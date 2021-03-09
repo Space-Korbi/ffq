@@ -74,7 +74,6 @@ const saveQuestion = async (questionId, questionData, answerOptions) => {
   payload.answerOptions = answerOptions;
 
   if (answerOptions.type === AnswerType.Amount) {
-    console.log('heyyy');
     const updatedAmountOptions = await updateAmountOptions(answerOptions.options);
     payload.answerOptions.options = updatedAmountOptions;
   }

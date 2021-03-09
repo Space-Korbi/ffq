@@ -41,7 +41,7 @@ const AnswerEditor = ({ answerOptions, dispatch, answerType, modalTable }) => {
       case 'images':
         setEditor(
           <div>
-            <QuestionnaireImages />
+            <QuestionnaireImages prevUploads={answerOptions.options} dispatch={dispatch} />
           </div>
         );
         break;

@@ -131,8 +131,6 @@ const QuestionnairePresenter = ({
   };
 
   const handleOnPause = () => {
-    console.log('pauses', pauses);
-
     if (pauses.indexOf(currentIndex) !== -1) {
       return;
     }

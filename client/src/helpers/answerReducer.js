@@ -222,6 +222,40 @@ const reducerHelper = {
       type: AnswerType.UserInput,
       options: newState
     };
+  },
+  addImage: (state, action) => {
+    const newState = state.options.concat({
+      id: action.payload.id,
+      imageURL: action.payload.imageURL,
+      imageData: action.payload.imageData
+    });
+
+    return {
+      type: 'images',
+      options: newState
+    };
+  },
+  removeImage: (state, action) => {
+    const newState = state.options.filter((el) => {
+      return el.id !== action.payload.id;
+    });
+    return {
+      type: 'images',
+      options: newState
+    };
+  },
+  moveImages: (state, action) => {
+    const newState = action.payload.movedImages.map((option) => {
+      if (option.imageData) {
+        return { id: option.id, imageURL: option.src, imageData: option.imageData };
+      }
+      return { id: option.id, imageURL: option.src };
+    });
+
+    return {
+      type: 'images',
+      options: newState
+    };
   }
 };
 
@@ -263,6 +297,12 @@ const answerReducer = (state, action) => {
       return reducerHelper.removeNumberInput(state, action);
     case 'changeNumberInputTitle':
       return reducerHelper.changeNumberInputTitle(state, action);
+    case 'addImage':
+      return reducerHelper.addImage(state, action);
+    case 'removeImage':
+      return reducerHelper.removeImage(state, action);
+    case 'moveImages':
+      return reducerHelper.moveImages(state, action);
     default:
       return state;
   }
