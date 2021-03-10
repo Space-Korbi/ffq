@@ -2,12 +2,15 @@ import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { useTranslation } from 'react-i18next';
 import { authService } from '../../services';
 
 // logo
 import { ReactComponent as Logo } from '../../hi-ffq_v9_react.svg';
 
 const LoginPage = () => {
+  const { t } = useTranslation(['globals', 'yup']);
+
   const history = useHistory();
 
   useEffect(() => {
@@ -24,13 +27,6 @@ const LoginPage = () => {
     >
       <div className="d-flex col-sm-8 col-md-6 col-lg-5">
         <div className="col">
-          <div className="alert alert-info">
-            Test Accounts
-            <br />
-            <strong>Administrator</strong> - Email: admin@abc.de PW: 12345
-            <br />
-            <strong>User</strong> - Email: user@abc.de PW: 54321
-          </div>
           <div className="d-flex justify-content-center">
             <Logo className="App-logo mb-5" width="72" height="72" />
           </div>
@@ -42,10 +38,10 @@ const LoginPage = () => {
               password: '12345'
             }}
             validationSchema={Yup.object().shape({
-              email: Yup.string().required('Email is required'),
+              email: Yup.string().required(t(('yup:email_required', 'Email-Adresse eingeben'))),
               password: Yup.string()
-                .required('Password is required')
-                .min(5, 'Password must be at least 5 characters')
+                .required(t(('yup:password_required', 'Passwort eingeben')))
+                .min(5, t(('yup:password_length', 'Mindestens 5 Zeichen verwenden')))
             })}
             onSubmit={({ email, password }, { setStatus, setSubmitting }) => {
               authService.loginUser(email, password).then(
@@ -58,9 +54,27 @@ const LoginPage = () => {
                     <ul className="list-unstyled content-align-center mb-0">{listElement}</ul>
                   );
                   if ([401, 403].indexOf(error.status) !== -1) {
-                    setStatus(errorList(<li>Password is incorrect.</li>));
+                    setStatus(
+                      errorList(
+                        <li>
+                          {t(
+                            ('globals:password_incorrect',
+                            'Falsches Passwort. Bitte noch einmal versuchen oder auf „Passwort vergessen“ klicken, um das Passwort zurückzusetzen.')
+                          )}
+                        </li>
+                      )
+                    );
                   } else if ([404].indexOf(error.status) !== -1) {
-                    setStatus(errorList(<li>Email is incorrect.</li>));
+                    setStatus(
+                      errorList(
+                        <li>
+                          {t(
+                            ('globals:email_incorrect',
+                            'Die Email-Adresse konnte nicht gefunden werden.')
+                          )}
+                        </li>
+                      )
+                    );
                   } else if (error.data.errors) {
                     const errorListElements = error.data.errors.map((err) => {
                       return <li key={err.value}>{err.msg}</li>;
@@ -84,7 +98,7 @@ const LoginPage = () => {
                   <ErrorMessage name="email" component="div" className="invalid-feedback" />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="password">Password</label>
+                  <label htmlFor="password">{t('yup:password_headline', 'Passwort')}</label>
                   <Field
                     name="password"
                     type="password"
@@ -118,7 +132,7 @@ const LoginPage = () => {
                   data-toggle="modal"
                   data-target="#staticBackdrop"
                 >
-                  Forgot Password
+                  {t(('globals:password_forgot', 'Passwort vergessen'))}
                 </button>
                 {status && <div className="alert alert-danger mb-5">{status}</div>}
               </Form>
@@ -139,7 +153,7 @@ const LoginPage = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="staticBackdropLabel">
-                Forgot Password
+                {t(('globals:password_forgot', 'Passwort vergessen'))}
               </h5>
               <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
