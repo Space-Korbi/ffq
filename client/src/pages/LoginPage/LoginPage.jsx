@@ -88,7 +88,7 @@ const LoginPage = () => {
             {({ errors, status, touched, isSubmitting }) => (
               <Form>
                 <div className="form-group">
-                  <label htmlFor="email">Email</label>
+                  <label htmlFor="email">{t(('globals:email', 'Email'))}</label>
                   <Field
                     id="email"
                     name="email"
@@ -98,7 +98,7 @@ const LoginPage = () => {
                   <ErrorMessage name="email" component="div" className="invalid-feedback" />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="password">{t('yup:password_headline', 'Passwort')}</label>
+                  <label htmlFor="password">{t('globals:password', 'Passwort')}</label>
                   <Field
                     name="password"
                     type="password"
@@ -117,7 +117,7 @@ const LoginPage = () => {
                     className="btn btn-link"
                     onClick={() => history.push(`/signup`)}
                   >
-                    Sign Up
+                    {t(('globals:sign_up_headline', 'Registrierung'))}
                   </button>
                   {isSubmitting && (
                     <img

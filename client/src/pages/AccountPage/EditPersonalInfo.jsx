@@ -10,7 +10,7 @@ import Spinner from '../../components/Spinner';
 import { userService } from '../../services';
 
 function EditPersonalInfo({ userId, isAdmin, personalInfo }) {
-  const { t } = useTranslation(['global', 'yup']);
+  const { t } = useTranslation(['globals', 'yup']);
 
   const [didChange, setdidChange] = useState(false);
 
@@ -97,7 +97,7 @@ function EditPersonalInfo({ userId, isAdmin, personalInfo }) {
             <div className="row">
               <div className="col-lg-4 mb-2 mb-lg-0">
                 <div className="form-group mb-lg-0">
-                  <label htmlFor="inputFirstName">{t(('globals:firstName', 'Vorname'))}</label>
+                  <label htmlFor="inputFirstName">{t(('globals:first_name', 'Vorname'))}</label>
                   <Field
                     type="text"
                     name="firstName"
@@ -108,7 +108,7 @@ function EditPersonalInfo({ userId, isAdmin, personalInfo }) {
               </div>
               <div className="col-lg-4 mb-2 mb-lg-0">
                 <div className="form-group mb-lg-0">
-                  <label htmlFor="inputLastName">{t(('globals:lastName', 'Nachname'))}</label>
+                  <label htmlFor="inputLastName">{t(('globals:last_name', 'Nachname'))}</label>
                   <Field
                     type="text"
                     name="lastName"

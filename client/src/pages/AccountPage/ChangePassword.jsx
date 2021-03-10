@@ -10,7 +10,7 @@ import Spinner from '../../components/Spinner';
 import { userService } from '../../services';
 
 const ChangePassword = ({ userId }) => {
-  const { t } = useTranslation(['global', 'yup']);
+  const { t } = useTranslation(['globals', 'yup']);
 
   const [didChange, setDidChange] = useState(false);
 
@@ -85,9 +85,7 @@ const ChangePassword = ({ userId }) => {
           >
             <div className="mt-5">
               <div className="d-flex flex-row align-items-end justify-content-between">
-                <p className="align-bottom m-0 mb-1 lead">
-                  {t('global:password_headline', 'Passwort')}
-                </p>
+                <p className="align-bottom m-0 mb-1 lead">{t('globals:password', 'Passwort')}</p>
                 <button
                   type="submit"
                   className="btn btn-outline-primary btn-sm ml-auto mb-1"
