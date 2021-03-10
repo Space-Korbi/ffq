@@ -3,12 +3,15 @@ import { bool, shape, string } from 'prop-types';
 
 import * as Yup from 'yup';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { useTranslation } from 'react-i18next';
 
 // components
 import Spinner from '../../components/Spinner';
 import { userService } from '../../services';
 
 function EditPersonalInfo({ userId, isAdmin, personalInfo }) {
+  const { t } = useTranslation(['global', 'yup']);
+
   const [didChange, setdidChange] = useState(false);
 
   return (
@@ -20,9 +23,11 @@ function EditPersonalInfo({ userId, isAdmin, personalInfo }) {
           email: personalInfo.email
         }}
         validationSchema={Yup.object().shape({
-          firstName: Yup.string().required('First name is required'),
-          lastName: Yup.string().required('Last name is required'),
-          email: Yup.string().email().required('Email is required')
+          firstName: Yup.string().required(t(('yup:first_name_required', 'Vornamen eingeben'))),
+          lastName: Yup.string().required(t(('yup:last_name_required', 'Nachnamen eingeben'))),
+          email: Yup.string()
+            .email()
+            .required(t(('yup:email_required', 'Email-Adresse eingeben')))
         })}
         validateOnChange={false}
         validateOnBlur={false}
@@ -32,7 +37,9 @@ function EditPersonalInfo({ userId, isAdmin, personalInfo }) {
               .updateUserData(userId, { firstName, lastName, email })
               .then(() => {
                 setStatus(
-                  <div className="alert alert-success mb-5">Changes saved successfully.</div>
+                  <div className="alert alert-success mb-5">
+                    {t(('globals:changes_save_success', 'Änderungen erfolgreich gespeichert.'))}
+                  </div>
                 );
                 setSubmitting(false);
                 setdidChange(false);
@@ -65,7 +72,9 @@ function EditPersonalInfo({ userId, isAdmin, personalInfo }) {
             <div className="mt-5">
               <div className="d-flex align-items-end justify-content-between">
                 <div className="col p-0">
-                  <p className="align-bottom text-nowrap m-0 mb-1 lead">Personal Info</p>
+                  <p className="align-bottom text-nowrap m-0 mb-1 lead">
+                    {t(('globals:personal_info_headline', 'Persönliche Informationen'))}
+                  </p>
                 </div>
                 <div className="col flex-grow-1 p-0">
                   <button
@@ -75,12 +84,9 @@ function EditPersonalInfo({ userId, isAdmin, personalInfo }) {
                   >
                     <>
                       {isSubmitting ? (
-                        <>
-                          Saving...
-                          <Spinner className="spinner-border spinner-border-sm ml-1" />
-                        </>
+                        <Spinner className="spinner-border spinner-border-sm ml-1" />
                       ) : (
-                        'Save Changes'
+                        t(('globals:"save_changes', 'Änderung speichern'))
                       )}
                     </>
                   </button>
@@ -91,7 +97,7 @@ function EditPersonalInfo({ userId, isAdmin, personalInfo }) {
             <div className="row">
               <div className="col-lg-4 mb-2 mb-lg-0">
                 <div className="form-group mb-lg-0">
-                  <label htmlFor="inputFirstName">First Name</label>
+                  <label htmlFor="inputFirstName">{t(('globals:firstName', 'Vorname'))}</label>
                   <Field
                     type="text"
                     name="firstName"
@@ -102,7 +108,7 @@ function EditPersonalInfo({ userId, isAdmin, personalInfo }) {
               </div>
               <div className="col-lg-4 mb-2 mb-lg-0">
                 <div className="form-group mb-lg-0">
-                  <label htmlFor="inputLastName">Last Name</label>
+                  <label htmlFor="inputLastName">{t(('globals:lastName', 'Nachname'))}</label>
                   <Field
                     type="text"
                     name="lastName"
@@ -113,7 +119,7 @@ function EditPersonalInfo({ userId, isAdmin, personalInfo }) {
               </div>
               <div className="col-lg-4 mb-lg-0">
                 <div className="form-group mb-0">
-                  <label htmlFor="inputEmail">Email</label>
+                  <label htmlFor="inputEmail">{t(('globals:email', 'Email'))}</label>
                   <Field
                     name="email"
                     type="email"

@@ -1,13 +1,17 @@
+/* eslint-disable prettier/prettier */
 import React, { useState } from 'react';
 import { string } from 'prop-types';
 import * as Yup from 'yup';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { useTranslation } from 'react-i18next';
 
 // components
 import Spinner from '../../components/Spinner';
 import { userService } from '../../services';
 
 const ChangePassword = ({ userId }) => {
+  const { t } = useTranslation(['global', 'yup']);
+
   const [didChange, setDidChange] = useState(false);
 
   return (
@@ -20,16 +24,23 @@ const ChangePassword = ({ userId }) => {
         }}
         validationSchema={Yup.object().shape({
           oldPassword: Yup.string()
-            .required('Old Password is required')
-            .min(5, 'Password must be at least 5 characters'),
+            .required(t(('yup:old_password_required', 'Altes Password eingeben')))
+            .min(5, t('yup:password_length')),
+
           newPassword: Yup.string()
-            .required('New Password is required')
-            .min(5, 'Password must be at least 5 characters'),
+            .required(t(('new_password_required', 'Neues Password eingeben')))
+            .min(5, t(('yup:password_length', 'Mindestens 5 Zeichen verwenden'))),
           confirmPassword: Yup.string()
-            .required('Please confirm your password')
+            .required(t(('yup:password_confirm', 'Passwort bestätigen')))
             .when('newPassword', {
               is: (password) => !!(password && password.length > 0),
-              then: Yup.string().oneOf([Yup.ref('newPassword')], "Password doesn't match")
+              then: Yup.string().oneOf(
+                [Yup.ref('newPassword')],
+                t(
+                  ('yup:password_dont_match',
+                  'Diese Passwörter stimmen nicht überein. Versuchen Sie es noch einmal.')
+                )
+              )
             })
         })}
         validateOnChange={false}
@@ -40,7 +51,9 @@ const ChangePassword = ({ userId }) => {
               .updateUserData(userId, { oldPassword, newPassword, confirmPassword })
               .then(() => {
                 setStatus(
-                  <div className="alert alert-success mb-5">Password changed successfully.</div>
+                  <div className="alert alert-success mb-5">
+                    {t(('password_change_success', 'Passwort erfolgreich geändert'))}
+                  </div>
                 );
                 setSubmitting(false);
                 setDidChange(false);
@@ -72,7 +85,9 @@ const ChangePassword = ({ userId }) => {
           >
             <div className="mt-5">
               <div className="d-flex flex-row align-items-end justify-content-between">
-                <p className="align-bottom m-0 mb-1 lead">Password</p>
+                <p className="align-bottom m-0 mb-1 lead">
+                  {t('global:password_headline', 'Passwort')}
+                </p>
                 <button
                   type="submit"
                   className="btn btn-outline-primary btn-sm ml-auto mb-1"
@@ -80,12 +95,9 @@ const ChangePassword = ({ userId }) => {
                 >
                   <>
                     {isSubmitting ? (
-                      <>
-                        Changing...
-                        <Spinner className="spinner-border spinner-border-sm ml-1" />
-                      </>
+                      <Spinner className="spinner-border spinner-border-sm" />
                     ) : (
-                      'Change Password'
+                      t('save_password', 'Passwort speichern')
                     )}
                   </>
                 </button>
@@ -96,7 +108,7 @@ const ChangePassword = ({ userId }) => {
             <div className="row">
               <div className="col-lg-4 mb-2 mb-lg-0">
                 <div className="form-group mb-lg-0">
-                  <label htmlFor="oldPassword">Old Password</label>
+                  <label htmlFor="oldPassword">{t('password_old', 'Altes Passwort')}</label>
                   <Field
                     type="password"
                     name="oldPassword"
@@ -107,7 +119,7 @@ const ChangePassword = ({ userId }) => {
               </div>
               <div className="col-lg-4 mb-2 mb-lg-0">
                 <div className="form-group mb-lg-0">
-                  <label htmlFor="newPassword">New Password</label>
+                  <label htmlFor="newPassword">{t('password_new', 'Neues Passwort')}</label>
                   <Field
                     type="password"
                     name="newPassword"
@@ -118,7 +130,9 @@ const ChangePassword = ({ userId }) => {
               </div>
               <div className="col-lg-4 mb-lg-0">
                 <div className="form-group mb-0">
-                  <label htmlFor="inputConfirmPassword">Confirm Password</label>
+                  <label htmlFor="inputConfirmPassword">
+                    {t('password_confirm', 'Passwort bestätigen')}
+                  </label>
                   <Field
                     name="confirmPassword"
                     type="password"

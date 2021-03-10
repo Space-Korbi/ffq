@@ -1,0 +1,19 @@
+{
+  "personal_info_headline": "Personal Info",
+  "first_name": "First Name",
+  "last_name": "Last Name",
+  "email": "Email",
+  "save_changes": "Save Changes",
+  "changes_save_success": "Changes saved successfully.",
+  "password_headline": "Password",
+  "password_new": "New Password",
+  "password_old": "Old Password",
+  "password_confirm": "Confirm Password",
+  "password_change_success": "Password changed successfully.",
+  "save_password": "Save Password",
+  "status_accept": "Accepted",
+  "status_reject": "Rejected",
+  "status_wait": "Wait",
+  "consent_accept": "Accepted",
+  "consent_not_accept": "Not accepted"
+}
