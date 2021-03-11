@@ -3,11 +3,16 @@ import { arrayOf, func, shape, string } from 'prop-types';
 import { nanoid } from 'nanoid';
 import moment from 'moment';
 
+// localization
+import { useTranslation } from 'react-i18next';
+
 // components
 import DateIntervalSettings from '../DateInterval';
 import { AddButton } from '../Button';
 
 const QuestionnaireSettings = ({ questionnaire, save }) => {
+  const { t } = useTranslation(['globals']);
+
   const [name, setName] = useState(questionnaire.name);
   const [consentScript, setConsentScript] = useState(questionnaire.consentScript);
   const [iterations, setIterations] = useState(questionnaire.iterations);
@@ -36,9 +41,11 @@ const QuestionnaireSettings = ({ questionnaire, save }) => {
               save({ name, consentScript, iterations });
             }}
           >
-            Save Settings
+            {t(('editor:save_settings', 'Einstellungen speichern'))}
           </button>
-          <p className="lead m-0 mb-1 mt-5">Questionnaire Name</p>
+          <p className="lead m-0 mb-1 mt-5">
+            {t(('editor:questionnaire_name', 'Name des Fragebogens'))}
+          </p>
           <hr className="m-0 mb-3" />
           <input
             type="text"
@@ -50,10 +57,13 @@ const QuestionnaireSettings = ({ questionnaire, save }) => {
 
           <div className="mt-5">
             <div className="d-flex flex-row align-items-end justify-content-between">
-              <p className="align-bottom m-0 mb-1 lead">Iterations</p>
+              <p className="align-bottom m-0 mb-1 lead">
+                {t('iteration_headline', 'Wiederholungen')}
+              </p>
               <AddButton
                 onClick={() => addIteration()}
                 styling="btn btn-outline-primary ml-auto mb-1"
+                tooltip="Wiederholung hinzufügen"
               />
             </div>
           </div>
@@ -61,7 +71,9 @@ const QuestionnaireSettings = ({ questionnaire, save }) => {
           <hr className="m-0 mb-3" />
           <DateIntervalSettings iterations={iterations} setIterations={setIterations} />
 
-          <p className="lead m-0 mb-1 mt-5">Consent Script</p>
+          <p className="lead m-0 mb-1 mt-5">
+            {t(('globals:consent_form_headline', 'Einverständniserklärung'))}
+          </p>
           <hr className="m-0 mb-3" />
           <textarea
             className="form-control"

@@ -115,7 +115,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
           <ChangePassword userId={user.id} />
           {!isAdmin && (
             <div>
-              <p className="lead m-0 mb-1 mt-5">{t('iteration_headline', 'Durchläufe')}</p>
+              <p className="lead m-0 mb-1 mt-5">{t('iteration_headline', 'Wiederholungen')}</p>
               <hr className="m-0 mb-3" />
               <div className="row no-gutters overflow-auto flex-row flex-nowrap">
                 <div className="col">
@@ -124,7 +124,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
                       <caption className="p-0 pt-2 ">
                         {t(
                           'iteration_caption',
-                          'Der Fragebogen sollte innherhalb jedes Intervalls ausgefüllt werden.'
+                          'Der Fragebogen kann nur zwischen Startdatum und Enddatum jeder Wiederholung ausgefüllt werden.'
                         )}
                       </caption>
                       <thead>

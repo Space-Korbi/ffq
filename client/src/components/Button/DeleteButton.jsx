@@ -1,6 +1,7 @@
 import React from 'react';
 import { func, bool, string, number } from 'prop-types';
 import { TrashIcon, XIcon } from '@primer/octicons-react';
+import $ from 'jquery';
 
 function DeleteIcon({ trashCan, size }) {
   return trashCan ? <TrashIcon size={size} /> : <XIcon size={size} />;
@@ -17,11 +18,18 @@ DeleteIcon.defaultProps = {
 };
 
 const DeleteButton = ({ onClick, isTrashCan, isDeleting, styling, iconSize }) => {
+  $(() => {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+
   return (
     <button
       type="button"
       className={`btn btn-outline-danger d-flex align-items-center p-1 ${styling}`}
       onClick={onClick}
+      data-toggle="tooltip"
+      data-placement="top"
+      title="Löschen"
     >
       {isDeleting ? (
         <>

@@ -25,6 +25,7 @@
   "status_accept": "Accepted",
   "status_reject": "Rejected",
   "status_wait": "Wait",
+  "consent_form_headline": "Consent Form",
   "consent_accept": "Accepted",
   "consent_not_accept": "Not accepted",
   "reset_password_information": "If you have forgotten your password, enter your email address and click 'Request link'. You will recieve an email containing a link to reset your password.",
