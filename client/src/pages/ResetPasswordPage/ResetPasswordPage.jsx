@@ -2,12 +2,16 @@ import React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { useTranslation } from 'react-i18next';
+
 import { authService } from '../../services';
 
 // logo
 import { ReactComponent as Logo } from '../../hi-ffq_v9_react.svg';
 
 const ResetPasswordPage = () => {
+  const { t } = useTranslation(['globals', 'yup']);
+
   const history = useHistory();
   const { token } = useParams();
 
@@ -21,7 +25,7 @@ const ResetPasswordPage = () => {
           <div className="d-flex justify-content-center">
             <Logo className="App-logo mb-5" width="72" height="72" />
           </div>
-          <h2>Change Password</h2>
+          <h2>{t(('globals:change_password', 'Passwort Ändern'))}</h2>
           <br />
           <Formik
             initialValues={{
@@ -30,13 +34,19 @@ const ResetPasswordPage = () => {
             }}
             validationSchema={Yup.object().shape({
               password: Yup.string()
-                .required('Password is required')
-                .min(5, 'Password must be at least 5 characters'),
+                .required(t(('yup:password_required', 'Passwort eingeben')))
+                .min(5, t(('yup:password_length', 'Mindestens 5 Zeichen verwenden'))),
               confirmPassword: Yup.string()
-                .required('Please confirm your password')
+                .required(t(('yup:password_confirm', 'Passwort bestätigen')))
                 .when('password', {
                   is: (password) => !!(password && password.length > 0),
-                  then: Yup.string().oneOf([Yup.ref('password')], "Password doesn't match")
+                  then: Yup.string().oneOf(
+                    [Yup.ref('password')],
+                    t(
+                      ('yup:password_dont_match',
+                      'Diese Passwörter stimmen nicht überein. Versuchen Sie es noch einmal.')
+                    )
+                  )
                 })
             })}
             onSubmit={({ password }, { setStatus, setSubmitting }) => {
@@ -45,7 +55,7 @@ const ResetPasswordPage = () => {
                   setSubmitting(false);
                   // eslint-disable-next-line no-alert
                   window.alert(
-                    'Password changed successfully! You can now login with your new password.'
+                    t(('globals:password_change_success', ' Passwort erfolgreich geändert.'))
                   );
                   history.push(`/login`);
                 },
@@ -59,7 +69,7 @@ const ResetPasswordPage = () => {
             {({ errors, status, touched, isSubmitting }) => (
               <Form>
                 <div className="form-group">
-                  <label htmlFor="password">New Password</label>
+                  <label htmlFor="password">{t(('globals:password_new', 'Neues Passwort'))}</label>
                   <Field
                     name="password"
                     type="password"
@@ -70,7 +80,9 @@ const ResetPasswordPage = () => {
                   <ErrorMessage name="password" component="div" className="invalid-feedback" />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="confirmPassword">Confirm New Password</label>
+                  <label htmlFor="confirmPassword">
+                    {t(('globals:password_confirm', 'Passwort bestätigen'))}
+                  </label>
                   <Field
                     name="confirmPassword"
                     type="password"
@@ -86,7 +98,7 @@ const ResetPasswordPage = () => {
                 </div>
                 <div className="form-group pb-5">
                   <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-                    Change password
+                    {t(('change_password', 'Passwort ändern'))}
                   </button>
                   {isSubmitting && (
                     <img

@@ -1,4 +1,5 @@
 {
+  "cancel": "Cancel",
   "personal_info_headline": "Personal Info",
   "first_name": "First Name",
   "last_name": "Last Name",
@@ -22,5 +23,8 @@
   "status_reject": "Rejected",
   "status_wait": "Wait",
   "consent_accept": "Accepted",
-  "consent_not_accept": "Not accepted"
+  "consent_not_accept": "Not accepted",
+  "reset_password_information": "If you have forgotten your password, enter your email address and click 'Request link'. You will recieve an email containing a link to reset your password.",
+  "request_link_button": "Request link",
+  "change_password": "Change Password"
 }

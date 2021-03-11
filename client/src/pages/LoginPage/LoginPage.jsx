@@ -165,30 +165,40 @@ const LoginPage = () => {
                   email: ''
                 }}
                 validationSchema={Yup.object().shape({
-                  email: Yup.string().required('Email is required')
+                  email: Yup.string().required(t(('yup:email_required', 'Email-Adresse eingeben')))
                 })}
                 onSubmit={({ email }, { setStatus, setSubmitting }) => {
                   authService.requestPasswordReset({ email }).then(
                     () => {
                       setSubmitting(false);
                       setStatus(
-                        `You will soon recieve an email. Please check your spam folder too.`
+                        t(
+                          ('globals:email_sent',
+                          'Sie erhalten die Email in kürze. Überprüfen Sie auch Ihren Spam-Ordner.')
+                        )
                       );
                     },
                     (error) => {
                       setSubmitting(false);
                       console.log(error);
-                      setStatus('Email is incorrect');
+                      setStatus(
+                        t(
+                          ('globals:email_incorrect',
+                          'Die Email-Adresse konnte nicht gefunden werden.')
+                        )
+                      );
                     }
                   );
                 }}
               >
                 {({ errors, status, touched, isSubmitting }) => (
                   <Form>
-                    {`If you have forgotten your password, enter your email address and click 'Request
-                      link'. You will recieve an email containing a link to reset your password.`}
+                    {t(
+                      ('globals:reset_password_information',
+                      `Falls Sie Ihr Passwort vergessen habe, geben Sie Ihre Email-Adresse ein und klicken sie 'Link anfordern'. Kurz danach erhalten Sie eine Email mit einem Link um Ihr Passwort zurückzusetzen.`)
+                    )}
                     <div className="form-group mt-4">
-                      <label htmlFor="email">Email</label>
+                      <label htmlFor="email">{t(('globals:email', 'Email'))}</label>
                       <Field
                         id="email"
                         name="email"
@@ -200,7 +210,7 @@ const LoginPage = () => {
                       <ErrorMessage name="email" component="div" className="invalid-feedback" />
                     </div>
                     <button type="submit" className="btn btn-primary">
-                      Request link
+                      {t(('globals:request_link_button', 'Link anfordern'))}
                     </button>
                     {isSubmitting && (
                       <img
@@ -215,7 +225,7 @@ const LoginPage = () => {
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-dismiss="modal">
-                Close
+                {t(('globals:cancel', 'Abbrechen'))}
               </button>
             </div>
           </div>

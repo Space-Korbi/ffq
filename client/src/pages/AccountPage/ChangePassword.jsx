@@ -52,7 +52,7 @@ const ChangePassword = ({ userId }) => {
               .then(() => {
                 setStatus(
                   <div className="alert alert-success mb-5">
-                    {t(('password_change_success', 'Passwort erfolgreich geändert'))}
+                    {t(('password_change_success', 'Passwort wurde erfolgreich geändert.'))}
                   </div>
                 );
                 setSubmitting(false);
