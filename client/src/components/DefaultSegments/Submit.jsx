@@ -20,7 +20,7 @@ const Submit = ({ iterationId }) => {
     <div>
       <div className="jumbotron jumbotron-fluid text-center mt-5">
         <div className="container">
-          <h1 className="display-4">Thank you!</h1>
+          <h1 className="lead">Thank you for participating!</h1>
         </div>
 
         <button

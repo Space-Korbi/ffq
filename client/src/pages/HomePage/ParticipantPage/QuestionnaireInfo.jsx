@@ -100,7 +100,7 @@ const QuestionnaireInfo = ({
 
   return (
     <>
-      <p className="display-4 my-5">Willkommen</p>
+      <p className="h1 my-5">Willkommen</p>
       <h4 className="" style={{ whiteSpace: 'pre-wrap' }}>
         {title}
       </h4>
