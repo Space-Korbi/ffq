@@ -50,7 +50,7 @@ const AdminPage = () => {
         <div className="col mb-4">
           <div className="card h-100">
             <div className="card-body">
-              <h5 className="card-title">Nutzer Manager</h5>
+              <h5 className="card-title">User Manager</h5>
               <ClippyIcon size={48} />
               <p className="card-text my-2">Verwalte die Teilnehmer und werte ihre Antworten aus</p>
               <Link to={`${url}/participantsManager`} className="p-0 m-0 border-0 stretched-link">
