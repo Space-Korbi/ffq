@@ -1,7 +1,7 @@
 {
-  "status_accept": "Akzeptiert",
-  "status_reject": "Abgelehnt",
-  "status_wait": "Warten",
+  "accepted": "Akzeptiert",
+  "rejected": "Abgelehnt",
+  "wait": "Warten",
   "consent_accept": "Akzeptiert",
   "consent_not_accept": "Nicht Akzeptiert"
 }

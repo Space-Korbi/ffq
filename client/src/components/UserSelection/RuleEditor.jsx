@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { arrayOf, func, number, shape, string } from 'prop-types';
 
+// localization
+import { useTranslation } from 'react-i18next';
+
 // services
 import { questionnaireService } from '../../services';
 
@@ -12,12 +15,12 @@ import Spinner from '../Spinner';
 import { Info } from '../Popover';
 
 const checkResult = (result) => {
-  switch (result) {
-    case 'Accept':
+  switch (result.toLowerCase()) {
+    case 'accept':
       return 'badge badge-success';
-    case 'Reject':
+    case 'reject':
       return 'badge badge-danger';
-    case 'Wait':
+    case 'wait':
       return 'badge badge-warning';
     default:
       return 'badge badge-info';
@@ -25,12 +28,38 @@ const checkResult = (result) => {
 };
 
 const RuleCard = ({ index, rule, removeRule }) => {
+  const { t } = useTranslation(['globals']);
+
+  const translateOperator = (operator) => {
+    switch (operator.toLowerCase()) {
+      case 'or':
+        return t(('globals:or', 'Oder'));
+      case 'and':
+        return t(('globals:and', 'Und'));
+      default:
+        return '';
+    }
+  };
+  const translateDecision = (decision) => {
+    switch (decision.toLowerCase()) {
+      case 'accept':
+        return t(('globals:accept', 'Akzeptieren'));
+      case 'reject':
+        return t(('globals:reject', 'Ablehnen'));
+      case 'wait':
+        return t(('globals:wait', 'Warten'));
+      default:
+        return '';
+    }
+  };
+
   return (
     <div className="mb-3 mr-3">
       <div className="card" style={{ width: '18rem' }}>
         <div className="card-header">
           <div className="d-flex justify-content-between">
-            Rule {index + 1} <DeleteButton onClick={() => removeRule(rule)} />
+            {t(('globals:rule', 'Regel'))} {index + 1}
+            <DeleteButton onClick={() => removeRule(rule)} />
           </div>
         </div>
         <div className="card-body">
@@ -47,13 +76,13 @@ const RuleCard = ({ index, rule, removeRule }) => {
               </ul>
             </div>
             <div className="col-3 align-self-center d-flex justify-content-start">
-              <span className="badge badge-info">{rule.operator}</span>
+              <span className="badge badge-info">{translateOperator(rule.operator)}</span>
             </div>
           </div>
         </div>
         <div className="card-footer">
-          <span>Decision: </span>
-          <span className={checkResult(rule.decision)}>{rule.decision}</span>
+          <span className="mr-1">{t(('globals:decision', 'Entscheidung'))}</span>
+          <span className={checkResult(rule.decision)}>{translateDecision(rule.decision)}</span>
         </div>
       </div>
     </div>
@@ -78,6 +107,8 @@ const RuleEditor = ({
   removeRule,
   questionnaireId
 }) => {
+  const { t } = useTranslation(['globals']);
+
   const [status, setStatus] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [didChange, setDidChange] = useState(false);
@@ -111,7 +142,9 @@ const RuleEditor = ({
                   .updateQuestionnaire(questionnaireId, { screeningRules })
                   .then(() => {
                     setStatus(
-                      <div className="alert alert alert-success">Changes saved successfully.</div>
+                      <div className="alert alert alert-success">
+                        {t(('globals:changes_save_success', 'Änderungen erfolgreich gespeichert.'))}
+                      </div>
                     );
                     setSubmitting(false);
                     setDidChange(false);
@@ -133,11 +166,11 @@ const RuleEditor = ({
             >
               {submitting ? (
                 <>
-                  Saving...
+                  {t(('globals:saving', 'Speichern...'))}
                   <Spinner className="spinner-border spinner-border-sm ml-1" />
                 </>
               ) : (
-                'Save Changes'
+                t(('globals:save_changes', 'Änderungen speichern'))
               )}
             </button>
           </div>
@@ -157,10 +190,13 @@ const RuleEditor = ({
         </div>
         <div className="col">
           <h6 className="d-inline-flex mb-0">
-            Rules
+            {t(('globals:rules', 'Regeln'))}
             <sup className="text-info ml-1">
               <Info
-                text="The decision of the first matching rule will be applied. If no rule is met, the user will be accepted."
+                text={t(
+                  ('globals:rules_info',
+                  'Die Entscheidung der ersten Regel, dessen Kriterien erfüllt werden, wird angewandt. Wenn keine Regel angewandt werden kann, wird der Teilnehmer akzeptiert.')
+                )}
                 size={20}
               />
             </sup>

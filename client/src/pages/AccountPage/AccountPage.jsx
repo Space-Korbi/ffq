@@ -211,19 +211,19 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
                   case 'Accept':
                     return (
                       <span className="badge badge-success mx-1">
-                        {t('globals:status_accept', 'Akzeptiert')}
+                        {t('globals:accepted', 'Akzeptiert')}
                       </span>
                     );
                   case 'Reject':
                     return (
                       <span className="badge badge-danger mx-1">
-                        {t('globals:status_reject', 'Abgelehnt')}
+                        {t('globals:rejected', 'Abgelehnt')}
                       </span>
                     );
                   default:
                     return (
                       <span className="badge badge-warning mx-1">
-                        {t('globals:status_wait', 'Warten')}
+                        {t('globals:wait', 'Warten')}
                       </span>
                     );
                 }

@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { func, string, arrayOf } from 'prop-types';
 
+// localization
+import { useTranslation } from 'react-i18next';
+
 // icons
 // eslint-disable-next-line no-unused-vars
 import { InfoIcon, PlusIcon } from '@primer/octicons-react';
@@ -13,6 +16,8 @@ import RemovableListItem from '../List';
 import Spinner from '../Spinner';
 
 const SelectionCriteriaInput = ({ onClick }) => {
+  const { t } = useTranslation(['globals']);
+
   const [newCriteriaInput, setNewCriteriaInput] = useState('');
 
   return (
@@ -23,7 +28,7 @@ const SelectionCriteriaInput = ({ onClick }) => {
         id="newCriteria"
         className="form-control"
         value={newCriteriaInput}
-        placeholder="Enter new criteria"
+        placeholder={t(('globals:enter_new_criteria', 'Neues Kriterium eingeben'))}
         onChange={(e) => setNewCriteriaInput(e.target.value)}
       />
       <div className="input-group-append">
@@ -74,6 +79,8 @@ const SelectionCriteria = ({
   addSelectionCriteria,
   removeSelectionCriteria
 }) => {
+  const { t } = useTranslation(['globals']);
+
   const [status, setStatus] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [didChange, setDidChange] = useState(false);
@@ -92,7 +99,9 @@ const SelectionCriteria = ({
                   .updateQuestionnaire(questionnaireId, { selectionCriteria })
                   .then(() => {
                     setStatus(
-                      <div className="alert alert alert-success">Changes saved successfully.</div>
+                      <div className="alert alert alert-success">
+                        {t(('globals:changes_save_success', 'Änderungen erfolgreich gespeichert.'))}
+                      </div>
                     );
                     setSubmitting(false);
                     setDidChange(false);
@@ -114,11 +123,11 @@ const SelectionCriteria = ({
             >
               {submitting ? (
                 <>
-                  Saving...
+                  {t(('globals:saving', 'Speichern...'))}
                   <Spinner className="spinner-border spinner-border-sm ml-1" />
                 </>
               ) : (
-                'Save Changes'
+                t(('globals:save_changes', 'Änderungen speichern'))
               )}
             </button>
           </div>
