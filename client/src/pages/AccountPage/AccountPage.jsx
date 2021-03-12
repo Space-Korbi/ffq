@@ -2,6 +2,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import moment from 'moment';
 
@@ -15,6 +16,8 @@ import ChangePassword from './ChangePassword';
 import { ConsentModal } from '../../components/Modals';
 
 const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
+  const { t } = useTranslation(['accountPage', 'globals']);
+
   const history = useHistory();
   const [{ update, isUpdatingUser, errorUpdatingUser }, setUpdate] = useUpdateUser(user.id);
 
@@ -57,20 +60,26 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
       if (
         completedIterations.some((completedIteration) => iteration.id === completedIteration.id)
       ) {
-        return <span className="badge badge-success mx-1">Completed</span>;
+        return (
+          <span className="badge badge-success mx-1">
+            {t('iteration_completed', 'Abgeschlossen')}
+          </span>
+        );
       }
     }
     if (isIncompleteIteration(iteration)) {
       return (
         <div>
-          <span className="badge badge-warning mx-1">Not completed</span>
+          <span className="badge badge-warning mx-1">
+            {t('iteration_not_completed', 'Nicht abgeschlossen')}
+          </span>
           {moment(now).isBetween(iteration.start, iteration.end, 'day', '[]') && (
             <button
               type="button"
               className="btn btn-sm btn-link"
               onClick={() => history.push(`questionnairePresenter/iteration/${iteration.id}`)}
             >
-              Continue now
+              {t('iteration_continue', 'Fortsetzen')}
             </button>
           )}
         </div>
@@ -78,14 +87,16 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
     }
     return (
       <div>
-        <span className="badge badge-danger mx-1">Not started</span>
+        <span className="badge badge-danger mx-1">
+          {t('iteration_not_started', 'Nicht gestartet')}
+        </span>
         {moment(now).isBetween(iteration.start, iteration.end, 'day', '[]') && (
           <button
             type="button"
             className="btn btn-sm btn-link"
             onClick={() => startQuestionnaire(user.id)}
           >
-            Start now
+            {t('iteration_not_started', 'Jetzt starten')}
           </button>
         )}
       </div>
@@ -104,26 +115,28 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
           <ChangePassword userId={user.id} />
           {!isAdmin && (
             <div>
-              <p className="lead m-0 mb-1 mt-5">Questionnaire Iterations</p>
+              <p className="lead m-0 mb-1 mt-5">{t('iteration_headline', 'Wiederholungen')}</p>
               <hr className="m-0 mb-3" />
               <div className="row no-gutters overflow-auto flex-row flex-nowrap">
                 <div className="col">
                   <div className="table m-0">
                     <table className="table  m-0 border-top-0">
                       <caption className="p-0 pt-2 ">
-                        The questionnaire can be accessed in between each interval, start and end
-                        date included.
+                        {t(
+                          'iteration_caption',
+                          'Der Fragebogen kann nur zwischen Startdatum und Enddatum jeder Wiederholung ausgefüllt werden.'
+                        )}
                       </caption>
                       <thead>
                         <tr>
                           <th scope="col" className="pt-0 pl-0">
-                            Start
+                            {t('iteration_table_start', 'Start')}
                           </th>
                           <th scope="col" className="pt-0 pl-0">
-                            End
+                            {t('iteration_table_end', 'Ende')}
                           </th>
                           <th scope="col" className="pt-0 pl-0">
-                            Status
+                            {t('iteration_table_status', 'Status')}
                           </th>
                         </tr>
                       </thead>
@@ -131,6 +144,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
                         {iterations.length ? (
                           iterations.map((iteration) => {
                             const completedIterations = getCompletedIterations();
+                            // TODO: change startLabel cause it is not localizable
                             return (
                               <tr key={iteration.id}>
                                 <td className="align-middle pl-0">{iteration.startLabel}</td>
@@ -145,7 +159,9 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
                           <tr>
                             <td colSpan="3">
                               <div className="d-flex flex-column text-center">
-                                <span className="badge badge-warning">No Iterations</span>
+                                <span className="badge badge-warning">
+                                  {t('iteration_table_empty', 'Keine Wiederholungen')}
+                                </span>
                               </div>
                             </td>
                           </tr>
@@ -157,7 +173,9 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
               </div>
               <div className="mt-5">
                 <div className="d-flex flex-row align-items-end justify-content-between">
-                  <p className="align-bottom m-0 mb-1 lead">Consent Form</p>
+                  <p className="align-bottom m-0 mb-1 lead">
+                    {t('consent_form_headline', 'Einverständniserklärung')}
+                  </p>
                   {consentScript && (
                     <button
                       type="button"
@@ -165,16 +183,20 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
                       data-toggle="modal"
                       data-target="#staticBackdrop"
                     >
-                      View Form
+                      {t('view_consent_modal_button', 'Ansehen')}
                     </button>
                   )}
                 </div>
               </div>
               <hr className="m-0 mb-3" />
               {hasAcceptedConsentForm ? (
-                <span className="badge badge-success mx-1">Accepted</span>
+                <span className="badge badge-success mx-1">
+                  {t('globals:consent_accept', 'Akzeptiert')}
+                </span>
               ) : (
-                <span className="badge badge-danger mx-1">Not accepted</span>
+                <span className="badge badge-danger mx-1">
+                  {t('globals:consent_not_accept', 'Nicht akzeptiert')}
+                </span>
               )}
               <ConsentModal
                 consentScript={consentScript}
@@ -182,17 +204,28 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
                   setUpdate({ hasAcceptedConsentForm: true });
                 }}
               />
-
-              <p className="lead m-0 mb-1 mt-5">Screening Status</p>
+              <p className="lead m-0 mb-1 mt-5"> {t('screening_headline', 'Teilnahmestatus')}</p>
               <hr className="m-0 mb-3" />
               {(() => {
                 switch (screeningStatus) {
                   case 'Accept':
-                    return <span className="badge badge-success mx-1">Accepted</span>;
+                    return (
+                      <span className="badge badge-success mx-1">
+                        {t('globals:accepted', 'Akzeptiert')}
+                      </span>
+                    );
                   case 'Reject':
-                    return <span className="badge badge-danger mx-1">Rejected</span>;
+                    return (
+                      <span className="badge badge-danger mx-1">
+                        {t('globals:rejected', 'Abgelehnt')}
+                      </span>
+                    );
                   default:
-                    return <span className="badge badge-warning mx-1">Wait</span>;
+                    return (
+                      <span className="badge badge-warning mx-1">
+                        {t('globals:wait', 'Warten')}
+                      </span>
+                    );
                 }
               })()}
             </div>

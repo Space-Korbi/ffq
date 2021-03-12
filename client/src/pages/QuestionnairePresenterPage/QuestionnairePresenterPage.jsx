@@ -4,6 +4,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { bool, string } from 'prop-types';
 import { useParams, useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 // services
 import { userService, questionnaireService, authService } from '../../services';
@@ -26,6 +27,8 @@ const QuestionnairePresenter = ({
   isAdmin,
   iterationId
 }) => {
+  const { t } = useTranslation(['globals']);
+
   const history = useHistory();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
@@ -155,7 +158,7 @@ const QuestionnairePresenter = ({
                   setCurrentIndex(prevQuestionIndex);
                 }}
               >
-                Back
+                {t(('globals:back', 'Zurück'))}
               </button>
               <button
                 type="button"
@@ -170,7 +173,7 @@ const QuestionnairePresenter = ({
                     });
                 }}
               >
-                Reset answers
+                {t(('globals:reset_answers', 'Antworten zurücksetzen'))}
               </button>
               <button
                 type="button"
@@ -179,7 +182,7 @@ const QuestionnairePresenter = ({
                   history.push(`/users/${userId}`);
                 }}
               >
-                Exit
+                {t(('globals:exit', 'Exit'))}
               </button>
             </div>
             <div className="row no-gutters flex-row w-100">
@@ -199,7 +202,7 @@ const QuestionnairePresenter = ({
                   setCurrentIndex(prevQuestionIndex);
                 }}
               >
-                Back
+                {t(('globals:back', 'Zurück'))}
               </button>
               <div className="pl-2" />
               <ProgressIndicator currentPosition={currentIndex} length={questions.length} />
@@ -211,7 +214,7 @@ const QuestionnairePresenter = ({
                 data-toggle="modal"
                 data-target="#staticBackdrop"
               >
-                Pause
+                {t(('globals:pause', 'Pause'))}
               </button>
             </div>
           </div>
@@ -288,6 +291,8 @@ const QuestionnairePresenter = ({
 };
 
 const QuestionnairePresenterPage = ({ isAdmin }) => {
+  const { t } = useTranslation(['globals']);
+
   const { userId, iterationId } = useParams();
 
   const [imageURLs, setImageURLs] = useState([
@@ -336,7 +341,10 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
     <div>
       {(isErrorUsers || isErrorQuestions) && (
         <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
-          Something went wrong...
+          {t(
+            ('globals:error',
+            'Etwas ist schiefgelaufen. Laden Sie die Seite erneut oder versuchen Sie es später noch einmal.')
+          )}
         </div>
       )}
       {(isLoadingUsers || isLoadingQuestions) && (
@@ -358,7 +366,7 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
       )}
       {!fetchedQuestions.length && (
         <div className="alert alert-warning d-flex justify-content-center mt-5" role="alert">
-          The questionnaire has no questions.
+          {t(('globals:questionnaire_empty', 'Der Fragebogen hat keine Fragen.'))}
         </div>
       )}
     </div>

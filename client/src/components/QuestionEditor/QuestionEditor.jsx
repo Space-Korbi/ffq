@@ -5,6 +5,9 @@
 import React, { useState, useReducer } from 'react';
 import { string, shape, arrayOf, bool, exact, oneOfType } from 'prop-types';
 
+// localization
+import { useTranslation } from 'react-i18next';
+
 import AnswerType from '../../types';
 
 import JumbotronInputs from './JumbotronInputs';
@@ -19,6 +22,8 @@ import { updateQuestion, uploadImageToCloudinary } from '../../api';
 import AnswerEditor from '../AnswerEditor/AnswerEditor';
 
 const QuestionEditor = ({ question, onExit, modalTable }) => {
+  const { t } = useTranslation(['globals']);
+
   const [title, setTitle] = useState(question.title);
   const [subtitle1, setSubtitle1] = useState(question.subtitle1);
   const [subtitle2, setSubtitle2] = useState(question.subtitle2);
@@ -90,11 +95,10 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
                   >
                     {saving ? (
                       <>
-                        Saving...
                         <Spinner className="spinner-border spinner-border-sm ml-1" />
                       </>
                     ) : (
-                      'Save and Exit'
+                      t('globals:save_and_exit', 'Speichern und schließen')
                     )}
                   </button>
                   <button
@@ -103,7 +107,7 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
                     disabled={saving}
                     onClick={() => onExit(question)}
                   >
-                    Exit
+                    {('globals:exit', 'Schließen')}
                   </button>
                   {/* TODO: link to or create next question" 
                       <button

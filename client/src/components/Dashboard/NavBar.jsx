@@ -1,6 +1,7 @@
 import React from 'react';
 import { bool } from 'prop-types';
 import { useRouteMatch, NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 // services
 import { authService } from '../../services';
@@ -8,39 +9,41 @@ import { authService } from '../../services';
 // logo
 import { ReactComponent as Logo } from '../../hi-ffq_v9_react.svg';
 
-const adminLinks = [
-  {
-    name: 'FFQ Editor',
-    to: '/questionnaireEditor',
-    className: 'nav-link',
-    activeClassName: 'nav-link active'
-  },
-  {
-    name: 'FFQ Preview',
-    to: '/questionnairePresenter/iteration/0',
-    className: 'nav-link',
-    activeClassName: 'nav-link active'
-  },
-  {
-    name: 'User Manager',
-    to: '/participantsManager',
-    className: 'nav-link',
-    activeClassName: 'nav-link active'
-  },
-  {
-    name: 'Account',
-    to: '/account',
-    className: 'nav-link',
-    activeClassName: 'nav-link active'
-  }
-];
-
 function NavBar({ isAdmin }) {
+  const { t } = useTranslation(['Navbar']);
+
   const { url, params } = useRouteMatch();
+
+  const adminLinks = [
+    {
+      name: 'FFQ Editor',
+      to: '/questionnaireEditor',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    },
+    {
+      name: t('navbar:ffq_preview', 'FFQ Vorschau'),
+      to: '/questionnairePresenter/iteration/0',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    },
+    {
+      name: 'User Manager',
+      to: '/participantsManager',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    },
+    {
+      name: 'Account',
+      to: '/account',
+      className: 'nav-link',
+      activeClassName: 'nav-link active'
+    }
+  ];
 
   const userLinks = [
     {
-      name: 'Home',
+      name: 'Start',
       to: '',
       className: 'nav-link',
       activeClassName: 'nav-link active'

@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { string, arrayOf, func } from 'prop-types';
 import $ from 'jquery';
+import { useTranslation } from 'react-i18next';
 
 const Carousel = ({ imageURLs, onSubmitAnswer }) => {
+  const { t } = useTranslation(['globals']);
+
   const [currentIndex, setCurrentIndex] = useState(1);
   const [transitioning, setTransitioning] = useState(false);
 
@@ -39,7 +42,7 @@ const Carousel = ({ imageURLs, onSubmitAnswer }) => {
                 setCurrentIndex((prevState) => prevState - 1);
               }}
             >
-              Back
+              {t(('globals:back', 'Zurück'))}
             </button>
             <div className="pl-2" />
             <h5 className="text-dark">{`Teil ${currentIndex} von ${imageURLs.length}`}</h5>
@@ -57,7 +60,9 @@ const Carousel = ({ imageURLs, onSubmitAnswer }) => {
                 }
               }}
             >
-              {currentIndex >= imageURLs.length ? 'To the questions' : 'Continue'}
+              {currentIndex >= imageURLs.length
+                ? t(('globals:to_the_questions', 'Zu den Fragen'))
+                : t(('globals:continue', 'Weiter'))}
             </button>
           </div>
         </div>

@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { arrayOf, func, string, bool } from 'prop-types';
 import { nanoid } from 'nanoid';
+
+// localization
+import { useTranslation } from 'react-i18next';
+
+// components
 import RemovableListItem from '../List';
+
+// helpers
 import { addValidString } from '../../helpers';
 
 const RuleCriteriaSelect = ({ criteria, onChange }) => {
@@ -29,11 +36,13 @@ RuleCriteriaSelect.propTypes = {
 };
 
 const NewRuleCard = ({ criteria, removeCriteriaFromCard, onSubmit }) => {
+  const { t } = useTranslation(['globals']);
+
   return (
     <>
       <form id="newRuleForm" onSubmit={(e) => onSubmit(e)}>
         <div className="card">
-          <div className="card-header">New Rule</div>
+          <div className="card-header">{t(('globals:new_rule', 'Neue Regel'))}</div>
           <div className="card-body">
             <div className="row d-flex align-self-center justify-content-center">
               <div className="col flex-grow-1 mb-2">
@@ -49,7 +58,7 @@ const NewRuleCard = ({ criteria, removeCriteriaFromCard, onSubmit }) => {
                     ))
                   ) : (
                     <div className="alert alert-light m-0" role="alert">
-                      No criteria selected
+                      {t(('globals:no_criteria_selected', 'Kein Kriterium ausgewählt.'))}
                     </div>
                   )}
                 </ul>
@@ -58,11 +67,11 @@ const NewRuleCard = ({ criteria, removeCriteriaFromCard, onSubmit }) => {
                 <div className="btn-group btn-group-toggle" data-toggle="buttons">
                   <label className="btn btn-outline-primary active">
                     <input type="radio" name="option" id="and" autoComplete="off" defaultChecked />
-                    And
+                    {t(('globals:and', 'Und'))}
                   </label>
                   <label className="btn btn-outline-primary">
                     <input type="radio" name="option" id="or" autoComplete="off" />
-                    Or
+                    {t(('globals:or', 'Oder'))}
                   </label>
                 </div>
               </div>
@@ -72,13 +81,13 @@ const NewRuleCard = ({ criteria, removeCriteriaFromCard, onSubmit }) => {
             <div className="input-group flex-nowrap">
               <div className="input-group-prepend">
                 <label className="input-group-text" htmlFor="decisionSelect">
-                  Decision:
+                  {t(('globals:decision', 'Entscheidung'))}{' '}
                 </label>
               </div>
               <select className="custom-select" id="decisionSelect">
-                <option>Accept</option>
-                <option>Reject</option>
-                <option>Wait</option>
+                <option value="Accept">{t(('globals:accept', 'Akzeptieren'))}</option>
+                <option value="Reject">{t(('globals:reject', 'Ablehnen'))}</option>
+                <option value="Wait">{t(('globals:wait', 'Warten'))}</option>
               </select>
             </div>
           </div>
@@ -95,9 +104,11 @@ NewRuleCard.propTypes = {
 };
 
 const AddRuleButton = ({ disabled }) => {
+  const { t } = useTranslation(['globals']);
+
   return (
     <button form="newRuleForm" className="btn btn-primary" type="submit" disabled={disabled}>
-      Add Rule
+      {t(('globals:add_rule', 'Regel hinzufügen'))}
     </button>
   );
 };
@@ -108,6 +119,8 @@ AddRuleButton.propTypes = {
 };
 
 const AddRule = ({ selectionCriteria, saveRule }) => {
+  const { t } = useTranslation(['globals']);
+
   const [canAddRule, setCanAddRule] = useState(false);
   const [selectedCriteria, setSelectedCriteria] = useState([]);
 
@@ -156,7 +169,7 @@ const AddRule = ({ selectionCriteria, saveRule }) => {
   return (
     <>
       <div className="col p-0 mb-3">
-        <h6>Selection Criteria</h6>
+        <h6>{t(('globals:selection_criteria', 'Auswahlkriterien'))}</h6>
         <RuleCriteriaSelect criteria={selectionCriteria} onChange={addCriteriaToCard} />
         <NewRuleCard
           criteria={selectedCriteria}

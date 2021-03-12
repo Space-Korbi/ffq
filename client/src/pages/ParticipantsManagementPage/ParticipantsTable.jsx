@@ -6,6 +6,9 @@ import React, { useState } from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import ToolkitProvider from 'react-bootstrap-table2-toolkit';
 
+// localization
+import { useTranslation } from 'react-i18next';
+
 // services
 import { userService } from '../../services';
 
@@ -13,19 +16,23 @@ import { userService } from '../../services';
 import { dateHelper } from '../../helpers';
 
 const ExportCSVButton = (props) => {
+  const { t } = useTranslation(['globals']);
+
   const handleClick = () => {
     props.onExport();
   };
   return (
     <div>
       <button type="button" className="btn btn-outline-success" onClick={handleClick}>
-        Export to CSV
+        {t(('globals:export_csv', 'Als CSV exportieren'))}
       </button>
     </div>
   );
 };
 
 const ScreeningStatusCell = ({ content, userId }) => {
+  const { t } = useTranslation(['globals']);
+
   const [status, setStatus] = useState(content);
 
   const handleStatusSelection = async (selection) => {
@@ -36,8 +43,12 @@ const ScreeningStatusCell = ({ content, userId }) => {
 
   return (
     <>
-      {status === 'Accept' && <span className="badge badge-success">Accepted</span>}
-      {status === 'Reject' && <span className="badge badge-danger">Rejected</span>}
+      {status === 'Accept' && (
+        <span className="badge badge-success"> {t('globals:accepted', 'Akzeptiert')}</span>
+      )}
+      {status === 'Reject' && (
+        <span className="badge badge-danger">{t('globals:rejected', 'Abgelehnt')}</span>
+      )}
       {status === 'Wait' && (
         <>
           <button
@@ -48,7 +59,7 @@ const ScreeningStatusCell = ({ content, userId }) => {
             aria-haspopup="true"
             aria-expanded="false"
           >
-            Waiting
+            {t('globals:waiting', 'Wartet')}
           </button>
           <div className="dropdown-menu text-center" aria-labelledby="dropdownMenuButton">
             <button
@@ -56,7 +67,7 @@ const ScreeningStatusCell = ({ content, userId }) => {
               className="dropdown-item"
               onClick={() => handleStatusSelection('Accept')}
             >
-              <span className="badge badge-success">Accept</span>
+              <span className="badge badge-success">{t('globals:accept', 'Akzeptieren')}</span>
             </button>
             <div className="dropdown-divider" />
             <button
@@ -64,7 +75,7 @@ const ScreeningStatusCell = ({ content, userId }) => {
               className="dropdown-item"
               onClick={() => handleStatusSelection('Reject')}
             >
-              <span className="badge badge-danger">Reject</span>
+              <span className="badge badge-danger">{t('globals:reject', 'Ablehnen')}</span>
             </button>
           </div>
         </>
@@ -74,27 +85,33 @@ const ScreeningStatusCell = ({ content, userId }) => {
 };
 
 const ParticipantsTable = ({ fileName, data, columns, iterationSelector }) => {
+  const { t } = useTranslation(['globals']);
+
   const staticColumns = [
     {
       dataField: 'email',
-      text: 'Email'
+      text: t('globals:email', 'Email')
     },
     {
       dataField: 'firstName',
-      text: 'First Name'
+      text: t('globals:first_name', 'Vorname')
     },
     {
       dataField: 'lastName',
-      text: 'Last Name'
+      text: t('globals:last_name', 'Nachname')
     },
     {
       dataField: 'hasAcceptedConsentForm',
-      text: 'Consent Form',
+      text: t('consent_form_headline', 'Einverständniserklärung'),
       formatter: (cellContent) => {
         if (cellContent) {
-          return <span className="badge badge-success">Accepted</span>;
+          return <span className="badge badge-success">{t('globals:accepted', 'Akzeptiert')}</span>;
         }
-        return <span className="badge badge-danger">Not yet accepted</span>;
+        return (
+          <span className="badge badge-danger">
+            {t('globals:not_yet_accept', 'Noch nicht akzeptiert')}
+          </span>
+        );
       }
     },
     {
@@ -106,7 +123,7 @@ const ParticipantsTable = ({ fileName, data, columns, iterationSelector }) => {
     },
     {
       dataField: 'screeningData',
-      text: 'Screening Data',
+      text: t('globals:screening_data', ''),
       formatter: (cellContent) => {
         const formatted = cellContent.map((content) => {
           return <li key={content}>{content}</li>;
@@ -120,21 +137,21 @@ const ParticipantsTable = ({ fileName, data, columns, iterationSelector }) => {
     },
     {
       dataField: 'iterations[0].startedAt',
-      text: 'Started',
+      text: t('globals:started', 'Gestarted'),
       formatter: (cellContent) => {
         return dateHelper.applyDateStyle(cellContent);
       }
     },
     {
       dataField: 'iterations[0].finishedAt',
-      text: 'Finished',
+      text: t('globals:finished', 'Beendet'),
       formatter: (cellContent) => {
         return dateHelper.applyDateStyle(cellContent);
       }
     },
     {
       dataField: 'iterations[0].pausedAt',
-      text: 'Paused at',
+      text: t('globals:paused_at', 'Pausiert bei'),
       formatter: (cellContent) => {
         if (!cellContent) {
           return '';

@@ -5,12 +5,17 @@ import Gallery from 'react-grid-gallery';
 import $ from 'jquery';
 import { nanoid } from 'nanoid';
 
+// localization
+import { useTranslation } from 'react-i18next';
+
 // components
 import { ArrowRightIcon, ArrowLeftIcon } from '@primer/octicons-react';
 
 // icons
 
 function QuestionnaireImages({ prevUploads, dispatch }) {
+  const { t } = useTranslation(['globals']);
+
   const [selectedImages, setSelectedImages] = useState([]);
   const [currentIndex, setCurrentIndex] = useState();
   const [currentSrc, setCurrentSrc] = useState('...');
@@ -134,7 +139,7 @@ function QuestionnaireImages({ prevUploads, dispatch }) {
           <div className="input-group" style={{ maxWidth: '500px' }}>
             <div className="input-group-prepend">
               <span className="input-group-text" id="inputGroupFileAddon01">
-                Upload image
+                {t(('globals:upload_image', 'Bild hochladen'))}
               </span>
             </div>
             <div className="custom-file">
@@ -156,7 +161,7 @@ function QuestionnaireImages({ prevUploads, dispatch }) {
                 }}
               />
               <label className="custom-file-label" htmlFor="inputGroupFile01">
-                Choose file
+                {t(('globals:choose_image', 'Bild auswählen'))}
               </label>
             </div>
           </div>
@@ -178,7 +183,7 @@ function QuestionnaireImages({ prevUploads, dispatch }) {
               disabled={selectedImages.length !== 1}
               style={{ pointerEvents: 'none' }}
             >
-              Move image
+              {t(('globals:move_image', 'Bild verschieben'))}
             </button>
             <button
               type="button"
@@ -197,7 +202,7 @@ function QuestionnaireImages({ prevUploads, dispatch }) {
             onClick={() => deleteSelected()}
             disabled={!selectedImages.length}
           >
-            Delete selected
+            {t(('globals:delete_selected', 'Auswahl löschen'))}
           </button>
         </div>
       </div>
@@ -226,7 +231,7 @@ function QuestionnaireImages({ prevUploads, dispatch }) {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="exampleModalLabel">
-                Image
+                {t(('globals:preview', 'Vorschau'))}
               </h5>
               <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -237,10 +242,10 @@ function QuestionnaireImages({ prevUploads, dispatch }) {
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-dismiss="modal">
-                Close
+                {t(('globals:close', 'Schließen'))}
               </button>
               <button type="button" className="btn btn-danger" onClick={() => onClickDelete()}>
-                Delete image
+                {t(('globals:delete_image', 'Bild löschen'))}
               </button>
             </div>
           </div>

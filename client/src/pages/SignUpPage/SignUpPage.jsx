@@ -2,12 +2,16 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { useTranslation } from 'react-i18next';
+
 import { authService } from '../../services';
 
 // logo
 import { ReactComponent as Logo } from '../../hi-ffq_v9_react.svg';
 
 const SignUpPage = () => {
+  const { t } = useTranslation(['globals', 'yup']);
+
   const history = useHistory();
 
   return (
@@ -20,7 +24,7 @@ const SignUpPage = () => {
           <div className="d-flex justify-content-center">
             <Logo className="App-logo mb-5" width="72" height="72" />
           </div>
-          <h2>Sign Up</h2>
+          <h2>{t(('globals:sign_up_headline', 'Registrierung'))}</h2>
           <br />
           <Formik
             initialValues={{
@@ -31,17 +35,23 @@ const SignUpPage = () => {
               confirmPassword: ''
             }}
             validationSchema={Yup.object().shape({
-              firstName: Yup.string().required('First name is required'),
-              lastName: Yup.string().required('Last name is required'),
-              email: Yup.string().required('Email is required'),
+              firstName: Yup.string().required(t(('yup:first_name_required', 'Vornamen eingeben'))),
+              lastName: Yup.string().required(t(('yup:last_name_required', 'Nachnamen eingeben'))),
+              email: Yup.string().required(t(('yup:email_required', 'Email-Adresse eingeben'))),
               password: Yup.string()
-                .required('Password is required')
-                .min(5, 'Password must be at least 5 characters'),
+                .required(t(('yup:password_required', 'Passwort eingeben')))
+                .min(5, t(('yup:password_length', 'Mindestens 5 Zeichen verwenden'))),
               confirmPassword: Yup.string()
-                .required('Please confirm your password')
+                .required(t(('yup:password_confirm', 'Passwort bestätigen')))
                 .when('password', {
                   is: (password) => !!(password && password.length > 0),
-                  then: Yup.string().oneOf([Yup.ref('password')], "Password doesn't match")
+                  then: Yup.string().oneOf(
+                    [Yup.ref('password')],
+                    t(
+                      ('yup:password_dont_match',
+                      'Diese Passwörter stimmen nicht überein. Versuchen Sie es noch einmal.')
+                    )
+                  )
                 })
             })}
             onSubmit={({ firstName, lastName, email, password }, { setStatus, setSubmitting }) => {
@@ -50,7 +60,9 @@ const SignUpPage = () => {
                   setSubmitting(false);
                   if (response.status === 200) {
                     // eslint-disable-next-line no-alert
-                    window.alert('Sign up successful!');
+                    window.alert(
+                      t(('globals:sign_up_success', 'Registrierung erfolgreich abgeschlossen.'))
+                    );
                     history.push(`/login`);
                   }
                 },
@@ -72,7 +84,7 @@ const SignUpPage = () => {
             {({ errors, status, touched, isSubmitting }) => (
               <Form>
                 <div className="form-group">
-                  <label htmlFor="firstName">First Name</label>
+                  <label htmlFor="firstName">{t(('globals:first_name', 'Vorname'))}</label>
                   <Field
                     id="firstName"
                     name="firstName"
@@ -84,7 +96,7 @@ const SignUpPage = () => {
                   <ErrorMessage name="firstName" component="div" className="invalid-feedback" />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="lastName">Last Name</label>
+                  <label htmlFor="lastName">{t(('globals:last_name', 'Nachname'))}</label>
                   <Field
                     id="lastName"
                     name="lastName"
@@ -96,7 +108,7 @@ const SignUpPage = () => {
                   <ErrorMessage name="lastName" component="div" className="invalid-feedback" />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="email">Email</label>
+                  <label htmlFor="email">{t(('globals:email', 'Email'))}</label>
                   <Field
                     id="email"
                     name="email"
@@ -106,7 +118,7 @@ const SignUpPage = () => {
                   <ErrorMessage name="email" component="div" className="invalid-feedback" />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="password">Password</label>
+                  <label htmlFor="password">{t(('globals:password', 'Passwort'))}</label>
                   <Field
                     name="password"
                     type="password"
@@ -117,7 +129,9 @@ const SignUpPage = () => {
                   <ErrorMessage name="password" component="div" className="invalid-feedback" />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="confirmPassword">Confirm Password</label>
+                  <label htmlFor="confirmPassword">
+                    {t(('yup:password_confirm', 'Passwort bestätigen'))}
+                  </label>
                   <Field
                     name="confirmPassword"
                     type="password"
@@ -133,7 +147,7 @@ const SignUpPage = () => {
                 </div>
                 <div className="form-group pb-5">
                   <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-                    Sign Up
+                    {t(('globals:sign_up_button', 'Registrieren'))}
                   </button>
                   <button
                     type="button"

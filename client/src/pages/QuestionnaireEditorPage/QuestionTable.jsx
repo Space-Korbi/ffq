@@ -4,6 +4,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import BootstrapTable from 'react-bootstrap-table-next';
 
+// localization
+import { useTranslation } from 'react-i18next';
+
 // services
 import { questionnaireService } from '../../services';
 
@@ -17,6 +20,8 @@ const QuestionTable = ({
   questionnaire,
   questionsRef
 }) => {
+  const { t } = useTranslation(['globals']);
+
   const handleMoveQuestionFromTo = async (question, fromIndex, toIndex) => {
     if (toIndex >= 0 && toIndex < questionsRef.current.length) {
       await questionnaireService.moveQuestion(questionnaire._id, question._id, toIndex).then(() => {
@@ -97,6 +102,7 @@ const QuestionTable = ({
         onClick={() => {
           handleCreateQuestionAt();
         }}
+        tooltip="Frage hinzufügen"
       />
     );
   };
@@ -111,7 +117,6 @@ const QuestionTable = ({
     },
     {
       dataField: 'edit',
-      text: 'Edit',
       editable: false,
       align: 'center',
       formatter: editButton,
@@ -119,26 +124,25 @@ const QuestionTable = ({
     },
     {
       dataField: 'move',
-      text: 'Move',
       editable: false,
       align: 'center',
       style: { width: '12px' },
       formatter: moveButtons
     },
     {
-      text: 'Title',
+      text: t(('editor:title', 'Titel')),
       dataField: 'question.title'
     },
     {
-      text: 'Subtitle1',
+      text: t(('editor:subtitle1', 'Untertitel1')),
       dataField: 'question.subtitle1'
     },
     {
-      text: 'Subtitle2',
+      text: t(('editor:subtitle2', 'Untertitel2')),
       dataField: 'question.subtitle2'
     },
     {
-      text: 'Help',
+      text: t(('editor:help', 'Hilfe')),
       dataField: 'question.help'
     },
 

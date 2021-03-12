@@ -1,12 +1,17 @@
 import React from 'react';
 import { func, string } from 'prop-types';
 
+// localization
+import { useTranslation } from 'react-i18next';
+
 const HelpTextInput = ({ help, onChange }) => {
+  const { t } = useTranslation(['globals']);
+
   return (
     <div className="input-group my-2">
       <div className="input-group-prepend">
         <span className="input-group-text" id="help-text-input">
-          Help
+          {t(('globals:help', 'Hilfe'))}
         </span>
       </div>
       <input

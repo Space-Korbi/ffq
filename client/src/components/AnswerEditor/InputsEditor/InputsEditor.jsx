@@ -2,11 +2,16 @@ import React from 'react';
 import { string, func, shape, arrayOf } from 'prop-types';
 import { nanoid } from 'nanoid';
 
+// localization
+import { useTranslation } from 'react-i18next';
+
 import InputEditor from './InputEditor';
 import { OutlineButton } from '../../Button';
 import { CardsGrid } from '../../Cards';
 
 const InputsEditor = ({ answerOptions, dispatch }) => {
+  const { t } = useTranslation(['globals']);
+
   const InputEditors = answerOptions.map((answerOption, index) => {
     return (
       <InputEditor
@@ -22,7 +27,7 @@ const InputsEditor = ({ answerOptions, dispatch }) => {
     <div>
       <div className="my-5 text-center">
         <OutlineButton
-          title="Add text input"
+          title={t(('globals:add_text_input', 'Eingabefeld hinzufügen'))}
           onClick={() =>
             dispatch({
               type: 'addTextInput',
