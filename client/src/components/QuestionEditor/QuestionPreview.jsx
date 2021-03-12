@@ -1,12 +1,17 @@
 import React from 'react';
 import { arrayOf, bool, exact, oneOfType, shape, string } from 'prop-types';
 
+// localization
+import { useTranslation } from 'react-i18next';
+
 import { Question } from '../Question';
 
 const QuestionPreview = ({ title, subtitle1, subtitle2, help, answerOptions }) => {
+  const { t } = useTranslation(['globals']);
+
   return (
     <div className="mt-n2">
-      <span className="badge badge-info">Preview</span>
+      <span className="badge badge-info"> {t(('globals:preview', 'Vorschau'))}</span>
       <div
         className="border border-info "
         style={{ minHeight: '760px', minWidth: '270px', maxWidth: '100%' }}
@@ -14,10 +19,12 @@ const QuestionPreview = ({ title, subtitle1, subtitle2, help, answerOptions }) =
         {answerOptions.type === 'images' ? (
           <div className="jumbotron jumbotron-fluid">
             <div className="container">
-              <h1 className="display-4">Images</h1>
+              <h1 className="display-4">{t(('globals:images', 'Bilder'))}</h1>
               <p className="lead">
-                A live preview of images is currently not possible. Go to &apos;FFQ Preview&apos; to
-                see what it looks like.
+                {t(
+                  ('globals:preview_not_possible',
+                  'Eine Vorschau der Bilder ist hier momentan nicht verfügbar. Um eine Vorschau zu sehen gehen Sie auf &apos;FFQ Vorschau&apos;')
+                )}
               </p>
             </div>
           </div>

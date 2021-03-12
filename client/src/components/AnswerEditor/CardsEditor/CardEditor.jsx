@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { string, func, shape, number, bool } from 'prop-types';
 
+// localization
+import { useTranslation } from 'react-i18next';
+
 import { XIcon } from '@primer/octicons-react';
 import TextEditor from '../../TextEditor';
 
 import { EditorCard } from '../../Cards';
 
 const ImageUpload = ({ answerId, imageName, onChange, disabled }) => {
+  const { t } = useTranslation(['globals']);
+
   const [imageUploadLabel, setImageUploadLabel] = useState(
     imageName.substr(imageName.indexOf('-') + 1)
   );
@@ -20,7 +25,7 @@ const ImageUpload = ({ answerId, imageName, onChange, disabled }) => {
             className="btn btn-outline-secondary"
             disabled={disabled}
             onClick={() => {
-              setImageUploadLabel('Select Image');
+              setImageUploadLabel(t(('globals:select_image', 'Bild auswählen')));
               onChange({
                 type: 'removeCardImage',
                 payload: { id: answerId }
@@ -78,7 +83,9 @@ ImageUpload.defaultProps = {
 };
 
 const CardEditor = ({ index, answerOption, dispatch }) => {
-  const tabNames = ['Text', 'Image'];
+  const { t } = useTranslation(['globals']);
+
+  const tabNames = [t(('globals:text', 'Text')), t(('globals:image', 'Bild'))];
 
   useEffect(() => {
     dispatch({
@@ -89,7 +96,7 @@ const CardEditor = ({ index, answerOption, dispatch }) => {
 
   const textTabContent = (
     <TextEditor
-      placeholder="Card Title"
+      placeholder={t(('globals:title', 'Titel'))}
       value={answerOption.title}
       onChange={(value) => {
         dispatch({

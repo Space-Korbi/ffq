@@ -2,6 +2,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
+import $ from 'jquery';
 
 import PropTypes from 'prop-types';
 
@@ -24,6 +25,9 @@ import QuestionnaireImages from '../../components/Images';
 import QuestionTable from './QuestionTable';
 
 const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
+  $(() => {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
   const { t } = useTranslation(['globals']);
 
   const [

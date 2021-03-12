@@ -2,11 +2,20 @@ import React, { useState } from 'react';
 import { arrayOf, func, string, shape, number } from 'prop-types';
 import BootstrapTable from 'react-bootstrap-table-next';
 
+// localization
+import { useTranslation } from 'react-i18next';
+
 import TextEditor from '../../TextEditor';
 import { EditorCard } from '../../Cards';
 
 const ButtonEditor = ({ dispatch, position, answerOption, index, modalTable }) => {
-  const tabNames = ['Text', 'Action', 'Color'];
+  const { t } = useTranslation(['globals']);
+
+  const tabNames = [
+    t('globals:text', 'Text'),
+    t('globals:action', 'Aktion'),
+    t('globals:color', 'Farbe')
+  ];
 
   const setPrevSelection = () => {
     let prevSelected = [];
@@ -37,7 +46,7 @@ const ButtonEditor = ({ dispatch, position, answerOption, index, modalTable }) =
 
   const textTabContent = (
     <TextEditor
-      placeholder="Button Title"
+      placeholder={t('globals:title', 'Titel')}
       value={answerOption.title}
       onChange={(value) => {
         dispatch({
@@ -56,7 +65,7 @@ const ButtonEditor = ({ dispatch, position, answerOption, index, modalTable }) =
         data-toggle="modal"
         data-target="#staticBackdrop"
       >
-        Select questions to skip
+        {t('globals:questions_to_skip', 'Fragen überspringen')}
       </button>
     </div>
   );

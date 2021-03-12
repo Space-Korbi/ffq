@@ -1,16 +1,21 @@
 import React from 'react';
 import { bool, func, number, shape, string } from 'prop-types';
 
+// localization
+import { useTranslation } from 'react-i18next';
+
 import { DeleteButton } from '../../Button';
 import TextEditor from '../../TextEditor';
 import { EditorCard } from '../../Cards';
 
 const InputEditor = ({ index, answerOption, dispatch }) => {
-  const tabNames = ['Main', 'Optional'];
+  const { t } = useTranslation(['globals']);
+
+  const tabNames = [t(('globals:text_input', 'Eingabefeld')), t(('globals:optional', 'Optional'))];
 
   const mainTabContent = (
     <TextEditor
-      placeholder="Text Input Title"
+      placeholder={t(('globals:text_input_title', 'Eingabetitel'))}
       value={answerOption.title}
       onChange={(value) => {
         dispatch({
@@ -28,7 +33,7 @@ const InputEditor = ({ index, answerOption, dispatch }) => {
           <div className="d-flex flex-fill">
             <div className="flex-grow-1">
               <TextEditor
-                placeholder="Number Input Title"
+                placeholder={t(('globals:unit_of_measurement', 'Maßeinheit'))}
                 value={answerOption.numberInputTitle}
                 onChange={(value) => {
                   dispatch({
@@ -64,7 +69,7 @@ const InputEditor = ({ index, answerOption, dispatch }) => {
             })
           }
         >
-          Add number input
+          {t(('globals:add_number_input', 'Mengeneingabe hinzufügen'))}
         </button>
       )}
     </div>

@@ -1,9 +1,14 @@
 import React from 'react';
 import { func, string } from 'prop-types';
 
+// localization
+import { useTranslation } from 'react-i18next';
+
 import AnswerType from '../../types';
 
 const Select = ({ onChange, dispatch, value }) => {
+  const { t } = useTranslation(['globals']);
+
   const setValue = () => {
     switch (value) {
       case AnswerType.Frequency:
@@ -24,7 +29,7 @@ const Select = ({ onChange, dispatch, value }) => {
       <div className="input-group my-2">
         <div className="input-group-prepend">
           <label className="input-group-text" htmlFor="select">
-            Answer Type
+            {t(('globals:answer_type', 'Antwortarten'))}
           </label>
         </div>
         <select
@@ -39,11 +44,11 @@ const Select = ({ onChange, dispatch, value }) => {
             });
           }}
         >
-          <option value="select">Select...</option>
-          <option value={AnswerType.Frequency}>Buttons</option>
-          <option value={AnswerType.Amount}>Cards</option>
-          <option value={AnswerType.UserInput}>User Input</option>
-          <option value="images">Images</option>
+          <option value="select">{t(('globals:select...', 'Auswählen...'))}</option>
+          <option value={AnswerType.Frequency}>{t('globals:buttons', 'Buttons')}</option>
+          <option value={AnswerType.Amount}>{t(('globals:cards', 'Karten'))}</option>
+          <option value={AnswerType.UserInput}>{t(('globals:user_input', 'Eingabefelder'))}</option>
+          <option value="images">{t(('globals:images', 'Bilder'))}</option>
         </select>
       </div>
     </>

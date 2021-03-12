@@ -18,15 +18,14 @@ DeleteIcon.defaultProps = {
 };
 
 const DeleteButton = ({ onClick, isTrashCan, isDeleting, styling, iconSize }) => {
-  $(() => {
-    $('[data-toggle="tooltip"]').tooltip();
-  });
-
   return (
     <button
       type="button"
       className={`btn btn-outline-danger d-flex align-items-center p-1 ${styling}`}
-      onClick={onClick}
+      onClick={() => {
+        $('[data-toggle="tooltip"]').tooltip('hide');
+        return onClick();
+      }}
       data-toggle="tooltip"
       data-placement="top"
       title="Löschen"
@@ -34,7 +33,7 @@ const DeleteButton = ({ onClick, isTrashCan, isDeleting, styling, iconSize }) =>
       {isDeleting ? (
         <>
           <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
-          <span className="sr-only">Loading...</span>
+          <span className="sr-only">...</span>
         </>
       ) : (
         <DeleteIcon trashCan={isTrashCan} size={iconSize} />

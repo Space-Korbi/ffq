@@ -2,6 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { arrayOf, func, string, shape, exact, bool, oneOfType } from 'prop-types';
 
+// localization
+import { useTranslation } from 'react-i18next';
+
 import ButtonsEditor from './ButtonsEditor/ButtonsEditor';
 import CardsEditor from './CardsEditor/CardsEditor';
 import InputsEditor from './InputsEditor/InputsEditor';
@@ -9,6 +12,8 @@ import AnswerType from '../../types';
 import QuestionnaireImages from '../Images';
 
 const AnswerEditor = ({ answerOptions, dispatch, answerType, modalTable }) => {
+  const { t } = useTranslation(['globals']);
+
   const [editor, setEditor] = useState(<div />);
 
   useEffect(() => {
@@ -48,7 +53,7 @@ const AnswerEditor = ({ answerOptions, dispatch, answerType, modalTable }) => {
       default:
         setEditor(
           <div className="alert alert-info text-center m-5" role="alert">
-            Choose an Answer Type
+            {t(('globals:choose_answer_type', 'Wähle eine Antwortart'))}
           </div>
         );
     }

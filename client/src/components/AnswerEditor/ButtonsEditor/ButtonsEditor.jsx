@@ -2,11 +2,27 @@ import React from 'react';
 import { arrayOf, func, string, shape, number } from 'prop-types';
 import { nanoid } from 'nanoid';
 
+// localization
+import { useTranslation } from 'react-i18next';
+
 import { OutlineButton } from '../../Button';
 import ButtonEditor from './ButtonEditor';
 import { CardsGrid } from '../../Cards';
 
 const ButtonColumn = ({ answerOptions, position, dispatch, modalTable }) => {
+  const { t } = useTranslation(['globals']);
+
+  const translatePosition = () => {
+    switch (position.toLowerCase()) {
+      case 'left':
+        return t(('globals:left', 'links'));
+      case 'right':
+        return t(('globals:rechts', 'rechts'));
+      default:
+        return '';
+    }
+  };
+
   const ButtonEditors = answerOptions.map((answerOption, index) => {
     return (
       <ButtonEditor
@@ -22,7 +38,9 @@ const ButtonColumn = ({ answerOptions, position, dispatch, modalTable }) => {
 
   return (
     <div className="text-center">
-      {answerOptions.length > 0 && <span className="badge badge-secondary">{position}</span>}
+      {answerOptions.length > 0 && (
+        <span className="badge badge-secondary">{translatePosition(position)}</span>
+      )}
       <CardsGrid Cards={ButtonEditors} gridColumns="row-cols-1" />
     </div>
   );
@@ -39,10 +57,23 @@ ButtonColumn.defaultProps = {
 };
 
 const AddButton = ({ position, dispatch }) => {
+  const { t } = useTranslation(['globals']);
+
+  const translatePosition = () => {
+    switch (position.toLowerCase()) {
+      case 'left':
+        return t(('globals:add_button_left', 'Button links hinzufügen'));
+      case 'right':
+        return t(('globals:add_button_rechts', 'Button rechts hinzufügen'));
+      default:
+        return '';
+    }
+  };
+
   return (
     <div>
       <OutlineButton
-        title={`Add button ${position}`}
+        title={translatePosition(position)}
         onClick={() =>
           dispatch({
             type: 'addButton',
