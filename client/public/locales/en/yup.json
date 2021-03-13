@@ -1,6 +1,7 @@
 {
   "old_password_required": "Altes Password eingeben",
   "password_length": "Mindestens 5 Zeichen verwenden",
+  "new_password_required": "Neues Password eingeben",
   "password_confirm": "Passwort bestätigen",
   "first_name_required": "Vornamen eingeben",
   "last_name_required": "Nachnamen eingeben",
