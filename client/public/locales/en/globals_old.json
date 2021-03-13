@@ -1,0 +1,15 @@
+{
+  "back": "Back",
+  "cancel": "Cancel",
+  "personal_info_headline": "Personal Info",
+  "sign_up_headline": "Sign Up",
+  "sign_up_button": "Sign Up",
+  "sign_up_success": "Signed up succesfully",
+  "changes_save_success": "Changes saved successfully.",
+  "password_change_success": "Password changed successfully.",
+  "globals:password_incorrect": "Wrong Password. Please try again or click 'Forgot password' to reset the password.",
+  "reset_password_information": "If you have forgotten your password, enter your email address and click 'Request link'. You will recieve an email containing a link to reset your password.",
+  "request_link_button": "Request link",
+  "change_password": "Change Password",
+  "rules_info": "The decision of the first matching rule will be applied. If no rule is met, the user will be accepted."
+}

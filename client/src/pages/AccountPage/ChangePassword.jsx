@@ -25,7 +25,7 @@ const ChangePassword = ({ userId }) => {
         validationSchema={Yup.object().shape({
           oldPassword: Yup.string()
             .required(t(('yup:old_password_required', 'Altes Password eingeben')))
-            .min(5, t('yup:password_length')),
+            .min(5, t('yup:password_length', 'Mindestens 5 Zeichen verwenden')),
 
           newPassword: Yup.string()
             .required(t(('new_password_required', 'Neues Password eingeben')))

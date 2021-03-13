@@ -10,7 +10,7 @@ import { authService } from '../../services';
 import { ReactComponent as Logo } from '../../hi-ffq_v9_react.svg';
 
 function NavBar({ isAdmin }) {
-  const { t } = useTranslation(['Navbar']);
+  const { t } = useTranslation(['globals']);
 
   const { url, params } = useRouteMatch();
 
@@ -22,7 +22,7 @@ function NavBar({ isAdmin }) {
       activeClassName: 'nav-link active'
     },
     {
-      name: t('navbar:ffq_preview', 'FFQ Vorschau'),
+      name: t('globals:ffq_preview', 'FFQ Vorschau'),
       to: '/questionnairePresenter/iteration/0',
       className: 'nav-link',
       activeClassName: 'nav-link active'
