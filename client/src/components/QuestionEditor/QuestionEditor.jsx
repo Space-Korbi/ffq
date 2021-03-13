@@ -5,6 +5,9 @@
 import React, { useState, useReducer } from 'react';
 import { string, shape, arrayOf, bool, exact, oneOfType } from 'prop-types';
 
+// localization
+import { useTranslation } from 'react-i18next';
+
 import AnswerType from '../../types';
 
 import JumbotronInputs from './JumbotronInputs';
@@ -19,6 +22,8 @@ import { updateQuestion, uploadImageToCloudinary } from '../../api';
 import AnswerEditor from '../AnswerEditor/AnswerEditor';
 
 const QuestionEditor = ({ question, onExit, modalTable }) => {
+  const { t } = useTranslation(['globals']);
+
   const [title, setTitle] = useState(question.title);
   const [subtitle1, setSubtitle1] = useState(question.subtitle1);
   const [subtitle2, setSubtitle2] = useState(question.subtitle2);
@@ -53,7 +58,6 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
         return Promise.resolve(updatedAmountOption);
       })
     );
-    console.log('updatedAmountOptions', updatedAmountOptions);
     return updatedAmountOptions;
   };
 
@@ -61,12 +65,10 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
     setSaving(true);
     const updatedQuestion = { title, subtitle1, subtitle2, help, answerOptions };
 
-    if (answerType === AnswerType.Amount) {
-      console.log(answerOptions.options);
+    if (answerType === AnswerType.Amount || answerType === 'images') {
       updatedQuestion.answerOptions.options = await updateAmountOptions(answerOptions.options);
     }
 
-    console.log('updatedQuestion', updatedQuestion);
     updateQuestion(question._id, updatedQuestion).then(() => {
       setSaving(false);
       onExit({ ...updatedQuestion, _id: question._id });
@@ -80,7 +82,7 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
           <div className="my-2">
             <div className="row no-gutters flex-row d-flex flex-wrap-reverse">
               <div className="col col-md-6 d-flex">
-                <Select onChange={setAnswerType} dispatch={dispatch} />
+                <Select onChange={setAnswerType} dispatch={dispatch} value={answerType} />
               </div>
 
               <div className="col-12 col-md-6 d-flex">
@@ -93,11 +95,10 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
                   >
                     {saving ? (
                       <>
-                        Saving...
                         <Spinner className="spinner-border spinner-border-sm ml-1" />
                       </>
                     ) : (
-                      'Save and Exit'
+                      t('globals:save_and_exit', 'Speichern und schließen')
                     )}
                   </button>
                   <button
@@ -106,7 +107,7 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
                     disabled={saving}
                     onClick={() => onExit(question)}
                   >
-                    Exit
+                    {('globals:exit', 'Schließen')}
                   </button>
                   {/* TODO: link to or create next question" 
                       <button
@@ -181,7 +182,8 @@ QuestionEditor.propTypes = {
             hasNumberInput: bool,
             numberInputTitle: string
           })
-        )
+        ),
+        arrayOf(string)
       ])
     })
   }).isRequired

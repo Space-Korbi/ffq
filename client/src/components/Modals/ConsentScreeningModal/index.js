@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { func, string, arrayOf, bool } from 'prop-types';
 
+// localization
+import { useTranslation } from 'react-i18next';
+
 const ConsentScreeningModal = ({
   consentScript,
   selectionCriteria,
@@ -8,6 +11,8 @@ const ConsentScreeningModal = ({
   onAccept,
   onDone
 }) => {
+  const { t } = useTranslation(['globals']);
+
   const [accepted, setAccepted] = useState(hasAcceptedConsentForm);
   const [selected, setSelected] = useState([]);
 
@@ -24,7 +29,7 @@ const ConsentScreeningModal = ({
     <div className="modal-content">
       <div className="modal-header">
         <h5 className="modal-title" id="staticBackdropLabel">
-          Consent form
+          {t('globals:consent_form_headline', 'Einverständniserklärung')}
         </h5>
         <button type="button" className="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -34,7 +39,7 @@ const ConsentScreeningModal = ({
 
       <div className="modal-footer">
         <button type="button" className="btn btn-secondary" data-dismiss="modal">
-          Close
+          {t('globals:close', 'Schließen')}
         </button>
         <button
           type="button"
@@ -44,7 +49,7 @@ const ConsentScreeningModal = ({
             onAccept();
           }}
         >
-          I accept
+          {t('globals:accept', 'Akzeptieren')}
         </button>
       </div>
     </div>
@@ -84,7 +89,7 @@ const ConsentScreeningModal = ({
 
       <div className="modal-footer">
         <button type="button" className="btn btn-secondary" data-dismiss="modal">
-          Close
+          {t('globals:close', 'Schließen')}
         </button>
         <button
           type="button"
@@ -92,7 +97,7 @@ const ConsentScreeningModal = ({
           data-dismiss="modal"
           onClick={() => onDone(selected)}
         >
-          Done
+          {t('globals:continue', 'Weiter')}
         </button>
       </div>
     </div>

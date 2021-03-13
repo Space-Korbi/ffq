@@ -2,8 +2,12 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
+import $ from 'jquery';
 
 import PropTypes from 'prop-types';
+
+// localization
+import { useTranslation } from 'react-i18next';
 
 // services
 import { questionnaireService } from '../../services';
@@ -17,9 +21,15 @@ import { NavTabs, NavContents } from '../../components/Navigation';
 import QuestionEditor from '../../components/QuestionEditor';
 import { OutlineButton } from '../../components/Button';
 import QuestionnaireSettings from '../../components/Settings';
+import QuestionnaireImages from '../../components/Images';
 import QuestionTable from './QuestionTable';
 
 const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
+  $(() => {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+  const { t } = useTranslation(['globals']);
+
   const [
     { fetchedQuestions, isLoadingQuestions, isErrorQuestions },
     setQuestionniareId
@@ -81,15 +91,15 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
       style: { width: '8px' }
     },
     {
-      text: 'Title',
+      text: t(('editor:title', 'Titel')),
       dataField: 'question.title'
     },
     {
-      text: 'Subtitle1',
+      text: t(('editor:subtitle1', 'Untertitel1')),
       dataField: 'question.subtitle1'
     },
     {
-      text: 'Subtitle2',
+      text: t(('editor:subtitle2', 'Untertitel2')),
       dataField: 'question.subtitle2'
     }
   ];
@@ -114,7 +124,10 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
           <div>
             {isErrorQuestions && (
               <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
-                Something went wrong...
+                {t(
+                  ('globals:error',
+                  'Etwas ist schiefgelaufen. Laden Sie die Seite erneut oder versuchen Sie es später noch einmal.')
+                )}
               </div>
             )}
             {isLoadingQuestions ? (
@@ -142,7 +155,10 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
     <QuestionnaireSettings questionnaire={questionnaire} save={saveSettings} />
   );
 
-  const tabNames = ['Questions', 'Settings'];
+  const tabNames = [
+    t(('editor:questions_tab', 'Fragen')),
+    t(('editor:settings_tab', 'Einstellungen'))
+  ];
   const tabContents = [questionsContent, settingsContent];
 
   return (
@@ -158,6 +174,8 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
 };
 
 const QuestionnaireEditorPage = () => {
+  const { t } = useTranslation(['globals']);
+
   const [
     { fetchedQuestionnaires, isLoadingQuestionnaires, isErrorQuestionnaires }
   ] = useFetchQuestionnaires();
@@ -189,7 +207,10 @@ const QuestionnaireEditorPage = () => {
         <div>
           {isErrorQuestionnaires && (
             <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
-              Something went wrong...
+              {t(
+                ('globals:error',
+                'Etwas ist schiefgelaufen. Laden Sie die Seite erneut oder versuchen Sie es später noch einmal.')
+              )}
             </div>
           )}
           {isLoadingQuestionnaires ? (

@@ -13,6 +13,7 @@ import { Help } from '../Popover';
 import AnswerButtons from './FrequencyAnswer/AnswerButtons';
 import AmountAnswer from './AmountAnswer/AmountAnswer';
 import UserInputAnswer from './UserInputAnswer/UserInputAnswer';
+import Carousel from '../Carousel';
 
 // global constants
 import AnswerType from '../../types';
@@ -66,8 +67,9 @@ const Question = ({
   answerOptions,
   submittedAnswer,
   onSubmitAnswer,
-  currentIndex,
-  iterationId
+  iterationId,
+  isPreview,
+  isImage
 }) => {
   const { userId } = useParams();
   const [userInput, setUserInput] = useState();
@@ -76,7 +78,7 @@ const Question = ({
   const [latestAnswer, setLatestAnswer] = useState();
 
   useEffect(() => {
-    if (!isSaving && !isSavingError && userInput) {
+    if (!isSaving && !isSavingError && userInput && !isPreview) {
       setAnswer({ answerOption: userInput });
     }
   }, [userInput]);
@@ -98,33 +100,48 @@ const Question = ({
 
   return (
     <div>
-      <div>
-        <Jumbotron title={title} subtitle1={subtitle1} subtitle2={subtitle2} />
-      </div>
-      {help && (
-        <div className="row no-gutters">
-          <div className="col d-flex justify-content-end">
-            <Help infoText={help} />
-          </div>
+      {isImage ? (
+        <div>
+          <Carousel
+            imageURLs={answerOptions.options.map((option) => {
+              return option.imageURL;
+            })}
+            onSubmitAnswer={() =>
+              onSubmitAnswer({ questionId: id, answerOption: [{ id: 'images' }] })
+            }
+          />
         </div>
-      )}
-      <div>
-        {isSavingError ? (
-          'Something went wrong...'
-        ) : (
-          <>
-            {isSaving ? (
-              'Saving...'
+      ) : (
+        <>
+          <div>
+            <Jumbotron title={title} subtitle1={subtitle1} subtitle2={subtitle2} />
+          </div>
+          {help && (
+            <div className="row no-gutters">
+              <div className="col d-flex justify-content-end">
+                <Help infoText={help} />
+              </div>
+            </div>
+          )}
+          <div>
+            {isSavingError ? (
+              'Something went wrong...'
             ) : (
-              <Answers
-                answerOptions={answerOptions}
-                setUserInput={setUserInput}
-                submittedAnswer={latestAnswer}
-              />
+              <>
+                {isSaving ? (
+                  'Saving...'
+                ) : (
+                  <Answers
+                    answerOptions={answerOptions}
+                    setUserInput={setUserInput}
+                    submittedAnswer={latestAnswer}
+                  />
+                )}
+              </>
             )}
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
@@ -164,7 +181,9 @@ Question.propTypes = {
     shape({ questionId: string, answer: shape({ id: string, value: string }) }),
     shape({ questionId: string, answer: arrayOf(shape({ id: string, value: string })) })
   ]),
-  onSubmitAnswer: func.isRequired
+  onSubmitAnswer: func.isRequired,
+  isPreview: bool,
+  isImage: bool
 };
 
 Question.defaultProps = {
@@ -172,7 +191,9 @@ Question.defaultProps = {
   subtitle1: '',
   subtitle2: '',
   help: '',
-  submittedAnswer: undefined
+  submittedAnswer: undefined,
+  isPreview: false,
+  isImage: false
 };
 
 export default Question;

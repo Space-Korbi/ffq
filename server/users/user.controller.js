@@ -1,4 +1,5 @@
 require('dotenv').config();
+const AWS = require('aws-sdk');
 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
@@ -123,6 +124,88 @@ const loginUser = async (req, res) => {
         roles: authorities,
         accessToken: token
       });
+    });
+};
+
+const requestPasswordReset = async (req, res) => {
+  const { email } = req.body;
+  console.log('email', email);
+
+  User.findOne({
+    email
+  })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send();
+      }
+
+      const token = jwt.sign({ id: user.id }, process.env.SECRET || 'localDevSecret', {
+        expiresIn: '2h'
+      });
+
+      // Create sendEmail params
+      const params = {
+        Destination: {
+          /* required */
+          ToAddresses: ['korbinian.baumer@web.de']
+        },
+        Message: {
+          /* required */
+          Body: {
+            /* required */
+            Html: {
+              Charset: 'UTF-8',
+              Data: `<p> Click the link or copy it into a browser to reset your password. <br /><br /> <a href="localhost:8000/passwordreset/${token}"> localhost:8000/passwordreset/${token} </a> </p>`
+            }
+          },
+          Subject: {
+            Charset: 'UTF-8',
+            Data: 'Test email'
+          }
+        },
+        Source: 'hiffq.app@gmail.com',
+        ReplyToAddresses: ['hiffq.app@gmail.com']
+      };
+
+      const SESConfig = {
+        apiVersion: '2010-12-01',
+        accessKeyId: process.env.AWS_SES_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SES_SECRET_ACCESS_KEY,
+        region: process.env.AWS_SES_REGION
+      };
+
+      // Create the promise and SES service object
+      const sendPromise = new AWS.SES(SESConfig).sendEmail(params).promise();
+
+      // Handle promise's fulfilled/rejected states
+      sendPromise
+        .then(function (data) {
+          console.log(data.MessageId);
+          return res.status(204).send();
+        })
+        .catch(function (err) {
+          console.error(err, err.stack);
+          return res.status(500).json(err);
+        });
+    })
+    .catch((error) => {
+      return res.status(500).json(error);
+    });
+};
+
+const resetPassword = async (req, res) => {
+  const { userId } = req;
+  const { password } = req.body;
+
+  const filter = { _id: userId };
+  const update = { password: bcrypt.hashSync(password, 8) };
+
+  User.findOneAndUpdate(filter, update)
+    .then(() => {
+      return res.status(204).send();
+    })
+    .catch((error) => {
+      return res.status(500).json(error);
     });
 };
 
@@ -286,6 +369,7 @@ const updateAnswer = async (req, res) => {
       const iteration = userUpdate.iterations.find((i) => {
         return i.id === iterationId;
       });
+
       let answer;
       if (iteration.answers && iteration.answers.length) {
         answer = iteration.answers.find((a) => {
@@ -293,8 +377,14 @@ const updateAnswer = async (req, res) => {
         });
       }
       if (answer) {
+        iteration.questionsToSkip = updateSkip(
+          answer.answerOption,
+          answerOption,
+          iteration.questionsToSkip
+        );
         answer.answerOption = answerOption;
       } else {
+        iteration.questionsToSkip = updateSkip(null, answerOption, iteration.questionsToSkip);
         iteration.answers.push({ questionId, answerOption });
       }
 
@@ -304,14 +394,16 @@ const updateAnswer = async (req, res) => {
     })
     .catch((error) => {
       return res
-        .status(404)
-        .json({ error, title: 'Users not found', detail: 'No user could be found.' });
+        .status(500)
+        .json({ error, title: 'Internal error', detail: 'Answer was not saved or updated.' });
     });
 };
 
 module.exports = {
   loginUser,
   createUser,
+  requestPasswordReset,
+  resetPassword,
   getUsers,
   updateUser,
   updateIteration,

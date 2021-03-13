@@ -1,16 +1,21 @@
 import React from 'react';
 import { bool, func, number, shape, string } from 'prop-types';
 
+// localization
+import { useTranslation } from 'react-i18next';
+
 import { DeleteButton } from '../../Button';
 import TextEditor from '../../TextEditor';
 import { EditorCard } from '../../Cards';
 
 const InputEditor = ({ index, answerOption, dispatch }) => {
-  const tabNames = ['Main', 'Optional'];
+  const { t } = useTranslation(['globals']);
+
+  const tabNames = [t(('globals:text_input', 'Eingabefeld')), t(('globals:optional', 'Optional'))];
 
   const mainTabContent = (
     <TextEditor
-      placeholder="Text Input Title"
+      placeholder={t(('globals:text_input_title', 'Eingabetitel'))}
       value={answerOption.title}
       onChange={(value) => {
         dispatch({
@@ -24,25 +29,31 @@ const InputEditor = ({ index, answerOption, dispatch }) => {
   const optionalTabContent = (
     <div>
       {answerOption.hasNumberInput ? (
-        <div className="d-flex">
-          <TextEditor
-            placeholder="Number Input Title"
-            value={answerOption.numberInputTitle}
-            onChange={(value) => {
-              dispatch({
-                type: 'changeNumberInputTitle',
-                payload: { id: answerOption.id, numberInputTitle: value }
-              });
-            }}
-          />
-          <DeleteButton
-            onClick={() =>
-              dispatch({
-                type: 'removeNumberInput',
-                payload: { id: answerOption.id }
-              })
-            }
-          />
+        <div className="row d-flex no-gutters flex-row">
+          <div className="d-flex flex-fill">
+            <div className="flex-grow-1">
+              <TextEditor
+                placeholder={t(('globals:unit_of_measurement', 'Maßeinheit'))}
+                value={answerOption.numberInputTitle}
+                onChange={(value) => {
+                  dispatch({
+                    type: 'changeNumberInputTitle',
+                    payload: { id: answerOption.id, numberInputTitle: value }
+                  });
+                }}
+              />
+            </div>
+            <div className="align-self-center ml-2">
+              <DeleteButton
+                onClick={() =>
+                  dispatch({
+                    type: 'removeNumberInput',
+                    payload: { id: answerOption.id }
+                  })
+                }
+              />
+            </div>
+          </div>
         </div>
       ) : (
         <button
@@ -58,7 +69,7 @@ const InputEditor = ({ index, answerOption, dispatch }) => {
             })
           }
         >
-          Add number input
+          {t(('globals:add_number_input', 'Mengeneingabe hinzufügen'))}
         </button>
       )}
     </div>
@@ -72,7 +83,7 @@ const InputEditor = ({ index, answerOption, dispatch }) => {
   };
 
   return (
-    <div className="col my-3">
+    <div className="col my-3 px-2">
       <EditorCard
         index={index}
         tabNames={tabNames}

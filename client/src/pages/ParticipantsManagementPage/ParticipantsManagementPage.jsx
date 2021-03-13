@@ -4,6 +4,9 @@
 
 import React, { useEffect, useState } from 'react';
 
+// localization
+import { useTranslation } from 'react-i18next';
+
 // services
 import { userService } from '../../services';
 
@@ -84,6 +87,8 @@ const listAnswers = (column) => {
 };
 
 const ParticipantsManagement = ({ questions, questionnaire }) => {
+  const { t } = useTranslation(['globals']);
+
   const [selectionCriteria, setSelectionCriteria] = useState(questionnaire.selectionCriteria);
   const [screeningRules, setScreeningRules] = useState(questionnaire.screeningRules);
   const [selection, setSelection] = useState(0);
@@ -249,7 +254,11 @@ const ParticipantsManagement = ({ questions, questionnaire }) => {
     />
   );
 
-  const tabNames = ['Participants', 'Selection Criteria', 'Selection Rules'];
+  const tabNames = [
+    t(('globals:participants', 'Teilnehmer')),
+    t(('globals:selection_criteria', 'Auswahlkriterien')),
+    t(('globals:selection_rules', 'Auswahlregeln'))
+  ];
   const tabContents = [participantsContent, selectionCriteriaContent, ruleEditorContent];
 
   return (
@@ -265,6 +274,8 @@ const ParticipantsManagement = ({ questions, questionnaire }) => {
 };
 
 const ParticipantsManagementPage = () => {
+  const { t } = useTranslation(['globals']);
+
   const [
     { fetchedQuestionnaires, isLoadingQuestionnaires, isErrorQuestionnaires }
   ] = useFetchQuestionnaires(null, '_id name iterations selectionCriteria screeningRules');
@@ -284,7 +295,10 @@ const ParticipantsManagementPage = () => {
       <div>
         {(isErrorQuestionnaires || isErrorQuestions) && (
           <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
-            Something went wrong...
+            {t(
+              ('globals:error',
+              'Etwas ist schiefgelaufen. Laden Sie die Seite erneut oder versuchen Sie es später noch einmal.')
+            )}
           </div>
         )}
         {(isLoadingQuestionnaires || isLoadingQuestions) && (

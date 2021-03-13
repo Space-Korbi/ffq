@@ -4,9 +4,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { bool, string } from 'prop-types';
 import { useParams, useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 // services
-import { userService, questionnaireService } from '../../services';
+import { userService, questionnaireService, authService } from '../../services';
 
 // custom hooks
 import { useFetchQuestions, useFetchUsers } from '../../hooks';
@@ -19,15 +20,20 @@ import ProgressIndicator from '../../components/ProgressIndicator';
 
 const QuestionnairePresenter = ({
   questions,
+  imageURLs,
   previousAnswers,
+  previousPauses,
   questionsToSkip,
   isAdmin,
   iterationId
 }) => {
+  const { t } = useTranslation(['globals']);
+
   const history = useHistory();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDisabled, setIsDisabled] = useState(true);
   const [answers, setAnswers] = useState([]);
+  const [pauses, setPauses] = useState(previousPauses);
   const [toSkip, setToSkip] = useState(questionsToSkip);
   const { userId } = useParams();
   const answersRef = useRef(answers);
@@ -127,6 +133,16 @@ const QuestionnairePresenter = ({
     });
   };
 
+  const handleOnPause = () => {
+    if (pauses.indexOf(currentIndex) !== -1) {
+      return;
+    }
+    userService.updateUserData(userId, {
+      iterations: [{ id: iterationId, pausedAt: [...pauses, currentIndex] }]
+    });
+    setPauses((prevState) => [...prevState, currentIndex]);
+  };
+
   return (
     <div>
       <nav className="navbar navbar-expand-md navbar-dark bg-dark questionnaire">
@@ -142,7 +158,7 @@ const QuestionnairePresenter = ({
                   setCurrentIndex(prevQuestionIndex);
                 }}
               >
-                Back
+                {t(('globals:back', 'Zurück'))}
               </button>
               <button
                 type="button"
@@ -157,7 +173,7 @@ const QuestionnairePresenter = ({
                     });
                 }}
               >
-                Reset answers
+                {t(('globals:reset_answers', 'Antworten zurücksetzen'))}
               </button>
               <button
                 type="button"
@@ -166,7 +182,7 @@ const QuestionnairePresenter = ({
                   history.push(`/users/${userId}`);
                 }}
               >
-                Exit
+                {t(('globals:exit', 'Exit'))}
               </button>
             </div>
             <div className="row no-gutters flex-row w-100">
@@ -179,25 +195,28 @@ const QuestionnairePresenter = ({
             <div className="col d-flex justify-content-between align-items-center">
               <button
                 type="button"
-                className="btn btn-light d-none d-sm-block"
+                className="btn btn-light"
                 disabled={isDisabled}
                 onClick={() => {
                   const prevQuestionIndex = prevUnskippedQuestionAt(currentIndex - 1);
                   setCurrentIndex(prevQuestionIndex);
                 }}
               >
-                Back
+                {t(('globals:back', 'Zurück'))}
               </button>
               <div className="pl-2" />
               <ProgressIndicator currentPosition={currentIndex} length={questions.length} />
-            </div>
-            {/* <button
+              <div className="pl-2" />
+              <button
                 type="button"
                 className="btn btn btn-light"
-                onClick={() => setCurrentIndex(currentIndex + 1)}
+                onClick={() => handleOnPause()}
+                data-toggle="modal"
+                data-target="#staticBackdrop"
               >
-                Weiter
-              </button> */}
+                {t(('globals:pause', 'Pause'))}
+              </button>
+            </div>
           </div>
         )}
       </nav>
@@ -219,8 +238,8 @@ const QuestionnairePresenter = ({
                     answerOptions={questions[currentIndex].answerOptions}
                     onSubmitAnswer={(answer) => handleSubmitAnswer(answer)}
                     currentIndex={currentIndex}
-                    isPreview={isAdmin}
                     iterationId={iterationId}
+                    isImage={questions[currentIndex].answerOptions.type === 'images'}
                   />
                 </div>
               </>
@@ -228,13 +247,59 @@ const QuestionnairePresenter = ({
           </>
         )}
       </div>
+      <div
+        className="modal fade"
+        id="staticBackdrop"
+        data-backdrop="static"
+        data-keyboard="false"
+        tabIndex="-1"
+        aria-labelledby="staticBackdropLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="staticBackdropLabel">
+                Frage {currentIndex + 1}
+              </h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              Alle antworten wurden gespeichert. Sie können sich jederzeit ausloggen und das
+              Ausfüllen des Fragebogens zu einem späteren Zeitpunkt fortsetzen.
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-dismiss="modal"
+                onClick={() => authService.logoutUser()}
+              >
+                Ausloggen
+              </button>
+              <button type="button" className="btn btn-primary" data-dismiss="modal">
+                Umfrage Fortsetzen
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
 const QuestionnairePresenterPage = ({ isAdmin }) => {
+  const { t } = useTranslation(['globals']);
+
   const { userId, iterationId } = useParams();
 
+  const [imageURLs, setImageURLs] = useState([
+    'https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg',
+    'https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_b.jpg',
+    'https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_b.jpg'
+  ]);
   const [
     { fetchedQuestions, isLoadingQuestions, isErrorQuestions },
     setQuestionniareId
@@ -257,6 +322,7 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
       let answers = [];
       let questionsToSkip = [];
       let stoppedAtIndex = -1;
+      let pauses = [];
       const status = users[0].iterations.filter(
         (prevIteration) => prevIteration.id === iterationId
       );
@@ -264,9 +330,10 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
         answers = status[0].answers;
         questionsToSkip = status[0].questionsToSkip;
         stoppedAtIndex = status[0].stoppedAtIndex;
+        pauses = status[0].pausedAt;
       }
 
-      setIteration({ answers, questionsToSkip, stoppedAtIndex });
+      setIteration({ answers, questionsToSkip, stoppedAtIndex, pauses });
     }
   }, [users]);
 
@@ -274,7 +341,10 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
     <div>
       {(isErrorUsers || isErrorQuestions) && (
         <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
-          Something went wrong...
+          {t(
+            ('globals:error',
+            'Etwas ist schiefgelaufen. Laden Sie die Seite erneut oder versuchen Sie es später noch einmal.')
+          )}
         </div>
       )}
       {(isLoadingUsers || isLoadingQuestions) && (
@@ -285,16 +355,18 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
       {users && users.length > 0 && fetchedQuestions && iteration && (
         <QuestionnairePresenter
           questions={fetchedQuestions}
+          imageURLs={imageURLs}
           previousAnswers={iteration.answers}
           questionsToSkip={iteration.questionsToSkip}
           stoppedAtIndex={iteration.stoppedAtIndex + 1}
+          previousPauses={iteration.pauses}
           isAdmin={isAdmin}
           iterationId={iterationId}
         />
       )}
       {!fetchedQuestions.length && (
         <div className="alert alert-warning d-flex justify-content-center mt-5" role="alert">
-          The questionnaire has no questions.
+          {t(('globals:questionnaire_empty', 'Der Fragebogen hat keine Fragen.'))}
         </div>
       )}
     </div>

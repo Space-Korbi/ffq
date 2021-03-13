@@ -2,11 +2,14 @@
 import React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 
 // services
 import { userService } from '../../services';
 
 const Submit = ({ iterationId }) => {
+  const { t } = useTranslation(['globals']);
+
   const history = useHistory();
   const { userId } = useParams();
 
@@ -20,7 +23,9 @@ const Submit = ({ iterationId }) => {
     <div>
       <div className="jumbotron jumbotron-fluid text-center mt-5">
         <div className="container">
-          <h1 className="display-4">Thank you!</h1>
+          <h1 className="lead">
+            {t(('globals:thank_for_participation', 'Vielen Dank für Ihre Teilnahme!'))}
+          </h1>
         </div>
 
         <button
@@ -30,7 +35,7 @@ const Submit = ({ iterationId }) => {
             submit();
           }}
         >
-          Finish FFQ
+          {t(('globals:finish_ffq', 'Fragebogen beenden'))}
         </button>
       </div>
     </div>

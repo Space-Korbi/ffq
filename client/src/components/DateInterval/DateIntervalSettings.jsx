@@ -7,6 +7,9 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import de from 'date-fns/locale/de';
 
+// localization
+import { useTranslation } from 'react-i18next';
+
 // components
 import { DeleteButton } from '../Button';
 
@@ -23,11 +26,16 @@ CustomDateInput.propTypes = { value: string.isRequired, onClick: func.isRequired
 // */
 
 const IterationsTableXs = ({ iterations, setStart, setEnd, remove }) => {
+  const { t } = useTranslation(['globals']);
+
   return (
     <div className="table m-0">
       <table className="table table-sm table-borderless m-0 border-top-0">
         <caption className="p-0 pt-2 ml-1">
-          The questionnaire can be accessed in between each interval, start and end date included.
+          {t(
+            'iteration_caption',
+            'Der Fragebogen kann nur zwischen Startdatum und Enddatum jeder Wiederholung ausgefüllt werden.'
+          )}
         </caption>
 
         <tbody>
@@ -112,19 +120,24 @@ IterationsTableXs.propTypes = {
 };
 
 const IterationsTableLg = ({ iterations, setStart, setEnd, remove }) => {
+  const { t } = useTranslation(['globals']);
+
   return (
     <div className="table m-0">
       <table className="table table-sm table-borderless m-0 border-top-0">
         <caption className="p-0 pt-2 ml-1">
-          The questionnaire can be accessed in between each interval, start and end date included.
+          {t(
+            'iteration_caption',
+            'Der Fragebogen kann nur zwischen Startdatum und Enddatum jeder Wiederholung ausgefüllt werden.'
+          )}
         </caption>
         <thead>
           <tr>
             <th scope="col" className="pt-0 pl-0">
-              Start
+              {t('iteration_start', 'Start')}
             </th>
             <th scope="col" className="pt-0 pl-0">
-              End
+              {t('iteration_end', 'Ende')}
             </th>
           </tr>
         </thead>

@@ -2,11 +2,16 @@ import React from 'react';
 import { string, func, arrayOf, shape } from 'prop-types';
 import { nanoid } from 'nanoid';
 
+// localization
+import { useTranslation } from 'react-i18next';
+
 import { OutlineButton } from '../../Button';
 import CardEditor from './CardEditor';
 import { CardsGrid } from '../../Cards';
 
 const CardsEditor = ({ answerOptions, dispatch }) => {
+  const { t } = useTranslation(['globals']);
+
   const CardEditors = answerOptions.map((answerOption, index) => {
     return (
       <CardEditor
@@ -21,7 +26,7 @@ const CardsEditor = ({ answerOptions, dispatch }) => {
   return (
     <div className="my-5 text-center">
       <OutlineButton
-        title="Add card"
+        title={t(('globals:add_card', 'Karte hinzufügen'))}
         onClick={() =>
           dispatch({
             type: 'addCard',
@@ -30,7 +35,10 @@ const CardsEditor = ({ answerOptions, dispatch }) => {
         }
       />
       <div>
-        <CardsGrid Cards={CardEditors} gridColumns="row-cols-1 row-cols-md-2" />
+        <CardsGrid
+          Cards={CardEditors}
+          gridColumns="row justify-content-between row-cols-1 row-cols-md-2 mx-n2"
+        />
       </div>
     </div>
   );

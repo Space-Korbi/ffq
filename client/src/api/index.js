@@ -23,6 +23,19 @@ export const signup = (payload) =>
 export const login = (payload) =>
   axios.post(`${process.env.REACT_APP_BASE_URL}/users/login`, payload);
 
+// password reset
+export const requestPasswordReset = (payload) =>
+  axios.post(`${process.env.REACT_APP_BASE_URL}/users/requestPasswordReset`, payload);
+export const resetPassword = (token, password) => {
+  const resetApi = axios.create();
+  resetApi.interceptors.request.use((request) => {
+    request.headers = { 'x-access-token': token };
+    return request;
+  });
+
+  return resetApi.patch(`${process.env.REACT_APP_BASE_URL}/users/resetPassword`, { password });
+};
+
 // * REFACTORED
 // user
 export const getUsers = (params) => api.get(`/users`, { params });

@@ -23,7 +23,7 @@ const ParticipantPage = ({ user }) => {
 
   const [currentQuestionnaire, setCurrentQuestionnaire] = useState();
   const [iterationId, setIterationId] = useState();
-  const [buttonTitle, setButtonTitle] = useState('Umfrage starten');
+  const [buttonTitle, setButtonTitle] = useState('Fragebogen starten');
   const [disabled, setDisabled] = useState();
   const [screeningStatus, setScreeningStatus] = useState(user.screeningStatus);
   const [hasAcceptedConsentForm, setHasAcceptedConsentForm] = useState(user.hasAcceptedConsentForm);
