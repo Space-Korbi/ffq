@@ -102,7 +102,7 @@ const ParticipantsTable = ({ fileName, data, columns, iterationSelector }) => {
     },
     {
       dataField: 'hasAcceptedConsentForm',
-      text: t('consent_form_headline', 'Einverständniserklärung'),
+      text: t('globals:consent_form', 'Einverständniserklärung'),
       formatter: (cellContent) => {
         if (cellContent) {
           return <span className="badge badge-success">{t('globals:accepted', 'Akzeptiert')}</span>;

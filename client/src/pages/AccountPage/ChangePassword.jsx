@@ -129,7 +129,7 @@ const ChangePassword = ({ userId }) => {
               <div className="col-lg-4 mb-lg-0">
                 <div className="form-group mb-0">
                   <label htmlFor="inputConfirmPassword">
-                    {t('password_confirm', 'Passwort bestätigen')}
+                    {t('globals:password_confirm', 'Passwort bestätigen')}
                   </label>
                   <Field
                     name="confirmPassword"

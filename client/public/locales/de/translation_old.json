@@ -1,4 +1,20 @@
 {
   "de": "Deutsch",
-  "en": "Englisch"
+  "en": "Englisch",
+  "iteration_start": "Start",
+  "iteration_end": "Ende",
+  "iteration_caption": "Der Fragebogen kann nur zwischen Startdatum und Enddatum jeder Wiederholung ausgefüllt werden.",
+  "iteration_headline": "Wiederholungen",
+  "iteration_completed": "Abgeschlossen",
+  "iteration_not_completed": "Nicht abgeschlossen",
+  "iteration_continue": "Fortsetzen",
+  "iteration_not_started": "Jetzt starten",
+  "iteration_table_start": "Start",
+  "iteration_table_end": "Ende",
+  "iteration_table_status": "Status",
+  "iteration_table_empty": "Keine Wiederholungen",
+  "consent_form_headline": "Einverständniserklärung",
+  "view_consent_modal_button": "Ansehen",
+  "screening_headline": "Teilnahmestatus",
+  "password_confirm": "Passwort bestätigen"
 }

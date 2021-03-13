@@ -62,7 +62,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
       ) {
         return (
           <span className="badge badge-success mx-1">
-            {t('iteration_completed', 'Abgeschlossen')}
+            {t('globals:completed', 'Abgeschlossen')}
           </span>
         );
       }
@@ -71,7 +71,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
       return (
         <div>
           <span className="badge badge-warning mx-1">
-            {t('iteration_not_completed', 'Nicht abgeschlossen')}
+            {t('globals:not_completed', 'Nicht abgeschlossen')}
           </span>
           {moment(now).isBetween(iteration.start, iteration.end, 'day', '[]') && (
             <button
@@ -79,7 +79,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
               className="btn btn-sm btn-link"
               onClick={() => history.push(`questionnairePresenter/iteration/${iteration.id}`)}
             >
-              {t('iteration_continue', 'Fortsetzen')}
+              {t('globals:continue', 'Fortsetzen')}
             </button>
           )}
         </div>
@@ -88,7 +88,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
     return (
       <div>
         <span className="badge badge-danger mx-1">
-          {t('iteration_not_started', 'Nicht gestartet')}
+          {t('globals:not_started', 'Nicht gestartet')}
         </span>
         {moment(now).isBetween(iteration.start, iteration.end, 'day', '[]') && (
           <button
@@ -96,7 +96,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
             className="btn btn-sm btn-link"
             onClick={() => startQuestionnaire(user.id)}
           >
-            {t('iteration_not_started', 'Jetzt starten')}
+            {t('globals:start_now', 'Jetzt starten')}
           </button>
         )}
       </div>
@@ -115,7 +115,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
           <ChangePassword userId={user.id} />
           {!isAdmin && (
             <div>
-              <p className="lead m-0 mb-1 mt-5">{t('iteration_headline', 'Wiederholungen')}</p>
+              <p className="lead m-0 mb-1 mt-5">{t('globals:iteration', 'Wiederholungen')}</p>
               <hr className="m-0 mb-3" />
               <div className="row no-gutters overflow-auto flex-row flex-nowrap">
                 <div className="col">
@@ -123,20 +123,20 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
                     <table className="table  m-0 border-top-0">
                       <caption className="p-0 pt-2 ">
                         {t(
-                          'iteration_caption',
+                          'globals:iteration_caption',
                           'Der Fragebogen kann nur zwischen Startdatum und Enddatum jeder Wiederholung ausgefüllt werden.'
                         )}
                       </caption>
                       <thead>
                         <tr>
                           <th scope="col" className="pt-0 pl-0">
-                            {t('iteration_table_start', 'Start')}
+                            {t('globals:start', 'Start')}
                           </th>
                           <th scope="col" className="pt-0 pl-0">
-                            {t('iteration_table_end', 'Ende')}
+                            {t('globals:end', 'Ende')}
                           </th>
                           <th scope="col" className="pt-0 pl-0">
-                            {t('iteration_table_status', 'Status')}
+                            {t('globals:status', 'Status')}
                           </th>
                         </tr>
                       </thead>
@@ -160,7 +160,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
                             <td colSpan="3">
                               <div className="d-flex flex-column text-center">
                                 <span className="badge badge-warning">
-                                  {t('iteration_table_empty', 'Keine Wiederholungen')}
+                                  {t('globals:iteration_table_empty', 'Keine Wiederholungen')}
                                 </span>
                               </div>
                             </td>
@@ -174,7 +174,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
               <div className="mt-5">
                 <div className="d-flex flex-row align-items-end justify-content-between">
                   <p className="align-bottom m-0 mb-1 lead">
-                    {t('consent_form_headline', 'Einverständniserklärung')}
+                    {t('globals:consent_form', 'Einverständniserklärung')}
                   </p>
                   {consentScript && (
                     <button
@@ -183,7 +183,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
                       data-toggle="modal"
                       data-target="#staticBackdrop"
                     >
-                      {t('view_consent_modal_button', 'Ansehen')}
+                      {t('globals:view', 'Ansehen')}
                     </button>
                   )}
                 </div>
@@ -191,11 +191,11 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
               <hr className="m-0 mb-3" />
               {hasAcceptedConsentForm ? (
                 <span className="badge badge-success mx-1">
-                  {t('globals:consent_accept', 'Akzeptiert')}
+                  {t('globals:accepted', 'Akzeptiert')}
                 </span>
               ) : (
                 <span className="badge badge-danger mx-1">
-                  {t('globals:consent_not_accept', 'Nicht akzeptiert')}
+                  {t('globals:not_accept', 'Nicht akzeptiert')}
                 </span>
               )}
               <ConsentModal
@@ -204,7 +204,9 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
                   setUpdate({ hasAcceptedConsentForm: true });
                 }}
               />
-              <p className="lead m-0 mb-1 mt-5"> {t('screening_headline', 'Teilnahmestatus')}</p>
+              <p className="lead m-0 mb-1 mt-5">
+                {t('globals:screening_status', 'Teilnahmestatus')}
+              </p>
               <hr className="m-0 mb-3" />
               {(() => {
                 switch (screeningStatus) {

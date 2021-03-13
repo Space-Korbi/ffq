@@ -130,19 +130,19 @@ const QuestionTable = ({
       formatter: moveButtons
     },
     {
-      text: t(('editor:title', 'Titel')),
+      text: t(('globals:title', 'Titel')),
       dataField: 'question.title'
     },
     {
-      text: t(('editor:subtitle1', 'Untertitel1')),
+      text: t(('globals:subtitle1', 'Untertitel1')),
       dataField: 'question.subtitle1'
     },
     {
-      text: t(('editor:subtitle2', 'Untertitel2')),
+      text: t(('globals:subtitle2', 'Untertitel2')),
       dataField: 'question.subtitle2'
     },
     {
-      text: t(('editor:help', 'Hilfe')),
+      text: t(('globals:help', 'Hilfe')),
       dataField: 'question.help'
     },
 

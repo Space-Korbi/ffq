@@ -34,8 +34,8 @@ const LoginPage = () => {
           <br />
           <Formik
             initialValues={{
-              email: 'a@1.de',
-              password: '12345'
+              email: '',
+              password: ''
             }}
             validationSchema={Yup.object().shape({
               email: Yup.string().required(t(('yup:email_required', 'Email-Adresse eingeben'))),
@@ -198,9 +198,9 @@ const LoginPage = () => {
                       `Falls Sie Ihr Passwort vergessen habe, geben Sie Ihre Email-Adresse ein und klicken sie 'Link anfordern'. Kurz danach erhalten Sie eine Email mit einem Link um Ihr Passwort zurückzusetzen.`)
                     )}
                     <div className="form-group mt-4">
-                      <label htmlFor="email">{t(('globals:email', 'Email'))}</label>
+                      <label htmlFor="resetemail">{t(('globals:email', 'Email'))}</label>
                       <Field
-                        id="email"
+                        id="resetemail"
                         name="email"
                         type="email"
                         className={`form-control${
