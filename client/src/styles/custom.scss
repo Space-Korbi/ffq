@@ -55,6 +55,10 @@ main {
 .react-bootstrap-table td {
   vertical-align: middle;
   white-space: nowrap;
+  font-size: smaller;
+  max-width: 600px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .react-bootstrap-table th {
