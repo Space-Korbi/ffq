@@ -123,7 +123,7 @@ const ParticipantsTable = ({ fileName, data, columns, iterationSelector }) => {
     },
     {
       dataField: 'screeningData',
-      text: t('globals:screening_data', ''),
+      text: t('globals:data', 'Angaben'),
       formatter: (cellContent) => {
         const formatted = cellContent.map((content) => {
           return <li key={content}>{content}</li>;
