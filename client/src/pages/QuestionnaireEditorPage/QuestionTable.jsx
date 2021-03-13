@@ -50,6 +50,7 @@ const QuestionTable = ({
       })
       .catch((error) => {
         // TODO: Show error to user
+        // eslint-disable-next-line no-console
         console.log(error);
       });
   };
