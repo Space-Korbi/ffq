@@ -191,22 +191,11 @@ const requestPasswordReset = async (req, res) => {
     .catch((error) => {
       return res.status(500).json(error);
     });
-
-  AWS.config.getCredentials(function (err) {
-    if (err) console.log(err.stack);
-    // credentials not loaded
-    else {
-      console.log('Access key:', AWS.config.credentials.accessKeyId);
-    }
-  });
 };
 
 const resetPassword = async (req, res) => {
   const { userId } = req;
   const { password } = req.body;
-
-  console.log('----------', userId, password);
-  console.log('--body', req.body);
 
   const filter = { _id: userId };
   const update = { password: bcrypt.hashSync(password, 8) };
@@ -380,6 +369,7 @@ const updateAnswer = async (req, res) => {
       const iteration = userUpdate.iterations.find((i) => {
         return i.id === iterationId;
       });
+
       let answer;
       if (iteration.answers && iteration.answers.length) {
         answer = iteration.answers.find((a) => {
@@ -387,8 +377,14 @@ const updateAnswer = async (req, res) => {
         });
       }
       if (answer) {
+        iteration.questionsToSkip = updateSkip(
+          answer.answerOption,
+          answerOption,
+          iteration.questionsToSkip
+        );
         answer.answerOption = answerOption;
       } else {
+        iteration.questionsToSkip = updateSkip(null, answerOption, iteration.questionsToSkip);
         iteration.answers.push({ questionId, answerOption });
       }
 
@@ -398,8 +394,8 @@ const updateAnswer = async (req, res) => {
     })
     .catch((error) => {
       return res
-        .status(404)
-        .json({ error, title: 'Users not found', detail: 'No user could be found.' });
+        .status(500)
+        .json({ error, title: 'Internal error', detail: 'Answer was not saved or updated.' });
     });
 };
 

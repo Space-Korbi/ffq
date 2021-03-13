@@ -46,8 +46,7 @@ const Questionnaire = mongoose.model(
       screeningRules: [ScreeningRule],
       selectionCriteria: { type: [String], default: [] },
       iterations: [Iteration],
-      questions: [{ type: mongoose.Types.ObjectId, ref: 'questions', default: [] }],
-      imageURLs: [{ type: String, default: [] }]
+      questions: [{ type: mongoose.Types.ObjectId, ref: 'questions', default: [] }]
     },
     { timestamps: true }
   )

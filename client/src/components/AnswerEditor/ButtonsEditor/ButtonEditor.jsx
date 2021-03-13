@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { arrayOf, func, string, shape, number } from 'prop-types';
 import BootstrapTable from 'react-bootstrap-table-next';
 
@@ -11,11 +11,7 @@ import { EditorCard } from '../../Cards';
 const ButtonEditor = ({ dispatch, position, answerOption, index, modalTable }) => {
   const { t } = useTranslation(['globals']);
 
-  const tabNames = [
-    t('globals:text', 'Text'),
-    t('globals:action', 'Aktion'),
-    t('globals:color', 'Farbe')
-  ];
+  const [currentAnswerOption, setCurrentAnswerOption] = useState();
 
   const setPrevSelection = () => {
     let prevSelected = [];
@@ -28,6 +24,17 @@ const ButtonEditor = ({ dispatch, position, answerOption, index, modalTable }) =
     }
     return prevSelected;
   };
+
+  useEffect(() => {
+    console.log('heyyy');
+    setPrevSelection();
+  }, [answerOption]);
+
+  const tabNames = [
+    t('globals:text', 'Text'),
+    t('globals:action', 'Aktion'),
+    t('globals:color', 'Farbe')
+  ];
 
   const [selectedQuestions, setSelectedQuestions] = useState(() => setPrevSelection());
 
@@ -42,6 +49,17 @@ const ButtonEditor = ({ dispatch, position, answerOption, index, modalTable }) =
         return prevSelection.filter((prev) => prev.questionId !== row.question._id);
       });
     }
+  };
+
+  const handleSaveSelected = () => {
+    dispatch({
+      type: 'setSkippedQuestions',
+      payload: {
+        id: currentAnswerOption.id,
+        position,
+        skip: selectedQuestions.map((question) => question.questionId)
+      }
+    });
   };
 
   const textTabContent = (
@@ -63,7 +81,10 @@ const ButtonEditor = ({ dispatch, position, answerOption, index, modalTable }) =
         type="button"
         className="btn btn-outline-primary "
         data-toggle="modal"
-        data-target="#staticBackdrop"
+        data-target={`#questionSkipModal${answerOption.id}`}
+        onClick={() => {
+          setCurrentAnswerOption(answerOption);
+        }}
       >
         {t('globals:questions_to_skip', 'Fragen überspringen')}
       </button>
@@ -152,18 +173,18 @@ const ButtonEditor = ({ dispatch, position, answerOption, index, modalTable }) =
       />
       <div
         className="modal fade"
-        id="staticBackdrop"
+        id={`questionSkipModal${answerOption.id}`}
         data-backdrop="static"
         data-keyboard="false"
         tabIndex="-1"
-        aria-labelledby="staticBackdropLabel"
+        aria-labelledby="questionSkipModalLabel"
         aria-hidden="true"
       >
-        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div className="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title" id="staticBackdropLabel">
-                Questions to skip
+              <h5 className="modal-title" id="questionSkipModalLabel">
+                {t('globals:to_skip', 'Zu überspringen')} {position}
               </h5>
               <button
                 type="button"
@@ -190,25 +211,16 @@ const ButtonEditor = ({ dispatch, position, answerOption, index, modalTable }) =
                 data-dismiss="modal"
                 onClick={() => setSelectedQuestions([])}
               >
-                Close
+                {t('globals:close', 'Schließen')}
               </button>
               <button
                 type="button"
+                id="setSkip"
                 className="btn btn-primary"
                 data-dismiss="modal"
-                onClick={() => {
-                  dispatch({
-                    type: 'setSkippedQuestions',
-                    payload: {
-                      id: answerOption.id,
-                      position,
-                      skip: selectedQuestions.map((question) => question.questionId)
-                    }
-                  });
-                  setSelectedQuestions([]);
-                }}
+                onClick={() => handleSaveSelected()}
               >
-                Save
+                {t('globals:save', 'Speichern')}
               </button>
             </div>
           </div>
