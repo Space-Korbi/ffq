@@ -28,7 +28,7 @@ const ChangePassword = ({ userId }) => {
             .min(5, t('yup:password_length', 'Mindestens 5 Zeichen verwenden')),
 
           newPassword: Yup.string()
-            .required(t('new_password_required', 'Neues Password eingeben'))
+            .required(t('yup:new_password_required', 'Neues Password eingeben'))
             .min(5, t('yup:password_length', 'Mindestens 5 Zeichen verwenden')),
           confirmPassword: Yup.string()
             .required(t('yup:password_confirm', 'Passwort bestätigen'))
@@ -52,7 +52,7 @@ const ChangePassword = ({ userId }) => {
               .then(() => {
                 setStatus(
                   <div className="alert alert-success mb-5">
-                    {t('password_change_success', 'Passwort wurde erfolgreich geändert.')}
+                    {t('globals:password_change_success', 'Passwort wurde erfolgreich geändert.')}
                   </div>
                 );
                 setSubmitting(false);
@@ -95,7 +95,7 @@ const ChangePassword = ({ userId }) => {
                     {isSubmitting ? (
                       <Spinner className="spinner-border spinner-border-sm" />
                     ) : (
-                      t('save_password', 'Passwort speichern')
+                      t('globals:save_password', 'Passwort speichern')
                     )}
                   </>
                 </button>
@@ -106,7 +106,7 @@ const ChangePassword = ({ userId }) => {
             <div className="row">
               <div className="col-lg-4 mb-2 mb-lg-0">
                 <div className="form-group mb-lg-0">
-                  <label htmlFor="oldPassword">{t('password_old', 'Altes Passwort')}</label>
+                  <label htmlFor="oldPassword">{t('globals:password_old', 'Altes Passwort')}</label>
                   <Field
                     type="password"
                     name="oldPassword"
@@ -117,7 +117,7 @@ const ChangePassword = ({ userId }) => {
               </div>
               <div className="col-lg-4 mb-2 mb-lg-0">
                 <div className="form-group mb-lg-0">
-                  <label htmlFor="newPassword">{t('password_new', 'Neues Passwort')}</label>
+                  <label htmlFor="newPassword">{t('globals:password_new', 'Neues Passwort')}</label>
                   <Field
                     type="password"
                     name="newPassword"

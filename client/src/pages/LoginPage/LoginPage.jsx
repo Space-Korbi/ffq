@@ -180,6 +180,7 @@ const LoginPage = () => {
                     },
                     (error) => {
                       setSubmitting(false);
+                      // eslint-disable-next-line no-console
                       console.log(error);
                       setStatus(
                         t(

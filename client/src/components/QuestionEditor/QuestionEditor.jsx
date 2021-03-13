@@ -38,10 +38,12 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
     data.append('image', amountOption.imageData);
     const url = await uploadImageToCloudinary(data)
       .then((response) => {
+        // eslint-disable-next-line no-console
         console.log(response.data.url);
         return response.data.url;
       })
       .catch((error) => {
+        // eslint-disable-next-line no-console
         console.log(error);
       });
     return url;

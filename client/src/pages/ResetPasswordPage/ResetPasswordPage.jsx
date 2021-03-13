@@ -98,7 +98,7 @@ const ResetPasswordPage = () => {
                 </div>
                 <div className="form-group pb-5">
                   <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-                    {t('change_password', 'Passwort ändern')}
+                    {t('globals:change_password', 'Passwort ändern')}
                   </button>
                   {isSubmitting && (
                     <img

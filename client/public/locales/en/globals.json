@@ -80,10 +80,13 @@
   "not_accept": "Nicht akzeptiert",
   "screening_status": "Teilnahmestatus",
   "rejected": "Abgelehnt",
+  "password_change_success": " Passwort erfolgreich geändert.",
   "password": "Passwort",
+  "save_password": "Passwort speichern",
+  "password_old": "Altes Passwort",
+  "password_new": "Neues Passwort",
   "password_confirm": "Passwort bestätigen",
   "personal_info_headline": "Persönliche Informationen",
-  "\"save_changes": "Änderung speichern",
   "first_name": "Vorname",
   "last_name": "Nachname",
   "email": "Email",
@@ -108,8 +111,6 @@
   "pause": "Pause",
   "questionnaire_empty": "Der Fragebogen hat keine Fragen.",
   "change_password": "Passwort Ändern",
-  "password_change_success": " Passwort erfolgreich geändert.",
-  "password_new": "Neues Passwort",
   "sign_up_success": "Registrierung erfolgreich abgeschlossen.",
   "sign_up_button": "Registrieren"
 }
