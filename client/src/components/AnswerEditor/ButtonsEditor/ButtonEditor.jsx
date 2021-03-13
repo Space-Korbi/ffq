@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { arrayOf, func, string, shape, number } from 'prop-types';
 import BootstrapTable from 'react-bootstrap-table-next';
 
@@ -37,6 +37,8 @@ const ButtonEditor = ({ dispatch, position, answerOption, index, modalTable }) =
 
   const [selectedQuestions, setSelectedQuestions] = useState(() => setPrevSelection());
 
+  const selectedRef = useRef(selectedQuestions);
+
   const handleOnSelect = (row, isSelect) => {
     if (isSelect) {
       setSelectedQuestions((prevSelection) => [
@@ -51,6 +53,7 @@ const ButtonEditor = ({ dispatch, position, answerOption, index, modalTable }) =
   };
 
   const handleSaveSelected = () => {
+    selectedRef.current = selectedQuestions;
     dispatch({
       type: 'setSkippedQuestions',
       payload: {
@@ -190,7 +193,7 @@ const ButtonEditor = ({ dispatch, position, answerOption, index, modalTable }) =
                 className="close"
                 data-dismiss="modal"
                 aria-label="Close"
-                onClick={() => setSelectedQuestions([])}
+                onClick={() => setSelectedQuestions(selectedRef.current)}
               >
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -208,7 +211,7 @@ const ButtonEditor = ({ dispatch, position, answerOption, index, modalTable }) =
                 type="button"
                 className="btn btn-secondary"
                 data-dismiss="modal"
-                onClick={() => setSelectedQuestions([])}
+                onClick={() => setSelectedQuestions(selectedRef.current)}
               >
                 {t('globals:close', 'Schließen')}
               </button>
