@@ -34,14 +34,14 @@ const LoginPage = () => {
           <br />
           <Formik
             initialValues={{
-              email: 'a@1.de',
-              password: '12345'
+              email: '',
+              password: ''
             }}
             validationSchema={Yup.object().shape({
-              email: Yup.string().required(t(('yup:email_required', 'Email-Adresse eingeben'))),
+              email: Yup.string().required(t('yup:email_required', 'Email-Adresse eingeben')),
               password: Yup.string()
-                .required(t(('yup:password_required', 'Passwort eingeben')))
-                .min(5, t(('yup:password_length', 'Mindestens 5 Zeichen verwenden')))
+                .required(t('yup:password_required', 'Passwort eingeben'))
+                .min(5, t('yup:password_length', 'Mindestens 5 Zeichen verwenden'))
             })}
             onSubmit={({ email, password }, { setStatus, setSubmitting }) => {
               authService.loginUser(email, password).then(
@@ -88,7 +88,7 @@ const LoginPage = () => {
             {({ errors, status, touched, isSubmitting }) => (
               <Form>
                 <div className="form-group">
-                  <label htmlFor="email">{t(('globals:email', 'Email'))}</label>
+                  <label htmlFor="email">{t('globals:email', 'Email')}</label>
                   <Field
                     id="email"
                     name="email"
@@ -117,7 +117,7 @@ const LoginPage = () => {
                     className="btn btn-link"
                     onClick={() => history.push(`/signup`)}
                   >
-                    {t(('globals:sign_up_headline', 'Registrierung'))}
+                    {t('globals:sign_up_headline', 'Registrierung')}
                   </button>
                   {isSubmitting && (
                     <img
@@ -132,7 +132,7 @@ const LoginPage = () => {
                   data-toggle="modal"
                   data-target="#staticBackdrop"
                 >
-                  {t(('globals:password_forgot', 'Passwort vergessen'))}
+                  {t('globals:password_forgot', 'Passwort vergessen')}
                 </button>
                 {status && <div className="alert alert-danger mb-5">{status}</div>}
               </Form>
@@ -153,7 +153,7 @@ const LoginPage = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="staticBackdropLabel">
-                {t(('globals:password_forgot', 'Passwort vergessen'))}
+                {t('globals:password_forgot', 'Passwort vergessen')}
               </h5>
               <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -165,7 +165,7 @@ const LoginPage = () => {
                   email: ''
                 }}
                 validationSchema={Yup.object().shape({
-                  email: Yup.string().required(t(('yup:email_required', 'Email-Adresse eingeben')))
+                  email: Yup.string().required(t('yup:email_required', 'Email-Adresse eingeben'))
                 })}
                 onSubmit={({ email }, { setStatus, setSubmitting }) => {
                   authService.requestPasswordReset({ email }).then(
@@ -194,13 +194,13 @@ const LoginPage = () => {
                 {({ errors, status, touched, isSubmitting }) => (
                   <Form>
                     {t(
-                      ('globals:reset_password_information',
-                      `Falls Sie Ihr Passwort vergessen habe, geben Sie Ihre Email-Adresse ein und klicken sie 'Link anfordern'. Kurz danach erhalten Sie eine Email mit einem Link um Ihr Passwort zurückzusetzen.`)
+                      'globals:reset_password_information',
+                      `Falls Sie Ihr Passwort vergessen habe, geben Sie Ihre Email-Adresse ein und klicken sie 'Link anfordern'. Kurz danach erhalten Sie eine Email mit einem Link um Ihr Passwort zurückzusetzen.`
                     )}
                     <div className="form-group mt-4">
-                      <label htmlFor="email">{t(('globals:email', 'Email'))}</label>
+                      <label htmlFor="resetemail">{t('globals:email', 'Email')}</label>
                       <Field
-                        id="email"
+                        id="resetemail"
                         name="email"
                         type="email"
                         className={`form-control${
@@ -210,7 +210,7 @@ const LoginPage = () => {
                       <ErrorMessage name="email" component="div" className="invalid-feedback" />
                     </div>
                     <button type="submit" className="btn btn-primary">
-                      {t(('globals:request_link_button', 'Link anfordern'))}
+                      {t('globals:request_link_button', 'Link anfordern')}
                     </button>
                     {isSubmitting && (
                       <img
@@ -225,7 +225,7 @@ const LoginPage = () => {
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-dismiss="modal">
-                {t(('globals:cancel', 'Abbrechen'))}
+                {t('globals:cancel', 'Abbrechen')}
               </button>
             </div>
           </div>

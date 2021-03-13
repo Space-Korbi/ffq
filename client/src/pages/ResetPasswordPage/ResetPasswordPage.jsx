@@ -25,7 +25,7 @@ const ResetPasswordPage = () => {
           <div className="d-flex justify-content-center">
             <Logo className="App-logo mb-5" width="72" height="72" />
           </div>
-          <h2>{t(('globals:change_password', 'Passwort Ändern'))}</h2>
+          <h2>{t('globals:change_password', 'Passwort Ändern')}</h2>
           <br />
           <Formik
             initialValues={{
@@ -34,10 +34,10 @@ const ResetPasswordPage = () => {
             }}
             validationSchema={Yup.object().shape({
               password: Yup.string()
-                .required(t(('yup:password_required', 'Passwort eingeben')))
-                .min(5, t(('yup:password_length', 'Mindestens 5 Zeichen verwenden'))),
+                .required(t('yup:password_required', 'Passwort eingeben'))
+                .min(5, t('yup:password_length', 'Mindestens 5 Zeichen verwenden')),
               confirmPassword: Yup.string()
-                .required(t(('yup:password_confirm', 'Passwort bestätigen')))
+                .required(t('yup:password_confirm', 'Passwort bestätigen'))
                 .when('password', {
                   is: (password) => !!(password && password.length > 0),
                   then: Yup.string().oneOf(
@@ -55,7 +55,7 @@ const ResetPasswordPage = () => {
                   setSubmitting(false);
                   // eslint-disable-next-line no-alert
                   window.alert(
-                    t(('globals:password_change_success', ' Passwort erfolgreich geändert.'))
+                    t('globals:password_change_success', ' Passwort erfolgreich geändert.')
                   );
                   history.push(`/login`);
                 },
@@ -69,7 +69,7 @@ const ResetPasswordPage = () => {
             {({ errors, status, touched, isSubmitting }) => (
               <Form>
                 <div className="form-group">
-                  <label htmlFor="password">{t(('globals:password_new', 'Neues Passwort'))}</label>
+                  <label htmlFor="password">{t('globals:password_new', 'Neues Passwort')}</label>
                   <Field
                     name="password"
                     type="password"
@@ -81,7 +81,7 @@ const ResetPasswordPage = () => {
                 </div>
                 <div className="form-group">
                   <label htmlFor="confirmPassword">
-                    {t(('globals:password_confirm', 'Passwort bestätigen'))}
+                    {t('globals:password_confirm', 'Passwort bestätigen')}
                   </label>
                   <Field
                     name="confirmPassword"
@@ -98,7 +98,7 @@ const ResetPasswordPage = () => {
                 </div>
                 <div className="form-group pb-5">
                   <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-                    {t(('change_password', 'Passwort ändern'))}
+                    {t('change_password', 'Passwort ändern')}
                   </button>
                   {isSubmitting && (
                     <img

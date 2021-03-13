@@ -24,14 +24,14 @@ const ChangePassword = ({ userId }) => {
         }}
         validationSchema={Yup.object().shape({
           oldPassword: Yup.string()
-            .required(t(('yup:old_password_required', 'Altes Password eingeben')))
-            .min(5, t('yup:password_length')),
+            .required(t('yup:old_password_required', 'Altes Password eingeben'))
+            .min(5, t('yup:password_length', 'Mindestens 5 Zeichen verwenden')),
 
           newPassword: Yup.string()
-            .required(t(('new_password_required', 'Neues Password eingeben')))
-            .min(5, t(('yup:password_length', 'Mindestens 5 Zeichen verwenden'))),
+            .required(t('new_password_required', 'Neues Password eingeben'))
+            .min(5, t('yup:password_length', 'Mindestens 5 Zeichen verwenden')),
           confirmPassword: Yup.string()
-            .required(t(('yup:password_confirm', 'Passwort bestätigen')))
+            .required(t('yup:password_confirm', 'Passwort bestätigen'))
             .when('newPassword', {
               is: (password) => !!(password && password.length > 0),
               then: Yup.string().oneOf(
@@ -52,7 +52,7 @@ const ChangePassword = ({ userId }) => {
               .then(() => {
                 setStatus(
                   <div className="alert alert-success mb-5">
-                    {t(('password_change_success', 'Passwort wurde erfolgreich geändert.'))}
+                    {t('password_change_success', 'Passwort wurde erfolgreich geändert.')}
                   </div>
                 );
                 setSubmitting(false);
@@ -129,7 +129,7 @@ const ChangePassword = ({ userId }) => {
               <div className="col-lg-4 mb-lg-0">
                 <div className="form-group mb-0">
                   <label htmlFor="inputConfirmPassword">
-                    {t('password_confirm', 'Passwort bestätigen')}
+                    {t('globals:password_confirm', 'Passwort bestätigen')}
                   </label>
                   <Field
                     name="confirmPassword"

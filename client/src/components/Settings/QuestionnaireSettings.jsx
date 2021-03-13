@@ -41,10 +41,10 @@ const QuestionnaireSettings = ({ questionnaire, save }) => {
               save({ name, consentScript, iterations });
             }}
           >
-            {t(('editor:save_settings', 'Einstellungen speichern'))}
+            {t('globals:save_settings', 'Einstellungen speichern')}
           </button>
           <p className="lead m-0 mb-1 mt-5">
-            {t(('editor:questionnaire_name', 'Name des Fragebogens'))}
+            {t('globals:questionnaire_name', 'Name des Fragebogens')}
           </p>
           <hr className="m-0 mb-3" />
           <input
@@ -58,7 +58,7 @@ const QuestionnaireSettings = ({ questionnaire, save }) => {
           <div className="mt-5">
             <div className="d-flex flex-row align-items-end justify-content-between">
               <p className="align-bottom m-0 mb-1 lead">
-                {t('iteration_headline', 'Wiederholungen')}
+                {t('globals:iteration', 'Wiederholungen')}
               </p>
               <AddButton
                 onClick={() => addIteration()}
@@ -72,7 +72,7 @@ const QuestionnaireSettings = ({ questionnaire, save }) => {
           <DateIntervalSettings iterations={iterations} setIterations={setIterations} />
 
           <p className="lead m-0 mb-1 mt-5">
-            {t(('globals:consent_form_headline', 'Einverständniserklärung'))}
+            {t('globals:consent_form', 'Einverständniserklärung')}
           </p>
           <hr className="m-0 mb-3" />
           <textarea

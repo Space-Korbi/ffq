@@ -24,7 +24,7 @@ const ExportCSVButton = (props) => {
   return (
     <div>
       <button type="button" className="btn btn-outline-success" onClick={handleClick}>
-        {t(('globals:export_csv', 'Als CSV exportieren'))}
+        {t('globals:export_csv', 'Als CSV exportieren')}
       </button>
     </div>
   );
@@ -102,7 +102,7 @@ const ParticipantsTable = ({ fileName, data, columns, iterationSelector }) => {
     },
     {
       dataField: 'hasAcceptedConsentForm',
-      text: t('consent_form_headline', 'Einverständniserklärung'),
+      text: t('globals:consent_form', 'Einverständniserklärung'),
       formatter: (cellContent) => {
         if (cellContent) {
           return <span className="badge badge-success">{t('globals:accepted', 'Akzeptiert')}</span>;

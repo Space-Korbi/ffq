@@ -33,7 +33,7 @@ const IterationsTableXs = ({ iterations, setStart, setEnd, remove }) => {
       <table className="table table-sm table-borderless m-0 border-top-0">
         <caption className="p-0 pt-2 ml-1">
           {t(
-            'iteration_caption',
+            'globals:iteration_caption',
             'Der Fragebogen kann nur zwischen Startdatum und Enddatum jeder Wiederholung ausgefüllt werden.'
           )}
         </caption>
@@ -127,17 +127,17 @@ const IterationsTableLg = ({ iterations, setStart, setEnd, remove }) => {
       <table className="table table-sm table-borderless m-0 border-top-0">
         <caption className="p-0 pt-2 ml-1">
           {t(
-            'iteration_caption',
+            'globals:iteration_caption',
             'Der Fragebogen kann nur zwischen Startdatum und Enddatum jeder Wiederholung ausgefüllt werden.'
           )}
         </caption>
         <thead>
           <tr>
             <th scope="col" className="pt-0 pl-0">
-              {t('iteration_start', 'Start')}
+              {t('globals:start', 'Start')}
             </th>
             <th scope="col" className="pt-0 pl-0">
-              {t('iteration_end', 'Ende')}
+              {t('globals:end', 'Ende')}
             </th>
           </tr>
         </thead>

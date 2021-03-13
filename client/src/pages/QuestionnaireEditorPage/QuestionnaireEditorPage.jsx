@@ -4,8 +4,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import $ from 'jquery';
 
-import PropTypes from 'prop-types';
-
 // localization
 import { useTranslation } from 'react-i18next';
 
@@ -21,7 +19,6 @@ import { NavTabs, NavContents } from '../../components/Navigation';
 import QuestionEditor from '../../components/QuestionEditor';
 import { OutlineButton } from '../../components/Button';
 import QuestionnaireSettings from '../../components/Settings';
-import QuestionnaireImages from '../../components/Images';
 import QuestionTable from './QuestionTable';
 
 const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
@@ -91,15 +88,15 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
       style: { width: '8px' }
     },
     {
-      text: t(('editor:title', 'Titel')),
+      text: t('globals:title', 'Titel'),
       dataField: 'question.title'
     },
     {
-      text: t(('editor:subtitle1', 'Untertitel1')),
+      text: t('globals:subtitle1', 'Untertitel1'),
       dataField: 'question.subtitle1'
     },
     {
-      text: t(('editor:subtitle2', 'Untertitel2')),
+      text: t('globals:subtitle2', 'Untertitel2'),
       dataField: 'question.subtitle2'
     }
   ];
@@ -156,8 +153,8 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
   );
 
   const tabNames = [
-    t(('editor:questions_tab', 'Fragen')),
-    t(('editor:settings_tab', 'Einstellungen'))
+    t('globals:questions_tab', 'Fragen'),
+    t('globals:settings_tab', 'Einstellungen')
   ];
   const tabContents = [questionsContent, settingsContent];
 

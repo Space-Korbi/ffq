@@ -255,9 +255,9 @@ const ParticipantsManagement = ({ questions, questionnaire }) => {
   );
 
   const tabNames = [
-    t(('globals:participants', 'Teilnehmer')),
-    t(('globals:selection_criteria', 'Auswahlkriterien')),
-    t(('globals:selection_rules', 'Auswahlregeln'))
+    t('globals:participants', 'Teilnehmer'),
+    t('globals:selection_criteria', 'Auswahlkriterien'),
+    t('globals:selection_rules', 'Auswahlregeln')
   ];
   const tabContents = [participantsContent, selectionCriteriaContent, ruleEditorContent];
 

@@ -11,7 +11,7 @@ const HelpTextInput = ({ help, onChange }) => {
     <div className="input-group my-2">
       <div className="input-group-prepend">
         <span className="input-group-text" id="help-text-input">
-          {t(('globals:help', 'Hilfe'))}
+          {t('globals:help', 'Hilfe')}
         </span>
       </div>
       <input

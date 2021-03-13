@@ -35,6 +35,7 @@
     "yup": "^0.30.0"
   },
   "scripts": {
+    "extract": "i18next --config i18next-parser.config.js",
     "start": "PORT=8000 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

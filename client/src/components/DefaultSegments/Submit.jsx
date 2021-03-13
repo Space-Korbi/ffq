@@ -24,7 +24,7 @@ const Submit = ({ iterationId }) => {
       <div className="jumbotron jumbotron-fluid text-center mt-5">
         <div className="container">
           <h1 className="lead">
-            {t(('globals:thank_for_participation', 'Vielen Dank für Ihre Teilnahme!'))}
+            {t('globals:thank_for_participation', 'Vielen Dank für Ihre Teilnahme!')}
           </h1>
         </div>
 
@@ -35,7 +35,7 @@ const Submit = ({ iterationId }) => {
             submit();
           }}
         >
-          {t(('globals:finish_ffq', 'Fragebogen beenden'))}
+          {t('globals:finish_ffq', 'Fragebogen beenden')}
         </button>
       </div>
     </div>

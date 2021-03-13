@@ -1,10 +1,9 @@
 {
-  "old_password_required": "Enter your old password",
-  "new_password_required": "Enter your new password",
-  "password_confirm": "Confirm your password",
-  "password_dont_match": "Those passwords didn’t match. Try again.",
-  "password_length": "Use 5 or more characters",
-  "first_name_required": "First name is required",
-  "last_name_required": "Last name is required",
-  "email_required": "Email address is required"
+  "old_password_required": "Altes Password eingeben",
+  "password_length": "Mindestens 5 Zeichen verwenden",
+  "password_confirm": "Passwort bestätigen",
+  "first_name_required": "Vornamen eingeben",
+  "last_name_required": "Nachnamen eingeben",
+  "email_required": "Email-Adresse eingeben",
+  "password_required": "Passwort eingeben"
 }

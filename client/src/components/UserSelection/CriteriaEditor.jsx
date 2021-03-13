@@ -28,7 +28,7 @@ const SelectionCriteriaInput = ({ onClick }) => {
         id="newCriteria"
         className="form-control"
         value={newCriteriaInput}
-        placeholder={t(('globals:enter_new_criteria', 'Neues Kriterium eingeben'))}
+        placeholder={t('globals:enter_new_criteria', 'Neues Kriterium eingeben')}
         onChange={(e) => setNewCriteriaInput(e.target.value)}
       />
       <div className="input-group-append">
@@ -100,7 +100,7 @@ const SelectionCriteria = ({
                   .then(() => {
                     setStatus(
                       <div className="alert alert alert-success">
-                        {t(('globals:changes_save_success', 'Änderungen erfolgreich gespeichert.'))}
+                        {t('globals:changes_save_success', 'Änderungen erfolgreich gespeichert.')}
                       </div>
                     );
                     setSubmitting(false);
@@ -123,11 +123,11 @@ const SelectionCriteria = ({
             >
               {submitting ? (
                 <>
-                  {t(('globals:saving', 'Speichern...'))}
+                  {t('globals:saving', 'Speichern...')}
                   <Spinner className="spinner-border spinner-border-sm ml-1" />
                 </>
               ) : (
-                t(('globals:save_changes', 'Änderungen speichern'))
+                t('globals:save_changes', 'Änderungen speichern')
               )}
             </button>
           </div>

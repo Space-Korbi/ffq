@@ -42,7 +42,7 @@ const NewRuleCard = ({ criteria, removeCriteriaFromCard, onSubmit }) => {
     <>
       <form id="newRuleForm" onSubmit={(e) => onSubmit(e)}>
         <div className="card">
-          <div className="card-header">{t(('globals:new_rule', 'Neue Regel'))}</div>
+          <div className="card-header">{t('globals:new_rule', 'Neue Regel')}</div>
           <div className="card-body">
             <div className="row d-flex align-self-center justify-content-center">
               <div className="col flex-grow-1 mb-2">
@@ -58,7 +58,7 @@ const NewRuleCard = ({ criteria, removeCriteriaFromCard, onSubmit }) => {
                     ))
                   ) : (
                     <div className="alert alert-light m-0" role="alert">
-                      {t(('globals:no_criteria_selected', 'Kein Kriterium ausgewählt.'))}
+                      {t('globals:no_criteria_selected', 'Kein Kriterium ausgewählt.')}
                     </div>
                   )}
                 </ul>
@@ -67,11 +67,11 @@ const NewRuleCard = ({ criteria, removeCriteriaFromCard, onSubmit }) => {
                 <div className="btn-group btn-group-toggle" data-toggle="buttons">
                   <label className="btn btn-outline-primary active">
                     <input type="radio" name="option" id="and" autoComplete="off" defaultChecked />
-                    {t(('globals:and', 'Und'))}
+                    {t('globals:and', 'Und')}
                   </label>
                   <label className="btn btn-outline-primary">
                     <input type="radio" name="option" id="or" autoComplete="off" />
-                    {t(('globals:or', 'Oder'))}
+                    {t('globals:or', 'Oder')}
                   </label>
                 </div>
               </div>
@@ -81,13 +81,13 @@ const NewRuleCard = ({ criteria, removeCriteriaFromCard, onSubmit }) => {
             <div className="input-group flex-nowrap">
               <div className="input-group-prepend">
                 <label className="input-group-text" htmlFor="decisionSelect">
-                  {t(('globals:decision', 'Entscheidung'))}{' '}
+                  {t('globals:decision', 'Entscheidung')}{' '}
                 </label>
               </div>
               <select className="custom-select" id="decisionSelect">
-                <option value="Accept">{t(('globals:accept', 'Akzeptieren'))}</option>
-                <option value="Reject">{t(('globals:reject', 'Ablehnen'))}</option>
-                <option value="Wait">{t(('globals:wait', 'Warten'))}</option>
+                <option value="Accept">{t('globals:accept', 'Akzeptieren')}</option>
+                <option value="Reject">{t('globals:reject', 'Ablehnen')}</option>
+                <option value="Wait">{t('globals:wait', 'Warten')}</option>
               </select>
             </div>
           </div>
@@ -108,7 +108,7 @@ const AddRuleButton = ({ disabled }) => {
 
   return (
     <button form="newRuleForm" className="btn btn-primary" type="submit" disabled={disabled}>
-      {t(('globals:add_rule', 'Regel hinzufügen'))}
+      {t('globals:add_rule', 'Regel hinzufügen')}
     </button>
   );
 };
@@ -169,7 +169,7 @@ const AddRule = ({ selectionCriteria, saveRule }) => {
   return (
     <>
       <div className="col p-0 mb-3">
-        <h6>{t(('globals:selection_criteria', 'Auswahlkriterien'))}</h6>
+        <h6>{t('globals:selection_criteria', 'Auswahlkriterien')}</h6>
         <RuleCriteriaSelect criteria={selectionCriteria} onChange={addCriteriaToCard} />
         <NewRuleCard
           criteria={selectedCriteria}

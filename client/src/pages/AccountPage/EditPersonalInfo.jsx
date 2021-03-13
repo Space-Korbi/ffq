@@ -23,11 +23,9 @@ function EditPersonalInfo({ userId, isAdmin, personalInfo }) {
           email: personalInfo.email
         }}
         validationSchema={Yup.object().shape({
-          firstName: Yup.string().required(t(('yup:first_name_required', 'Vornamen eingeben'))),
-          lastName: Yup.string().required(t(('yup:last_name_required', 'Nachnamen eingeben'))),
-          email: Yup.string()
-            .email()
-            .required(t(('yup:email_required', 'Email-Adresse eingeben')))
+          firstName: Yup.string().required(t('yup:first_name_required', 'Vornamen eingeben')),
+          lastName: Yup.string().required(t('yup:last_name_required', 'Nachnamen eingeben')),
+          email: Yup.string().email().required(t('yup:email_required', 'Email-Adresse eingeben'))
         })}
         validateOnChange={false}
         validateOnBlur={false}
@@ -38,7 +36,7 @@ function EditPersonalInfo({ userId, isAdmin, personalInfo }) {
               .then(() => {
                 setStatus(
                   <div className="alert alert-success mb-5">
-                    {t(('globals:changes_save_success', 'Änderungen erfolgreich gespeichert.'))}
+                    {t('globals:changes_save_success', 'Änderungen erfolgreich gespeichert.')}
                   </div>
                 );
                 setSubmitting(false);
@@ -73,7 +71,7 @@ function EditPersonalInfo({ userId, isAdmin, personalInfo }) {
               <div className="d-flex align-items-end justify-content-between">
                 <div className="col p-0">
                   <p className="align-bottom text-nowrap m-0 mb-1 lead">
-                    {t(('globals:personal_info_headline', 'Persönliche Informationen'))}
+                    {t('globals:personal_info_headline', 'Persönliche Informationen')}
                   </p>
                 </div>
                 <div className="col flex-grow-1 p-0">
@@ -86,7 +84,7 @@ function EditPersonalInfo({ userId, isAdmin, personalInfo }) {
                       {isSubmitting ? (
                         <Spinner className="spinner-border spinner-border-sm ml-1" />
                       ) : (
-                        t(('globals:"save_changes', 'Änderung speichern'))
+                        t('globals:"save_changes', 'Änderung speichern')
                       )}
                     </>
                   </button>
@@ -97,7 +95,7 @@ function EditPersonalInfo({ userId, isAdmin, personalInfo }) {
             <div className="row">
               <div className="col-lg-4 mb-2 mb-lg-0">
                 <div className="form-group mb-lg-0">
-                  <label htmlFor="inputFirstName">{t(('globals:first_name', 'Vorname'))}</label>
+                  <label htmlFor="inputFirstName">{t('globals:first_name', 'Vorname')}</label>
                   <Field
                     type="text"
                     name="firstName"
@@ -108,7 +106,7 @@ function EditPersonalInfo({ userId, isAdmin, personalInfo }) {
               </div>
               <div className="col-lg-4 mb-2 mb-lg-0">
                 <div className="form-group mb-lg-0">
-                  <label htmlFor="inputLastName">{t(('globals:last_name', 'Nachname'))}</label>
+                  <label htmlFor="inputLastName">{t('globals:last_name', 'Nachname')}</label>
                   <Field
                     type="text"
                     name="lastName"
@@ -119,7 +117,7 @@ function EditPersonalInfo({ userId, isAdmin, personalInfo }) {
               </div>
               <div className="col-lg-4 mb-lg-0">
                 <div className="form-group mb-0">
-                  <label htmlFor="inputEmail">{t(('globals:email', 'Email'))}</label>
+                  <label htmlFor="inputEmail">{t('globals:email', 'Email')}</label>
                   <Field
                     name="email"
                     type="email"
