@@ -37,7 +37,7 @@ const AdminPage = () => {
             <div className="card-body">
               <h5 className="card-title">FFQ Vorschau</h5>
               <TelescopeIcon size={48} />
-              <p className="card-text my-2">Klicken Sie sich durch eine Vorschau des Fragebogens</p>
+              <p className="card-text my-2">Klicken dich durch eine Vorschau des Fragebogens</p>
               <Link
                 to={`${url}/questionnairePresenter/iteration/0`}
                 className="p-0 m-0 border-0 stretched-link"
