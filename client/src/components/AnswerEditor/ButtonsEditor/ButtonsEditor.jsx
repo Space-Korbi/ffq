@@ -15,9 +15,9 @@ const ButtonColumn = ({ answerOptions, position, dispatch, modalTable }) => {
   const translatePosition = () => {
     switch (position.toLowerCase()) {
       case 'left':
-        return t(('globals:left', 'links'));
+        return t('globals:left', 'links');
       case 'right':
-        return t(('globals:rechts', 'rechts'));
+        return t('globals:rechts', 'rechts');
       default:
         return '';
     }
@@ -62,9 +62,9 @@ const AddButton = ({ position, dispatch }) => {
   const translatePosition = () => {
     switch (position.toLowerCase()) {
       case 'left':
-        return t(('globals:add_button_left', 'Button links hinzufügen'));
+        return t('globals:add_button_left', 'Button links hinzufügen');
       case 'right':
-        return t(('globals:add_button_rechts', 'Button rechts hinzufügen'));
+        return t('globals:add_button_rechts', 'Button rechts hinzufügen');
       default:
         return '';
     }

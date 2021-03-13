@@ -1,3 +1,9 @@
 {
-  "password_length": "Use 5 or more characters"
+  "old_password_required": "Altes Password eingeben",
+  "password_length": "Mindestens 5 Zeichen verwenden",
+  "password_confirm": "Passwort bestätigen",
+  "first_name_required": "Vornamen eingeben",
+  "last_name_required": "Nachnamen eingeben",
+  "email_required": "Email-Adresse eingeben",
+  "password_required": "Passwort eingeben"
 }

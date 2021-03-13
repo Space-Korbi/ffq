@@ -26,7 +26,7 @@ const CardsEditor = ({ answerOptions, dispatch }) => {
   return (
     <div className="my-5 text-center">
       <OutlineButton
-        title={t(('globals:add_card', 'Karte hinzufügen'))}
+        title={t('globals:add_card', 'Karte hinzufügen')}
         onClick={() =>
           dispatch({
             type: 'addCard',

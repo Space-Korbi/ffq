@@ -41,10 +41,10 @@ const QuestionnaireSettings = ({ questionnaire, save }) => {
               save({ name, consentScript, iterations });
             }}
           >
-            {t(('globals:save_settings', 'Einstellungen speichern'))}
+            {t('globals:save_settings', 'Einstellungen speichern')}
           </button>
           <p className="lead m-0 mb-1 mt-5">
-            {t(('globals:questionnaire_name', 'Name des Fragebogens'))}
+            {t('globals:questionnaire_name', 'Name des Fragebogens')}
           </p>
           <hr className="m-0 mb-3" />
           <input
@@ -72,7 +72,7 @@ const QuestionnaireSettings = ({ questionnaire, save }) => {
           <DateIntervalSettings iterations={iterations} setIterations={setIterations} />
 
           <p className="lead m-0 mb-1 mt-5">
-            {t(('globals:consent_form', 'Einverständniserklärung'))}
+            {t('globals:consent_form', 'Einverständniserklärung')}
           </p>
           <hr className="m-0 mb-3" />
           <textarea

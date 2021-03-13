@@ -24,7 +24,7 @@ const SignUpPage = () => {
           <div className="d-flex justify-content-center">
             <Logo className="App-logo mb-5" width="72" height="72" />
           </div>
-          <h2>{t(('globals:sign_up_headline', 'Registrierung'))}</h2>
+          <h2>{t('globals:sign_up_headline', 'Registrierung')}</h2>
           <br />
           <Formik
             initialValues={{
@@ -35,14 +35,14 @@ const SignUpPage = () => {
               confirmPassword: ''
             }}
             validationSchema={Yup.object().shape({
-              firstName: Yup.string().required(t(('yup:first_name_required', 'Vornamen eingeben'))),
-              lastName: Yup.string().required(t(('yup:last_name_required', 'Nachnamen eingeben'))),
-              email: Yup.string().required(t(('yup:email_required', 'Email-Adresse eingeben'))),
+              firstName: Yup.string().required(t('yup:first_name_required', 'Vornamen eingeben')),
+              lastName: Yup.string().required(t('yup:last_name_required', 'Nachnamen eingeben')),
+              email: Yup.string().required(t('yup:email_required', 'Email-Adresse eingeben')),
               password: Yup.string()
-                .required(t(('yup:password_required', 'Passwort eingeben')))
-                .min(5, t(('yup:password_length', 'Mindestens 5 Zeichen verwenden'))),
+                .required(t('yup:password_required', 'Passwort eingeben'))
+                .min(5, t('yup:password_length', 'Mindestens 5 Zeichen verwenden')),
               confirmPassword: Yup.string()
-                .required(t(('yup:password_confirm', 'Passwort bestätigen')))
+                .required(t('yup:password_confirm', 'Passwort bestätigen'))
                 .when('password', {
                   is: (password) => !!(password && password.length > 0),
                   then: Yup.string().oneOf(
@@ -61,7 +61,7 @@ const SignUpPage = () => {
                   if (response.status === 200) {
                     // eslint-disable-next-line no-alert
                     window.alert(
-                      t(('globals:sign_up_success', 'Registrierung erfolgreich abgeschlossen.'))
+                      t('globals:sign_up_success', 'Registrierung erfolgreich abgeschlossen.')
                     );
                     history.push(`/login`);
                   }
@@ -84,7 +84,7 @@ const SignUpPage = () => {
             {({ errors, status, touched, isSubmitting }) => (
               <Form>
                 <div className="form-group">
-                  <label htmlFor="firstName">{t(('globals:first_name', 'Vorname'))}</label>
+                  <label htmlFor="firstName">{t('globals:first_name', 'Vorname')}</label>
                   <Field
                     id="firstName"
                     name="firstName"
@@ -96,7 +96,7 @@ const SignUpPage = () => {
                   <ErrorMessage name="firstName" component="div" className="invalid-feedback" />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="lastName">{t(('globals:last_name', 'Nachname'))}</label>
+                  <label htmlFor="lastName">{t('globals:last_name', 'Nachname')}</label>
                   <Field
                     id="lastName"
                     name="lastName"
@@ -108,7 +108,7 @@ const SignUpPage = () => {
                   <ErrorMessage name="lastName" component="div" className="invalid-feedback" />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="email">{t(('globals:email', 'Email'))}</label>
+                  <label htmlFor="email">{t('globals:email', 'Email')}</label>
                   <Field
                     id="email"
                     name="email"
@@ -118,7 +118,7 @@ const SignUpPage = () => {
                   <ErrorMessage name="email" component="div" className="invalid-feedback" />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="password">{t(('globals:password', 'Passwort'))}</label>
+                  <label htmlFor="password">{t('globals:password', 'Passwort')}</label>
                   <Field
                     name="password"
                     type="password"
@@ -130,7 +130,7 @@ const SignUpPage = () => {
                 </div>
                 <div className="form-group">
                   <label htmlFor="confirmPassword">
-                    {t(('yup:password_confirm', 'Passwort bestätigen'))}
+                    {t('yup:password_confirm', 'Passwort bestätigen')}
                   </label>
                   <Field
                     name="confirmPassword"
@@ -147,7 +147,7 @@ const SignUpPage = () => {
                 </div>
                 <div className="form-group pb-5">
                   <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-                    {t(('globals:sign_up_button', 'Registrieren'))}
+                    {t('globals:sign_up_button', 'Registrieren')}
                   </button>
                   <button
                     type="button"

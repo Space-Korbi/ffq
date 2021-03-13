@@ -33,9 +33,9 @@ const RuleCard = ({ index, rule, removeRule }) => {
   const translateOperator = (operator) => {
     switch (operator.toLowerCase()) {
       case 'or':
-        return t(('globals:or', 'Oder'));
+        return t('globals:or', 'Oder');
       case 'and':
-        return t(('globals:and', 'Und'));
+        return t('globals:and', 'Und');
       default:
         return '';
     }
@@ -43,11 +43,11 @@ const RuleCard = ({ index, rule, removeRule }) => {
   const translateDecision = (decision) => {
     switch (decision.toLowerCase()) {
       case 'accept':
-        return t(('globals:accept', 'Akzeptieren'));
+        return t('globals:accept', 'Akzeptieren');
       case 'reject':
-        return t(('globals:reject', 'Ablehnen'));
+        return t('globals:reject', 'Ablehnen');
       case 'wait':
-        return t(('globals:wait', 'Warten'));
+        return t('globals:wait', 'Warten');
       default:
         return '';
     }
@@ -58,7 +58,7 @@ const RuleCard = ({ index, rule, removeRule }) => {
       <div className="card" style={{ width: '18rem' }}>
         <div className="card-header">
           <div className="d-flex justify-content-between">
-            {t(('globals:rule', 'Regel'))} {index + 1}
+            {t('globals:rule', 'Regel')} {index + 1}
             <DeleteButton onClick={() => removeRule(rule)} />
           </div>
         </div>
@@ -81,7 +81,7 @@ const RuleCard = ({ index, rule, removeRule }) => {
           </div>
         </div>
         <div className="card-footer">
-          <span className="mr-1">{t(('globals:decision', 'Entscheidung'))}</span>
+          <span className="mr-1">{t('globals:decision', 'Entscheidung')}</span>
           <span className={checkResult(rule.decision)}>{translateDecision(rule.decision)}</span>
         </div>
       </div>
@@ -143,7 +143,7 @@ const RuleEditor = ({
                   .then(() => {
                     setStatus(
                       <div className="alert alert alert-success">
-                        {t(('globals:changes_save_success', 'Änderungen erfolgreich gespeichert.'))}
+                        {t('globals:changes_save_success', 'Änderungen erfolgreich gespeichert.')}
                       </div>
                     );
                     setSubmitting(false);
@@ -166,11 +166,11 @@ const RuleEditor = ({
             >
               {submitting ? (
                 <>
-                  {t(('globals:saving', 'Speichern...'))}
+                  {t('globals:saving', 'Speichern...')}
                   <Spinner className="spinner-border spinner-border-sm ml-1" />
                 </>
               ) : (
-                t(('globals:save_changes', 'Änderungen speichern'))
+                t('globals:save_changes', 'Änderungen speichern')
               )}
             </button>
           </div>
@@ -190,7 +190,7 @@ const RuleEditor = ({
         </div>
         <div className="col">
           <h6 className="d-inline-flex mb-0">
-            {t(('globals:rules', 'Regeln'))}
+            {t('globals:rules', 'Regeln')}
             <sup className="text-info ml-1">
               <Info
                 text={t(

@@ -158,7 +158,7 @@ const QuestionnairePresenter = ({
                   setCurrentIndex(prevQuestionIndex);
                 }}
               >
-                {t(('globals:back', 'Zurück'))}
+                {t('globals:back', 'Zurück')}
               </button>
               <button
                 type="button"
@@ -173,7 +173,7 @@ const QuestionnairePresenter = ({
                     });
                 }}
               >
-                {t(('globals:reset_answers', 'Antworten zurücksetzen'))}
+                {t('globals:reset_answers', 'Antworten zurücksetzen')}
               </button>
               <button
                 type="button"
@@ -182,7 +182,7 @@ const QuestionnairePresenter = ({
                   history.push(`/users/${userId}`);
                 }}
               >
-                {t(('globals:exit', 'Exit'))}
+                {t('globals:exit', 'Exit')}
               </button>
             </div>
             <div className="row no-gutters flex-row w-100">
@@ -202,7 +202,7 @@ const QuestionnairePresenter = ({
                   setCurrentIndex(prevQuestionIndex);
                 }}
               >
-                {t(('globals:back', 'Zurück'))}
+                {t('globals:back', 'Zurück')}
               </button>
               <div className="pl-2" />
               <ProgressIndicator currentPosition={currentIndex} length={questions.length} />
@@ -214,7 +214,7 @@ const QuestionnairePresenter = ({
                 data-toggle="modal"
                 data-target="#staticBackdrop"
               >
-                {t(('globals:pause', 'Pause'))}
+                {t('globals:pause', 'Pause')}
               </button>
             </div>
           </div>
@@ -366,7 +366,7 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
       )}
       {!fetchedQuestions.length && (
         <div className="alert alert-warning d-flex justify-content-center mt-5" role="alert">
-          {t(('globals:questionnaire_empty', 'Der Fragebogen hat keine Fragen.'))}
+          {t('globals:questionnaire_empty', 'Der Fragebogen hat keine Fragen.')}
         </div>
       )}
     </div>

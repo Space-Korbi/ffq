@@ -53,7 +53,7 @@ const AnswerEditor = ({ answerOptions, dispatch, answerType, modalTable }) => {
       default:
         setEditor(
           <div className="alert alert-info text-center m-5" role="alert">
-            {t(('globals:choose_answer_type', 'Wähle eine Antwortart'))}
+            {t('globals:choose_answer_type', 'Wähle eine Antwortart')}
           </div>
         );
     }

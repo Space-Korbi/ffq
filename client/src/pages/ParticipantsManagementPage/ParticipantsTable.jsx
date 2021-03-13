@@ -24,7 +24,7 @@ const ExportCSVButton = (props) => {
   return (
     <div>
       <button type="button" className="btn btn-outline-success" onClick={handleClick}>
-        {t(('globals:export_csv', 'Als CSV exportieren'))}
+        {t('globals:export_csv', 'Als CSV exportieren')}
       </button>
     </div>
   );

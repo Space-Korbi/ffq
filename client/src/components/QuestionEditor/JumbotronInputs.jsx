@@ -10,11 +10,11 @@ const TitleInputs = ({ value, type, onChange }) => {
   const translateTitleInput = () => {
     switch (type) {
       case 'title':
-        return t(('globals:title', 'Titel'));
+        return t('globals:title', 'Titel');
       case 'subtitle1':
-        return t(('globals:subtitle1', 'Untertitel 1'));
+        return t('globals:subtitle1', 'Untertitel 1');
       case 'subtitle2':
-        return t(('globals:subtitle2', 'Untertitel 2'));
+        return t('globals:subtitle2', 'Untertitel 2');
       default:
         return '';
     }

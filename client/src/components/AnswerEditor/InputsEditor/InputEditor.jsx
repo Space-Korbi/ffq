@@ -11,11 +11,11 @@ import { EditorCard } from '../../Cards';
 const InputEditor = ({ index, answerOption, dispatch }) => {
   const { t } = useTranslation(['globals']);
 
-  const tabNames = [t(('globals:text_input', 'Eingabefeld')), t(('globals:optional', 'Optional'))];
+  const tabNames = [t('globals:text_input', 'Eingabefeld'), t('globals:optional', 'Optional')];
 
   const mainTabContent = (
     <TextEditor
-      placeholder={t(('globals:text_input_title', 'Eingabetitel'))}
+      placeholder={t('globals:text_input_title', 'Eingabetitel')}
       value={answerOption.title}
       onChange={(value) => {
         dispatch({
@@ -33,7 +33,7 @@ const InputEditor = ({ index, answerOption, dispatch }) => {
           <div className="d-flex flex-fill">
             <div className="flex-grow-1">
               <TextEditor
-                placeholder={t(('globals:unit_of_measurement', 'Maßeinheit'))}
+                placeholder={t('globals:unit_of_measurement', 'Maßeinheit')}
                 value={answerOption.numberInputTitle}
                 onChange={(value) => {
                   dispatch({
@@ -69,7 +69,7 @@ const InputEditor = ({ index, answerOption, dispatch }) => {
             })
           }
         >
-          {t(('globals:add_number_input', 'Mengeneingabe hinzufügen'))}
+          {t('globals:add_number_input', 'Mengeneingabe hinzufügen')}
         </button>
       )}
     </div>

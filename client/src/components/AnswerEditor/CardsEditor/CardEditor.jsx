@@ -25,7 +25,7 @@ const ImageUpload = ({ answerId, imageName, onChange, disabled }) => {
             className="btn btn-outline-secondary"
             disabled={disabled}
             onClick={() => {
-              setImageUploadLabel(t(('globals:select_image', 'Bild auswählen')));
+              setImageUploadLabel(t('globals:select_image', 'Bild auswählen'));
               onChange({
                 type: 'removeCardImage',
                 payload: { id: answerId }
@@ -85,7 +85,7 @@ ImageUpload.defaultProps = {
 const CardEditor = ({ index, answerOption, dispatch }) => {
   const { t } = useTranslation(['globals']);
 
-  const tabNames = [t(('globals:text', 'Text')), t(('globals:image', 'Bild'))];
+  const tabNames = [t('globals:text', 'Text'), t('globals:image', 'Bild')];
 
   useEffect(() => {
     dispatch({
@@ -96,7 +96,7 @@ const CardEditor = ({ index, answerOption, dispatch }) => {
 
   const textTabContent = (
     <TextEditor
-      placeholder={t(('globals:title', 'Titel'))}
+      placeholder={t('globals:title', 'Titel')}
       value={answerOption.title}
       onChange={(value) => {
         dispatch({

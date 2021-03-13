@@ -27,7 +27,7 @@ const InputsEditor = ({ answerOptions, dispatch }) => {
     <div>
       <div className="my-5 text-center">
         <OutlineButton
-          title={t(('globals:add_text_input', 'Eingabefeld hinzufügen'))}
+          title={t('globals:add_text_input', 'Eingabefeld hinzufügen')}
           onClick={() =>
             dispatch({
               type: 'addTextInput',
