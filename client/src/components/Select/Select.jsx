@@ -26,7 +26,7 @@ const Select = ({ onChange, dispatch, value }) => {
 
   return (
     <>
-      <div className="input-group my-2">
+      <div className="input-group my-2 flex-nowrap">
         <div className="input-group-prepend">
           <label className="input-group-text" htmlFor="select">
             {t(('globals:answer_type', 'Antwortarten'))}
@@ -43,6 +43,7 @@ const Select = ({ onChange, dispatch, value }) => {
               payload: { answerType: e.target.value }
             });
           }}
+          style={{ minWidth: '180px' }}
         >
           <option value="select">{t(('globals:select...', 'Auswählen...'))}</option>
           <option value={AnswerType.Frequency}>{t('globals:buttons', 'Buttons')}</option>

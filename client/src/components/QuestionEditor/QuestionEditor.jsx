@@ -80,36 +80,35 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
       <div className="row no-gutters my-3">
         <div className="col-lg mr-lg-3">
           <div className="my-2">
-            <div className="row no-gutters flex-row d-flex flex-wrap-reverse">
-              <div className="col col-md-6 d-flex">
+            <div className="row no-gutters flex-row flex-wrap-reverse justify-content-between">
+              <div className="col d-flex flex-row  mr-2">
                 <Select onChange={setAnswerType} dispatch={dispatch} value={answerType} />
               </div>
 
-              <div className="col-12 col-md-6 d-flex">
-                <div className="my-2 ml-auto">
-                  <button
-                    type="button"
-                    className="btn btn-outline-primary mr-2"
-                    disabled={saving}
-                    onClick={() => onSaveAndExit()}
-                  >
-                    {saving ? (
-                      <>
-                        <Spinner className="spinner-border spinner-border-sm ml-1" />
-                      </>
-                    ) : (
-                      t('globals:save_and_exit', 'Speichern und schließen')
-                    )}
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-outline-secondary"
-                    disabled={saving}
-                    onClick={() => onExit(question)}
-                  >
-                    {('globals:exit', 'Schließen')}
-                  </button>
-                  {/* TODO: link to or create next question" 
+              <div className="col my-2 d-flex flex-row d-flex-block flex-nowrap ml-auto justify-content-end align-items-center">
+                <button
+                  type="button"
+                  className="btn btn-outline-primary mr-2 text-nowrap"
+                  disabled={saving}
+                  onClick={() => onSaveAndExit()}
+                >
+                  {saving ? (
+                    <>
+                      <Spinner className="spinner-border spinner-border-sm ml-1" />
+                    </>
+                  ) : (
+                    t('globals:save_and_exit', 'Speichern und schließen')
+                  )}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  disabled={saving}
+                  onClick={() => onExit(question)}
+                >
+                  {('globals:exit', 'Schließen')}
+                </button>
+                {/* TODO: link to or create next question" 
                       <button
                       type="button"
                       className="btn btn-outline-primary"
@@ -117,7 +116,6 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
                         >
                       Save and Next
                     </button> */}
-                </div>
               </div>
             </div>
           </div>

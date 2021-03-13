@@ -26,7 +26,6 @@ const ButtonEditor = ({ dispatch, position, answerOption, index, modalTable }) =
   };
 
   useEffect(() => {
-    console.log('heyyy');
     setPrevSelection();
   }, [answerOption]);
 
