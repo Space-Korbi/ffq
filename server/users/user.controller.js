@@ -46,10 +46,14 @@ const createUser = (req, res) => {
           user.roles = roles.map((role) => role._id);
           user.save((error) => {
             if (error) {
-              return res.status(500).json({ error, message: 'User was not saved' });
+              return res
+                .status(500)
+                .json({ error, message: 'Nutzer konnte nicht registriert werden.' });
             }
 
-            return res.status(201).json({ success: true, message: 'User registered successfully' });
+            return res
+              .status(201)
+              .json({ success: true, message: 'Nutzer erfolgreich registriert.' });
           });
         }
       );
@@ -65,7 +69,7 @@ const createUser = (req, res) => {
             return res.status(500).json({ error, message: 'User was not saved' });
           }
 
-          return res.json({ success: true, message: 'User was registered successfully!' });
+          return res.json({ success: true, message: 'Nutzer erfolgreich registriert.' });
         });
       });
     }
@@ -105,8 +109,8 @@ const loginUser = async (req, res) => {
       if (!passwordIsValid) {
         return res.status(401).json({
           accessToken: null,
-          title: 'Invalid Username or Password.',
-          detail: 'The Username or Password is invalid.'
+          title: 'Passwort ungültig',
+          detail: 'Passwort ungültig'
         });
       }
 
@@ -155,7 +159,7 @@ const requestPasswordReset = async (req, res) => {
             /* required */
             Html: {
               Charset: 'UTF-8',
-              Data: `<p> Click the link or copy it into a browser to reset your password. <br /><br /> <a href="localhost:8000/passwordreset/${token}"> localhost:8000/passwordreset/${token} </a> </p>`
+              Data: `<p> Klicken Sie auf den Link oder kopieren Sie ihn in einen Browser um ihr Passwort zurückzusetzen. Falls Sie diese Email vor mehr als zwei Stunden erhalten haben, müssen Sie einen neuen Link anfordern.<br /><br /> <a href="localhost:8000/passwordreset/${token}"> localhost:8000/passwordreset/${token} </a> </p>`
             }
           },
           Subject: {

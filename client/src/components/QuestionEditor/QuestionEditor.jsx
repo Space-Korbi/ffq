@@ -110,14 +110,6 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
                 >
                   {('globals:exit', 'Schließen')}
                 </button>
-                {/* TODO: link to or create next question" 
-                      <button
-                      type="button"
-                      className="btn btn-outline-primary"
-                      onClick={() => onExit(question)}
-                        >
-                      Save and Next
-                    </button> */}
               </div>
             </div>
           </div>

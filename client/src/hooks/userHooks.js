@@ -170,7 +170,6 @@ const useSaveAnswer = (userId, iterationId, questionId) => {
     const saveAnswer = async () => {
       dispatch({ type: 'SAVE_INIT' });
       try {
-        // TODO: Refactor lodash part
         if (
           get(answer, 'answerOption.id', false) ||
           get(answer, ['answerOption', '0', 'id'], false)

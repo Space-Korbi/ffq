@@ -144,7 +144,7 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
                         {iterations.length ? (
                           iterations.map((iteration) => {
                             const completedIterations = getCompletedIterations();
-                            // TODO: change startLabel cause it is not localizable
+                            // TODO: change startLabel date cause it is not localizable. Currently its in de-De format
                             return (
                               <tr key={iteration.id}>
                                 <td className="align-middle pl-0">{iteration.startLabel}</td>
