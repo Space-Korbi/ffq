@@ -23,7 +23,7 @@ const QuestionPreview = ({ title, subtitle1, subtitle2, help, answerOptions }) =
               <p className="lead">
                 {t(
                   ('globals:preview_not_possible',
-                  `Eine Vorschau der Bilder ist hier momentan nicht verfügbar. Um eine Vorschau zu sehen gehen Sie auf 'FFQ Vorschau'.`)
+                  `Eine Vorschau der Bilder ist hier momentan nicht verfügbar. Um eine Vorschau zu sehen, gehen Sie auf 'FFQ Vorschau'.`)
                 )}
               </p>
             </div>
