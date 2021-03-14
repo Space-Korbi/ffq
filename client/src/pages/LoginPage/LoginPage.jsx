@@ -195,8 +195,8 @@ const LoginPage = () => {
                 {({ errors, status, touched, isSubmitting }) => (
                   <Form>
                     {t(
-                      'globals:reset_password_information',
-                      `Falls Sie Ihr Passwort vergessen habe, geben Sie Ihre Email-Adresse ein und klicken sie 'Link anfordern'. Kurz danach erhalten Sie eine Email mit einem Link um Ihr Passwort zurückzusetzen.`
+                      ('globals:reset_password_information',
+                      `Falls Sie Ihr Passwort vergessen habe, geben Sie Ihre Email-Adresse ein und klicken sie 'Link anfordern'. Kurz danach erhalten Sie eine Email mit einem Link um Ihr Passwort zurückzusetzen.`)
                     )}
                     <div className="form-group mt-4">
                       <label htmlFor="resetemail">{t('globals:email', 'Email')}</label>
