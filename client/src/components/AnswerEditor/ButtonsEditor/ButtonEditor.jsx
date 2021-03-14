@@ -186,7 +186,7 @@ const ButtonEditor = ({ dispatch, position, answerOption, index, modalTable }) =
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="questionSkipModalLabel">
-                {t('globals:to_skip', 'Zu überspringen')} {position}
+                {t('globals:to_skip', 'Zu überspringen')}
               </h5>
               <button
                 type="button"
