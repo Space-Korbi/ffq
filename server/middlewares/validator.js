@@ -17,7 +17,7 @@ const signup = [
   check('email').custom((value) => {
     return User.findOne({ email: value }).then((user) => {
       if (user) {
-        return Promise.reject('Die Email-Addresse wird bereits verwendet');
+        return Promise.reject('Die Email-Adresse wird bereits verwendet');
       }
     });
   }),
@@ -31,10 +31,10 @@ const signup = [
 const login = [
   body('email')
     .notEmpty()
-    .withMessage('Email-Addresse eingeben')
+    .withMessage('Email-Adresse eingeben')
     .bail()
     .isEmail()
-    .withMessage('Gültige Email-Addresse eingeben'),
+    .withMessage('Gültige Email-Adresse eingeben'),
   body('password')
     .notEmpty()
     .withMessage('Passwort eingeben')
