@@ -61,7 +61,7 @@ const ResetPasswordPage = () => {
                 },
                 (error) => {
                   setSubmitting(false);
-                  setStatus('Something went wrong. ', error);
+                  setStatus('Etwas ist schiefgelaufen.', error);
                 }
               );
             }}

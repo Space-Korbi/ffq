@@ -125,11 +125,11 @@ const Question = ({
           )}
           <div>
             {isSavingError ? (
-              'Something went wrong...'
+              'Etwas ist schiefgelaufen'
             ) : (
               <>
                 {isSaving ? (
-                  'Saving...'
+                  'Speichern...'
                 ) : (
                   <Answers
                     answerOptions={answerOptions}
