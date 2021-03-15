@@ -16,7 +16,7 @@ import ChangePassword from './ChangePassword';
 import { ConsentModal } from '../../components/Modals';
 
 const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
-  const { t } = useTranslation(['accountPage', 'globals']);
+  const { t } = useTranslation(['globals']);
 
   const history = useHistory();
   const [{ update, isUpdatingUser, errorUpdatingUser }, setUpdate] = useUpdateUser(user.id);
@@ -239,6 +239,8 @@ const AccountDataPresenter = ({ user, isAdmin, questionnaireInfo }) => {
 };
 
 const AccountPage = ({ isAdmin }) => {
+  const { t } = useTranslation(['globals']);
+
   const { userId } = useParams();
   const [{ users, isLoadingUsers, isErrorUsers }, setFields] = useFetchUsers(
     userId,
@@ -253,7 +255,10 @@ const AccountPage = ({ isAdmin }) => {
     <div>
       {(isErrorUsers || isErrorQuestionnaires) && (
         <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
-          Something went wrong...
+          {t(
+            ('globals:error',
+            'Etwas ist schiefgelaufen. Laden Sie die Seite erneut oder versuchen Sie es später noch einmal.')
+          )}
         </div>
       )}
       {(isLoadingUsers || isLoadingQuestionnaires) && (

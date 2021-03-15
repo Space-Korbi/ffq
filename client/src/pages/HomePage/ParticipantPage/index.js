@@ -3,7 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { shape } from 'prop-types';
 import { useRouteMatch, useHistory, useParams } from 'react-router-dom';
-import moment from 'moment/min/moment-with-locales';
+import { useTranslation } from 'react-i18next';
+
+import moment from 'moment';
 
 // hooks
 import { useFetchQuestionnaires } from '../../../hooks';
@@ -17,6 +19,8 @@ import QuestionnaireInfo from './QuestionnaireInfo';
 import UserApproval from './UserApproval';
 
 const ParticipantPage = ({ user }) => {
+  const { t } = useTranslation(['globals']);
+
   const [
     { fetchedQuestionnaires, isLoadingQuestionnaires, isErrorQuestionnaires }
   ] = useFetchQuestionnaires(null, 'iterations consentScript selectionCriteria screeningRules');
@@ -55,7 +59,10 @@ const ParticipantPage = ({ user }) => {
     <div>
       {isErrorQuestionnaires && (
         <div className="alert alert-danger d-flex justify-content-center mt-5" role="alert">
-          Something went wrong...
+          {t(
+            ('globals:error',
+            'Etwas ist schiefgelaufen. Laden Sie die Seite erneut oder versuchen Sie es später noch einmal.')
+          )}
         </div>
       )}
       {isLoadingQuestionnaires && (
