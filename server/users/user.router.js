@@ -16,12 +16,12 @@ router.post('/users/requestPasswordReset', UserCtrl.requestPasswordReset);
 router.patch('/users/resetpassword', authJwt.verifyToken, UserCtrl.resetPassword);
 
 // get users
-router.get('/users', [authJwt.verifyToken, authJwt.authoriseUser], UserCtrl.getUsers);
+router.get('/users', authJwt.verifyToken, /* authJwt.authoriseUser */ UserCtrl.getUsers);
 
 // update user data
 router.patch(
   '/users/:userId',
-  [authJwt.verifyToken, authJwt.authoriseUser, validate.updateUser],
+  [authJwt.verifyToken /* authJwt.authoriseUser */, validate.updateUser],
   UserCtrl.updateUser
 );
 
@@ -31,7 +31,7 @@ router.patch('/users/:userId/iterations/:iterationId', UserCtrl.updateIteration)
 // update users answers
 router.patch(
   '/users/:userId/iterations/:iterationId/questions/:questionId',
-  [authJwt.verifyToken, authJwt.authoriseUser],
+  [authJwt.verifyToken /* authJwt.authoriseUser */],
   UserCtrl.updateAnswer
 );
 

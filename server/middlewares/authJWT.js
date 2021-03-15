@@ -65,6 +65,7 @@ const isAdmin = (req, res, next) => {
   });
 };
 
+// TODO authorise correctly
 const authoriseUser = (req, res, next) => {
   console.log('========', req.userId, req.query.userId);
 

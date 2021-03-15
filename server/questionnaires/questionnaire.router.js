@@ -40,7 +40,7 @@ router.get(
 // update questionnaire
 router.patch(
   '/questionnaires/:questionnaireId',
-  [authJwt.verifyToken],
+  [authJwt.verifyToken, authJwt.isAdmin],
   QuestionnaireCtrl.updateQuestionnaire
 );
 
