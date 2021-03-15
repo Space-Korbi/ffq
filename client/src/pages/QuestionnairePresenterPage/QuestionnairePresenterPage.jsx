@@ -2,7 +2,7 @@
 /* eslint-disable react/no-unused-prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
-import { bool, string } from 'prop-types';
+import { bool } from 'prop-types';
 import { useParams, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -20,7 +20,6 @@ import ProgressIndicator from '../../components/ProgressIndicator';
 
 const QuestionnairePresenter = ({
   questions,
-  imageURLs,
   previousAnswers,
   previousPauses,
   questionsToSkip,
@@ -137,9 +136,9 @@ const QuestionnairePresenter = ({
     if (pauses.indexOf(currentIndex) !== -1) {
       return;
     }
-    userService.updateUserData(userId, {
-      iterations: [{ id: iterationId, pausedAt: [...pauses, currentIndex] }]
-    });
+
+    userService.updateUserIteration(userId, iterationId, { pausedAt: [...pauses, currentIndex] });
+
     setPauses((prevState) => [...prevState, currentIndex]);
   };
 

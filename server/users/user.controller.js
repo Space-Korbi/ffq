@@ -133,7 +133,6 @@ const loginUser = async (req, res) => {
 
 const requestPasswordReset = async (req, res) => {
   const { email } = req.body;
-  console.log('email', email);
 
   User.findOne({
     email
