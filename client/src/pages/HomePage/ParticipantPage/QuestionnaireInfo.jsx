@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { difference } from 'lodash';
-import moment from 'moment/min/moment-with-locales';
+import moment from 'moment';
+import 'moment/locale/de';
 
 const QuestionnaireInfo = ({
   userProp,
@@ -13,7 +13,6 @@ const QuestionnaireInfo = ({
   setIterationId
 }) => {
   moment.locale('de');
-
   const [title, setTitle] = useState('');
   const [daysTilStart, setDaysTilStart] = useState('');
   const [accessInformation, setAccessInformation] = useState('');
