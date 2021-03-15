@@ -34,3 +34,6 @@ Download these two extensions for autoformatting and linting in VSCode:
 
 - "Prettier Formatter" @5.7.1+
 - "ESLint" @ 2.1.13+
+
+
+[![License: CC BY-NC-ND 4.0](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
