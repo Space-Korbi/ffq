@@ -16,51 +16,52 @@ const router = express.Router();
 // create questionnaire
 router.post(
   '/questionnaires',
-  /* [authJwt.verifyToken, authJwt.isAdmin], */
+  [authJwt.verifyToken, authJwt.isAdmin],
   QuestionnaireCtrl.createQuestionnaire
 );
 
 // create question
 router.post(
   '/questionnaires/:questionnaireId/questions',
-  /* [authJwt.verifyToken, authJwt.isAdmin], */
+  [authJwt.verifyToken, authJwt.isAdmin],
   [QuestionCtrl.createQuestion, QuestionnaireCtrl.addQuestion]
 );
 
 // get questionnaire
-router.get('/questionnaires', /* [authJwt.verifyToken], */ QuestionnaireCtrl.getQuestionnaires);
+router.get('/questionnaires', [authJwt.verifyToken], QuestionnaireCtrl.getQuestionnaires);
 
 // get questions
 router.get(
   '/questionnaires/:questionnaireId/questions',
-  /* [authJwt.verifyToken], */
+  [authJwt.verifyToken],
   QuestionnaireCtrl.getQuestions
 );
 
 // update questionnaire
 router.patch(
   '/questionnaires/:questionnaireId',
-  /* [authJwt.verifyToken], */ QuestionnaireCtrl.updateQuestionnaire
+  [authJwt.verifyToken, authJwt.isAdmin],
+  QuestionnaireCtrl.updateQuestionnaire
 );
 
 // update question
 router.patch(
   '/questions/:questionId',
-  /* [authJwt.verifyToken, authJwt.isAdmin], */
+  [authJwt.verifyToken, authJwt.isAdmin],
   QuestionCtrl.updateQuestion
 );
 
 // move question
 router.patch(
   `/questionnaires/:questionnaireId/questions/:questionId/position/:position`,
-  /* [authJwt.verifyToken, authJwt.isAdmin], */
+  [authJwt.verifyToken, authJwt.isAdmin],
   QuestionnaireCtrl.moveQuestion
 );
 
 // deleteQuestion
 router.delete(
   '/questionnaires/:questionnaireId/questions/:questionId',
-  /* [authJwt.verifyToken, authJwt.isAdmin], */
+  [authJwt.verifyToken, authJwt.isAdmin],
   [QuestionCtrl.deleteQuestion, QuestionnaireCtrl.removeQuestion]
 );
 

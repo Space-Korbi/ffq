@@ -170,11 +170,6 @@ const ParticipantsManagement = ({ questions, questionnaire }) => {
     };
   }, [selectedIteration]);
 
-  /**
-   * TODO
-   * api call to get rules && api call to get Saved criteria
-   */
-
   const saveSelectionCriteria = (newCriteria) => {
     addValidString(newCriteria, selectionCriteria, setSelectionCriteria);
   };
@@ -184,11 +179,6 @@ const ParticipantsManagement = ({ questions, questionnaire }) => {
   };
 
   const saveRule = (newRule) => {
-    /**
-     * TODO
-     * api call to save rules in db
-     */
-
     if (!screeningRules.includes(newRule)) {
       setScreeningRules((prevRules) => [...prevRules, newRule]);
     }

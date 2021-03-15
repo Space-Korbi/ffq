@@ -17,7 +17,7 @@ const signup = [
   check('email').custom((value) => {
     return User.findOne({ email: value }).then((user) => {
       if (user) {
-        return Promise.reject('E-mail already in use.');
+        return Promise.reject('Die Email-Addresse wird bereits verwendet');
       }
     });
   }),
@@ -31,15 +31,15 @@ const signup = [
 const login = [
   body('email')
     .notEmpty()
-    .withMessage('Email cannot be empty.')
+    .withMessage('Email-Addresse eingeben')
     .bail()
     .isEmail()
-    .withMessage('Please enter a valid email address.'),
+    .withMessage('Gültige Email-Addresse eingeben'),
   body('password')
     .notEmpty()
-    .withMessage('Password cannot be empty.')
+    .withMessage('Passwort eingeben')
     .isLength({ min: 5 })
-    .withMessage('Password must be at least 5 characters long.')
+    .withMessage('Passwort muss mindestens 5 Zeichen enthalten')
 ];
 
 const updateUser = [
@@ -52,7 +52,7 @@ const updateUser = [
       return User.findOne({ _id: userId }).then((user) => {
         const passwordIsValid = bcrypt.compareSync(req.body.oldPassword, user.password);
         if (!passwordIsValid) {
-          return Promise.reject('Old Password is incorrect.');
+          return Promise.reject('Altes Passwort ist inkorrekt');
         }
       });
     }),

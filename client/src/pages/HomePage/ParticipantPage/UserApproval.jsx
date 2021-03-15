@@ -48,13 +48,13 @@ const UserApproval = ({
     <div>
       {screeningStatus === 'Wait' && (
         <div className="alert alert-info text-center m-3" role="alert">
-          Based on your screening data, your access needs to be granted manually. Please come back
-          later.
+          Ihre Angaben werden noch manuell geprüft. Kommen Sie bitte später zurück um den Fragebogen
+          zu bearbeiten.
         </div>
       )}
       {screeningStatus === 'Reject' && (
         <div className="alert alert-info text-center m-3" role="alert">
-          Based on your screening data, you are not suitable for this questionnaire.
+          Aufgrund ihrer Angaben eignen Sie sich leider nicht für diese Umfgrage.
         </div>
       )}
       <ConsentScreeningModal

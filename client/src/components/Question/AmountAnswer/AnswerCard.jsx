@@ -5,11 +5,7 @@ import { bool, func, string } from 'prop-types';
 
 function AnswerCard({ title, imageURL, imageName, isSelectedAnswer, onClick }) {
   const [currentURL, setCurrentURL] = useState(`http://localhost:3000/${imageName}`);
-  /**
-   * TODO
-   * change hardcoded URL path value and make url global constant
-   * <img src={`http://localhost:3000/${imageName}`}
-   */
+
   useEffect(() => {
     if (imageURL) {
       setCurrentURL(imageURL);

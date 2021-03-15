@@ -28,7 +28,6 @@ router.post('/upload', ImageCtrl.upload, ImageCtrl.getImageName);
 
 router.post('/uploadToCloudinary', fileUpload.single('image'), [
   function (req, res, next) {
-    console.log('DATA ==========', req.body);
     const streamUpload = (req) => {
       return new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream((error, result) => {

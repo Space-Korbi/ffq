@@ -12,7 +12,9 @@ const checkDuplicateEmail = (req, res, next) => {
     }
 
     if (user) {
-      return res.status(400).json({ success: false, message: 'This email is already in use' });
+      return res
+        .status(400)
+        .json({ success: false, message: 'Die Email-Addresse wird bereits verwendet' });
     }
 
     next();
