@@ -135,11 +135,11 @@ const QuestionTable = ({
       dataField: 'question.title'
     },
     {
-      text: t('globals:subtitle1', 'Untertitel1'),
+      text: t('globals:subtitle1', 'Untertitel 1'),
       dataField: 'question.subtitle1'
     },
     {
-      text: t('globals:subtitle2', 'Untertitel2'),
+      text: t('globals:subtitle2', 'Untertitel 2'),
       dataField: 'question.subtitle2'
     },
     {
