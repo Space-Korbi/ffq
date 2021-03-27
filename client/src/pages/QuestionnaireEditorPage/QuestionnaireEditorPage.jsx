@@ -36,6 +36,7 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
   const [data, setData] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState();
+  const [saveState, setSaveState] = useState();
 
   const questionsRef = useRef(questions);
 
@@ -75,7 +76,20 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
   }, [questions, isEditing]);
 
   const saveSettings = async (settings) => {
-    await questionnaireService.updateQuestionnaire(questionnaire._id, settings);
+    await questionnaireService
+      .updateQuestionnaire(questionnaire._id, settings)
+      .then(() => {
+        setSaveState(
+          <div className="alert alert alert-success">
+            {t('globals:changes_save_success', 'Änderungen erfolgreich gespeichert.')}
+          </div>
+        );
+      })
+      .catch((err) => {
+        <div className="alert alert alert-danger">
+          {t('globals:changes_save_error', 'Änderungen konnent nicht gespeichert werden.')}
+        </div>;
+      });
   };
 
   const modalTableColumns = [
@@ -147,7 +161,12 @@ const QuestionnaireEditor = ({ questionnaire, deleteQuestionnaire }) => {
   );
 
   const settingsContent = (
-    <QuestionnaireSettings questionnaire={questionnaire} save={saveSettings} />
+    <QuestionnaireSettings
+      questionnaire={questionnaire}
+      save={saveSettings}
+      saveState={saveState}
+      setSaveState={setSaveState}
+    />
   );
 
   const tabNames = [

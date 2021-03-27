@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+
 import React, { useState } from 'react';
 import { arrayOf, func, shape, string } from 'prop-types';
 import { nanoid } from 'nanoid';
@@ -10,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import DateIntervalSettings from '../DateInterval';
 import { AddButton } from '../Button';
 
-const QuestionnaireSettings = ({ questionnaire, save }) => {
+const QuestionnaireSettings = ({ questionnaire, save, saveState, setSaveState }) => {
   const { t } = useTranslation(['globals']);
 
   const [name, setName] = useState(questionnaire.name);
@@ -43,6 +45,7 @@ const QuestionnaireSettings = ({ questionnaire, save }) => {
           >
             {t('globals:save_settings', 'Einstellungen speichern')}
           </button>
+          <div className="m-0 my-3">{saveState}</div>
           <p className="lead m-0 mb-1 mt-5">
             {t('globals:questionnaire_name', 'Name des Fragebogens')}
           </p>
@@ -51,7 +54,10 @@ const QuestionnaireSettings = ({ questionnaire, save }) => {
             type="text"
             className="form-control"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setSaveState();
+              setName(e.target.value);
+            }}
             aria-describedby="inputGroup-name"
           />
 
@@ -61,7 +67,10 @@ const QuestionnaireSettings = ({ questionnaire, save }) => {
                 {t('globals:iteration', 'Wiederholungen')}
               </p>
               <AddButton
-                onClick={() => addIteration()}
+                onClick={() => {
+                  setSaveState();
+                  return addIteration();
+                }}
                 styling="btn btn-outline-primary ml-auto mb-1"
                 tooltip="Wiederholung hinzufügen"
               />
@@ -69,7 +78,11 @@ const QuestionnaireSettings = ({ questionnaire, save }) => {
           </div>
 
           <hr className="m-0 mb-3" />
-          <DateIntervalSettings iterations={iterations} setIterations={setIterations} />
+          <DateIntervalSettings
+            iterations={iterations}
+            setIterations={setIterations}
+            setSaveState={setSaveState}
+          />
 
           <p className="lead m-0 mb-1 mt-5">
             {t('globals:consent_form', 'Einverständniserklärung')}
@@ -80,7 +93,10 @@ const QuestionnaireSettings = ({ questionnaire, save }) => {
             id="consentText"
             rows="6"
             value={consentScript}
-            onChange={(e) => setConsentScript(e.target.value)}
+            onChange={(e) => {
+              setSaveState();
+              setConsentScript(e.target.value);
+            }}
           />
         </div>
       </div>

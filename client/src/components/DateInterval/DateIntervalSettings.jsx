@@ -205,7 +205,7 @@ IterationsTableLg.propTypes = {
   remove: func.isRequired
 };
 
-const IterationsSettings = ({ iterations, setIterations }) => {
+const IterationsSettings = ({ iterations, setIterations, setSaveState }) => {
   const setStart = (id, date) => {
     const newIterations = iterations.map((iteration) => {
       if (iteration.id === id) {
@@ -219,6 +219,7 @@ const IterationsSettings = ({ iterations, setIterations }) => {
       return iteration;
     });
     setIterations(newIterations);
+    setSaveState();
   };
 
   const setEnd = (id, date) => {
@@ -234,11 +235,13 @@ const IterationsSettings = ({ iterations, setIterations }) => {
       return iteration;
     });
     setIterations(newIterations);
+    setSaveState();
   };
 
   const removeIteration = (iterationId) => {
     const newIterations = iterations.filter((prevIteration) => prevIteration.id !== iterationId);
     setIterations(newIterations);
+    setSaveState();
   };
 
   return (
@@ -267,7 +270,8 @@ const IterationsSettings = ({ iterations, setIterations }) => {
 
 IterationsSettings.propTypes = {
   iterations: arrayOf(shape({ id: string, start: string, end: string })).isRequired,
-  setIterations: func.isRequired
+  setIterations: func.isRequired,
+  setSaveState: func.isRequired
 };
 
 export default IterationsSettings;
