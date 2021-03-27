@@ -25,7 +25,7 @@ const AdminPage = () => {
             <div className="card-body">
               <h5 className="card-title">FFQ Editor</h5>
               <PencilIcon size={48} />
-              <p className="card-text my-2">Bearbeite deinen Fragebogen</p>
+              <p className="card-text my-2">Bearbeite deinen Fragebogen.</p>
               <Link to={`${url}/questionnaireEditor`} className="p-0 m-0 border-0 stretched-link">
                 {' '}
               </Link>
@@ -37,7 +37,7 @@ const AdminPage = () => {
             <div className="card-body">
               <h5 className="card-title">FFQ Vorschau</h5>
               <TelescopeIcon size={48} />
-              <p className="card-text my-2">Klicke dich durch eine Vorschau des Fragebogens</p>
+              <p className="card-text my-2">Klicke dich durch eine Vorschau des Fragebogens.</p>
               <Link
                 to={`${url}/questionnairePresenter/iteration/0`}
                 className="p-0 m-0 border-0 stretched-link"
@@ -52,7 +52,9 @@ const AdminPage = () => {
             <div className="card-body">
               <h5 className="card-title">User Manager</h5>
               <ClippyIcon size={48} />
-              <p className="card-text my-2">Verwalte die Teilnehmer und werte ihre Antworten aus</p>
+              <p className="card-text my-2">
+                Verwalte die Teilnehmer und werte ihre Antworten aus.
+              </p>
               <Link to={`${url}/participantsManager`} className="p-0 m-0 border-0 stretched-link">
                 {' '}
               </Link>
@@ -64,7 +66,7 @@ const AdminPage = () => {
             <div className="card-body">
               <h5 className="card-title">Account</h5>
               <PersonIcon size={48} />
-              <p className="card-text my-2">Ändere dein Passwort oder deine Nutzerdaten</p>
+              <p className="card-text my-2">Ändere dein Passwort oder deine Nutzerdaten.</p>
               <Link to={`${url}/account`} className="p-0 m-0 border-0 stretched-link">
                 {' '}
               </Link>
