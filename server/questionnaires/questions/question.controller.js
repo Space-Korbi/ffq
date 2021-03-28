@@ -10,10 +10,10 @@ const Images = require('../../images/image.controller');
 // refactor start
 const createQuestion = async (req, res, next) => {
   const { index } = req.body;
-  let title = 'New Question';
+  let title = 'Neue Frage';
 
   if (index) {
-    title = `Question ${index}`;
+    title = `Frage ${index}`;
   }
 
   new Question({ title })

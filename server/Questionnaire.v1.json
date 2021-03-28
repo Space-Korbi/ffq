@@ -271,7 +271,7 @@
           },
           "name": {
             "type": "string",
-            "default": "New Questionnaire"
+            "default": "Neuer Fragebogen"
           },
           "startDate": {
             "type": "string",
