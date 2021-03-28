@@ -30,6 +30,10 @@ const LoginPage = () => {
           <div className="d-flex justify-content-center">
             <Logo className="App-logo mb-5" width="72" height="72" />
           </div>
+          <div className="alert alert-info text-center m-5" role="alert">
+            Admin Account <br /> <b>Email:</b> admin@abc.de
+            <br /> <b>Passwort:</b> 12345
+          </div>
           <h2>Login</h2>
           <br />
           <Formik
