@@ -41,7 +41,7 @@ const Questionnaire = mongoose.model(
   'Questionnaire',
   new Schema(
     {
-      name: { type: String, default: 'New Questionnaire' },
+      name: { type: String, default: 'Neuer Fragebogen' },
       consentScript: { type: String, default: '' },
       screeningRules: [ScreeningRule],
       selectionCriteria: { type: [String], default: [] },
