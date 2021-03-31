@@ -259,7 +259,7 @@ const QuestionnairePresenter = ({
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="staticBackdropLabel">
-                Frage {currentIndex + 1}
+                Pause
               </h5>
               <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
