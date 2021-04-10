@@ -294,11 +294,6 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
 
   const { userId, iterationId } = useParams();
 
-  const [imageURLs, setImageURLs] = useState([
-    'https://c2.staticflickr.com/9/8817/28973449265_07e3aa5d2e_b.jpg',
-    'https://c2.staticflickr.com/9/8356/28897120681_3b2c0f43e0_b.jpg',
-    'https://c4.staticflickr.com/9/8887/28897124891_98c4fdd82b_b.jpg'
-  ]);
   const [
     { fetchedQuestions, isLoadingQuestions, isErrorQuestions },
     setQuestionniareId
@@ -354,7 +349,6 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
       {users && users.length > 0 && fetchedQuestions && iteration && (
         <QuestionnairePresenter
           questions={fetchedQuestions}
-          imageURLs={imageURLs}
           previousAnswers={iteration.answers}
           questionsToSkip={iteration.questionsToSkip}
           stoppedAtIndex={iteration.stoppedAtIndex + 1}
