@@ -18,6 +18,9 @@ import { Question } from '../../components/Question';
 import Submit from '../../components/DefaultSegments';
 import ProgressIndicator from '../../components/ProgressIndicator';
 
+// TODO: FIX BUG
+// !BUG: When continuing questionnaire after logout, cannot move forward. Questionnaire stuck. Error loading resource.
+
 const QuestionnairePresenter = ({
   questions,
   previousAnswers,

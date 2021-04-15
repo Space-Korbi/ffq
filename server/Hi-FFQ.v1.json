@@ -24,7 +24,9 @@
       ],
       "get": {
         "summary": "Get User Info by User ID",
-        "tags": [],
+        "tags": [
+          "users"
+        ],
         "responses": {
           "200": {
             "description": "User Found",
@@ -133,7 +135,10 @@
             }
           },
           "description": "Patch user properties to update."
-        }
+        },
+        "tags": [
+          "users"
+        ]
       }
     },
     "/user": {
@@ -212,7 +217,10 @@
           },
           "description": "Post the necessary fields for the API to create a new user."
         },
-        "description": "Create a new user."
+        "description": "Create a new user.",
+        "tags": [
+          "users"
+        ]
       },
       "get": {
         "summary": "",
@@ -221,7 +229,10 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "tags": [
+          "users"
+        ]
       }
     },
     "/questionnaires": {
@@ -232,7 +243,10 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "tags": [
+          "questionnaires"
+        ]
       },
       "get": {
         "summary": "",
@@ -241,13 +255,18 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "tags": [
+          "questionnaires"
+        ]
       }
     },
     "/questionnaires/{questionnaireId}/questions": {
       "get": {
         "summary": "Your GET endpoint",
-        "tags": [],
+        "tags": [
+          "questionnaires"
+        ],
         "responses": {},
         "operationId": "get-questionnaires-:questionnaireId-questions"
       },
@@ -258,7 +277,10 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "tags": [
+          "questionnaires"
+        ]
       },
       "parameters": [
         {
@@ -289,7 +311,10 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "tags": [
+          "questionnaires"
+        ]
       }
     },
     "/questions/{questionId}": {
@@ -310,7 +335,10 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "tags": [
+          "questions"
+        ]
       }
     },
     "/questionnaires/:questionnaireId/questions/{questionId}/position/{position}": {
@@ -339,7 +367,10 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "tags": [
+          "questionnaires"
+        ]
       }
     },
     "/questionnaires/{questionnaireId}/questions/{questionId}": {
@@ -368,7 +399,10 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "tags": [
+          "questionnaires"
+        ]
       }
     },
     "/upload": {
@@ -379,7 +413,10 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "tags": [
+          "images"
+        ]
       }
     },
     "/users/signup": {
@@ -390,7 +427,10 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "tags": [
+          "users"
+        ]
       }
     },
     "/users/login": {
@@ -401,7 +441,10 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "tags": [
+          "users"
+        ]
       }
     },
     "/users/requestPasswordReset": {
@@ -412,7 +455,10 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "tags": [
+          "users"
+        ]
       }
     },
     "/users/resetpassword": {
@@ -423,7 +469,10 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "tags": [
+          "users"
+        ]
       }
     },
     "/users/{userId}/iterations/{iterationId}": {
@@ -452,7 +501,10 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "tags": [
+          "users"
+        ]
       }
     },
     "/users/{userId}/iterations/{iterationId}/questions/{questionId}": {
@@ -489,7 +541,10 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "tags": [
+          "users"
+        ]
       }
     }
   },

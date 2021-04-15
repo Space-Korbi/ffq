@@ -96,7 +96,7 @@ const UserInputAnswer = ({ answerOptions, submittedAnswer, onSubmit }) => {
       })}
       <div className="d-flex justify-content-center mb-3">
         <button type="button" className="btn btn-outline-primary" onClick={() => submit()}>
-          Continue
+          Weiter
         </button>
       </div>
     </div>
