@@ -10,7 +10,7 @@ const verifyToken = (req, res, next) => {
   if (!token) {
     return res.status(403).json({
       title: 'No token provided.',
-      detail: 'Ensure that a valid access token is inlcuded in the request header.'
+      detail: 'Ensure that a valid access token is included in the request header.'
     });
   }
 
@@ -65,7 +65,6 @@ const isAdmin = (req, res, next) => {
   });
 };
 
-// TODO authorise correctly
 const authoriseUser = (req, res, next) => {
   console.log('========', req.userId, req.query.userId);
 

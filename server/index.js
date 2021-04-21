@@ -95,7 +95,7 @@ app.use('/api', [userRouter, questionnaireRouter, imageRouter]);
 
 // app.use([errorHandler.errorHandler]);
 
-const swaggerDocument = require('./Questionnaire.v1.json');
+const swaggerDocument = require('./Hi-FFQ.v1.json');
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
