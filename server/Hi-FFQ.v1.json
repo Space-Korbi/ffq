@@ -1,12 +1,12 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Hi-FFQ",
+    "title": "HI-FFQ",
     "version": "1.0"
   },
   "servers": [
     {
-      "url": "https://hi-ffq.herokuapp.com/"
+      "url": "https://hi-ffq.herokuapp.com/api"
     }
   ],
   "paths": {
@@ -14,7 +14,8 @@
       "parameters": [
         {
           "schema": {
-            "type": "integer"
+            "type": "integer",
+            "example": "60a4254548f29b0048bb2f1d"
           },
           "name": "userId",
           "in": "path",
@@ -3729,6 +3730,111 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "x-examples": {
+                    "example-1": {
+                      "accessToken": null,
+                      "title": "Passwort ungültig",
+                      "detail": "Passwort ungültig"
+                    }
+                  },
+                  "properties": {
+                    "accessToken": {
+                      "nullable": true
+                    },
+                    "title": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "detail": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "detail"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "detail": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "detail"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "title": "User not found.",
+                      "detail": "The user could not be found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "detail": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "title",
+                    "detail"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": "",
+                      "title": "Internal error.",
+                      "detail": "Something went wrong."
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -3872,7 +3978,8 @@
       "parameters": [
         {
           "schema": {
-            "type": "string"
+            "type": "string",
+            "example": "60a4254548f29b0048bb2f1d"
           },
           "name": "userId",
           "in": "path",
@@ -3880,7 +3987,8 @@
         },
         {
           "schema": {
-            "type": "string"
+            "type": "string",
+            "example": "rPwlcoKcpu2krpGzn_Tr4"
           },
           "name": "iterationId",
           "in": "path",
@@ -4042,7 +4150,8 @@
       "parameters": [
         {
           "schema": {
-            "type": "string"
+            "type": "string",
+            "example": "60a4254548f29b0048bb2f1d"
           },
           "name": "userId",
           "in": "path",
@@ -4050,7 +4159,8 @@
         },
         {
           "schema": {
-            "type": "string"
+            "type": "string",
+            "example": "rPwlcoKcpu2krpGzn_Tr4"
           },
           "name": "iterationId",
           "in": "path",
@@ -4058,7 +4168,8 @@
         },
         {
           "schema": {
-            "type": "string"
+            "type": "string",
+            "example": "6020b6527f81aa0047f81c7c"
           },
           "name": "questionId",
           "in": "path",
