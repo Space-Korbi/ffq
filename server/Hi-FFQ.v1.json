@@ -22,74 +22,42 @@
           "description": "Id of an existing user."
         }
       ],
-      "get": {
-        "summary": "Get User Info by User ID",
-        "tags": [
-          "users"
-        ],
-        "responses": {
-          "200": {
-            "description": "User Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                },
-                "examples": {
-                  "Get User Alice Smith": {
-                    "value": {
-                      "id": 142,
-                      "firstName": "Alice",
-                      "lastName": "Smith",
-                      "email": "alice.smith@gmail.com",
-                      "dateOfBirth": "1997-10-31",
-                      "emailVerified": true,
-                      "signUpDate": "2019-08-24"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "User Not Found"
-          }
-        },
-        "operationId": "get-users-userId",
-        "description": "Retrieve the information of the user with the matching user ID."
-      },
       "patch": {
         "summary": "Update User Information",
         "operationId": "patch-users-userId",
         "responses": {
-          "200": {
-            "description": "User Updated",
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "User Not Found",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
-                },
-                "examples": {
-                  "Updated User Rebecca Baker": {
-                    "value": {
-                      "id": 13,
-                      "firstName": "Rebecca",
-                      "lastName": "Baker",
-                      "email": "rebecca@gmail.com",
-                      "dateOfBirth": "1985-10-02",
-                      "emailVerified": false,
-                      "createDate": "2019-08-24"
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "message"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": "",
+                      "message": "User not updated!"
                     }
                   }
                 }
               }
             }
-          },
-          "404": {
-            "description": "User Not Found"
-          },
-          "409": {
-            "description": "Email Already Taken"
           }
         },
         "description": "Update the information of an existing user.",
@@ -108,9 +76,6 @@
                   "email": {
                     "type": "string",
                     "description": "If a new email is given, the user's email verified property will be set to false."
-                  },
-                  "dateOfBirth": {
-                    "type": "string"
                   }
                 }
               },
@@ -125,10 +90,49 @@
                     "email": "rebecca@gmail.com"
                   }
                 },
-                "Update Last Name & Date of Birth": {
+                "Update password ": {
                   "value": {
-                    "lastName": "Baker",
-                    "dateOfBirth": "1985-10-02"
+                    "oldPassword": "12345",
+                    "newPassword": "54321",
+                    "confirmPassword": "54321"
+                  }
+                }
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "description": "",
+                "type": "object",
+                "properties": {
+                  "oldPassword": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "confirmPassword": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "oldPassword",
+                  "newPassword",
+                  "confirmPassword"
+                ],
+                "x-examples": {
+                  "example-1": {
+                    "oldPassword": "12345",
+                    "newPassword": "54321",
+                    "confirmPassword": "54321"
                   }
                 }
               }
@@ -138,101 +142,2135 @@
         },
         "tags": [
           "users"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYTNmOGFiYTNjYjk1MDA0N2RlN2ViNiIsImlhdCI6MTYyMTM1OTA0MCwiZXhwIjoxNjIxNDQ1NDQwfQ.vOvlF0BUZ_opIb4cXRm5nHZkFueeH0SnpalG-QkPgN7"
+            },
+            "in": "header",
+            "name": "x-access-token",
+            "description": "JWT",
+            "required": true
+          }
         ]
       }
     },
     "/users": {
-      "post": {
-        "summary": "Create New User",
-        "operationId": "post-user",
+      "get": {
+        "summary": "",
+        "operationId": "get-user",
         "responses": {
           "200": {
-            "description": "User Created",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "uniqueItems": true,
+                      "minItems": 1,
+                      "items": {
+                        "required": [
+                          "firstName",
+                          "lastName",
+                          "hasAcceptedConsentForm",
+                          "screeningStatus",
+                          "_id",
+                          "email",
+                          "id"
+                        ],
+                        "properties": {
+                          "firstName": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "lastName": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "hasAcceptedConsentForm": {
+                            "type": "boolean"
+                          },
+                          "screeningData": {
+                            "type": "array",
+                            "items": {
+                              "required": [],
+                              "properties": {}
+                            }
+                          },
+                          "screeningStatus": {
+                            "type": "string"
+                          },
+                          "_id": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "email": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "iterations": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 1,
+                            "items": {
+                              "required": [
+                                "stoppedAtIndex",
+                                "id"
+                              ],
+                              "properties": {
+                                "pausedAt": {
+                                  "type": "array",
+                                  "items": {
+                                    "required": [],
+                                    "properties": {}
+                                  }
+                                },
+                                "stoppedAtIndex": {
+                                  "type": "number"
+                                },
+                                "questionsToSkip": {
+                                  "type": "array",
+                                  "items": {
+                                    "required": [],
+                                    "properties": {}
+                                  }
+                                },
+                                "id": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "answers": {
+                                  "type": "array",
+                                  "uniqueItems": true,
+                                  "minItems": 1,
+                                  "items": {
+                                    "required": [
+                                      "questionId"
+                                    ],
+                                    "properties": {
+                                      "questionId": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      "answerOption": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "minLength": 1
+                                          },
+                                          "title": {
+                                            "type": "string",
+                                            "minLength": 1
+                                          },
+                                          "skip": {
+                                            "type": "array",
+                                            "items": {
+                                              "required": [],
+                                              "properties": {}
+                                            }
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "title",
+                                          "skip"
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "users"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "users": [
+                        {
+                          "firstName": "Admin",
+                          "lastName": "Admin",
+                          "hasAcceptedConsentForm": false,
+                          "screeningData": [],
+                          "screeningStatus": "",
+                          "_id": "6020b6287f81aa0047f81c79",
+                          "email": "admin@abc.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [
+                                "60781799da37b500477d5dc5",
+                                "60781a8dda37b500477d5dc8"
+                              ],
+                              "id": "0",
+                              "answers": [
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": {
+                                    "id": "2pqdWXQfhAn1idQiLrtwW",
+                                    "title": "Nein",
+                                    "skip": [
+                                      "60781799da37b500477d5dc5",
+                                      "60781a8dda37b500477d5dc8"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "Y0dWDEhknxvlnu7LbZmAn",
+                                    "title": "2 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                }
+                              ]
+                            }
+                          ],
+                          "id": "6020b6287f81aa0047f81c79"
+                        },
+                        {
+                          "firstName": "Person",
+                          "lastName": "Test",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "60644ba66f26ec0047d01c8a",
+                          "email": "person@test.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "E2egbvTxfdSe4Q-n-Ckcq",
+                              "startedAt": "2021-03-31T10:16:55.116Z",
+                              "answers": [
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "tJHAbvcy0JWqHRroCheSH",
+                                    "title": "1-3 Mal in den letzten 4 Wochen",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "DScAxvVP2KIp3FWRUgdJC",
+                                    "title": "Dazwischen",
+                                    "imageURL": "",
+                                    "index": 5
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                }
+                              ],
+                              "finishedAt": "2021-03-31T10:18:56.760Z"
+                            }
+                          ],
+                          "id": "60644ba66f26ec0047d01c8a"
+                        },
+                        {
+                          "firstName": "Abc",
+                          "lastName": "Def",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "606469bc6f26ec0047d01c8f",
+                          "email": "abc@def.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [
+                                3
+                              ],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "E2egbvTxfdSe4Q-n-Ckcq",
+                              "startedAt": "2021-03-31T12:23:41.125Z",
+                              "answers": [
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "tJHAbvcy0JWqHRroCheSH",
+                                    "title": "1-3 Mal in den letzten 4 Wochen",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "7gVaK_mpsZIKMJzXyXrpU",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183085/yovlov3x1u30ilj0a8ia.jpg",
+                                    "index": 4
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "xZ4maKaU55Z71qFy0rJ-y",
+                                    "title": "1-3 Mal in den letzten 4 Wochen"
+                                  }
+                                }
+                              ]
+                            }
+                          ],
+                          "id": "606469bc6f26ec0047d01c8f"
+                        },
+                        {
+                          "firstName": "Person",
+                          "lastName": "Beispiel",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "60646edb6f26ec0047d01c92",
+                          "email": "person@beispiel.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [
+                                6
+                              ],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "E2egbvTxfdSe4Q-n-Ckcq",
+                              "startedAt": "2021-03-31T12:46:20.981Z",
+                              "answers": [
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "tJHAbvcy0JWqHRroCheSH",
+                                    "title": "1-3 Mal in den letzten 4 Wochen",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "7gVaK_mpsZIKMJzXyXrpU",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183085/yovlov3x1u30ilj0a8ia.jpg",
+                                    "index": 4
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "xZ4maKaU55Z71qFy0rJ-y",
+                                    "title": "1-3 Mal in den letzten 4 Wochen"
+                                  }
+                                },
+                                {
+                                  "questionId": "606466ba6f26ec0047d01c8c",
+                                  "answerOption": {
+                                    "id": "fCXvf6_7UOP3rpqFIiQkL",
+                                    "title": "Nein"
+                                  }
+                                }
+                              ]
+                            }
+                          ],
+                          "id": "60646edb6f26ec0047d01c92"
+                        },
+                        {
+                          "firstName": "Max",
+                          "lastName": "Mustermann",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "606482826df321004815b6b2",
+                          "email": "m.musterman@example.com",
+                          "iterations": [
+                            {
+                              "pausedAt": [
+                                1
+                              ],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-03-31T14:30:42.231Z",
+                              "answers": [
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "uobtBBRHJVB78J3heJzSU",
+                                    "title": "1 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "7gVaK_mpsZIKMJzXyXrpU",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183085/yovlov3x1u30ilj0a8ia.jpg",
+                                    "index": 4
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "xZ4maKaU55Z71qFy0rJ-y",
+                                    "title": "1-3 Mal in den letzten 4 Wochen"
+                                  }
+                                },
+                                {
+                                  "questionId": "606466ba6f26ec0047d01c8c",
+                                  "answerOption": {
+                                    "id": "chmGdSHExWK4Imza3Bg7h",
+                                    "title": "Ja",
+                                    "color": "success"
+                                  }
+                                },
+                                {
+                                  "questionId": "606470836f26ec0047d01c93",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                },
+                                {
+                                  "questionId": "606470b66f26ec0047d01c94",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                }
+                              ],
+                              "finishedAt": "2021-03-31T14:31:57.151Z"
+                            }
+                          ],
+                          "id": "606482826df321004815b6b2"
+                        },
+                        {
+                          "firstName": "Erika",
+                          "lastName": "Musterfrau",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "606489ac6df321004815b6b3",
+                          "email": "e.musterfrau@example.com",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-03-31T14:39:49.894Z",
+                              "answers": [
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "Y0dWDEhknxvlnu7LbZmAn",
+                                    "title": "2 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "DScAxvVP2KIp3FWRUgdJC",
+                                    "title": "Dazwischen",
+                                    "imageURL": "",
+                                    "index": 5
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "AyfZbeWQRNSPaTvj_IVqt",
+                                    "title": "1 Mal pro Tag"
+                                  }
+                                },
+                                {
+                                  "questionId": "606466ba6f26ec0047d01c8c",
+                                  "answerOption": {
+                                    "id": "fCXvf6_7UOP3rpqFIiQkL",
+                                    "title": "Nein"
+                                  }
+                                },
+                                {
+                                  "questionId": "606470836f26ec0047d01c93",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                },
+                                {
+                                  "questionId": "606470b66f26ec0047d01c94",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                }
+                              ],
+                              "finishedAt": "2021-03-31T14:43:33.660Z"
+                            }
+                          ],
+                          "id": "606489ac6df321004815b6b3"
+                        },
+                        {
+                          "firstName": "Max",
+                          "lastName": "Mustermann",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [
+                            "omnivor"
+                          ],
+                          "screeningStatus": "Accept",
+                          "_id": "606eb6ff4e13420047e71d99",
+                          "email": "tweety090596@yahoo.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-04-08T07:56:07.037Z",
+                              "answers": [
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "ojSMBON8HieYHKcQ7LdHn",
+                                    "title": "2 - 4 Mal pro Woche",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "7gVaK_mpsZIKMJzXyXrpU",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183085/yovlov3x1u30ilj0a8ia.jpg",
+                                    "index": 4
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "xZ4maKaU55Z71qFy0rJ-y",
+                                    "title": "1-3 Mal in den letzten 4 Wochen"
+                                  }
+                                },
+                                {
+                                  "questionId": "606466ba6f26ec0047d01c8c",
+                                  "answerOption": {
+                                    "id": "chmGdSHExWK4Imza3Bg7h",
+                                    "title": "Ja",
+                                    "color": "success"
+                                  }
+                                },
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                },
+                                {
+                                  "questionId": "606eb56b4e13420047e71d97",
+                                  "answerOption": {
+                                    "id": "W0j2CYuz4-kYlqGafqDt6",
+                                    "title": "Ja",
+                                    "color": "success"
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb6b24e13420047e71d98",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                }
+                              ],
+                              "finishedAt": "2021-04-08T07:58:47.404Z"
+                            }
+                          ],
+                          "id": "606eb6ff4e13420047e71d99"
+                        },
+                        {
+                          "firstName": "testuser",
+                          "lastName": "testuser",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "6073198d18448900475ec0eb",
+                          "email": "test@abc.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-04-11T15:45:30.342Z",
+                              "answers": [
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "uobtBBRHJVB78J3heJzSU",
+                                    "title": "1 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "LtplWXub8I-yGXj2oCUZh",
+                                    "title": "Mehr",
+                                    "imageURL": "",
+                                    "index": 7
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "AyfZbeWQRNSPaTvj_IVqt",
+                                    "title": "1 Mal pro Tag"
+                                  }
+                                },
+                                {
+                                  "questionId": "606466ba6f26ec0047d01c8c",
+                                  "answerOption": {
+                                    "id": "fCXvf6_7UOP3rpqFIiQkL",
+                                    "title": "Nein"
+                                  }
+                                },
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                },
+                                {
+                                  "questionId": "606eb56b4e13420047e71d97",
+                                  "answerOption": {
+                                    "id": "pGEMDRPjBfvoJ2qPqVwWN",
+                                    "title": "Nein",
+                                    "color": "danger"
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb6b24e13420047e71d98",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                }
+                              ],
+                              "finishedAt": "2021-04-11T15:45:52.228Z"
+                            }
+                          ],
+                          "id": "6073198d18448900475ec0eb"
+                        },
+                        {
+                          "firstName": "Test",
+                          "lastName": "Tester",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [
+                            "omnivor"
+                          ],
+                          "screeningStatus": "Accept",
+                          "_id": "60782257da37b500477d5dcc",
+                          "email": "test.test@gmail.com",
+                          "iterations": [
+                            {
+                              "pausedAt": [
+                                4
+                              ],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-04-15T11:30:14.777Z",
+                              "answers": [
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": {
+                                    "id": "0djX4fdwDAyjdFYMhfcvX",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781799da37b500477d5dc5",
+                                  "answerOption": {
+                                    "id": "4tg_R1bjHETmZMcYxsz8U",
+                                    "title": "2 - 4 Mal pro Woche",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a8dda37b500477d5dc8",
+                                  "answerOption": {
+                                    "id": "nIgc86sSESsvREn7rxDKE",
+                                    "title": "Weniger",
+                                    "imageURL": "",
+                                    "index": 1
+                                  }
+                                },
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "tJHAbvcy0JWqHRroCheSH",
+                                    "title": "1-3 Mal in den letzten 4 Wochen",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "7gVaK_mpsZIKMJzXyXrpU",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183085/yovlov3x1u30ilj0a8ia.jpg",
+                                    "index": 4
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb6b24e13420047e71d98",
+                                  "answerOption": {
+                                    "id": "Tw4YrOQoyYjo6k2ColtXg",
+                                    "title": "1 - 3 Mal in den letzten 4 Wochen",
+                                    "color": "dark"
+                                  }
+                                }
+                              ]
+                            }
+                          ],
+                          "id": "60782257da37b500477d5dcc"
+                        },
+                        {
+                          "firstName": "Ich",
+                          "lastName": "Ich",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "6078245bda37b500477d5dcd",
+                          "email": "ich@bins.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [
+                                "60781ca2da37b500477d5dcb"
+                              ],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-04-15T11:33:29.324Z",
+                              "answers": [
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": {
+                                    "id": "0djX4fdwDAyjdFYMhfcvX",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781799da37b500477d5dc5",
+                                  "answerOption": {
+                                    "id": "4tg_R1bjHETmZMcYxsz8U",
+                                    "title": "2 - 4 Mal pro Woche",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a8dda37b500477d5dc8",
+                                  "answerOption": {
+                                    "id": "nIgc86sSESsvREn7rxDKE",
+                                    "title": "Weniger",
+                                    "imageURL": "",
+                                    "index": 1
+                                  }
+                                },
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "n3J3B8bZrm6flDNcLkQTB",
+                                    "title": "1 Mal pro Woche",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "7gVaK_mpsZIKMJzXyXrpU",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183085/yovlov3x1u30ilj0a8ia.jpg",
+                                    "index": 4
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb6b24e13420047e71d98",
+                                  "answerOption": {
+                                    "id": "Tw4YrOQoyYjo6k2ColtXg",
+                                    "title": "1 - 3 Mal in den letzten 4 Wochen",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781335da37b500477d5dc4",
+                                  "answerOption": {
+                                    "id": "3X-goHtxko6yM6KlXO4UD",
+                                    "title": "Dazwischen",
+                                    "imageURL": "",
+                                    "index": 3
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "69djRm9tNoV1h_UB73hDm",
+                                    "title": "Nie in den letzten 4 Wochen ",
+                                    "skip": [
+                                      "60781ca2da37b500477d5dcb"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "questionId": "60781ba5da37b500477d5dc9",
+                                  "answerOption": {
+                                    "id": "OynzXv3D24Osvr3kHgGGz",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781bf3da37b500477d5dca",
+                                  "answerOption": [
+                                    {
+                                      "id": "zwlEyZGPLhcGvjEZq66U5",
+                                      "title": "",
+                                      "hasNumberInput": false,
+                                      "answer": "Suppe"
+                                    },
+                                    {
+                                      "id": "M_iXHKPmWDliKw3DceINt",
+                                      "title": "",
+                                      "hasNumberInput": false
+                                    },
+                                    {
+                                      "id": "bxx-MqsGTy2oq2BAlLGyj",
+                                      "title": "",
+                                      "hasNumberInput": false
+                                    },
+                                    {
+                                      "id": "4HJRIjLq6Ex-muUvm9-JF",
+                                      "title": "",
+                                      "hasNumberInput": false
+                                    },
+                                    {
+                                      "id": "dDzPrUEb0gNbN5wwnu_GE",
+                                      "title": "",
+                                      "hasNumberInput": false
+                                    }
+                                  ]
+                                },
+                                {
+                                  "questionId": "606466ba6f26ec0047d01c8c",
+                                  "answerOption": {
+                                    "id": "chmGdSHExWK4Imza3Bg7h",
+                                    "title": "Ja",
+                                    "color": "success"
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb56b4e13420047e71d97",
+                                  "answerOption": {
+                                    "id": "W0j2CYuz4-kYlqGafqDt6",
+                                    "title": "Ja",
+                                    "color": "success"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a56da37b500477d5dc6",
+                                  "answerOption": {
+                                    "id": "5QDX7vQdRSXHiRAIddhpQ",
+                                    "title": "Omnivore"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a58da37b500477d5dc7",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                }
+                              ],
+                              "finishedAt": "2021-04-15T11:35:47.271Z"
+                            }
+                          ],
+                          "id": "6078245bda37b500477d5dcd"
+                        },
+                        {
+                          "firstName": "Testnutzer ",
+                          "lastName": "Interview",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "6078993c6e3ebe00474bcaf4",
+                          "email": "test@interview.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [
+                                6,
+                                9
+                              ],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [
+                                "6060e3b8934cf30048c10efb"
+                              ],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-04-15T21:49:22.187Z",
+                              "answers": [
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": {
+                                    "id": "0djX4fdwDAyjdFYMhfcvX",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781799da37b500477d5dc5",
+                                  "answerOption": {
+                                    "id": "Kvju5JkOomcO63ryU4pNm",
+                                    "title": "1 - 3 Mal in den letzten 4 Wochen",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a8dda37b500477d5dc8",
+                                  "answerOption": {
+                                    "id": "3Zy-WhABdlNG8i09cfOfD",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485177/o8ugat3lqmunkftyau43.jpg",
+                                    "index": 4
+                                  }
+                                },
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "LGwSuvelSrQ_4Twt8IT0s",
+                                    "title": "nie in den letzten 4 Wochen",
+                                    "color": "primary",
+                                    "skip": [
+                                      "6060e3b8934cf30048c10efb"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb6b24e13420047e71d98",
+                                  "answerOption": {
+                                    "id": "2Mmecb_kYjKcqAiXgwu0S",
+                                    "title": "1 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781335da37b500477d5dc4",
+                                  "answerOption": {
+                                    "id": "nEWFNlvVSrpZpM9OZD33q",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485408/aqoybfo2kb5tfqzkbxkl.jpg",
+                                    "index": 4
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "XMvrNp4latWK8-tLPWMz_",
+                                    "title": "1 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                }
+                              ]
+                            }
+                          ],
+                          "id": "6078993c6e3ebe00474bcaf4"
+                        },
+                        {
+                          "firstName": "Inter",
+                          "lastName": "View",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "6078b5e29f53db0047bab5b2",
+                          "email": "fokusgruppe@interview.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-04-16T07:56:46.798Z",
+                              "answers": [
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": {
+                                    "id": "0djX4fdwDAyjdFYMhfcvX",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781799da37b500477d5dc5",
+                                  "answerOption": {
+                                    "id": "2UYFee1yjG5Z05__IxuHv",
+                                    "title": "1 Mal pro Woche",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a8dda37b500477d5dc8",
+                                  "answerOption": {
+                                    "id": "3Zy-WhABdlNG8i09cfOfD",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485177/o8ugat3lqmunkftyau43.jpg",
+                                    "index": 4
+                                  }
+                                }
+                              ]
+                            }
+                          ],
+                          "id": "6078b5e29f53db0047bab5b2"
+                        },
+                        {
+                          "firstName": "Sebastian",
+                          "lastName": "Gimpfl",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "60793c3085ba86004750db42",
+                          "email": "sebastian_gimpfl@gmx.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [
+                                14
+                              ],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [
+                                "60781a8dda37b500477d5dc8",
+                                "6060e3b8934cf30048c10efb",
+                                "60781335da37b500477d5dc4",
+                                "60781ca2da37b500477d5dcb"
+                              ],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-04-16T07:28:22.104Z",
+                              "answers": [
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": {
+                                    "id": "0djX4fdwDAyjdFYMhfcvX",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781799da37b500477d5dc5",
+                                  "answerOption": {
+                                    "id": "jLZCxGt-nu5xBnKa5KN9-",
+                                    "title": "Nie in den letzten 4 Wochen",
+                                    "skip": [
+                                      "60781a8dda37b500477d5dc8"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "LGwSuvelSrQ_4Twt8IT0s",
+                                    "title": "nie in den letzten 4 Wochen",
+                                    "color": "primary",
+                                    "skip": [
+                                      "6060e3b8934cf30048c10efb"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb6b24e13420047e71d98",
+                                  "answerOption": {
+                                    "id": "uMyazwN_phFFK_l6M_zJ2",
+                                    "title": "Nie in den letzten 4 Wochen",
+                                    "color": "primary",
+                                    "skip": [
+                                      "60781335da37b500477d5dc4"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "69djRm9tNoV1h_UB73hDm",
+                                    "title": "Nie in den letzten 4 Wochen ",
+                                    "skip": [
+                                      "60781ca2da37b500477d5dcb"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "questionId": "60781ba5da37b500477d5dc9",
+                                  "answerOption": {
+                                    "id": "OynzXv3D24Osvr3kHgGGz",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781bf3da37b500477d5dca",
+                                  "answerOption": [
+                                    {
+                                      "id": "zwlEyZGPLhcGvjEZq66U5",
+                                      "title": "",
+                                      "hasNumberInput": false,
+                                      "answer": "asdsa"
+                                    },
+                                    {
+                                      "id": "M_iXHKPmWDliKw3DceINt",
+                                      "title": "",
+                                      "hasNumberInput": false
+                                    },
+                                    {
+                                      "id": "bxx-MqsGTy2oq2BAlLGyj",
+                                      "title": "",
+                                      "hasNumberInput": false
+                                    },
+                                    {
+                                      "id": "4HJRIjLq6Ex-muUvm9-JF",
+                                      "title": "",
+                                      "hasNumberInput": false
+                                    },
+                                    {
+                                      "id": "dDzPrUEb0gNbN5wwnu_GE",
+                                      "title": "",
+                                      "hasNumberInput": false
+                                    }
+                                  ]
+                                },
+                                {
+                                  "questionId": "606466ba6f26ec0047d01c8c",
+                                  "answerOption": {
+                                    "id": "chmGdSHExWK4Imza3Bg7h",
+                                    "title": "Ja",
+                                    "color": "success"
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb56b4e13420047e71d97",
+                                  "answerOption": {
+                                    "id": "W0j2CYuz4-kYlqGafqDt6",
+                                    "title": "Ja",
+                                    "color": "success"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a56da37b500477d5dc6",
+                                  "answerOption": {
+                                    "id": "iCsd5tPysEQq6jsA1qlpN",
+                                    "title": "vegan",
+                                    "color": "primary"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a58da37b500477d5dc7",
+                                  "answerOption": {
+                                    "id": "q937NcELBk28MUtgXGrTk",
+                                    "title": "Nein",
+                                    "color": "danger"
+                                  }
+                                }
+                              ],
+                              "finishedAt": "2021-04-16T07:28:20.109Z"
+                            }
+                          ],
+                          "id": "60793c3085ba86004750db42"
+                        },
+                        {
+                          "firstName": "Hi",
+                          "lastName": "Bye",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [
+                            "über 18 Jahre alt",
+                            "doof",
+                            "omnivor"
+                          ],
+                          "screeningStatus": "Accept",
+                          "_id": "60794f0785ba86004750db44",
+                          "email": "hallo@xn--tschss-6ya.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-04-16T08:47:35.725Z",
+                              "answers": []
+                            }
+                          ],
+                          "id": "60794f0785ba86004750db44"
+                        },
+                        {
+                          "firstName": "abc",
+                          "lastName": "abc",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "608450f7703fcd004709cfd5",
+                          "email": "u14@web.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [
+                                1
+                              ],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [
+                                "60781bf3da37b500477d5dca"
+                              ],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-04-24T17:11:04.807Z",
+                              "answers": [
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": {
+                                    "id": "0djX4fdwDAyjdFYMhfcvX",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781799da37b500477d5dc5",
+                                  "answerOption": {
+                                    "id": "2UYFee1yjG5Z05__IxuHv",
+                                    "title": "1 Mal pro Woche",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a8dda37b500477d5dc8",
+                                  "answerOption": {
+                                    "id": "3Zy-WhABdlNG8i09cfOfD",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485177/o8ugat3lqmunkftyau43.jpg",
+                                    "index": 4
+                                  }
+                                },
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "tJHAbvcy0JWqHRroCheSH",
+                                    "title": "1-3 Mal in den letzten 4 Wochen",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "6OCJITineltMZfQPJ-D8j",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183090/apfo8ziyur2zwd63tgme.jpg",
+                                    "index": 6
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb6b24e13420047e71d98",
+                                  "answerOption": {
+                                    "id": "8-PZ1TrkOwGQupAucd2RC",
+                                    "title": "2 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781335da37b500477d5dc4",
+                                  "answerOption": {
+                                    "id": "nEWFNlvVSrpZpM9OZD33q",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485408/aqoybfo2kb5tfqzkbxkl.jpg",
+                                    "index": 4
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "AyfZbeWQRNSPaTvj_IVqt",
+                                    "title": "5 - 6 Mal pro Woche",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781ca2da37b500477d5dcb",
+                                  "answerOption": [
+                                    {
+                                      "id": "g15MsdnkndqbW91wcn5lU",
+                                      "title": "mg",
+                                      "hasNumberInput": false,
+                                      "numberInputTitle": "mg"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "questionId": "60781ba5da37b500477d5dc9",
+                                  "answerOption": {
+                                    "id": "n9CtSm4yRuf2Cb6u33ZRU",
+                                    "title": "Nein",
+                                    "skip": [
+                                      "60781bf3da37b500477d5dca"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "questionId": "606466ba6f26ec0047d01c8c",
+                                  "answerOption": {
+                                    "id": "fCXvf6_7UOP3rpqFIiQkL",
+                                    "title": "Nein"
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb56b4e13420047e71d97",
+                                  "answerOption": {
+                                    "id": "W0j2CYuz4-kYlqGafqDt6",
+                                    "title": "Ja",
+                                    "color": "success"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a56da37b500477d5dc6",
+                                  "answerOption": {
+                                    "id": "eZ6jNmA_hFH2CaccOeccq",
+                                    "title": "vegetarisch"
+                                  }
+                                },
+                                {
+                                  "questionId": "60844fd3703fcd004709cfd4",
+                                  "answerOption": {
+                                    "id": "HXdsrxJv8lmREiGRKj6P6",
+                                    "title": "2"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a58da37b500477d5dc7",
+                                  "answerOption": {
+                                    "id": "q937NcELBk28MUtgXGrTk",
+                                    "title": "Nein",
+                                    "color": "danger"
+                                  }
+                                },
+                                {
+                                  "questionId": "607824e3da37b500477d5dce",
+                                  "answerOption": [
+                                    {
+                                      "id": "LZHU-BKZDFdJ73hHxEihl",
+                                      "title": "Liter pro Tag",
+                                      "hasNumberInput": false,
+                                      "answer": "1,5"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "questionId": "607946cd85ba86004750db43",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                }
+                              ],
+                              "finishedAt": "2021-04-24T17:14:12.765Z"
+                            }
+                          ],
+                          "id": "608450f7703fcd004709cfd5"
+                        },
+                        {
+                          "firstName": "u@1.de",
+                          "lastName": "u@1.de",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "6089ac50f4638e0047af0d54",
+                          "email": "u@1.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-05-09T16:01:41.241Z",
+                              "answers": [
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": {
+                                    "id": "0djX4fdwDAyjdFYMhfcvX",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781799da37b500477d5dc5",
+                                  "answerOption": {
+                                    "id": "FM3IX1j69Y3QextPrI3rc",
+                                    "title": "1 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a8dda37b500477d5dc8",
+                                  "answerOption": {
+                                    "id": "dMk55KGwyKU44nZXR7IO_",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485177/qbhou0xcejyqzbkleg5z.jpg",
+                                    "index": 2
+                                  }
+                                },
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "uobtBBRHJVB78J3heJzSU",
+                                    "title": "1 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "EvXlrFznJwcrUq5L8ycoe",
+                                    "title": "Dazwischen",
+                                    "imageURL": "",
+                                    "index": 3
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb6b24e13420047e71d98",
+                                  "answerOption": {
+                                    "id": "2Mmecb_kYjKcqAiXgwu0S",
+                                    "title": "1 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781335da37b500477d5dc4",
+                                  "answerOption": {
+                                    "id": "3X-goHtxko6yM6KlXO4UD",
+                                    "title": "Dazwischen",
+                                    "imageURL": "",
+                                    "index": 3
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "AyfZbeWQRNSPaTvj_IVqt",
+                                    "title": "5 - 6 Mal pro Woche",
+                                    "color": "dark"
+                                  }
+                                }
+                              ]
+                            }
+                          ],
+                          "id": "6089ac50f4638e0047af0d54"
+                        },
+                        {
+                          "firstName": "ba",
+                          "lastName": "bla",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "6096bc258cba670047db440f",
+                          "email": "bla@web.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-05-08T16:28:33.900Z",
+                              "answers": [
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": {
+                                    "id": "0djX4fdwDAyjdFYMhfcvX",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781799da37b500477d5dc5",
+                                  "answerOption": {
+                                    "id": "Kvju5JkOomcO63ryU4pNm",
+                                    "title": "1 - 3 Mal in den letzten 4 Wochen",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a8dda37b500477d5dc8",
+                                  "answerOption": {
+                                    "id": "dMk55KGwyKU44nZXR7IO_",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485177/qbhou0xcejyqzbkleg5z.jpg",
+                                    "index": 2
+                                  }
+                                },
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "uobtBBRHJVB78J3heJzSU",
+                                    "title": "1 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "4vhEHyymnmMPyaDqmzpmo",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183089/sotax8jtnnqyvv0o1w5a.jpg",
+                                    "index": 2
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb6b24e13420047e71d98",
+                                  "answerOption": {
+                                    "id": "8-PZ1TrkOwGQupAucd2RC",
+                                    "title": "2 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781335da37b500477d5dc4",
+                                  "answerOption": {
+                                    "id": "PMEpMQ_Lr2A8sFr8AShJ2",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485408/lrwtyidulsmvv5w2w4uu.jpg",
+                                    "index": 2
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "AyfZbeWQRNSPaTvj_IVqt",
+                                    "title": "5 - 6 Mal pro Woche",
+                                    "color": "dark"
+                                  }
+                                }
+                              ]
+                            }
+                          ],
+                          "id": "6096bc258cba670047db440f"
+                        },
+                        {
+                          "firstName": "Jon",
+                          "lastName": "Doe",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "60a03d4a35d0bb0048ee571b",
+                          "email": "j.doe@example.com",
+                          "iterations": [
+                            {
+                              "pausedAt": [
+                                1
+                              ],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [
+                                "60781bf3da37b500477d5dca"
+                              ],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-05-15T21:31:07.538Z",
+                              "answers": [
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": {
+                                    "id": "0djX4fdwDAyjdFYMhfcvX",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781799da37b500477d5dc5",
+                                  "answerOption": {
+                                    "id": "FM3IX1j69Y3QextPrI3rc",
+                                    "title": "1 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a8dda37b500477d5dc8",
+                                  "answerOption": {
+                                    "id": "dMk55KGwyKU44nZXR7IO_",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485177/qbhou0xcejyqzbkleg5z.jpg",
+                                    "index": 2
+                                  }
+                                },
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "Y0dWDEhknxvlnu7LbZmAn",
+                                    "title": "2 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "EvXlrFznJwcrUq5L8ycoe",
+                                    "title": "Dazwischen",
+                                    "imageURL": "",
+                                    "index": 3
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb6b24e13420047e71d98",
+                                  "answerOption": {
+                                    "id": "8-PZ1TrkOwGQupAucd2RC",
+                                    "title": "2 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781335da37b500477d5dc4",
+                                  "answerOption": {
+                                    "id": "PMEpMQ_Lr2A8sFr8AShJ2",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485408/lrwtyidulsmvv5w2w4uu.jpg",
+                                    "index": 2
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "AyfZbeWQRNSPaTvj_IVqt",
+                                    "title": "5 - 6 Mal pro Woche",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781ca2da37b500477d5dcb",
+                                  "answerOption": [
+                                    {
+                                      "id": "g15MsdnkndqbW91wcn5lU",
+                                      "title": "mg",
+                                      "hasNumberInput": false,
+                                      "numberInputTitle": "mg"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "questionId": "60781ba5da37b500477d5dc9",
+                                  "answerOption": {
+                                    "id": "n9CtSm4yRuf2Cb6u33ZRU",
+                                    "title": "Nein",
+                                    "skip": [
+                                      "60781bf3da37b500477d5dca"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "questionId": "606466ba6f26ec0047d01c8c",
+                                  "answerOption": {
+                                    "id": "fCXvf6_7UOP3rpqFIiQkL",
+                                    "title": "Nein"
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb56b4e13420047e71d97",
+                                  "answerOption": {
+                                    "id": "pGEMDRPjBfvoJ2qPqVwWN",
+                                    "title": "Nein",
+                                    "color": "danger"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a56da37b500477d5dc6",
+                                  "answerOption": {
+                                    "id": "eZ6jNmA_hFH2CaccOeccq",
+                                    "title": "vegetarisch"
+                                  }
+                                },
+                                {
+                                  "questionId": "60844fd3703fcd004709cfd4",
+                                  "answerOption": {
+                                    "id": "HXdsrxJv8lmREiGRKj6P6",
+                                    "title": "2"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a58da37b500477d5dc7",
+                                  "answerOption": {
+                                    "id": "q937NcELBk28MUtgXGrTk",
+                                    "title": "Nein",
+                                    "color": "danger"
+                                  }
+                                },
+                                {
+                                  "questionId": "607824e3da37b500477d5dce",
+                                  "answerOption": [
+                                    {
+                                      "id": "LZHU-BKZDFdJ73hHxEihl",
+                                      "title": "Liter pro Tag",
+                                      "hasNumberInput": false,
+                                      "answer": "1,5"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "questionId": "607946cd85ba86004750db43",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                },
+                                {
+                                  "questionId": "608452f0703fcd004709cfd6",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                }
+                              ],
+                              "finishedAt": "2021-05-15T21:31:39.001Z"
+                            }
+                          ],
+                          "id": "60a03d4a35d0bb0048ee571b"
+                        },
+                        {
+                          "firstName": "john",
+                          "lastName": "doe",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "60a3f8aba3cb950047de7eb6",
+                          "email": "123@abc.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [
+                                "60781a8dda37b500477d5dc8"
+                              ],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-05-18T19:04:30.807Z",
+                              "answers": [
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": {
+                                    "id": "0djX4fdwDAyjdFYMhfcvX",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781799da37b500477d5dc5",
+                                  "answerOption": {
+                                    "id": "jLZCxGt-nu5xBnKa5KN9-",
+                                    "title": "Nie in den letzten 4 Wochen",
+                                    "skip": [
+                                      "60781a8dda37b500477d5dc8"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "uobtBBRHJVB78J3heJzSU",
+                                    "title": "1 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                }
+                              ]
+                            }
+                          ],
+                          "id": "60a3f8aba3cb950047de7eb6"
+                        }
+                      ]
+                    }
+                  }
                 },
                 "examples": {
-                  "New User Bob Fellow": {
+                  "example-1": {
                     "value": {
-                      "id": 12,
-                      "firstName": "Bob",
-                      "lastName": "Fellow",
-                      "email": "bob.fellow@gmail.com",
-                      "dateOfBirth": "1996-08-24",
-                      "emailVerified": false,
-                      "createDate": "2020-11-18"
+                      "users": [
+                        {
+                          "firstName": "string",
+                          "lastName": "string",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [
+                            {}
+                          ],
+                          "screeningStatus": "string",
+                          "_id": "string",
+                          "email": "string",
+                          "iterations": [
+                            {
+                              "pausedAt": [
+                                {}
+                              ],
+                              "stoppedAtIndex": 0,
+                              "questionsToSkip": [
+                                {}
+                              ],
+                              "id": "string",
+                              "answers": [
+                                {
+                                  "questionId": "string",
+                                  "answerOption": {
+                                    "id": "string",
+                                    "title": "string",
+                                    "skip": [
+                                      {}
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          ],
+                          "id": "string"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "uniqueItems": true,
+                      "minItems": 1,
+                      "items": {
+                        "required": [
+                          "firstName",
+                          "lastName",
+                          "hasAcceptedConsentForm",
+                          "screeningStatus",
+                          "_id",
+                          "email",
+                          "id"
+                        ],
+                        "properties": {
+                          "firstName": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "lastName": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "hasAcceptedConsentForm": {
+                            "type": "boolean"
+                          },
+                          "screeningData": {
+                            "type": "array",
+                            "items": {
+                              "required": [],
+                              "properties": {}
+                            }
+                          },
+                          "screeningStatus": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "_id": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "email": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "iterations": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 1,
+                            "items": {
+                              "required": [
+                                "stoppedAtIndex",
+                                "id",
+                                "startedAt"
+                              ],
+                              "properties": {
+                                "pausedAt": {
+                                  "type": "array",
+                                  "items": {
+                                    "required": [],
+                                    "properties": {}
+                                  }
+                                },
+                                "stoppedAtIndex": {
+                                  "type": "number"
+                                },
+                                "questionsToSkip": {
+                                  "type": "array",
+                                  "items": {
+                                    "required": [],
+                                    "properties": {}
+                                  }
+                                },
+                                "id": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "startedAt": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "answers": {
+                                  "type": "array",
+                                  "items": {
+                                    "required": [],
+                                    "properties": {}
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "users"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "users": [
+                        {
+                          "firstName": "john",
+                          "lastName": "doe",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "60a3f8aba3cb950047de7eb6",
+                          "email": "123@abc.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-05-18T19:04:30.807Z",
+                              "answers": []
+                            }
+                          ],
+                          "id": "60a3f8aba3cb950047de7eb6"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "examples": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "detail": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "detail"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "title": "Users not found",
+                      "detail": "No user could be found."
                     }
                   }
                 }
               }
             }
           },
-          "400": {
-            "description": "Missing Required Information"
-          },
-          "409": {
-            "description": "Email Already Taken"
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "stringValue": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "kind": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "value": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "path": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "reason": {
+                          "type": "object",
+                          "properties": {},
+                          "required": []
+                        }
+                      },
+                      "required": [
+                        "stringValue",
+                        "kind",
+                        "value",
+                        "path",
+                        "reason"
+                      ]
+                    },
+                    "title": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "detail": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "title",
+                    "detail"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": {
+                        "stringValue": "\"123\"",
+                        "kind": "ObjectId",
+                        "value": "123",
+                        "path": "_id",
+                        "reason": {}
+                      },
+                      "title": "Internal error.",
+                      "detail": "Something went wrong."
+                    }
+                  }
+                }
+              }
+            }
           }
         },
+        "tags": [
+          "users"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": {
-                  "firstName": {
-                    "type": "string"
-                  },
-                  "lastName": {
-                    "type": "string"
-                  },
-                  "email": {
-                    "type": "string"
-                  },
-                  "dateOfBirth": {
-                    "type": "string",
-                    "format": "date"
-                  }
-                },
-                "required": [
-                  "firstName",
-                  "lastName",
-                  "email",
-                  "dateOfBirth"
-                ]
-              },
-              "examples": {
-                "Create User Bob Fellow": {
-                  "value": {
-                    "firstName": "Bob",
-                    "lastName": "Fellow",
-                    "email": "bob.fellow@gmail.com",
-                    "dateOfBirth": "1996-08-24"
-                  }
-                }
+                "properties": {}
               }
             }
-          },
-          "description": "Post the necessary fields for the API to create a new user."
-        },
-        "description": "Create a new user.",
-        "tags": [
-          "users"
-        ]
-      },
-      "get": {
-        "summary": "",
-        "operationId": "get-user",
-        "responses": {
-          "200": {
-            "description": "OK"
           }
         },
-        "tags": [
-          "users"
-        ]
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "60a3f8aba3cb950047de7eb4s"
+            },
+            "in": "query",
+            "name": "userId",
+            "description": "ID of specific user"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "jH1WTbBdbc0dH7eBFduXl"
+            },
+            "in": "query",
+            "name": "iterationId",
+            "description": "ID of specific iteration"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMjBiNjI4N2Y4MWFhMDA0N2Y4MWM3OSIsImlhdCI6MTYyMTM2NzM4NSwiZXhwIjoxNjIxNDUzNzg1fQ.J15ebmt6IG82Uxq6Yd8U9XOs0r56u8cT-le1Bk1WsyB"
+            },
+            "in": "header",
+            "name": "x-access-token",
+            "description": "JWT",
+            "required": true
+          }
+        ],
+        "description": "Retrieve information of users"
       },
       "parameters": []
     },
@@ -254,7 +2292,963 @@
         "operationId": "get-questionnaires",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "questions": {
+                      "type": "array",
+                      "uniqueItems": true,
+                      "minItems": 1,
+                      "items": {
+                        "required": [
+                          "title",
+                          "subtitle1",
+                          "subtitle2",
+                          "help",
+                          "_id",
+                          "createdAt",
+                          "updatedAt",
+                          "__v"
+                        ],
+                        "properties": {
+                          "answerOptions": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "options": {
+                                "type": "array",
+                                "uniqueItems": true,
+                                "minItems": 1,
+                                "items": {
+                                  "required": [
+                                    "id",
+                                    "imageURL"
+                                  ],
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    },
+                                    "imageURL": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "options"
+                            ]
+                          },
+                          "title": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "subtitle1": {
+                            "type": "string"
+                          },
+                          "subtitle2": {
+                            "type": "string"
+                          },
+                          "help": {
+                            "type": "string"
+                          },
+                          "_id": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "__v": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "questions"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "questions": [
+                        {
+                          "answerOptions": {
+                            "type": "images",
+                            "options": [
+                              {
+                                "id": "0iO41Wf3hHLTr9FJfkuBo",
+                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183254/erxptiiicaxh1vm6xnli.png"
+                              },
+                              {
+                                "id": "Tcj6QdfxY6BvPo1yMbzsU",
+                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617190210/zl3adj94hiyaaazczrjj.png"
+                              },
+                              {
+                                "id": "uTt9IJ-9iCSFaDynPdt__",
+                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617190210/zxh20zufbyhxrcdwxdp7.png"
+                              },
+                              {
+                                "id": "ywPaU218bSl-Soaae5sMy",
+                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617191549/lnaeyfvdih8g282kjn6d.png"
+                              },
+                              {
+                                "id": "tE1PBUI0G9b_IoYQECoqf",
+                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617190210/m1ghdn6epk6huzzmeumj.png"
+                              },
+                              {
+                                "id": "b2L8f8DW4r8BvRKufGL_z",
+                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617190210/uhgm4mvdpmnbcizqj8pm.png"
+                              },
+                              {
+                                "id": "OtsQbAyThiiL5UmYV6t_2",
+                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617191549/xyasu504c2kgfdxwcrq7.png"
+                              },
+                              {
+                                "id": "uNN-qTznO9FY4UbpNvFtj",
+                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617191549/od9mi03bywmdlrik5hk0.png"
+                              },
+                              {
+                                "id": "U1tJRL--FxYii7mPjdiTa",
+                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617192750/uuep65zqw86lschc0z0e.png"
+                              },
+                              {
+                                "id": "d42UIlJ5ImfLO9qhG1nP-",
+                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617192750/azw1xukmbr2lvcgvcmid.png"
+                              },
+                              {
+                                "id": "DEkXOy_AZs3Mm2OPXhkmw",
+                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617192750/ug4lfanhyzfjhluwn7d0.png"
+                              }
+                            ]
+                          },
+                          "title": "Erklärung FFQ",
+                          "subtitle1": "",
+                          "subtitle2": "",
+                          "help": "",
+                          "_id": "605a375e23c2b4004795d061",
+                          "createdAt": "2021-03-23T18:45:50.916Z",
+                          "updatedAt": "2021-03-31T12:33:35.794Z",
+                          "__v": 0
+                        },
+                        {
+                          "answerOptions": {
+                            "type": "Frequency",
+                            "options": {
+                              "left": [
+                                {
+                                  "id": "0djX4fdwDAyjdFYMhfcvX",
+                                  "title": "Ja"
+                                }
+                              ],
+                              "right": [
+                                {
+                                  "id": "2pqdWXQfhAn1idQiLrtwW",
+                                  "title": "Nein",
+                                  "skip": [
+                                    "60781799da37b500477d5dc5",
+                                    "60781a8dda37b500477d5dc8"
+                                  ]
+                                }
+                              ]
+                            }
+                          },
+                          "title": "Haben Sie in den letzten 4 Wochen Milchprodukte gegessen?",
+                          "subtitle1": "z.B. Käse, Joghurt, Butter",
+                          "subtitle2": "",
+                          "help": "Bitte wählen Sie die passende Antwort durch Anklicken aus",
+                          "_id": "60648c806df321004815b6b4",
+                          "createdAt": "2021-03-31T14:51:44.249Z",
+                          "updatedAt": "2021-04-15T11:16:56.081Z",
+                          "__v": 0
+                        },
+                        {
+                          "answerOptions": {
+                            "type": "Frequency",
+                            "options": {
+                              "left": [
+                                {
+                                  "id": "jLZCxGt-nu5xBnKa5KN9-",
+                                  "title": "Nie in den letzten 4 Wochen",
+                                  "skip": [
+                                    "60781a8dda37b500477d5dc8"
+                                  ]
+                                },
+                                {
+                                  "id": "Kvju5JkOomcO63ryU4pNm",
+                                  "title": "1 - 3 Mal in den letzten 4 Wochen",
+                                  "color": "dark"
+                                },
+                                {
+                                  "id": "2UYFee1yjG5Z05__IxuHv",
+                                  "title": "1 Mal pro Woche",
+                                  "color": "dark"
+                                },
+                                {
+                                  "id": "4tg_R1bjHETmZMcYxsz8U",
+                                  "title": "2 - 4 Mal pro Woche",
+                                  "color": "dark"
+                                },
+                                {
+                                  "id": "UPDv4-xwtdpYu0VakxKr4",
+                                  "title": "5 - 6 Mal pro Woche",
+                                  "color": "dark"
+                                }
+                              ],
+                              "right": [
+                                {
+                                  "id": "FM3IX1j69Y3QextPrI3rc",
+                                  "title": "1 Mal pro Tag",
+                                  "color": "dark"
+                                },
+                                {
+                                  "id": "KdsWQ7ZFRIJCfEimMaVWl",
+                                  "title": "2 Mal pro Tag",
+                                  "color": "dark"
+                                },
+                                {
+                                  "id": "e2VJ6ufsVMyn0lOtoGX3E",
+                                  "title": "3 - 4 Mal pro Tag",
+                                  "color": "dark"
+                                },
+                                {
+                                  "id": "s7HNWg-jIEQH2JuAt1ds-",
+                                  "title": "5+ Mal pro Tag",
+                                  "color": "dark"
+                                }
+                              ]
+                            }
+                          },
+                          "title": "Käse mit hohem Fettgehalt (>60% Fett i.Tr.)",
+                          "subtitle1": "z.B. Weichkäse, Brie, Camembert",
+                          "subtitle2": "",
+                          "help": "Bitte wählen Sie die passende Antwort durch Anklicken aus.",
+                          "_id": "60781799da37b500477d5dc5",
+                          "createdAt": "2021-04-15T10:38:17.081Z",
+                          "updatedAt": "2021-04-15T10:55:04.916Z",
+                          "__v": 0
+                        },
+                        {
+                          "answerOptions": {
+                            "type": "Amount",
+                            "options": [
+                              {
+                                "id": "nIgc86sSESsvREn7rxDKE",
+                                "title": "Weniger",
+                                "imageURL": "",
+                                "index": 1
+                              },
+                              {
+                                "id": "dMk55KGwyKU44nZXR7IO_",
+                                "title": "",
+                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485177/qbhou0xcejyqzbkleg5z.jpg",
+                                "index": 2
+                              },
+                              {
+                                "id": "3v_a560uYUrLEasw7ovUK",
+                                "title": "Dazwischen",
+                                "imageURL": "",
+                                "index": 3
+                              },
+                              {
+                                "id": "3Zy-WhABdlNG8i09cfOfD",
+                                "title": "",
+                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485177/o8ugat3lqmunkftyau43.jpg",
+                                "index": 4
+                              },
+                              {
+                                "id": "V-22cUtdKVMYyjzHjW6tF",
+                                "title": "Dazwischen",
+                                "imageURL": "",
+                                "index": 5
+                              },
+                              {
+                                "id": "rrq0YxQZYHDfw3KDlYD1S",
+                                "title": "",
+                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485177/eta7plhr9ilzs22u1z7e.jpg",
+                                "index": 6
+                              },
+                              {
+                                "id": "tIsRG4RCOTYfl0cFxLXiu",
+                                "title": "Mehr",
+                                "imageURL": "",
+                                "index": 7
+                              }
+                            ]
+                          },
+                          "title": "Wie groß war Ihre durchschnittliche Portionsgröße?",
+                          "subtitle1": "",
+                          "subtitle2": "Bitte wählen Sie Ihre durchschnittliche Portionsgröße pro Verzehrsgelegenheit ",
+                          "help": "Wählen Sie die durchschnittliche Portionsgröße pro Verzehrsgelegenheit durch einmaliges Anklicken eines Bildes oder eines Textfeldes (\"Weniger\", \"Dazwischen\" oder \"Mehr\") aus. Mit Verzehrsgelegenheit ist eine Mahlzeit gemeint (z.B. Frühstück, Mittagessen, Abendessen, Zwischenmahlzeit oder Snack).",
+                          "_id": "60781a8dda37b500477d5dc8",
+                          "createdAt": "2021-04-15T10:50:53.335Z",
+                          "updatedAt": "2021-04-15T11:12:57.990Z",
+                          "__v": 0
+                        },
+                        {
+                          "answerOptions": {
+                            "type": "Frequency",
+                            "options": {
+                              "left": [
+                                {
+                                  "id": "LGwSuvelSrQ_4Twt8IT0s",
+                                  "title": "nie in den letzten 4 Wochen",
+                                  "color": "primary",
+                                  "skip": [
+                                    "6060e3b8934cf30048c10efb"
+                                  ]
+                                },
+                                {
+                                  "id": "tJHAbvcy0JWqHRroCheSH",
+                                  "title": "1-3 Mal in den letzten 4 Wochen",
+                                  "color": "dark"
+                                },
+                                {
+                                  "id": "n3J3B8bZrm6flDNcLkQTB",
+                                  "title": "1 Mal pro Woche",
+                                  "color": "dark"
+                                },
+                                {
+                                  "id": "ojSMBON8HieYHKcQ7LdHn",
+                                  "title": "2 - 4 Mal pro Woche",
+                                  "color": "dark"
+                                },
+                                {
+                                  "id": "S6I0Oci-LvnFsXSVbWULA",
+                                  "title": "5 - 6 Mal pro Woche",
+                                  "color": "dark"
+                                }
+                              ],
+                              "right": [
+                                {
+                                  "id": "uobtBBRHJVB78J3heJzSU",
+                                  "title": "1 Mal pro Tag",
+                                  "color": "dark"
+                                },
+                                {
+                                  "id": "Y0dWDEhknxvlnu7LbZmAn",
+                                  "title": "2 Mal pro Tag",
+                                  "color": "dark"
+                                },
+                                {
+                                  "id": "6ZnlvtXlAs60IiHNFh9tO",
+                                  "title": "3 - 4 Mal pro Tag",
+                                  "color": "dark"
+                                },
+                                {
+                                  "id": "IsW-PHsm5peYrnOPuuD3w",
+                                  "title": "5 + Mal pro Tag",
+                                  "color": "dark"
+                                }
+                              ]
+                            }
+                          },
+                          "title": "Kartoffeln",
+                          "subtitle1": "z.B. Pellkartoffeln, Salzkartoffeln, Ofenkartoffeln",
+                          "subtitle2": "keine Süßkartoffeln",
+                          "help": "Bitte wählen Sie die zutreffende Antwort durch Anklicken aus.",
+                          "_id": "6020b6527f81aa0047f81c7c",
+                          "createdAt": "2021-02-08T03:56:02.457Z",
+                          "updatedAt": "2021-04-15T11:13:16.005Z",
+                          "__v": 0
+                        },
+                        {
+                          "answerOptions": {
+                            "type": "Amount",
+                            "options": [
+                              {
+                                "id": "CjExAlef3nx6iTyPRPM6w",
+                                "title": "Weniger",
+                                "imageURL": "",
+                                "index": 1
+                              },
+                              {
+                                "id": "4vhEHyymnmMPyaDqmzpmo",
+                                "title": "",
+                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183089/sotax8jtnnqyvv0o1w5a.jpg",
+                                "index": 2
+                              },
+                              {
+                                "id": "EvXlrFznJwcrUq5L8ycoe",
+                                "title": "Dazwischen",
+                                "imageURL": "",
+                                "index": 3
+                              },
+                              {
+                                "id": "7gVaK_mpsZIKMJzXyXrpU",
+                                "title": "",
+                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183085/yovlov3x1u30ilj0a8ia.jpg",
+                                "index": 4
+                              },
+                              {
+                                "id": "DScAxvVP2KIp3FWRUgdJC",
+                                "title": "Dazwischen",
+                                "imageURL": "",
+                                "index": 5
+                              },
+                              {
+                                "id": "6OCJITineltMZfQPJ-D8j",
+                                "title": "",
+                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183090/apfo8ziyur2zwd63tgme.jpg",
+                                "index": 6
+                              },
+                              {
+                                "id": "LtplWXub8I-yGXj2oCUZh",
+                                "title": "Mehr",
+                                "imageURL": "",
+                                "index": 7
+                              }
+                            ]
+                          },
+                          "title": "Wie groß war Ihre durchschnittliche Portionsgröße?",
+                          "subtitle1": "",
+                          "subtitle2": "Bitte wählen Sie Ihre durchschnittliche Portionsgröße pro Verzehrsgelegenheit ",
+                          "help": "Wählen Sie die durchschnittliche Portionsgröße pro Verzehrsgelegenheit durch einmaliges Anklicken eines Bildes oder eines Textfeldes (\"Weniger\", \"Dazwischen\" oder \"Mehr\") aus. Mit Verzehrsgelegenheit ist eine Mahlzeit gemeint (z.B. Frühstück, Mittagessen, Abendessen, Zwischenmahlzeit oder Snack).",
+                          "_id": "6060e3b8934cf30048c10efb",
+                          "createdAt": "2021-03-28T20:14:48.326Z",
+                          "updatedAt": "2021-04-15T10:51:42.586Z",
+                          "__v": 0
+                        },
+                        {
+                          "answerOptions": {
+                            "type": "Frequency",
+                            "options": {
+                              "left": [
+                                {
+                                  "id": "uMyazwN_phFFK_l6M_zJ2",
+                                  "title": "Nie in den letzten 4 Wochen",
+                                  "color": "primary",
+                                  "skip": [
+                                    "60781335da37b500477d5dc4"
+                                  ]
+                                },
+                                {
+                                  "id": "Tw4YrOQoyYjo6k2ColtXg",
+                                  "title": "1 - 3 Mal in den letzten 4 Wochen",
+                                  "color": "dark"
+                                },
+                                {
+                                  "id": "oOBz7EX8G1UxH_Sq44_kv",
+                                  "title": "1 Mal pro Woche",
+                                  "color": "dark"
+                                },
+                                {
+                                  "id": "-ICVrZNWOMYYoPrGYaY_i",
+                                  "title": "2 - 4 Mal pro Woche",
+                                  "color": "dark"
+                                },
+                                {
+                                  "id": "i2MCeV9ZiHS33JFUk3zTy",
+                                  "title": "5 - 6 Mal pro Woche",
+                                  "color": "dark"
+                                }
+                              ],
+                              "right": [
+                                {
+                                  "id": "2Mmecb_kYjKcqAiXgwu0S",
+                                  "title": "1 Mal pro Tag",
+                                  "color": "dark"
+                                },
+                                {
+                                  "id": "8-PZ1TrkOwGQupAucd2RC",
+                                  "title": "2 Mal pro Tag",
+                                  "color": "dark"
+                                },
+                                {
+                                  "id": "LMci2hKiTcaneXqHKLdSI",
+                                  "title": "3 - 4 Mal pro Tag",
+                                  "color": "dark"
+                                },
+                                {
+                                  "id": "JPn1cDzrKau4W31Bd-b4y",
+                                  "title": "5+ Mal pro Tag",
+                                  "color": "dark"
+                                }
+                              ]
+                            }
+                          },
+                          "title": "Fleischersatzprodukte",
+                          "subtitle1": "z.B. Tofu, Seitan, Sojaprotein",
+                          "subtitle2": "",
+                          "help": "Bitte wählen Sie die passende Antwort durch Anklicken aus.",
+                          "_id": "606eb6b24e13420047e71d98",
+                          "createdAt": "2021-04-08T07:54:26.953Z",
+                          "updatedAt": "2021-04-15T11:13:27.924Z",
+                          "__v": 0
+                        },
+                        {
+                          "answerOptions": {
+                            "type": "Amount",
+                            "options": [
+                              {
+                                "id": "MU8QcV027BtIozteDeCoy",
+                                "title": "Weniger",
+                                "imageURL": "",
+                                "index": 1
+                              },
+                              {
+                                "id": "PMEpMQ_Lr2A8sFr8AShJ2",
+                                "title": "",
+                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485408/lrwtyidulsmvv5w2w4uu.jpg",
+                                "index": 2
+                              },
+                              {
+                                "id": "3X-goHtxko6yM6KlXO4UD",
+                                "title": "Dazwischen",
+                                "imageURL": "",
+                                "index": 3
+                              },
+                              {
+                                "id": "nEWFNlvVSrpZpM9OZD33q",
+                                "title": "",
+                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485408/aqoybfo2kb5tfqzkbxkl.jpg",
+                                "index": 4
+                              },
+                              {
+                                "id": "JEktzlg5tYpi17-ihpMD1",
+                                "title": "Dazwischen",
+                                "imageURL": "",
+                                "index": 5
+                              },
+                              {
+                                "id": "zxQXSxJ58Y6hmvJ1PPdJu",
+                                "title": "",
+                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485407/fdy5vk8ze9sjjyikmwxy.jpg",
+                                "index": 6
+                              },
+                              {
+                                "id": "a8ihSHD73dLNl5LHumwIj",
+                                "title": "Mehr",
+                                "imageURL": "",
+                                "index": 7
+                              }
+                            ]
+                          },
+                          "title": "Wie groß war Ihre durchschnittliche Portionsgröße?",
+                          "subtitle1": "",
+                          "subtitle2": "Bitte wählen Sie Ihre durchschnittliche Portionsgröße pro Verzehrsgelegenheit ",
+                          "help": "Wählen Sie die durchschnittliche Portionsgröße pro Verzehrsgelegenheit durch einmaliges Anklicken eines Bildes oder eines Textfeldes (\"Weniger\", \"Dazwischen\" oder \"Mehr\") aus. Mit Verzehrsgelegenheit ist eine Mahlzeit gemeint (z.B. Frühstück, Mittagessen, Abendessen, Zwischenmahlzeit oder Snack).",
+                          "_id": "60781335da37b500477d5dc4",
+                          "createdAt": "2021-04-15T10:19:33.497Z",
+                          "updatedAt": "2021-04-15T11:16:49.680Z",
+                          "__v": 0
+                        },
+                        {
+                          "answerOptions": {
+                            "type": "images",
+                            "options": [
+                              {
+                                "id": "-Od9N39dLelnmuljtWC0y",
+                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617194000/exbzt7euokzckyp2hekb.png"
+                              }
+                            ]
+                          },
+                          "title": "Erklärung Textfeld",
+                          "subtitle1": "",
+                          "subtitle2": "",
+                          "help": "",
+                          "_id": "6064699d6f26ec0047d01c8e",
+                          "createdAt": "2021-03-31T12:22:53.994Z",
+                          "updatedAt": "2021-04-16T07:31:14.684Z",
+                          "__v": 0
+                        },
+                        {
+                          "answerOptions": {
+                            "type": "Frequency",
+                            "options": {
+                              "left": [
+                                {
+                                  "id": "69djRm9tNoV1h_UB73hDm",
+                                  "title": "Nie in den letzten 4 Wochen ",
+                                  "skip": [
+                                    "60781ca2da37b500477d5dcb"
+                                  ]
+                                },
+                                {
+                                  "id": "xZ4maKaU55Z71qFy0rJ-y",
+                                  "title": "1-3 Mal in den letzten 4 Wochen",
+                                  "color": "dark"
+                                },
+                                {
+                                  "id": "MArZNJ-MQ94IWbK3H-17B",
+                                  "title": "1 Mal pro Woche",
+                                  "color": "dark"
+                                },
+                                {
+                                  "id": "1F3YDAWPzwXJbHd0xdTIR",
+                                  "title": "2-4 Mal pro Woche",
+                                  "color": "dark"
+                                }
+                              ],
+                              "right": [
+                                {
+                                  "id": "AyfZbeWQRNSPaTvj_IVqt",
+                                  "title": "5 - 6 Mal pro Woche",
+                                  "color": "dark"
+                                },
+                                {
+                                  "id": "XMvrNp4latWK8-tLPWMz_",
+                                  "title": "1 Mal pro Tag",
+                                  "color": "dark"
+                                },
+                                {
+                                  "id": "bn19WPubTJg32tkkJhBDS",
+                                  "title": "2+ Mal pro Tag",
+                                  "color": "dark"
+                                }
+                              ]
+                            }
+                          },
+                          "title": "Haben Sie im letzten Monat Omega-3-Präparate, Fischöl oder Lebertran als Nahrungsergänzung eingenommen?",
+                          "subtitle1": "",
+                          "subtitle2": "",
+                          "help": "Bitte wählen Sie die zutreffende Antwort durch Anklicken aus.",
+                          "_id": "606421486f26ec0047d01c89",
+                          "createdAt": "2021-03-31T07:14:16.287Z",
+                          "updatedAt": "2021-04-15T12:02:41.975Z",
+                          "__v": 0
+                        },
+                        {
+                          "answerOptions": {
+                            "type": "User Input",
+                            "options": [
+                              {
+                                "id": "g15MsdnkndqbW91wcn5lU",
+                                "title": "mg",
+                                "hasNumberInput": false,
+                                "numberInputTitle": "mg"
+                              }
+                            ]
+                          },
+                          "title": "Bitte geben Sie in das Textfeld die Dosierung pro Verzehrsgelegenheit ein.",
+                          "subtitle1": "",
+                          "subtitle2": " Wenn Sie keine Angabe machen möchten, klicken Sie bitte auf \"Weiter\".",
+                          "help": "Bitte geben Sie Ihre Antwort in das untenstehende Textfeld über die Tastatur Ihres Computers an.",
+                          "_id": "60781ca2da37b500477d5dcb",
+                          "createdAt": "2021-04-15T10:59:46.280Z",
+                          "updatedAt": "2021-04-15T11:21:27.409Z",
+                          "__v": 0
+                        },
+                        {
+                          "answerOptions": {
+                            "type": "Frequency",
+                            "options": {
+                              "left": [
+                                {
+                                  "id": "OynzXv3D24Osvr3kHgGGz",
+                                  "title": "Ja"
+                                }
+                              ],
+                              "right": [
+                                {
+                                  "id": "n9CtSm4yRuf2Cb6u33ZRU",
+                                  "title": "Nein",
+                                  "skip": [
+                                    "60781bf3da37b500477d5dca"
+                                  ]
+                                }
+                              ]
+                            }
+                          },
+                          "title": "Gab es Lebensmittel, Getränke oder Gerichte, die Sie konsumierten und die Sie zu keiner der Fragen zuordnen konnten?",
+                          "subtitle1": "",
+                          "subtitle2": "",
+                          "help": "Bitte wählen Sie die passende Antwort durch Anklicken aus",
+                          "_id": "60781ba5da37b500477d5dc9",
+                          "createdAt": "2021-04-15T10:55:33.544Z",
+                          "updatedAt": "2021-04-15T11:17:02.529Z",
+                          "__v": 0
+                        },
+                        {
+                          "answerOptions": {
+                            "type": "User Input",
+                            "options": [
+                              {
+                                "id": "zwlEyZGPLhcGvjEZq66U5",
+                                "title": "",
+                                "hasNumberInput": false
+                              },
+                              {
+                                "id": "M_iXHKPmWDliKw3DceINt",
+                                "title": "",
+                                "hasNumberInput": false
+                              },
+                              {
+                                "id": "bxx-MqsGTy2oq2BAlLGyj",
+                                "title": "",
+                                "hasNumberInput": false
+                              },
+                              {
+                                "id": "4HJRIjLq6Ex-muUvm9-JF",
+                                "title": "",
+                                "hasNumberInput": false
+                              },
+                              {
+                                "id": "dDzPrUEb0gNbN5wwnu_GE",
+                                "title": "",
+                                "hasNumberInput": false
+                              }
+                            ]
+                          },
+                          "title": "Können Sie sich daran erinnern, welche Lebensmittel, Getränke oder Gerichte das waren?",
+                          "subtitle1": "Bitte geben Sie Ihre Antwort in die untenstehenden Textfelder ein. Bitte geben Sie pro Textfeld ein Lebensmittel, Getränk oder Gericht an.",
+                          "subtitle2": "Wenn Sie keine Angabe machen möchten, klicken Sie bitte auf \"Weiter\".",
+                          "help": "Bitte geben Sie Ihre Antwort in das untenstehende Textfeld über die Tastatur Ihres Computers an.",
+                          "_id": "60781bf3da37b500477d5dca",
+                          "createdAt": "2021-04-15T10:56:51.784Z",
+                          "updatedAt": "2021-04-15T11:18:57.768Z",
+                          "__v": 0
+                        },
+                        {
+                          "answerOptions": {
+                            "type": "Frequency",
+                            "options": {
+                              "left": [
+                                {
+                                  "id": "chmGdSHExWK4Imza3Bg7h",
+                                  "title": "Ja",
+                                  "color": "success"
+                                }
+                              ],
+                              "right": [
+                                {
+                                  "id": "fCXvf6_7UOP3rpqFIiQkL",
+                                  "title": "Nein"
+                                }
+                              ]
+                            }
+                          },
+                          "title": "Milchprodukte",
+                          "subtitle1": "Haben Sie in den letzten 4 Wochen Milchprodukte zu sich genommen?",
+                          "subtitle2": "z.B. Käse, Frischkäse, Quark, Sahne, Joghurt, etc.",
+                          "help": "Wählen Sie eine Antwortmöglichkeit aus.",
+                          "_id": "606466ba6f26ec0047d01c8c",
+                          "createdAt": "2021-03-31T12:10:34.959Z",
+                          "updatedAt": "2021-04-15T13:53:54.250Z",
+                          "__v": 0
+                        },
+                        {
+                          "answerOptions": {
+                            "type": "Frequency",
+                            "options": {
+                              "left": [
+                                {
+                                  "id": "W0j2CYuz4-kYlqGafqDt6",
+                                  "title": "Ja",
+                                  "color": "success"
+                                }
+                              ],
+                              "right": [
+                                {
+                                  "id": "pGEMDRPjBfvoJ2qPqVwWN",
+                                  "title": "Nein",
+                                  "color": "danger"
+                                }
+                              ]
+                            }
+                          },
+                          "title": "körperliche Betätigung",
+                          "subtitle1": "Bewegen Sie sich mindestens 30 min am Tag, wobei Sie sich moderat angestrengt fühlen?",
+                          "subtitle2": "zB. gemütlich joggen, Rad fahren, Crosstrainer, Nordic walking",
+                          "help": "Wählen Sie eine Antwortmöglichkeit aus.",
+                          "_id": "606eb56b4e13420047e71d97",
+                          "createdAt": "2021-04-08T07:48:59.947Z",
+                          "updatedAt": "2021-04-08T07:52:03.121Z",
+                          "__v": 0
+                        },
+                        {
+                          "answerOptions": {
+                            "type": "Frequency",
+                            "options": {
+                              "left": [
+                                {
+                                  "id": "iCsd5tPysEQq6jsA1qlpN",
+                                  "title": "vegan",
+                                  "color": "primary"
+                                },
+                                {
+                                  "id": "5QDX7vQdRSXHiRAIddhpQ",
+                                  "title": "Omnivore"
+                                }
+                              ],
+                              "right": [
+                                {
+                                  "id": "eZ6jNmA_hFH2CaccOeccq",
+                                  "title": "vegetarisch"
+                                }
+                              ]
+                            }
+                          },
+                          "title": "Ernährungsweise",
+                          "subtitle1": "",
+                          "subtitle2": "",
+                          "help": "",
+                          "_id": "60781a56da37b500477d5dc6",
+                          "createdAt": "2021-04-15T10:49:58.017Z",
+                          "updatedAt": "2021-04-15T10:52:30.333Z",
+                          "__v": 0
+                        },
+                        {
+                          "answerOptions": {
+                            "type": "Frequency",
+                            "options": {
+                              "left": [
+                                {
+                                  "id": "LKr0baDlpjm4asgnzqrlP",
+                                  "title": "1",
+                                  "color": "danger"
+                                }
+                              ],
+                              "right": [
+                                {
+                                  "id": "HXdsrxJv8lmREiGRKj6P6",
+                                  "title": "2"
+                                }
+                              ]
+                            }
+                          },
+                          "title": "Wer bist du?",
+                          "subtitle1": "hallo",
+                          "subtitle2": "hallo",
+                          "help": "Klicke auf ne antwort",
+                          "_id": "60844fd3703fcd004709cfd4",
+                          "createdAt": "2021-04-24T17:05:23.651Z",
+                          "updatedAt": "2021-04-24T17:06:37.046Z",
+                          "__v": 0
+                        },
+                        {
+                          "answerOptions": {
+                            "type": "Frequency",
+                            "options": {
+                              "left": [
+                                {
+                                  "id": "gqbbwC6eE-PplpfL0PUjb",
+                                  "title": "Ja",
+                                  "color": "success"
+                                }
+                              ],
+                              "right": [
+                                {
+                                  "id": "q937NcELBk28MUtgXGrTk",
+                                  "title": "Nein",
+                                  "color": "danger"
+                                },
+                                {
+                                  "id": "q0WAJxSeTCIypgaL2g-dm",
+                                  "title": "Überspringen",
+                                  "skip": [
+                                    "607824e3da37b500477d5dce"
+                                  ]
+                                }
+                              ]
+                            }
+                          },
+                          "title": "Proteinprodukte",
+                          "subtitle1": "Präferieren sie mit \"high-protein\"-gelabelte Produkte gegenüber konventionellen Produkten? ",
+                          "subtitle2": "z.B. Protein Pudding Ehrmann, Protein Eiscreme, High protein Skyr, Proteinmilch",
+                          "help": "Wählen Sie eine Antwortmöglichkeit aus. ",
+                          "_id": "60781a58da37b500477d5dc7",
+                          "createdAt": "2021-04-15T10:50:00.266Z",
+                          "updatedAt": "2021-04-15T13:57:35.957Z",
+                          "__v": 0
+                        },
+                        {
+                          "answerOptions": {
+                            "type": "User Input",
+                            "options": [
+                              {
+                                "id": "LZHU-BKZDFdJ73hHxEihl",
+                                "title": "Liter pro Tag",
+                                "hasNumberInput": false,
+                                "answer": "1,5"
+                              }
+                            ]
+                          },
+                          "title": "Trinken",
+                          "subtitle1": "Wie viel Liter trinken Sie geschätzt pro Tag?",
+                          "subtitle2": "z.B. 2,5 L",
+                          "help": "Geben Sie in Litern an, wie viel Sie am Tag in etwa trinken.",
+                          "_id": "607824e3da37b500477d5dce",
+                          "createdAt": "2021-04-15T11:34:59.426Z",
+                          "updatedAt": "2021-04-15T14:01:37.320Z",
+                          "__v": 0
+                        },
+                        {
+                          "answerOptions": {
+                            "type": "",
+                            "options": []
+                          },
+                          "title": "Neue Frage",
+                          "subtitle1": "",
+                          "subtitle2": "",
+                          "help": "",
+                          "_id": "607946cd85ba86004750db43",
+                          "createdAt": "2021-04-16T08:11:57.876Z",
+                          "updatedAt": "2021-04-16T08:11:57.876Z",
+                          "__v": 0
+                        },
+                        {
+                          "answerOptions": {
+                            "type": "",
+                            "options": []
+                          },
+                          "title": "Neue Frage",
+                          "subtitle1": "",
+                          "subtitle2": "",
+                          "help": "",
+                          "_id": "608452f0703fcd004709cfd6",
+                          "createdAt": "2021-04-24T17:18:40.354Z",
+                          "updatedAt": "2021-04-24T17:18:40.354Z",
+                          "__v": 0
+                        }
+                      ]
+                    }
+                  }
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "questions": [
+                        {
+                          "answerOptions": {
+                            "type": "string",
+                            "options": [
+                              {
+                                "id": "string",
+                                "imageURL": "string"
+                              }
+                            ]
+                          },
+                          "title": "string",
+                          "subtitle1": "string",
+                          "subtitle2": "string",
+                          "help": "string",
+                          "_id": "string",
+                          "createdAt": "string",
+                          "updatedAt": "string",
+                          "__v": 0
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -460,6 +3454,14 @@
                       "message": "Nutzer erfolgreich registriert."
                     }
                   }
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "success": true,
+                      "message": "Nutzer erfolgreich registriert."
+                    }
+                  }
                 }
               }
             }
@@ -488,6 +3490,14 @@
                   "required": [
                     "message"
                   ]
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "message": "Role not found",
+                      "error": "string"
+                    }
+                  }
                 }
               }
             }
@@ -499,28 +3509,31 @@
                 "schema": {
                   "description": "",
                   "type": "object",
-                  "x-examples": {
-                    "example-1": {
-                      "title": "User was not saved."
-                    }
-                  },
                   "properties": {
+                    "error": {
+                      "type": "string"
+                    },
                     "title": {
                       "type": "string",
                       "minLength": 1
-                    },
-                    "error": {
-                      "type": "string"
                     }
                   },
                   "required": [
+                    "error",
                     "title"
-                  ]
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": "",
+                      "title": "User was not saved."
+                    }
+                  }
                 },
                 "examples": {
                   "example-1": {
                     "value": {
-                      "title": "string"
+                      "error": "",
+                      "title": "User was not saved."
                     }
                   }
                 }
@@ -563,6 +3576,16 @@
                 ],
                 "x-examples": {
                   "example-1": {
+                    "firstName": "john",
+                    "lastName": "doe",
+                    "email": "123@abc.de",
+                    "password": "12345"
+                  }
+                }
+              },
+              "examples": {
+                "example-1": {
+                  "value": {
                     "firstName": "john",
                     "lastName": "doe",
                     "email": "123@abc.de",
@@ -682,6 +3705,27 @@
                       "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYTNmOGFiYTNjYjk1MDA0N2RlN2ViNiIsImlhdCI6MTYyMTM1OTA0MCwiZXhwIjoxNjIxNDQ1NDQwfQ.vOvlF0BUZ_opIb4cXRm5nHZkFueeH0SnpalG-QkPgN8"
                     }
                   }
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "user": {
+                        "firstName": "john",
+                        "lastName": "doe",
+                        "hasAcceptedConsentForm": false,
+                        "screeningData": [],
+                        "screeningStatus": "",
+                        "_id": "60a3f8aba3cb950047de7eb6",
+                        "email": "123@abc.de",
+                        "iterations": [],
+                        "id": "60a3f8aba3cb950047de7eb6"
+                      },
+                      "roles": [
+                        "ROLE_USER"
+                      ],
+                      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYTNmOGFiYTNjYjk1MDA0N2RlN2ViNiIsImlhdCI6MTYyMTM1OTA0MCwiZXhwIjoxNjIxNDQ1NDQwfQ.vOvlF0BUZ_opIb4cXRm5nHZkFueeH0BnpalG-QkPgN8"
+                    }
+                  }
                 }
               }
             }
@@ -696,6 +3740,12 @@
               "schema": {
                 "description": "",
                 "type": "object",
+                "x-examples": {
+                  "example-1": {
+                    "email": "123@abc.de",
+                    "password": "12345"
+                  }
+                },
                 "properties": {
                   "email": {
                     "type": "string",
@@ -709,19 +3759,13 @@
                 "required": [
                   "email",
                   "password"
-                ],
-                "x-examples": {
-                  "example-1": {
-                    "email": "123@abc.de",
-                    "password": "12345"
-                  }
-                }
+                ]
               },
               "examples": {
                 "example-1": {
                   "value": {
-                    "email": "string",
-                    "password": "string"
+                    "email": "123@abc.de",
+                    "password": "12345"
                   }
                 }
               }
@@ -736,13 +3780,41 @@
         "summary": "",
         "operationId": "post-users-requestPasswordReset",
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": ""
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
           "users"
-        ]
+        ],
+        "description": "Request password reset"
       }
     },
     "/users/resetpassword": {
@@ -750,12 +3822,49 @@
         "summary": "",
         "operationId": "patch-users-resetpassword",
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": ""
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
           "users"
+        ],
+        "description": "Reset password",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYTNmOGFiYTNjYjk1MDA0N2RlN2ViNiIsImlhdCI6MTYyMTM1OTA0MCwiZXhwIjoxNjIxNDQ1NDQwfQ.vOvlF0BUZ_opIb4cXRm5nHZkFueeH0SnpalG-QkPgN7"
+            },
+            "in": "header",
+            "name": "x-access-token",
+            "description": "JWT",
+            "required": true
+          }
         ]
       }
     },
@@ -782,12 +3891,150 @@
         "summary": "",
         "operationId": "patch-users-userId-iterations-iterationId",
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "message"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": "",
+                      "message": "Iteration not updated!"
+                    }
+                  }
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "error": "string",
+                      "message": "Iteration not updated!"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
           "users"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "description": "",
+                "type": "object",
+                "properties": {
+                  "questionId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "answerOption": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "title": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "title"
+                    ]
+                  }
+                },
+                "required": [
+                  "questionId",
+                  "answerOption"
+                ],
+                "x-examples": {
+                  "example-1": {
+                    "questionId": "60648c806df321004815b6b4",
+                    "answerOption": {
+                      "id": "0djX4fdwDAyjdFYMhfcvX",
+                      "title": "Ja"
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "example-1": {
+                  "value": {
+                    "questionId": "60648c806df321004815b6b4",
+                    "answerOption": {
+                      "id": "0djX4fdwDAyjdFYMhfcvX",
+                      "title": "Ja"
+                    }
+                  }
+                }
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "description": "",
+                "type": "object",
+                "properties": {
+                  "startedAt": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "startedAt"
+                ],
+                "x-examples": {
+                  "example-1": {
+                    "startedAt": "2021-05-18T20:37:11.733Z"
+                  }
+                }
+              }
+            }
+          },
+          "description": ""
+        },
+        "description": "Update the users answer",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYTNmOGFiYTNjYjk1MDA0N2RlN2ViNiIsImlhdCI6MTYyMTM1OTA0MCwiZXhwIjoxNjIxNDQ1NDQwfQ.vOvlF0BUZ_opIb4cXRm5nHZkFueeH0SnpalG-QkPgN7"
+            },
+            "in": "header",
+            "name": "x-access-token",
+            "description": "JWT",
+            "required": true
+          }
         ]
       }
     },
@@ -822,12 +4069,119 @@
         "summary": "",
         "operationId": "patch-users-userId-iterations-iterationId-questions-questionId",
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "detail": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "title",
+                    "detail"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": "",
+                      "title": "Internal error",
+                      "detail": "Answer was not saved or updated."
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
           "users"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "description": "",
+                "type": "object",
+                "properties": {
+                  "questionId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "answerOption": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "title": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "title"
+                    ]
+                  }
+                },
+                "required": [
+                  "questionId",
+                  "answerOption"
+                ],
+                "x-examples": {
+                  "example-1": {
+                    "questionId": "60648c806df321004815b6b4",
+                    "answerOption": {
+                      "id": "0djX4fdwDAyjdFYMhfcvX",
+                      "title": "Ja"
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "example-1": {
+                  "value": {
+                    "questionId": "60648c806df321004815b6b4",
+                    "answerOption": {
+                      "id": "0djX4fdwDAyjdFYMhfcvX",
+                      "title": "Ja"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "description": ""
+        },
+        "description": "Update the users answer of a iteration",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYTNmOGFiYTNjYjk1MDA0N2RlN2ViNiIsImlhdCI6MTYyMTM1OTA0MCwiZXhwIjoxNjIxNDQ1NDQwfQ.vOvlF0BUZ_opIb4cXRm5nHZkFueeH0SnpalG-QkPgN7"
+            },
+            "in": "header",
+            "name": "x-access-token",
+            "description": "JWT",
+            "required": true
+          }
         ]
       }
     }
