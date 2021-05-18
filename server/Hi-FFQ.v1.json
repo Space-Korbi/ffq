@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000"
+      "url": "https://hi-ffq.herokuapp.com/"
     }
   ],
   "paths": {
@@ -141,7 +141,7 @@
         ]
       }
     },
-    "/user": {
+    "/users": {
       "post": {
         "summary": "Create New User",
         "operationId": "post-user",
@@ -233,7 +233,8 @@
         "tags": [
           "users"
         ]
-      }
+      },
+      "parameters": []
     },
     "/questionnaires": {
       "post": {
@@ -263,12 +264,13 @@
     },
     "/questionnaires/{questionnaireId}/questions": {
       "get": {
-        "summary": "Your GET endpoint",
+        "summary": "",
         "tags": [
           "questionnaires"
         ],
         "responses": {},
-        "operationId": "get-questionnaires-:questionnaireId-questions"
+        "operationId": "get-questionnaires-:questionnaireId-questions",
+        "description": ""
       },
       "post": {
         "summary": "",
@@ -341,7 +343,7 @@
         ]
       }
     },
-    "/questionnaires/:questionnaireId/questions/{questionId}/position/{position}": {
+    "/questionnaires/{questionnaireId}/questions/{questionId}/position/{position}": {
       "parameters": [
         {
           "schema": {
@@ -356,6 +358,14 @@
             "type": "string"
           },
           "name": "position",
+          "in": "path",
+          "required": true
+        },
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "questionnaireId",
           "in": "path",
           "required": true
         }
@@ -424,13 +434,147 @@
         "summary": "",
         "operationId": "post-users-signup",
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "success": true,
+                      "message": "Nutzer erfolgreich registriert."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "x-examples": {
+                    "example-1": {
+                      "message": "Role not found"
+                    }
+                  },
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "x-examples": {
+                    "example-1": {
+                      "title": "User was not saved."
+                    }
+                  },
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title"
+                  ]
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "title": "string"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
           "users"
-        ]
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "description": "",
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "lastName": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "email": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "firstName",
+                  "lastName",
+                  "email",
+                  "password"
+                ],
+                "x-examples": {
+                  "example-1": {
+                    "firstName": "john",
+                    "lastName": "doe",
+                    "email": "123@abc.de",
+                    "password": "12345"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [],
+        "description": "Signup new user"
       }
     },
     "/users/login": {
@@ -439,12 +583,152 @@
         "operationId": "post-users-login",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "firstName": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "lastName": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "hasAcceptedConsentForm": {
+                          "type": "boolean"
+                        },
+                        "screeningData": {
+                          "type": "array",
+                          "items": {
+                            "required": [],
+                            "properties": {}
+                          }
+                        },
+                        "screeningStatus": {
+                          "type": "string"
+                        },
+                        "_id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "email": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "iterations": {
+                          "type": "array",
+                          "items": {
+                            "required": [],
+                            "properties": {}
+                          }
+                        },
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "firstName",
+                        "lastName",
+                        "hasAcceptedConsentForm",
+                        "screeningData",
+                        "screeningStatus",
+                        "_id",
+                        "email",
+                        "iterations",
+                        "id"
+                      ]
+                    },
+                    "roles": {
+                      "type": "array",
+                      "items": {
+                        "required": [],
+                        "properties": {}
+                      }
+                    },
+                    "accessToken": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "user",
+                    "roles",
+                    "accessToken"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "user": {
+                        "firstName": "john",
+                        "lastName": "doe",
+                        "hasAcceptedConsentForm": false,
+                        "screeningData": [],
+                        "screeningStatus": "",
+                        "_id": "60a3f8aba3cb950047de7eb6",
+                        "email": "123@abc.de",
+                        "iterations": [],
+                        "id": "60a3f8aba3cb950047de7eb6"
+                      },
+                      "roles": [
+                        "ROLE_USER"
+                      ],
+                      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYTNmOGFiYTNjYjk1MDA0N2RlN2ViNiIsImlhdCI6MTYyMTM1OTA0MCwiZXhwIjoxNjIxNDQ1NDQwfQ.vOvlF0BUZ_opIb4cXRm5nHZkFueeH0SnpalG-QkPgN8"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
           "users"
-        ]
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "description": "",
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "x-examples": {
+                  "example-1": {
+                    "email": "123@abc.de",
+                    "password": "12345"
+                  }
+                }
+              },
+              "examples": {
+                "example-1": {
+                  "value": {
+                    "email": "string",
+                    "password": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "User login"
       }
     },
     "/users/requestPasswordReset": {
@@ -974,6 +1258,7 @@
           "_id"
         ]
       }
-    }
+    },
+    "securitySchemes": {}
   }
 }
