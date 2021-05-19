@@ -2280,92 +2280,406 @@
         "summary": "",
         "operationId": "post-questionnaires",
         "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "tags": [
-          "questionnaires"
-        ]
-      },
-      "get": {
-        "summary": "",
-        "operationId": "get-questionnaires",
-        "responses": {
-          "200": {
-            "description": "OK",
+          "201": {
+            "description": "Created",
             "content": {
               "application/json": {
                 "schema": {
                   "description": "",
                   "type": "object",
                   "properties": {
-                    "questions": {
+                    "questionnaires": {
                       "type": "array",
                       "uniqueItems": true,
                       "minItems": 1,
                       "items": {
                         "required": [
-                          "title",
-                          "subtitle1",
-                          "subtitle2",
-                          "help",
+                          "name",
+                          "consentScript",
                           "_id",
                           "createdAt",
                           "updatedAt",
                           "__v"
                         ],
                         "properties": {
-                          "answerOptions": {
-                            "type": "object",
-                            "properties": {
-                              "type": {
-                                "type": "string",
-                                "minLength": 1
-                              },
-                              "options": {
-                                "type": "array",
-                                "uniqueItems": true,
-                                "minItems": 1,
-                                "items": {
-                                  "required": [
-                                    "id",
-                                    "imageURL"
-                                  ],
-                                  "properties": {
-                                    "id": {
-                                      "type": "string",
-                                      "minLength": 1
-                                    },
-                                    "imageURL": {
-                                      "type": "string",
-                                      "minLength": 1
-                                    }
-                                  }
-                                }
-                              }
-                            },
-                            "required": [
-                              "type",
-                              "options"
-                            ]
-                          },
-                          "title": {
+                          "name": {
                             "type": "string",
                             "minLength": 1
                           },
-                          "subtitle1": {
-                            "type": "string"
+                          "consentScript": {
+                            "type": "string",
+                            "minLength": 1
                           },
-                          "subtitle2": {
-                            "type": "string"
+                          "selectionCriteria": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 1,
+                            "items": {
+                              "required": [],
+                              "properties": {}
+                            }
                           },
-                          "help": {
-                            "type": "string"
+                          "questions": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 1,
+                            "items": {
+                              "required": [],
+                              "properties": {}
+                            }
                           },
                           "_id": {
                             "type": "string",
                             "minLength": 1
+                          },
+                          "screeningRules": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 1,
+                            "items": {
+                              "required": [
+                                "id",
+                                "operator",
+                                "decision"
+                              ],
+                              "properties": {
+                                "criteria": {
+                                  "type": "array",
+                                  "uniqueItems": true,
+                                  "minItems": 1,
+                                  "items": {
+                                    "required": [],
+                                    "properties": {}
+                                  }
+                                },
+                                "id": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "operator": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "decision": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              }
+                            }
+                          },
+                          "iterations": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 1,
+                            "items": {
+                              "required": [
+                                "id",
+                                "start",
+                                "startLabel",
+                                "end",
+                                "endLabel"
+                              ],
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "start": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "startLabel": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "end": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "endLabel": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              }
+                            }
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "__v": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "questionnaires",
+                    "message"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "questionnaires": [
+                        {
+                          "name": "string",
+                          "consentScript": "string",
+                          "selectionCriteria": [
+                            {}
+                          ],
+                          "questions": [
+                            {}
+                          ],
+                          "_id": "string",
+                          "screeningRules": [
+                            {
+                              "criteria": [
+                                {}
+                              ],
+                              "id": "string",
+                              "operator": "string",
+                              "decision": "string"
+                            }
+                          ],
+                          "iterations": [
+                            {
+                              "id": "string",
+                              "start": "string",
+                              "startLabel": "string",
+                              "end": "string",
+                              "endLabel": "string"
+                            }
+                          ],
+                          "createdAt": "string",
+                          "updatedAt": "string",
+                          "__v": 0
+                        }
+                      ],
+                      "message": "Questionnaire created!"
+                    }
+                  }
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "questionnaires": [
+                        {
+                          "name": "string",
+                          "consentScript": "string",
+                          "selectionCriteria": [
+                            {}
+                          ],
+                          "questions": [
+                            {}
+                          ],
+                          "_id": "string",
+                          "screeningRules": [
+                            {
+                              "criteria": [
+                                {}
+                              ],
+                              "id": "string",
+                              "operator": "string",
+                              "decision": "string"
+                            }
+                          ],
+                          "iterations": [
+                            {
+                              "id": "string",
+                              "start": "string",
+                              "startLabel": "string",
+                              "end": "string",
+                              "endLabel": "string"
+                            }
+                          ],
+                          "createdAt": "string",
+                          "updatedAt": "string",
+                          "__v": 0
+                        }
+                      ],
+                      "message": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "message": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "message": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "questionnaires"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMjBiNjI4N2Y4MWFhMDA0N2Y4MWM3OSIsImlhdCI6MTYyMTQ0NTU5NiwiZXhwIjoxNjIxNTMxOTk2fQ.ZDxV6fEU9sOSpNjqpcRzf56_yJJL6LgXzjpBKtZAodQ"
+            },
+            "in": "header",
+            "name": "x-access-token",
+            "description": "JWT",
+            "required": true
+          }
+        ]
+      },
+      "get": {
+        "summary": "",
+        "operationId": "get-questionnaires",
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "questionnaires": {
+                      "type": "array",
+                      "uniqueItems": true,
+                      "minItems": 1,
+                      "items": {
+                        "required": [
+                          "name",
+                          "consentScript",
+                          "_id",
+                          "createdAt",
+                          "updatedAt",
+                          "__v"
+                        ],
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "consentScript": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "selectionCriteria": {
+                            "type": "array",
+                            "items": {
+                              "required": [],
+                              "properties": {}
+                            }
+                          },
+                          "questions": {
+                            "type": "array",
+                            "items": {
+                              "required": [],
+                              "properties": {}
+                            }
+                          },
+                          "_id": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "screeningRules": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 1,
+                            "items": {
+                              "required": [
+                                "id",
+                                "operator",
+                                "decision"
+                              ],
+                              "properties": {
+                                "criteria": {
+                                  "type": "array",
+                                  "items": {
+                                    "required": [],
+                                    "properties": {}
+                                  }
+                                },
+                                "id": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "operator": {
+                                  "type": "string"
+                                },
+                                "decision": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              }
+                            }
+                          },
+                          "iterations": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 1,
+                            "items": {
+                              "required": [
+                                "id",
+                                "start",
+                                "startLabel",
+                                "end",
+                                "endLabel"
+                              ],
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "start": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "startLabel": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "end": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "endLabel": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              }
+                            }
                           },
                           "createdAt": {
                             "type": "string",
@@ -2383,839 +2697,99 @@
                     }
                   },
                   "required": [
-                    "questions"
+                    "questionnaires"
                   ],
                   "x-examples": {
                     "example-1": {
-                      "questions": [
+                      "questionnaires": [
                         {
-                          "answerOptions": {
-                            "type": "images",
-                            "options": [
-                              {
-                                "id": "0iO41Wf3hHLTr9FJfkuBo",
-                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183254/erxptiiicaxh1vm6xnli.png"
-                              },
-                              {
-                                "id": "Tcj6QdfxY6BvPo1yMbzsU",
-                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617190210/zl3adj94hiyaaazczrjj.png"
-                              },
-                              {
-                                "id": "uTt9IJ-9iCSFaDynPdt__",
-                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617190210/zxh20zufbyhxrcdwxdp7.png"
-                              },
-                              {
-                                "id": "ywPaU218bSl-Soaae5sMy",
-                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617191549/lnaeyfvdih8g282kjn6d.png"
-                              },
-                              {
-                                "id": "tE1PBUI0G9b_IoYQECoqf",
-                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617190210/m1ghdn6epk6huzzmeumj.png"
-                              },
-                              {
-                                "id": "b2L8f8DW4r8BvRKufGL_z",
-                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617190210/uhgm4mvdpmnbcizqj8pm.png"
-                              },
-                              {
-                                "id": "OtsQbAyThiiL5UmYV6t_2",
-                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617191549/xyasu504c2kgfdxwcrq7.png"
-                              },
-                              {
-                                "id": "uNN-qTznO9FY4UbpNvFtj",
-                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617191549/od9mi03bywmdlrik5hk0.png"
-                              },
-                              {
-                                "id": "U1tJRL--FxYii7mPjdiTa",
-                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617192750/uuep65zqw86lschc0z0e.png"
-                              },
-                              {
-                                "id": "d42UIlJ5ImfLO9qhG1nP-",
-                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617192750/azw1xukmbr2lvcgvcmid.png"
-                              },
-                              {
-                                "id": "DEkXOy_AZs3Mm2OPXhkmw",
-                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617192750/ug4lfanhyzfjhluwn7d0.png"
-                              }
-                            ]
-                          },
-                          "title": "Erklärung FFQ",
-                          "subtitle1": "",
-                          "subtitle2": "",
-                          "help": "",
-                          "_id": "605a375e23c2b4004795d061",
-                          "createdAt": "2021-03-23T18:45:50.916Z",
-                          "updatedAt": "2021-03-31T12:33:35.794Z",
-                          "__v": 0
-                        },
-                        {
-                          "answerOptions": {
-                            "type": "Frequency",
-                            "options": {
-                              "left": [
-                                {
-                                  "id": "0djX4fdwDAyjdFYMhfcvX",
-                                  "title": "Ja"
-                                }
+                          "name": "Verzehrshäufigkeitsfragebogen",
+                          "consentScript": "Hiermit stimme ich der Speicherung meiner Antworten zu den Fragen im nun folgenden Fragebogen zu. \n",
+                          "selectionCriteria": [
+                            "Laktoseintolerant",
+                            "omnivor",
+                            "doof",
+                            "Schwanger",
+                            "Stillend",
+                            "über 18 Jahre alt"
+                          ],
+                          "questions": [
+                            "605a375e23c2b4004795d061",
+                            "60648c806df321004815b6b4",
+                            "60781799da37b500477d5dc5",
+                            "60781a8dda37b500477d5dc8",
+                            "6020b6527f81aa0047f81c7c",
+                            "6060e3b8934cf30048c10efb",
+                            "606eb6b24e13420047e71d98",
+                            "60781335da37b500477d5dc4",
+                            "6064699d6f26ec0047d01c8e",
+                            "606421486f26ec0047d01c89",
+                            "60781ca2da37b500477d5dcb",
+                            "60781ba5da37b500477d5dc9",
+                            "60781bf3da37b500477d5dca",
+                            "606466ba6f26ec0047d01c8c",
+                            "606eb56b4e13420047e71d97",
+                            "60781a56da37b500477d5dc6",
+                            "60844fd3703fcd004709cfd4",
+                            "60781a58da37b500477d5dc7",
+                            "607824e3da37b500477d5dce",
+                            "607946cd85ba86004750db43",
+                            "608452f0703fcd004709cfd6",
+                            "60a42e9424af7500483435b9"
+                          ],
+                          "_id": "6020b6507f81aa0047f81c7a",
+                          "screeningRules": [
+                            {
+                              "criteria": [
+                                "Laktoseintolerant"
                               ],
-                              "right": [
-                                {
-                                  "id": "2pqdWXQfhAn1idQiLrtwW",
-                                  "title": "Nein",
-                                  "skip": [
-                                    "60781799da37b500477d5dc5",
-                                    "60781a8dda37b500477d5dc8"
-                                  ]
-                                }
-                              ]
-                            }
-                          },
-                          "title": "Haben Sie in den letzten 4 Wochen Milchprodukte gegessen?",
-                          "subtitle1": "z.B. Käse, Joghurt, Butter",
-                          "subtitle2": "",
-                          "help": "Bitte wählen Sie die passende Antwort durch Anklicken aus",
-                          "_id": "60648c806df321004815b6b4",
-                          "createdAt": "2021-03-31T14:51:44.249Z",
-                          "updatedAt": "2021-04-15T11:16:56.081Z",
-                          "__v": 0
-                        },
-                        {
-                          "answerOptions": {
-                            "type": "Frequency",
-                            "options": {
-                              "left": [
-                                {
-                                  "id": "jLZCxGt-nu5xBnKa5KN9-",
-                                  "title": "Nie in den letzten 4 Wochen",
-                                  "skip": [
-                                    "60781a8dda37b500477d5dc8"
-                                  ]
-                                },
-                                {
-                                  "id": "Kvju5JkOomcO63ryU4pNm",
-                                  "title": "1 - 3 Mal in den letzten 4 Wochen",
-                                  "color": "dark"
-                                },
-                                {
-                                  "id": "2UYFee1yjG5Z05__IxuHv",
-                                  "title": "1 Mal pro Woche",
-                                  "color": "dark"
-                                },
-                                {
-                                  "id": "4tg_R1bjHETmZMcYxsz8U",
-                                  "title": "2 - 4 Mal pro Woche",
-                                  "color": "dark"
-                                },
-                                {
-                                  "id": "UPDv4-xwtdpYu0VakxKr4",
-                                  "title": "5 - 6 Mal pro Woche",
-                                  "color": "dark"
-                                }
+                              "id": "O1S0brfjKugHLbNBCl3tE",
+                              "operator": "",
+                              "decision": "Reject"
+                            },
+                            {
+                              "criteria": [
+                                "Schwanger"
                               ],
-                              "right": [
-                                {
-                                  "id": "FM3IX1j69Y3QextPrI3rc",
-                                  "title": "1 Mal pro Tag",
-                                  "color": "dark"
-                                },
-                                {
-                                  "id": "KdsWQ7ZFRIJCfEimMaVWl",
-                                  "title": "2 Mal pro Tag",
-                                  "color": "dark"
-                                },
-                                {
-                                  "id": "e2VJ6ufsVMyn0lOtoGX3E",
-                                  "title": "3 - 4 Mal pro Tag",
-                                  "color": "dark"
-                                },
-                                {
-                                  "id": "s7HNWg-jIEQH2JuAt1ds-",
-                                  "title": "5+ Mal pro Tag",
-                                  "color": "dark"
-                                }
-                              ]
-                            }
-                          },
-                          "title": "Käse mit hohem Fettgehalt (>60% Fett i.Tr.)",
-                          "subtitle1": "z.B. Weichkäse, Brie, Camembert",
-                          "subtitle2": "",
-                          "help": "Bitte wählen Sie die passende Antwort durch Anklicken aus.",
-                          "_id": "60781799da37b500477d5dc5",
-                          "createdAt": "2021-04-15T10:38:17.081Z",
-                          "updatedAt": "2021-04-15T10:55:04.916Z",
-                          "__v": 0
-                        },
-                        {
-                          "answerOptions": {
-                            "type": "Amount",
-                            "options": [
-                              {
-                                "id": "nIgc86sSESsvREn7rxDKE",
-                                "title": "Weniger",
-                                "imageURL": "",
-                                "index": 1
-                              },
-                              {
-                                "id": "dMk55KGwyKU44nZXR7IO_",
-                                "title": "",
-                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485177/qbhou0xcejyqzbkleg5z.jpg",
-                                "index": 2
-                              },
-                              {
-                                "id": "3v_a560uYUrLEasw7ovUK",
-                                "title": "Dazwischen",
-                                "imageURL": "",
-                                "index": 3
-                              },
-                              {
-                                "id": "3Zy-WhABdlNG8i09cfOfD",
-                                "title": "",
-                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485177/o8ugat3lqmunkftyau43.jpg",
-                                "index": 4
-                              },
-                              {
-                                "id": "V-22cUtdKVMYyjzHjW6tF",
-                                "title": "Dazwischen",
-                                "imageURL": "",
-                                "index": 5
-                              },
-                              {
-                                "id": "rrq0YxQZYHDfw3KDlYD1S",
-                                "title": "",
-                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485177/eta7plhr9ilzs22u1z7e.jpg",
-                                "index": 6
-                              },
-                              {
-                                "id": "tIsRG4RCOTYfl0cFxLXiu",
-                                "title": "Mehr",
-                                "imageURL": "",
-                                "index": 7
-                              }
-                            ]
-                          },
-                          "title": "Wie groß war Ihre durchschnittliche Portionsgröße?",
-                          "subtitle1": "",
-                          "subtitle2": "Bitte wählen Sie Ihre durchschnittliche Portionsgröße pro Verzehrsgelegenheit ",
-                          "help": "Wählen Sie die durchschnittliche Portionsgröße pro Verzehrsgelegenheit durch einmaliges Anklicken eines Bildes oder eines Textfeldes (\"Weniger\", \"Dazwischen\" oder \"Mehr\") aus. Mit Verzehrsgelegenheit ist eine Mahlzeit gemeint (z.B. Frühstück, Mittagessen, Abendessen, Zwischenmahlzeit oder Snack).",
-                          "_id": "60781a8dda37b500477d5dc8",
-                          "createdAt": "2021-04-15T10:50:53.335Z",
-                          "updatedAt": "2021-04-15T11:12:57.990Z",
-                          "__v": 0
-                        },
-                        {
-                          "answerOptions": {
-                            "type": "Frequency",
-                            "options": {
-                              "left": [
-                                {
-                                  "id": "LGwSuvelSrQ_4Twt8IT0s",
-                                  "title": "nie in den letzten 4 Wochen",
-                                  "color": "primary",
-                                  "skip": [
-                                    "6060e3b8934cf30048c10efb"
-                                  ]
-                                },
-                                {
-                                  "id": "tJHAbvcy0JWqHRroCheSH",
-                                  "title": "1-3 Mal in den letzten 4 Wochen",
-                                  "color": "dark"
-                                },
-                                {
-                                  "id": "n3J3B8bZrm6flDNcLkQTB",
-                                  "title": "1 Mal pro Woche",
-                                  "color": "dark"
-                                },
-                                {
-                                  "id": "ojSMBON8HieYHKcQ7LdHn",
-                                  "title": "2 - 4 Mal pro Woche",
-                                  "color": "dark"
-                                },
-                                {
-                                  "id": "S6I0Oci-LvnFsXSVbWULA",
-                                  "title": "5 - 6 Mal pro Woche",
-                                  "color": "dark"
-                                }
+                              "id": "hA99z0fkAwRGNm0SIoCFN",
+                              "operator": "",
+                              "decision": "Reject"
+                            },
+                            {
+                              "criteria": [
+                                "über 18 Jahre alt"
                               ],
-                              "right": [
-                                {
-                                  "id": "uobtBBRHJVB78J3heJzSU",
-                                  "title": "1 Mal pro Tag",
-                                  "color": "dark"
-                                },
-                                {
-                                  "id": "Y0dWDEhknxvlnu7LbZmAn",
-                                  "title": "2 Mal pro Tag",
-                                  "color": "dark"
-                                },
-                                {
-                                  "id": "6ZnlvtXlAs60IiHNFh9tO",
-                                  "title": "3 - 4 Mal pro Tag",
-                                  "color": "dark"
-                                },
-                                {
-                                  "id": "IsW-PHsm5peYrnOPuuD3w",
-                                  "title": "5 + Mal pro Tag",
-                                  "color": "dark"
-                                }
-                              ]
+                              "id": "8go9t0tXN34EFeAiE1iR3",
+                              "operator": "",
+                              "decision": "Accept"
                             }
-                          },
-                          "title": "Kartoffeln",
-                          "subtitle1": "z.B. Pellkartoffeln, Salzkartoffeln, Ofenkartoffeln",
-                          "subtitle2": "keine Süßkartoffeln",
-                          "help": "Bitte wählen Sie die zutreffende Antwort durch Anklicken aus.",
-                          "_id": "6020b6527f81aa0047f81c7c",
-                          "createdAt": "2021-02-08T03:56:02.457Z",
-                          "updatedAt": "2021-04-15T11:13:16.005Z",
-                          "__v": 0
-                        },
-                        {
-                          "answerOptions": {
-                            "type": "Amount",
-                            "options": [
-                              {
-                                "id": "CjExAlef3nx6iTyPRPM6w",
-                                "title": "Weniger",
-                                "imageURL": "",
-                                "index": 1
-                              },
-                              {
-                                "id": "4vhEHyymnmMPyaDqmzpmo",
-                                "title": "",
-                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183089/sotax8jtnnqyvv0o1w5a.jpg",
-                                "index": 2
-                              },
-                              {
-                                "id": "EvXlrFznJwcrUq5L8ycoe",
-                                "title": "Dazwischen",
-                                "imageURL": "",
-                                "index": 3
-                              },
-                              {
-                                "id": "7gVaK_mpsZIKMJzXyXrpU",
-                                "title": "",
-                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183085/yovlov3x1u30ilj0a8ia.jpg",
-                                "index": 4
-                              },
-                              {
-                                "id": "DScAxvVP2KIp3FWRUgdJC",
-                                "title": "Dazwischen",
-                                "imageURL": "",
-                                "index": 5
-                              },
-                              {
-                                "id": "6OCJITineltMZfQPJ-D8j",
-                                "title": "",
-                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183090/apfo8ziyur2zwd63tgme.jpg",
-                                "index": 6
-                              },
-                              {
-                                "id": "LtplWXub8I-yGXj2oCUZh",
-                                "title": "Mehr",
-                                "imageURL": "",
-                                "index": 7
-                              }
-                            ]
-                          },
-                          "title": "Wie groß war Ihre durchschnittliche Portionsgröße?",
-                          "subtitle1": "",
-                          "subtitle2": "Bitte wählen Sie Ihre durchschnittliche Portionsgröße pro Verzehrsgelegenheit ",
-                          "help": "Wählen Sie die durchschnittliche Portionsgröße pro Verzehrsgelegenheit durch einmaliges Anklicken eines Bildes oder eines Textfeldes (\"Weniger\", \"Dazwischen\" oder \"Mehr\") aus. Mit Verzehrsgelegenheit ist eine Mahlzeit gemeint (z.B. Frühstück, Mittagessen, Abendessen, Zwischenmahlzeit oder Snack).",
-                          "_id": "6060e3b8934cf30048c10efb",
-                          "createdAt": "2021-03-28T20:14:48.326Z",
-                          "updatedAt": "2021-04-15T10:51:42.586Z",
-                          "__v": 0
-                        },
-                        {
-                          "answerOptions": {
-                            "type": "Frequency",
-                            "options": {
-                              "left": [
-                                {
-                                  "id": "uMyazwN_phFFK_l6M_zJ2",
-                                  "title": "Nie in den letzten 4 Wochen",
-                                  "color": "primary",
-                                  "skip": [
-                                    "60781335da37b500477d5dc4"
-                                  ]
-                                },
-                                {
-                                  "id": "Tw4YrOQoyYjo6k2ColtXg",
-                                  "title": "1 - 3 Mal in den letzten 4 Wochen",
-                                  "color": "dark"
-                                },
-                                {
-                                  "id": "oOBz7EX8G1UxH_Sq44_kv",
-                                  "title": "1 Mal pro Woche",
-                                  "color": "dark"
-                                },
-                                {
-                                  "id": "-ICVrZNWOMYYoPrGYaY_i",
-                                  "title": "2 - 4 Mal pro Woche",
-                                  "color": "dark"
-                                },
-                                {
-                                  "id": "i2MCeV9ZiHS33JFUk3zTy",
-                                  "title": "5 - 6 Mal pro Woche",
-                                  "color": "dark"
-                                }
-                              ],
-                              "right": [
-                                {
-                                  "id": "2Mmecb_kYjKcqAiXgwu0S",
-                                  "title": "1 Mal pro Tag",
-                                  "color": "dark"
-                                },
-                                {
-                                  "id": "8-PZ1TrkOwGQupAucd2RC",
-                                  "title": "2 Mal pro Tag",
-                                  "color": "dark"
-                                },
-                                {
-                                  "id": "LMci2hKiTcaneXqHKLdSI",
-                                  "title": "3 - 4 Mal pro Tag",
-                                  "color": "dark"
-                                },
-                                {
-                                  "id": "JPn1cDzrKau4W31Bd-b4y",
-                                  "title": "5+ Mal pro Tag",
-                                  "color": "dark"
-                                }
-                              ]
+                          ],
+                          "iterations": [
+                            {
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "start": "2021-03-30T22:00:00.000Z",
+                              "startLabel": "31.03.21",
+                              "end": "2021-05-20T21:59:59.999Z",
+                              "endLabel": "20.05.21"
+                            },
+                            {
+                              "id": "jH1WTbBdbc0dH7eBFduXl",
+                              "start": "2021-06-14T22:00:00.000Z",
+                              "startLabel": "15.06.21",
+                              "end": "2021-06-30T21:59:59.999Z",
+                              "endLabel": "30.06.21"
+                            },
+                            {
+                              "id": "vVj53jzXV78XyFX-kCP-p",
+                              "start": "2021-07-14T22:00:00.000Z",
+                              "startLabel": "15.07.21",
+                              "end": "2021-07-30T21:59:59.999Z",
+                              "endLabel": "30.07.21"
                             }
-                          },
-                          "title": "Fleischersatzprodukte",
-                          "subtitle1": "z.B. Tofu, Seitan, Sojaprotein",
-                          "subtitle2": "",
-                          "help": "Bitte wählen Sie die passende Antwort durch Anklicken aus.",
-                          "_id": "606eb6b24e13420047e71d98",
-                          "createdAt": "2021-04-08T07:54:26.953Z",
-                          "updatedAt": "2021-04-15T11:13:27.924Z",
-                          "__v": 0
-                        },
-                        {
-                          "answerOptions": {
-                            "type": "Amount",
-                            "options": [
-                              {
-                                "id": "MU8QcV027BtIozteDeCoy",
-                                "title": "Weniger",
-                                "imageURL": "",
-                                "index": 1
-                              },
-                              {
-                                "id": "PMEpMQ_Lr2A8sFr8AShJ2",
-                                "title": "",
-                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485408/lrwtyidulsmvv5w2w4uu.jpg",
-                                "index": 2
-                              },
-                              {
-                                "id": "3X-goHtxko6yM6KlXO4UD",
-                                "title": "Dazwischen",
-                                "imageURL": "",
-                                "index": 3
-                              },
-                              {
-                                "id": "nEWFNlvVSrpZpM9OZD33q",
-                                "title": "",
-                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485408/aqoybfo2kb5tfqzkbxkl.jpg",
-                                "index": 4
-                              },
-                              {
-                                "id": "JEktzlg5tYpi17-ihpMD1",
-                                "title": "Dazwischen",
-                                "imageURL": "",
-                                "index": 5
-                              },
-                              {
-                                "id": "zxQXSxJ58Y6hmvJ1PPdJu",
-                                "title": "",
-                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485407/fdy5vk8ze9sjjyikmwxy.jpg",
-                                "index": 6
-                              },
-                              {
-                                "id": "a8ihSHD73dLNl5LHumwIj",
-                                "title": "Mehr",
-                                "imageURL": "",
-                                "index": 7
-                              }
-                            ]
-                          },
-                          "title": "Wie groß war Ihre durchschnittliche Portionsgröße?",
-                          "subtitle1": "",
-                          "subtitle2": "Bitte wählen Sie Ihre durchschnittliche Portionsgröße pro Verzehrsgelegenheit ",
-                          "help": "Wählen Sie die durchschnittliche Portionsgröße pro Verzehrsgelegenheit durch einmaliges Anklicken eines Bildes oder eines Textfeldes (\"Weniger\", \"Dazwischen\" oder \"Mehr\") aus. Mit Verzehrsgelegenheit ist eine Mahlzeit gemeint (z.B. Frühstück, Mittagessen, Abendessen, Zwischenmahlzeit oder Snack).",
-                          "_id": "60781335da37b500477d5dc4",
-                          "createdAt": "2021-04-15T10:19:33.497Z",
-                          "updatedAt": "2021-04-15T11:16:49.680Z",
-                          "__v": 0
-                        },
-                        {
-                          "answerOptions": {
-                            "type": "images",
-                            "options": [
-                              {
-                                "id": "-Od9N39dLelnmuljtWC0y",
-                                "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617194000/exbzt7euokzckyp2hekb.png"
-                              }
-                            ]
-                          },
-                          "title": "Erklärung Textfeld",
-                          "subtitle1": "",
-                          "subtitle2": "",
-                          "help": "",
-                          "_id": "6064699d6f26ec0047d01c8e",
-                          "createdAt": "2021-03-31T12:22:53.994Z",
-                          "updatedAt": "2021-04-16T07:31:14.684Z",
-                          "__v": 0
-                        },
-                        {
-                          "answerOptions": {
-                            "type": "Frequency",
-                            "options": {
-                              "left": [
-                                {
-                                  "id": "69djRm9tNoV1h_UB73hDm",
-                                  "title": "Nie in den letzten 4 Wochen ",
-                                  "skip": [
-                                    "60781ca2da37b500477d5dcb"
-                                  ]
-                                },
-                                {
-                                  "id": "xZ4maKaU55Z71qFy0rJ-y",
-                                  "title": "1-3 Mal in den letzten 4 Wochen",
-                                  "color": "dark"
-                                },
-                                {
-                                  "id": "MArZNJ-MQ94IWbK3H-17B",
-                                  "title": "1 Mal pro Woche",
-                                  "color": "dark"
-                                },
-                                {
-                                  "id": "1F3YDAWPzwXJbHd0xdTIR",
-                                  "title": "2-4 Mal pro Woche",
-                                  "color": "dark"
-                                }
-                              ],
-                              "right": [
-                                {
-                                  "id": "AyfZbeWQRNSPaTvj_IVqt",
-                                  "title": "5 - 6 Mal pro Woche",
-                                  "color": "dark"
-                                },
-                                {
-                                  "id": "XMvrNp4latWK8-tLPWMz_",
-                                  "title": "1 Mal pro Tag",
-                                  "color": "dark"
-                                },
-                                {
-                                  "id": "bn19WPubTJg32tkkJhBDS",
-                                  "title": "2+ Mal pro Tag",
-                                  "color": "dark"
-                                }
-                              ]
-                            }
-                          },
-                          "title": "Haben Sie im letzten Monat Omega-3-Präparate, Fischöl oder Lebertran als Nahrungsergänzung eingenommen?",
-                          "subtitle1": "",
-                          "subtitle2": "",
-                          "help": "Bitte wählen Sie die zutreffende Antwort durch Anklicken aus.",
-                          "_id": "606421486f26ec0047d01c89",
-                          "createdAt": "2021-03-31T07:14:16.287Z",
-                          "updatedAt": "2021-04-15T12:02:41.975Z",
-                          "__v": 0
-                        },
-                        {
-                          "answerOptions": {
-                            "type": "User Input",
-                            "options": [
-                              {
-                                "id": "g15MsdnkndqbW91wcn5lU",
-                                "title": "mg",
-                                "hasNumberInput": false,
-                                "numberInputTitle": "mg"
-                              }
-                            ]
-                          },
-                          "title": "Bitte geben Sie in das Textfeld die Dosierung pro Verzehrsgelegenheit ein.",
-                          "subtitle1": "",
-                          "subtitle2": " Wenn Sie keine Angabe machen möchten, klicken Sie bitte auf \"Weiter\".",
-                          "help": "Bitte geben Sie Ihre Antwort in das untenstehende Textfeld über die Tastatur Ihres Computers an.",
-                          "_id": "60781ca2da37b500477d5dcb",
-                          "createdAt": "2021-04-15T10:59:46.280Z",
-                          "updatedAt": "2021-04-15T11:21:27.409Z",
-                          "__v": 0
-                        },
-                        {
-                          "answerOptions": {
-                            "type": "Frequency",
-                            "options": {
-                              "left": [
-                                {
-                                  "id": "OynzXv3D24Osvr3kHgGGz",
-                                  "title": "Ja"
-                                }
-                              ],
-                              "right": [
-                                {
-                                  "id": "n9CtSm4yRuf2Cb6u33ZRU",
-                                  "title": "Nein",
-                                  "skip": [
-                                    "60781bf3da37b500477d5dca"
-                                  ]
-                                }
-                              ]
-                            }
-                          },
-                          "title": "Gab es Lebensmittel, Getränke oder Gerichte, die Sie konsumierten und die Sie zu keiner der Fragen zuordnen konnten?",
-                          "subtitle1": "",
-                          "subtitle2": "",
-                          "help": "Bitte wählen Sie die passende Antwort durch Anklicken aus",
-                          "_id": "60781ba5da37b500477d5dc9",
-                          "createdAt": "2021-04-15T10:55:33.544Z",
-                          "updatedAt": "2021-04-15T11:17:02.529Z",
-                          "__v": 0
-                        },
-                        {
-                          "answerOptions": {
-                            "type": "User Input",
-                            "options": [
-                              {
-                                "id": "zwlEyZGPLhcGvjEZq66U5",
-                                "title": "",
-                                "hasNumberInput": false
-                              },
-                              {
-                                "id": "M_iXHKPmWDliKw3DceINt",
-                                "title": "",
-                                "hasNumberInput": false
-                              },
-                              {
-                                "id": "bxx-MqsGTy2oq2BAlLGyj",
-                                "title": "",
-                                "hasNumberInput": false
-                              },
-                              {
-                                "id": "4HJRIjLq6Ex-muUvm9-JF",
-                                "title": "",
-                                "hasNumberInput": false
-                              },
-                              {
-                                "id": "dDzPrUEb0gNbN5wwnu_GE",
-                                "title": "",
-                                "hasNumberInput": false
-                              }
-                            ]
-                          },
-                          "title": "Können Sie sich daran erinnern, welche Lebensmittel, Getränke oder Gerichte das waren?",
-                          "subtitle1": "Bitte geben Sie Ihre Antwort in die untenstehenden Textfelder ein. Bitte geben Sie pro Textfeld ein Lebensmittel, Getränk oder Gericht an.",
-                          "subtitle2": "Wenn Sie keine Angabe machen möchten, klicken Sie bitte auf \"Weiter\".",
-                          "help": "Bitte geben Sie Ihre Antwort in das untenstehende Textfeld über die Tastatur Ihres Computers an.",
-                          "_id": "60781bf3da37b500477d5dca",
-                          "createdAt": "2021-04-15T10:56:51.784Z",
-                          "updatedAt": "2021-04-15T11:18:57.768Z",
-                          "__v": 0
-                        },
-                        {
-                          "answerOptions": {
-                            "type": "Frequency",
-                            "options": {
-                              "left": [
-                                {
-                                  "id": "chmGdSHExWK4Imza3Bg7h",
-                                  "title": "Ja",
-                                  "color": "success"
-                                }
-                              ],
-                              "right": [
-                                {
-                                  "id": "fCXvf6_7UOP3rpqFIiQkL",
-                                  "title": "Nein"
-                                }
-                              ]
-                            }
-                          },
-                          "title": "Milchprodukte",
-                          "subtitle1": "Haben Sie in den letzten 4 Wochen Milchprodukte zu sich genommen?",
-                          "subtitle2": "z.B. Käse, Frischkäse, Quark, Sahne, Joghurt, etc.",
-                          "help": "Wählen Sie eine Antwortmöglichkeit aus.",
-                          "_id": "606466ba6f26ec0047d01c8c",
-                          "createdAt": "2021-03-31T12:10:34.959Z",
-                          "updatedAt": "2021-04-15T13:53:54.250Z",
-                          "__v": 0
-                        },
-                        {
-                          "answerOptions": {
-                            "type": "Frequency",
-                            "options": {
-                              "left": [
-                                {
-                                  "id": "W0j2CYuz4-kYlqGafqDt6",
-                                  "title": "Ja",
-                                  "color": "success"
-                                }
-                              ],
-                              "right": [
-                                {
-                                  "id": "pGEMDRPjBfvoJ2qPqVwWN",
-                                  "title": "Nein",
-                                  "color": "danger"
-                                }
-                              ]
-                            }
-                          },
-                          "title": "körperliche Betätigung",
-                          "subtitle1": "Bewegen Sie sich mindestens 30 min am Tag, wobei Sie sich moderat angestrengt fühlen?",
-                          "subtitle2": "zB. gemütlich joggen, Rad fahren, Crosstrainer, Nordic walking",
-                          "help": "Wählen Sie eine Antwortmöglichkeit aus.",
-                          "_id": "606eb56b4e13420047e71d97",
-                          "createdAt": "2021-04-08T07:48:59.947Z",
-                          "updatedAt": "2021-04-08T07:52:03.121Z",
-                          "__v": 0
-                        },
-                        {
-                          "answerOptions": {
-                            "type": "Frequency",
-                            "options": {
-                              "left": [
-                                {
-                                  "id": "iCsd5tPysEQq6jsA1qlpN",
-                                  "title": "vegan",
-                                  "color": "primary"
-                                },
-                                {
-                                  "id": "5QDX7vQdRSXHiRAIddhpQ",
-                                  "title": "Omnivore"
-                                }
-                              ],
-                              "right": [
-                                {
-                                  "id": "eZ6jNmA_hFH2CaccOeccq",
-                                  "title": "vegetarisch"
-                                }
-                              ]
-                            }
-                          },
-                          "title": "Ernährungsweise",
-                          "subtitle1": "",
-                          "subtitle2": "",
-                          "help": "",
-                          "_id": "60781a56da37b500477d5dc6",
-                          "createdAt": "2021-04-15T10:49:58.017Z",
-                          "updatedAt": "2021-04-15T10:52:30.333Z",
-                          "__v": 0
-                        },
-                        {
-                          "answerOptions": {
-                            "type": "Frequency",
-                            "options": {
-                              "left": [
-                                {
-                                  "id": "LKr0baDlpjm4asgnzqrlP",
-                                  "title": "1",
-                                  "color": "danger"
-                                }
-                              ],
-                              "right": [
-                                {
-                                  "id": "HXdsrxJv8lmREiGRKj6P6",
-                                  "title": "2"
-                                }
-                              ]
-                            }
-                          },
-                          "title": "Wer bist du?",
-                          "subtitle1": "hallo",
-                          "subtitle2": "hallo",
-                          "help": "Klicke auf ne antwort",
-                          "_id": "60844fd3703fcd004709cfd4",
-                          "createdAt": "2021-04-24T17:05:23.651Z",
-                          "updatedAt": "2021-04-24T17:06:37.046Z",
-                          "__v": 0
-                        },
-                        {
-                          "answerOptions": {
-                            "type": "Frequency",
-                            "options": {
-                              "left": [
-                                {
-                                  "id": "gqbbwC6eE-PplpfL0PUjb",
-                                  "title": "Ja",
-                                  "color": "success"
-                                }
-                              ],
-                              "right": [
-                                {
-                                  "id": "q937NcELBk28MUtgXGrTk",
-                                  "title": "Nein",
-                                  "color": "danger"
-                                },
-                                {
-                                  "id": "q0WAJxSeTCIypgaL2g-dm",
-                                  "title": "Überspringen",
-                                  "skip": [
-                                    "607824e3da37b500477d5dce"
-                                  ]
-                                }
-                              ]
-                            }
-                          },
-                          "title": "Proteinprodukte",
-                          "subtitle1": "Präferieren sie mit \"high-protein\"-gelabelte Produkte gegenüber konventionellen Produkten? ",
-                          "subtitle2": "z.B. Protein Pudding Ehrmann, Protein Eiscreme, High protein Skyr, Proteinmilch",
-                          "help": "Wählen Sie eine Antwortmöglichkeit aus. ",
-                          "_id": "60781a58da37b500477d5dc7",
-                          "createdAt": "2021-04-15T10:50:00.266Z",
-                          "updatedAt": "2021-04-15T13:57:35.957Z",
-                          "__v": 0
-                        },
-                        {
-                          "answerOptions": {
-                            "type": "User Input",
-                            "options": [
-                              {
-                                "id": "LZHU-BKZDFdJ73hHxEihl",
-                                "title": "Liter pro Tag",
-                                "hasNumberInput": false,
-                                "answer": "1,5"
-                              }
-                            ]
-                          },
-                          "title": "Trinken",
-                          "subtitle1": "Wie viel Liter trinken Sie geschätzt pro Tag?",
-                          "subtitle2": "z.B. 2,5 L",
-                          "help": "Geben Sie in Litern an, wie viel Sie am Tag in etwa trinken.",
-                          "_id": "607824e3da37b500477d5dce",
-                          "createdAt": "2021-04-15T11:34:59.426Z",
-                          "updatedAt": "2021-04-15T14:01:37.320Z",
-                          "__v": 0
-                        },
-                        {
-                          "answerOptions": {
-                            "type": "",
-                            "options": []
-                          },
-                          "title": "Neue Frage",
-                          "subtitle1": "",
-                          "subtitle2": "",
-                          "help": "",
-                          "_id": "607946cd85ba86004750db43",
-                          "createdAt": "2021-04-16T08:11:57.876Z",
-                          "updatedAt": "2021-04-16T08:11:57.876Z",
-                          "__v": 0
-                        },
-                        {
-                          "answerOptions": {
-                            "type": "",
-                            "options": []
-                          },
-                          "title": "Neue Frage",
-                          "subtitle1": "",
-                          "subtitle2": "",
-                          "help": "",
-                          "_id": "608452f0703fcd004709cfd6",
-                          "createdAt": "2021-04-24T17:18:40.354Z",
-                          "updatedAt": "2021-04-24T17:18:40.354Z",
-                          "__v": 0
+                          ],
+                          "createdAt": "2021-02-08T03:56:00.072Z",
+                          "updatedAt": "2021-05-18T21:16:04.607Z",
+                          "__v": 291
                         }
                       ]
                     }
@@ -3224,22 +2798,36 @@
                 "examples": {
                   "example-1": {
                     "value": {
-                      "questions": [
+                      "questionnaires": [
                         {
-                          "answerOptions": {
-                            "type": "string",
-                            "options": [
-                              {
-                                "id": "string",
-                                "imageURL": "string"
-                              }
-                            ]
-                          },
-                          "title": "string",
-                          "subtitle1": "string",
-                          "subtitle2": "string",
-                          "help": "string",
+                          "name": "string",
+                          "consentScript": "string",
+                          "selectionCriteria": [
+                            {}
+                          ],
+                          "questions": [
+                            {}
+                          ],
                           "_id": "string",
+                          "screeningRules": [
+                            {
+                              "criteria": [
+                                {}
+                              ],
+                              "id": "string",
+                              "operator": "string",
+                              "decision": "string"
+                            }
+                          ],
+                          "iterations": [
+                            {
+                              "id": "string",
+                              "start": "string",
+                              "startLabel": "string",
+                              "end": "string",
+                              "endLabel": "string"
+                            }
+                          ],
                           "createdAt": "string",
                           "updatedAt": "string",
                           "__v": 0
@@ -3250,11 +2838,103 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "detail"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "detail": "No questionnaire could be found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "detail": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "title",
+                    "detail"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": "",
+                      "title": "Internal error.",
+                      "detail": "Something went wrong."
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
           "questionnaires"
-        ]
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMjBiNjI4N2Y4MWFhMDA0N2Y4MWM3OSIsImlhdCI6MTYyMTQ0NTU5NiwiZXhwIjoxNjIxNTMxOTk2fQ.ZDxV6fEU9sOSpNjqpcRzf56_yJJL6LgXzjpBKtZAodQ"
+            },
+            "in": "header",
+            "name": "x-access-token",
+            "description": "JWT",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "6030b6507f81aa0047f81c7b"
+            },
+            "in": "query",
+            "name": "questionnaireId",
+            "description": "Questionnaire ID"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "iterations"
+            },
+            "in": "query",
+            "name": "fields",
+            "description": "Specified fields are returned. If no fields are specified, the entire questionnaire is returned"
+          }
+        ],
+        "description": "Request questionnaires or specific fields of a questionnaire"
       }
     },
     "/questionnaires/{questionnaireId}/questions": {
@@ -3263,9 +2943,31 @@
         "tags": [
           "questionnaires"
         ],
-        "responses": {},
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          }
+        },
         "operationId": "get-questionnaires-:questionnaireId-questions",
-        "description": ""
+        "description": "",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        }
       },
       "post": {
         "summary": "",
