@@ -17,6 +17,7 @@
     "lodash": "^4.17.21",
     "moment": "2.24.0",
     "nanoid": "^3.1.20",
+    "node-sass": "^6.0.0",
     "popper.js": "^1.16.1",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
