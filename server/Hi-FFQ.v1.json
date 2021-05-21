@@ -4428,4 +4428,540 @@
                 "schema": {
                   "description": "",
                   "type": "object",
- 
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "detail": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "title",
+                    "detail"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": "",
+                      "title": "Internal error",
+                      "detail": "Answer was not saved or updated."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "users"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "description": "",
+                "type": "object",
+                "properties": {
+                  "questionId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "answerOption": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "title": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "title"
+                    ]
+                  }
+                },
+                "required": [
+                  "questionId",
+                  "answerOption"
+                ],
+                "x-examples": {
+                  "example-1": {
+                    "questionId": "60648c806df321004815b6b4",
+                    "answerOption": {
+                      "id": "0djX4fdwDAyjdFYMhfcvX",
+                      "title": "Ja"
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "example-1": {
+                  "value": {
+                    "questionId": "60648c806df321004815b6b4",
+                    "answerOption": {
+                      "id": "0djX4fdwDAyjdFYMhfcvX",
+                      "title": "Ja"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "description": ""
+        },
+        "description": "Update the users answer of a iteration",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYTNmOGFiYTNjYjk1MDA0N2RlN2ViNiIsImlhdCI6MTYyMTM1OTA0MCwiZXhwIjoxNjIxNDQ1NDQwfQ.vOvlF0BUZ_opIb4cXRm5nHZkFueeH0SnpalG-QkPgN7"
+            },
+            "in": "header",
+            "name": "x-access-token",
+            "description": "JWT",
+            "required": true
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "description": "",
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "email": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "firstName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "lastName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "hasAcceptedConsentForm": {
+            "type": "boolean"
+          },
+          "screeningData": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "screeningStatus": {
+            "type": "string",
+            "minLength": 1
+          },
+          "iterations": {
+            "type": "array",
+            "uniqueItems": true,
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "pausedAt": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "stoppedAtIndex": {
+                  "type": "number"
+                },
+                "questionsToSkip": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "startedAt": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "answers": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "questionId": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "answerOption": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "title": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "color": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "skip": {
+                            "type": "array",
+                            "items": {
+                              "type": "object"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "finishedAt": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "updatedAt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "__v": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "_id",
+          "email",
+          "password"
+        ]
+      },
+      "Questionnaire": {
+        "description": "",
+        "type": "object",
+        "x-examples": {
+          "example-1": {
+            "_id": "ObjectId(\"601f1b1e17ed58f34ca46910\")",
+            "name": "FFQ",
+            "consentScript": "Consent script goes here...",
+            "selectionCriteria": [
+              "Lactose Intolerant",
+              "Older than 65"
+            ],
+            "questions": [
+              "ObjectId(\"604bb15f2b75107cd5a9d61f\")",
+              "ObjectId(\"604bb1602b75107cd5a9d620\")",
+              "ObjectId(\"604bb1612b75107cd5a9d621\")",
+              "ObjectId(\"604d3409b85c0e25af88249a\")"
+            ],
+            "screeningRules": [
+              {
+                "criteria": [
+                  "Over 65"
+                ],
+                "id": "ixogKquCVRLXKOcpf_Xnx",
+                "operator": "",
+                "decision": "Accept"
+              },
+              {
+                "criteria": [
+                  "Lactose Intolerant"
+                ],
+                "id": "zRNUaVushFZy8GjjycpDA",
+                "operator": "",
+                "decision": "Wait"
+              }
+            ],
+            "iterations": [
+              {
+                "id": "SnU4M30IstoUudDYVIhzO",
+                "start": "ISODate(\"2021-04-10T12:45:18.898Z\")",
+                "startLabel": "10.04.21",
+                "end": "ISODate(\"2021-04-12T21:59:59.999Z\")",
+                "endLabel": "12.04.21"
+              },
+              {
+                "id": "5z9UpalC_Zlaa9Hl1rujk",
+                "start": "ISODate(\"2021-04-12T22:00:00.000Z\")",
+                "startLabel": "13.04.21",
+                "end": "ISODate(\"2021-04-16T21:59:59.999Z\")",
+                "endLabel": "16.04.21"
+              }
+            ],
+            "createdAt": "ISODate(\"2021-02-06T22:41:34.473Z\")",
+            "updatedAt": "ISODate(\"2021-04-10T13:00:35.675Z\")",
+            "__v": 250
+          }
+        },
+        "properties": {
+          "_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "consentScript": {
+            "type": "string",
+            "minLength": 1
+          },
+          "selectionCriteria": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "screeningRules": {
+            "type": "array",
+            "uniqueItems": true,
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "criteria": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "operator": {
+                  "type": "string"
+                },
+                "decision": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "id"
+              ]
+            }
+          },
+          "iterations": {
+            "type": "array",
+            "uniqueItems": true,
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "start": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "startLabel": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "end": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "endLabel": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "id"
+              ]
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "updatedAt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "__v": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "_id"
+        ]
+      },
+      "Question": {
+        "description": "",
+        "type": "object",
+        "x-examples": {
+          "example-1": {
+            "_id": "ObjectId(\"604d3409b85c0e25af88249a\")",
+            "answerOptions": {
+              "type": "Frequency",
+              "options": {
+                "left": [
+                  {
+                    "id": "akAjc8RmnTmniegmgfHVm",
+                    "title": "Yes"
+                  }
+                ],
+                "right": [
+                  {
+                    "id": "Oyze3YHYQjpjbO2Aja1ju",
+                    "title": "No"
+                  }
+                ]
+              }
+            },
+            "title": "Have you consumed any other food items in the last 4 weeks that were not included in the questionnaire?\t",
+            "subtitle1": "",
+            "subtitle2": "Please enter your answer in the text box below. If you do not want to provide any information, you can skip the question by clicking \"continue\"\t",
+            "help": "Please enter your answer using the keyboard of your computer or tablet. Please enter your answer using the keyboard on your computer or tablet. If you name several foods, please separate the foods with a comma.",
+            "createdAt": "ISODate(\"2021-03-13T21:52:09.285Z\")",
+            "updatedAt": "ISODate(\"2021-04-10T12:50:42.458Z\")",
+            "__v": 0
+          }
+        },
+        "properties": {
+          "_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "answerOptions": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "minLength": 1
+              },
+              "options": {
+                "type": "object",
+                "properties": {
+                  "left": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "minItems": 1,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "title": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "color": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  },
+                  "right": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "minItems": 1,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "title": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "color": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "subtitle1": {
+            "type": "string",
+            "minLength": 1
+          },
+          "subtitle2": {
+            "type": "string",
+            "minLength": 1
+          },
+          "help": {
+            "type": "string",
+            "minLength": 1
+          },
+          "createdAt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "updatedAt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "__v": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "_id"
+        ]
+      }
+    },
+    "securitySchemes": {}
+  }
+}
