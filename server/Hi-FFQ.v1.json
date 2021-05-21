@@ -1,12 +1,12 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Hi-FFQ",
+    "title": "HI-FFQ",
     "version": "1.0"
   },
   "servers": [
     {
-      "url": "https://hi-ffq.herokuapp.com/"
+      "url": "https://hi-ffq.herokuapp.com/api"
     }
   ],
   "paths": {
@@ -14,7 +14,8 @@
       "parameters": [
         {
           "schema": {
-            "type": "integer"
+            "type": "integer",
+            "example": "60a4254548f29b0048bb2f1d"
           },
           "name": "userId",
           "in": "path",
@@ -22,74 +23,42 @@
           "description": "Id of an existing user."
         }
       ],
-      "get": {
-        "summary": "Get User Info by User ID",
-        "tags": [
-          "users"
-        ],
-        "responses": {
-          "200": {
-            "description": "User Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                },
-                "examples": {
-                  "Get User Alice Smith": {
-                    "value": {
-                      "id": 142,
-                      "firstName": "Alice",
-                      "lastName": "Smith",
-                      "email": "alice.smith@gmail.com",
-                      "dateOfBirth": "1997-10-31",
-                      "emailVerified": true,
-                      "signUpDate": "2019-08-24"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "User Not Found"
-          }
-        },
-        "operationId": "get-users-userId",
-        "description": "Retrieve the information of the user with the matching user ID."
-      },
       "patch": {
         "summary": "Update User Information",
         "operationId": "patch-users-userId",
         "responses": {
-          "200": {
-            "description": "User Updated",
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "User Not Found",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
-                },
-                "examples": {
-                  "Updated User Rebecca Baker": {
-                    "value": {
-                      "id": 13,
-                      "firstName": "Rebecca",
-                      "lastName": "Baker",
-                      "email": "rebecca@gmail.com",
-                      "dateOfBirth": "1985-10-02",
-                      "emailVerified": false,
-                      "createDate": "2019-08-24"
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "message"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": "",
+                      "message": "User not updated!"
                     }
                   }
                 }
               }
             }
-          },
-          "404": {
-            "description": "User Not Found"
-          },
-          "409": {
-            "description": "Email Already Taken"
           }
         },
         "description": "Update the information of an existing user.",
@@ -108,9 +77,6 @@
                   "email": {
                     "type": "string",
                     "description": "If a new email is given, the user's email verified property will be set to false."
-                  },
-                  "dateOfBirth": {
-                    "type": "string"
                   }
                 }
               },
@@ -125,10 +91,49 @@
                     "email": "rebecca@gmail.com"
                   }
                 },
-                "Update Last Name & Date of Birth": {
+                "Update password ": {
                   "value": {
-                    "lastName": "Baker",
-                    "dateOfBirth": "1985-10-02"
+                    "oldPassword": "12345",
+                    "newPassword": "54321",
+                    "confirmPassword": "54321"
+                  }
+                }
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "description": "",
+                "type": "object",
+                "properties": {
+                  "oldPassword": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "confirmPassword": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "oldPassword",
+                  "newPassword",
+                  "confirmPassword"
+                ],
+                "x-examples": {
+                  "example-1": {
+                    "oldPassword": "12345",
+                    "newPassword": "54321",
+                    "confirmPassword": "54321"
                   }
                 }
               }
@@ -138,101 +143,2135 @@
         },
         "tags": [
           "users"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYTNmOGFiYTNjYjk1MDA0N2RlN2ViNiIsImlhdCI6MTYyMTM1OTA0MCwiZXhwIjoxNjIxNDQ1NDQwfQ.vOvlF0BUZ_opIb4cXRm5nHZkFueeH0SnpalG-QkPgN7"
+            },
+            "in": "header",
+            "name": "x-access-token",
+            "description": "JWT",
+            "required": true
+          }
         ]
       }
     },
     "/users": {
-      "post": {
-        "summary": "Create New User",
-        "operationId": "post-user",
+      "get": {
+        "summary": "",
+        "operationId": "get-user",
         "responses": {
           "200": {
-            "description": "User Created",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "uniqueItems": true,
+                      "minItems": 1,
+                      "items": {
+                        "required": [
+                          "firstName",
+                          "lastName",
+                          "hasAcceptedConsentForm",
+                          "screeningStatus",
+                          "_id",
+                          "email",
+                          "id"
+                        ],
+                        "properties": {
+                          "firstName": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "lastName": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "hasAcceptedConsentForm": {
+                            "type": "boolean"
+                          },
+                          "screeningData": {
+                            "type": "array",
+                            "items": {
+                              "required": [],
+                              "properties": {}
+                            }
+                          },
+                          "screeningStatus": {
+                            "type": "string"
+                          },
+                          "_id": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "email": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "iterations": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 1,
+                            "items": {
+                              "required": [
+                                "stoppedAtIndex",
+                                "id"
+                              ],
+                              "properties": {
+                                "pausedAt": {
+                                  "type": "array",
+                                  "items": {
+                                    "required": [],
+                                    "properties": {}
+                                  }
+                                },
+                                "stoppedAtIndex": {
+                                  "type": "number"
+                                },
+                                "questionsToSkip": {
+                                  "type": "array",
+                                  "items": {
+                                    "required": [],
+                                    "properties": {}
+                                  }
+                                },
+                                "id": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "answers": {
+                                  "type": "array",
+                                  "uniqueItems": true,
+                                  "minItems": 1,
+                                  "items": {
+                                    "required": [
+                                      "questionId"
+                                    ],
+                                    "properties": {
+                                      "questionId": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      "answerOption": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "minLength": 1
+                                          },
+                                          "title": {
+                                            "type": "string",
+                                            "minLength": 1
+                                          },
+                                          "skip": {
+                                            "type": "array",
+                                            "items": {
+                                              "required": [],
+                                              "properties": {}
+                                            }
+                                          }
+                                        },
+                                        "required": [
+                                          "id",
+                                          "title",
+                                          "skip"
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "users"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "users": [
+                        {
+                          "firstName": "Admin",
+                          "lastName": "Admin",
+                          "hasAcceptedConsentForm": false,
+                          "screeningData": [],
+                          "screeningStatus": "",
+                          "_id": "6020b6287f81aa0047f81c79",
+                          "email": "admin@abc.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [
+                                "60781799da37b500477d5dc5",
+                                "60781a8dda37b500477d5dc8"
+                              ],
+                              "id": "0",
+                              "answers": [
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": {
+                                    "id": "2pqdWXQfhAn1idQiLrtwW",
+                                    "title": "Nein",
+                                    "skip": [
+                                      "60781799da37b500477d5dc5",
+                                      "60781a8dda37b500477d5dc8"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "Y0dWDEhknxvlnu7LbZmAn",
+                                    "title": "2 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                }
+                              ]
+                            }
+                          ],
+                          "id": "6020b6287f81aa0047f81c79"
+                        },
+                        {
+                          "firstName": "Person",
+                          "lastName": "Test",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "60644ba66f26ec0047d01c8a",
+                          "email": "person@test.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "E2egbvTxfdSe4Q-n-Ckcq",
+                              "startedAt": "2021-03-31T10:16:55.116Z",
+                              "answers": [
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "tJHAbvcy0JWqHRroCheSH",
+                                    "title": "1-3 Mal in den letzten 4 Wochen",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "DScAxvVP2KIp3FWRUgdJC",
+                                    "title": "Dazwischen",
+                                    "imageURL": "",
+                                    "index": 5
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                }
+                              ],
+                              "finishedAt": "2021-03-31T10:18:56.760Z"
+                            }
+                          ],
+                          "id": "60644ba66f26ec0047d01c8a"
+                        },
+                        {
+                          "firstName": "Abc",
+                          "lastName": "Def",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "606469bc6f26ec0047d01c8f",
+                          "email": "abc@def.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [
+                                3
+                              ],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "E2egbvTxfdSe4Q-n-Ckcq",
+                              "startedAt": "2021-03-31T12:23:41.125Z",
+                              "answers": [
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "tJHAbvcy0JWqHRroCheSH",
+                                    "title": "1-3 Mal in den letzten 4 Wochen",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "7gVaK_mpsZIKMJzXyXrpU",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183085/yovlov3x1u30ilj0a8ia.jpg",
+                                    "index": 4
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "xZ4maKaU55Z71qFy0rJ-y",
+                                    "title": "1-3 Mal in den letzten 4 Wochen"
+                                  }
+                                }
+                              ]
+                            }
+                          ],
+                          "id": "606469bc6f26ec0047d01c8f"
+                        },
+                        {
+                          "firstName": "Person",
+                          "lastName": "Beispiel",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "60646edb6f26ec0047d01c92",
+                          "email": "person@beispiel.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [
+                                6
+                              ],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "E2egbvTxfdSe4Q-n-Ckcq",
+                              "startedAt": "2021-03-31T12:46:20.981Z",
+                              "answers": [
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "tJHAbvcy0JWqHRroCheSH",
+                                    "title": "1-3 Mal in den letzten 4 Wochen",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "7gVaK_mpsZIKMJzXyXrpU",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183085/yovlov3x1u30ilj0a8ia.jpg",
+                                    "index": 4
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "xZ4maKaU55Z71qFy0rJ-y",
+                                    "title": "1-3 Mal in den letzten 4 Wochen"
+                                  }
+                                },
+                                {
+                                  "questionId": "606466ba6f26ec0047d01c8c",
+                                  "answerOption": {
+                                    "id": "fCXvf6_7UOP3rpqFIiQkL",
+                                    "title": "Nein"
+                                  }
+                                }
+                              ]
+                            }
+                          ],
+                          "id": "60646edb6f26ec0047d01c92"
+                        },
+                        {
+                          "firstName": "Max",
+                          "lastName": "Mustermann",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "606482826df321004815b6b2",
+                          "email": "m.musterman@example.com",
+                          "iterations": [
+                            {
+                              "pausedAt": [
+                                1
+                              ],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-03-31T14:30:42.231Z",
+                              "answers": [
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "uobtBBRHJVB78J3heJzSU",
+                                    "title": "1 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "7gVaK_mpsZIKMJzXyXrpU",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183085/yovlov3x1u30ilj0a8ia.jpg",
+                                    "index": 4
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "xZ4maKaU55Z71qFy0rJ-y",
+                                    "title": "1-3 Mal in den letzten 4 Wochen"
+                                  }
+                                },
+                                {
+                                  "questionId": "606466ba6f26ec0047d01c8c",
+                                  "answerOption": {
+                                    "id": "chmGdSHExWK4Imza3Bg7h",
+                                    "title": "Ja",
+                                    "color": "success"
+                                  }
+                                },
+                                {
+                                  "questionId": "606470836f26ec0047d01c93",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                },
+                                {
+                                  "questionId": "606470b66f26ec0047d01c94",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                }
+                              ],
+                              "finishedAt": "2021-03-31T14:31:57.151Z"
+                            }
+                          ],
+                          "id": "606482826df321004815b6b2"
+                        },
+                        {
+                          "firstName": "Erika",
+                          "lastName": "Musterfrau",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "606489ac6df321004815b6b3",
+                          "email": "e.musterfrau@example.com",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-03-31T14:39:49.894Z",
+                              "answers": [
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "Y0dWDEhknxvlnu7LbZmAn",
+                                    "title": "2 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "DScAxvVP2KIp3FWRUgdJC",
+                                    "title": "Dazwischen",
+                                    "imageURL": "",
+                                    "index": 5
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "AyfZbeWQRNSPaTvj_IVqt",
+                                    "title": "1 Mal pro Tag"
+                                  }
+                                },
+                                {
+                                  "questionId": "606466ba6f26ec0047d01c8c",
+                                  "answerOption": {
+                                    "id": "fCXvf6_7UOP3rpqFIiQkL",
+                                    "title": "Nein"
+                                  }
+                                },
+                                {
+                                  "questionId": "606470836f26ec0047d01c93",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                },
+                                {
+                                  "questionId": "606470b66f26ec0047d01c94",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                }
+                              ],
+                              "finishedAt": "2021-03-31T14:43:33.660Z"
+                            }
+                          ],
+                          "id": "606489ac6df321004815b6b3"
+                        },
+                        {
+                          "firstName": "Max",
+                          "lastName": "Mustermann",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [
+                            "omnivor"
+                          ],
+                          "screeningStatus": "Accept",
+                          "_id": "606eb6ff4e13420047e71d99",
+                          "email": "tweety090596@yahoo.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-04-08T07:56:07.037Z",
+                              "answers": [
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "ojSMBON8HieYHKcQ7LdHn",
+                                    "title": "2 - 4 Mal pro Woche",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "7gVaK_mpsZIKMJzXyXrpU",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183085/yovlov3x1u30ilj0a8ia.jpg",
+                                    "index": 4
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "xZ4maKaU55Z71qFy0rJ-y",
+                                    "title": "1-3 Mal in den letzten 4 Wochen"
+                                  }
+                                },
+                                {
+                                  "questionId": "606466ba6f26ec0047d01c8c",
+                                  "answerOption": {
+                                    "id": "chmGdSHExWK4Imza3Bg7h",
+                                    "title": "Ja",
+                                    "color": "success"
+                                  }
+                                },
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                },
+                                {
+                                  "questionId": "606eb56b4e13420047e71d97",
+                                  "answerOption": {
+                                    "id": "W0j2CYuz4-kYlqGafqDt6",
+                                    "title": "Ja",
+                                    "color": "success"
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb6b24e13420047e71d98",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                }
+                              ],
+                              "finishedAt": "2021-04-08T07:58:47.404Z"
+                            }
+                          ],
+                          "id": "606eb6ff4e13420047e71d99"
+                        },
+                        {
+                          "firstName": "testuser",
+                          "lastName": "testuser",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "6073198d18448900475ec0eb",
+                          "email": "test@abc.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-04-11T15:45:30.342Z",
+                              "answers": [
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "uobtBBRHJVB78J3heJzSU",
+                                    "title": "1 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "LtplWXub8I-yGXj2oCUZh",
+                                    "title": "Mehr",
+                                    "imageURL": "",
+                                    "index": 7
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "AyfZbeWQRNSPaTvj_IVqt",
+                                    "title": "1 Mal pro Tag"
+                                  }
+                                },
+                                {
+                                  "questionId": "606466ba6f26ec0047d01c8c",
+                                  "answerOption": {
+                                    "id": "fCXvf6_7UOP3rpqFIiQkL",
+                                    "title": "Nein"
+                                  }
+                                },
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                },
+                                {
+                                  "questionId": "606eb56b4e13420047e71d97",
+                                  "answerOption": {
+                                    "id": "pGEMDRPjBfvoJ2qPqVwWN",
+                                    "title": "Nein",
+                                    "color": "danger"
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb6b24e13420047e71d98",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                }
+                              ],
+                              "finishedAt": "2021-04-11T15:45:52.228Z"
+                            }
+                          ],
+                          "id": "6073198d18448900475ec0eb"
+                        },
+                        {
+                          "firstName": "Test",
+                          "lastName": "Tester",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [
+                            "omnivor"
+                          ],
+                          "screeningStatus": "Accept",
+                          "_id": "60782257da37b500477d5dcc",
+                          "email": "test.test@gmail.com",
+                          "iterations": [
+                            {
+                              "pausedAt": [
+                                4
+                              ],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-04-15T11:30:14.777Z",
+                              "answers": [
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": {
+                                    "id": "0djX4fdwDAyjdFYMhfcvX",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781799da37b500477d5dc5",
+                                  "answerOption": {
+                                    "id": "4tg_R1bjHETmZMcYxsz8U",
+                                    "title": "2 - 4 Mal pro Woche",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a8dda37b500477d5dc8",
+                                  "answerOption": {
+                                    "id": "nIgc86sSESsvREn7rxDKE",
+                                    "title": "Weniger",
+                                    "imageURL": "",
+                                    "index": 1
+                                  }
+                                },
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "tJHAbvcy0JWqHRroCheSH",
+                                    "title": "1-3 Mal in den letzten 4 Wochen",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "7gVaK_mpsZIKMJzXyXrpU",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183085/yovlov3x1u30ilj0a8ia.jpg",
+                                    "index": 4
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb6b24e13420047e71d98",
+                                  "answerOption": {
+                                    "id": "Tw4YrOQoyYjo6k2ColtXg",
+                                    "title": "1 - 3 Mal in den letzten 4 Wochen",
+                                    "color": "dark"
+                                  }
+                                }
+                              ]
+                            }
+                          ],
+                          "id": "60782257da37b500477d5dcc"
+                        },
+                        {
+                          "firstName": "Ich",
+                          "lastName": "Ich",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "6078245bda37b500477d5dcd",
+                          "email": "ich@bins.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [
+                                "60781ca2da37b500477d5dcb"
+                              ],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-04-15T11:33:29.324Z",
+                              "answers": [
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": {
+                                    "id": "0djX4fdwDAyjdFYMhfcvX",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781799da37b500477d5dc5",
+                                  "answerOption": {
+                                    "id": "4tg_R1bjHETmZMcYxsz8U",
+                                    "title": "2 - 4 Mal pro Woche",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a8dda37b500477d5dc8",
+                                  "answerOption": {
+                                    "id": "nIgc86sSESsvREn7rxDKE",
+                                    "title": "Weniger",
+                                    "imageURL": "",
+                                    "index": 1
+                                  }
+                                },
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "n3J3B8bZrm6flDNcLkQTB",
+                                    "title": "1 Mal pro Woche",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "7gVaK_mpsZIKMJzXyXrpU",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183085/yovlov3x1u30ilj0a8ia.jpg",
+                                    "index": 4
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb6b24e13420047e71d98",
+                                  "answerOption": {
+                                    "id": "Tw4YrOQoyYjo6k2ColtXg",
+                                    "title": "1 - 3 Mal in den letzten 4 Wochen",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781335da37b500477d5dc4",
+                                  "answerOption": {
+                                    "id": "3X-goHtxko6yM6KlXO4UD",
+                                    "title": "Dazwischen",
+                                    "imageURL": "",
+                                    "index": 3
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "69djRm9tNoV1h_UB73hDm",
+                                    "title": "Nie in den letzten 4 Wochen ",
+                                    "skip": [
+                                      "60781ca2da37b500477d5dcb"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "questionId": "60781ba5da37b500477d5dc9",
+                                  "answerOption": {
+                                    "id": "OynzXv3D24Osvr3kHgGGz",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781bf3da37b500477d5dca",
+                                  "answerOption": [
+                                    {
+                                      "id": "zwlEyZGPLhcGvjEZq66U5",
+                                      "title": "",
+                                      "hasNumberInput": false,
+                                      "answer": "Suppe"
+                                    },
+                                    {
+                                      "id": "M_iXHKPmWDliKw3DceINt",
+                                      "title": "",
+                                      "hasNumberInput": false
+                                    },
+                                    {
+                                      "id": "bxx-MqsGTy2oq2BAlLGyj",
+                                      "title": "",
+                                      "hasNumberInput": false
+                                    },
+                                    {
+                                      "id": "4HJRIjLq6Ex-muUvm9-JF",
+                                      "title": "",
+                                      "hasNumberInput": false
+                                    },
+                                    {
+                                      "id": "dDzPrUEb0gNbN5wwnu_GE",
+                                      "title": "",
+                                      "hasNumberInput": false
+                                    }
+                                  ]
+                                },
+                                {
+                                  "questionId": "606466ba6f26ec0047d01c8c",
+                                  "answerOption": {
+                                    "id": "chmGdSHExWK4Imza3Bg7h",
+                                    "title": "Ja",
+                                    "color": "success"
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb56b4e13420047e71d97",
+                                  "answerOption": {
+                                    "id": "W0j2CYuz4-kYlqGafqDt6",
+                                    "title": "Ja",
+                                    "color": "success"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a56da37b500477d5dc6",
+                                  "answerOption": {
+                                    "id": "5QDX7vQdRSXHiRAIddhpQ",
+                                    "title": "Omnivore"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a58da37b500477d5dc7",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                }
+                              ],
+                              "finishedAt": "2021-04-15T11:35:47.271Z"
+                            }
+                          ],
+                          "id": "6078245bda37b500477d5dcd"
+                        },
+                        {
+                          "firstName": "Testnutzer ",
+                          "lastName": "Interview",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "6078993c6e3ebe00474bcaf4",
+                          "email": "test@interview.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [
+                                6,
+                                9
+                              ],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [
+                                "6060e3b8934cf30048c10efb"
+                              ],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-04-15T21:49:22.187Z",
+                              "answers": [
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": {
+                                    "id": "0djX4fdwDAyjdFYMhfcvX",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781799da37b500477d5dc5",
+                                  "answerOption": {
+                                    "id": "Kvju5JkOomcO63ryU4pNm",
+                                    "title": "1 - 3 Mal in den letzten 4 Wochen",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a8dda37b500477d5dc8",
+                                  "answerOption": {
+                                    "id": "3Zy-WhABdlNG8i09cfOfD",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485177/o8ugat3lqmunkftyau43.jpg",
+                                    "index": 4
+                                  }
+                                },
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "LGwSuvelSrQ_4Twt8IT0s",
+                                    "title": "nie in den letzten 4 Wochen",
+                                    "color": "primary",
+                                    "skip": [
+                                      "6060e3b8934cf30048c10efb"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb6b24e13420047e71d98",
+                                  "answerOption": {
+                                    "id": "2Mmecb_kYjKcqAiXgwu0S",
+                                    "title": "1 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781335da37b500477d5dc4",
+                                  "answerOption": {
+                                    "id": "nEWFNlvVSrpZpM9OZD33q",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485408/aqoybfo2kb5tfqzkbxkl.jpg",
+                                    "index": 4
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "XMvrNp4latWK8-tLPWMz_",
+                                    "title": "1 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                }
+                              ]
+                            }
+                          ],
+                          "id": "6078993c6e3ebe00474bcaf4"
+                        },
+                        {
+                          "firstName": "Inter",
+                          "lastName": "View",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "6078b5e29f53db0047bab5b2",
+                          "email": "fokusgruppe@interview.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-04-16T07:56:46.798Z",
+                              "answers": [
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": {
+                                    "id": "0djX4fdwDAyjdFYMhfcvX",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781799da37b500477d5dc5",
+                                  "answerOption": {
+                                    "id": "2UYFee1yjG5Z05__IxuHv",
+                                    "title": "1 Mal pro Woche",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a8dda37b500477d5dc8",
+                                  "answerOption": {
+                                    "id": "3Zy-WhABdlNG8i09cfOfD",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485177/o8ugat3lqmunkftyau43.jpg",
+                                    "index": 4
+                                  }
+                                }
+                              ]
+                            }
+                          ],
+                          "id": "6078b5e29f53db0047bab5b2"
+                        },
+                        {
+                          "firstName": "Sebastian",
+                          "lastName": "Gimpfl",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "60793c3085ba86004750db42",
+                          "email": "sebastian_gimpfl@gmx.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [
+                                14
+                              ],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [
+                                "60781a8dda37b500477d5dc8",
+                                "6060e3b8934cf30048c10efb",
+                                "60781335da37b500477d5dc4",
+                                "60781ca2da37b500477d5dcb"
+                              ],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-04-16T07:28:22.104Z",
+                              "answers": [
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": {
+                                    "id": "0djX4fdwDAyjdFYMhfcvX",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781799da37b500477d5dc5",
+                                  "answerOption": {
+                                    "id": "jLZCxGt-nu5xBnKa5KN9-",
+                                    "title": "Nie in den letzten 4 Wochen",
+                                    "skip": [
+                                      "60781a8dda37b500477d5dc8"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "LGwSuvelSrQ_4Twt8IT0s",
+                                    "title": "nie in den letzten 4 Wochen",
+                                    "color": "primary",
+                                    "skip": [
+                                      "6060e3b8934cf30048c10efb"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb6b24e13420047e71d98",
+                                  "answerOption": {
+                                    "id": "uMyazwN_phFFK_l6M_zJ2",
+                                    "title": "Nie in den letzten 4 Wochen",
+                                    "color": "primary",
+                                    "skip": [
+                                      "60781335da37b500477d5dc4"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "69djRm9tNoV1h_UB73hDm",
+                                    "title": "Nie in den letzten 4 Wochen ",
+                                    "skip": [
+                                      "60781ca2da37b500477d5dcb"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "questionId": "60781ba5da37b500477d5dc9",
+                                  "answerOption": {
+                                    "id": "OynzXv3D24Osvr3kHgGGz",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781bf3da37b500477d5dca",
+                                  "answerOption": [
+                                    {
+                                      "id": "zwlEyZGPLhcGvjEZq66U5",
+                                      "title": "",
+                                      "hasNumberInput": false,
+                                      "answer": "asdsa"
+                                    },
+                                    {
+                                      "id": "M_iXHKPmWDliKw3DceINt",
+                                      "title": "",
+                                      "hasNumberInput": false
+                                    },
+                                    {
+                                      "id": "bxx-MqsGTy2oq2BAlLGyj",
+                                      "title": "",
+                                      "hasNumberInput": false
+                                    },
+                                    {
+                                      "id": "4HJRIjLq6Ex-muUvm9-JF",
+                                      "title": "",
+                                      "hasNumberInput": false
+                                    },
+                                    {
+                                      "id": "dDzPrUEb0gNbN5wwnu_GE",
+                                      "title": "",
+                                      "hasNumberInput": false
+                                    }
+                                  ]
+                                },
+                                {
+                                  "questionId": "606466ba6f26ec0047d01c8c",
+                                  "answerOption": {
+                                    "id": "chmGdSHExWK4Imza3Bg7h",
+                                    "title": "Ja",
+                                    "color": "success"
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb56b4e13420047e71d97",
+                                  "answerOption": {
+                                    "id": "W0j2CYuz4-kYlqGafqDt6",
+                                    "title": "Ja",
+                                    "color": "success"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a56da37b500477d5dc6",
+                                  "answerOption": {
+                                    "id": "iCsd5tPysEQq6jsA1qlpN",
+                                    "title": "vegan",
+                                    "color": "primary"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a58da37b500477d5dc7",
+                                  "answerOption": {
+                                    "id": "q937NcELBk28MUtgXGrTk",
+                                    "title": "Nein",
+                                    "color": "danger"
+                                  }
+                                }
+                              ],
+                              "finishedAt": "2021-04-16T07:28:20.109Z"
+                            }
+                          ],
+                          "id": "60793c3085ba86004750db42"
+                        },
+                        {
+                          "firstName": "Hi",
+                          "lastName": "Bye",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [
+                            "über 18 Jahre alt",
+                            "doof",
+                            "omnivor"
+                          ],
+                          "screeningStatus": "Accept",
+                          "_id": "60794f0785ba86004750db44",
+                          "email": "hallo@xn--tschss-6ya.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-04-16T08:47:35.725Z",
+                              "answers": []
+                            }
+                          ],
+                          "id": "60794f0785ba86004750db44"
+                        },
+                        {
+                          "firstName": "abc",
+                          "lastName": "abc",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "608450f7703fcd004709cfd5",
+                          "email": "u14@web.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [
+                                1
+                              ],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [
+                                "60781bf3da37b500477d5dca"
+                              ],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-04-24T17:11:04.807Z",
+                              "answers": [
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": {
+                                    "id": "0djX4fdwDAyjdFYMhfcvX",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781799da37b500477d5dc5",
+                                  "answerOption": {
+                                    "id": "2UYFee1yjG5Z05__IxuHv",
+                                    "title": "1 Mal pro Woche",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a8dda37b500477d5dc8",
+                                  "answerOption": {
+                                    "id": "3Zy-WhABdlNG8i09cfOfD",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485177/o8ugat3lqmunkftyau43.jpg",
+                                    "index": 4
+                                  }
+                                },
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "tJHAbvcy0JWqHRroCheSH",
+                                    "title": "1-3 Mal in den letzten 4 Wochen",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "6OCJITineltMZfQPJ-D8j",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183090/apfo8ziyur2zwd63tgme.jpg",
+                                    "index": 6
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb6b24e13420047e71d98",
+                                  "answerOption": {
+                                    "id": "8-PZ1TrkOwGQupAucd2RC",
+                                    "title": "2 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781335da37b500477d5dc4",
+                                  "answerOption": {
+                                    "id": "nEWFNlvVSrpZpM9OZD33q",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485408/aqoybfo2kb5tfqzkbxkl.jpg",
+                                    "index": 4
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "AyfZbeWQRNSPaTvj_IVqt",
+                                    "title": "5 - 6 Mal pro Woche",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781ca2da37b500477d5dcb",
+                                  "answerOption": [
+                                    {
+                                      "id": "g15MsdnkndqbW91wcn5lU",
+                                      "title": "mg",
+                                      "hasNumberInput": false,
+                                      "numberInputTitle": "mg"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "questionId": "60781ba5da37b500477d5dc9",
+                                  "answerOption": {
+                                    "id": "n9CtSm4yRuf2Cb6u33ZRU",
+                                    "title": "Nein",
+                                    "skip": [
+                                      "60781bf3da37b500477d5dca"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "questionId": "606466ba6f26ec0047d01c8c",
+                                  "answerOption": {
+                                    "id": "fCXvf6_7UOP3rpqFIiQkL",
+                                    "title": "Nein"
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb56b4e13420047e71d97",
+                                  "answerOption": {
+                                    "id": "W0j2CYuz4-kYlqGafqDt6",
+                                    "title": "Ja",
+                                    "color": "success"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a56da37b500477d5dc6",
+                                  "answerOption": {
+                                    "id": "eZ6jNmA_hFH2CaccOeccq",
+                                    "title": "vegetarisch"
+                                  }
+                                },
+                                {
+                                  "questionId": "60844fd3703fcd004709cfd4",
+                                  "answerOption": {
+                                    "id": "HXdsrxJv8lmREiGRKj6P6",
+                                    "title": "2"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a58da37b500477d5dc7",
+                                  "answerOption": {
+                                    "id": "q937NcELBk28MUtgXGrTk",
+                                    "title": "Nein",
+                                    "color": "danger"
+                                  }
+                                },
+                                {
+                                  "questionId": "607824e3da37b500477d5dce",
+                                  "answerOption": [
+                                    {
+                                      "id": "LZHU-BKZDFdJ73hHxEihl",
+                                      "title": "Liter pro Tag",
+                                      "hasNumberInput": false,
+                                      "answer": "1,5"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "questionId": "607946cd85ba86004750db43",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                }
+                              ],
+                              "finishedAt": "2021-04-24T17:14:12.765Z"
+                            }
+                          ],
+                          "id": "608450f7703fcd004709cfd5"
+                        },
+                        {
+                          "firstName": "u@1.de",
+                          "lastName": "u@1.de",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "6089ac50f4638e0047af0d54",
+                          "email": "u@1.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-05-09T16:01:41.241Z",
+                              "answers": [
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": {
+                                    "id": "0djX4fdwDAyjdFYMhfcvX",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781799da37b500477d5dc5",
+                                  "answerOption": {
+                                    "id": "FM3IX1j69Y3QextPrI3rc",
+                                    "title": "1 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a8dda37b500477d5dc8",
+                                  "answerOption": {
+                                    "id": "dMk55KGwyKU44nZXR7IO_",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485177/qbhou0xcejyqzbkleg5z.jpg",
+                                    "index": 2
+                                  }
+                                },
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "uobtBBRHJVB78J3heJzSU",
+                                    "title": "1 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "EvXlrFznJwcrUq5L8ycoe",
+                                    "title": "Dazwischen",
+                                    "imageURL": "",
+                                    "index": 3
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb6b24e13420047e71d98",
+                                  "answerOption": {
+                                    "id": "2Mmecb_kYjKcqAiXgwu0S",
+                                    "title": "1 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781335da37b500477d5dc4",
+                                  "answerOption": {
+                                    "id": "3X-goHtxko6yM6KlXO4UD",
+                                    "title": "Dazwischen",
+                                    "imageURL": "",
+                                    "index": 3
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "AyfZbeWQRNSPaTvj_IVqt",
+                                    "title": "5 - 6 Mal pro Woche",
+                                    "color": "dark"
+                                  }
+                                }
+                              ]
+                            }
+                          ],
+                          "id": "6089ac50f4638e0047af0d54"
+                        },
+                        {
+                          "firstName": "ba",
+                          "lastName": "bla",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "6096bc258cba670047db440f",
+                          "email": "bla@web.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-05-08T16:28:33.900Z",
+                              "answers": [
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": {
+                                    "id": "0djX4fdwDAyjdFYMhfcvX",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781799da37b500477d5dc5",
+                                  "answerOption": {
+                                    "id": "Kvju5JkOomcO63ryU4pNm",
+                                    "title": "1 - 3 Mal in den letzten 4 Wochen",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a8dda37b500477d5dc8",
+                                  "answerOption": {
+                                    "id": "dMk55KGwyKU44nZXR7IO_",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485177/qbhou0xcejyqzbkleg5z.jpg",
+                                    "index": 2
+                                  }
+                                },
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "uobtBBRHJVB78J3heJzSU",
+                                    "title": "1 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "4vhEHyymnmMPyaDqmzpmo",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1617183089/sotax8jtnnqyvv0o1w5a.jpg",
+                                    "index": 2
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb6b24e13420047e71d98",
+                                  "answerOption": {
+                                    "id": "8-PZ1TrkOwGQupAucd2RC",
+                                    "title": "2 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781335da37b500477d5dc4",
+                                  "answerOption": {
+                                    "id": "PMEpMQ_Lr2A8sFr8AShJ2",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485408/lrwtyidulsmvv5w2w4uu.jpg",
+                                    "index": 2
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "AyfZbeWQRNSPaTvj_IVqt",
+                                    "title": "5 - 6 Mal pro Woche",
+                                    "color": "dark"
+                                  }
+                                }
+                              ]
+                            }
+                          ],
+                          "id": "6096bc258cba670047db440f"
+                        },
+                        {
+                          "firstName": "Jon",
+                          "lastName": "Doe",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "60a03d4a35d0bb0048ee571b",
+                          "email": "j.doe@example.com",
+                          "iterations": [
+                            {
+                              "pausedAt": [
+                                1
+                              ],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [
+                                "60781bf3da37b500477d5dca"
+                              ],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-05-15T21:31:07.538Z",
+                              "answers": [
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": {
+                                    "id": "0djX4fdwDAyjdFYMhfcvX",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781799da37b500477d5dc5",
+                                  "answerOption": {
+                                    "id": "FM3IX1j69Y3QextPrI3rc",
+                                    "title": "1 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a8dda37b500477d5dc8",
+                                  "answerOption": {
+                                    "id": "dMk55KGwyKU44nZXR7IO_",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485177/qbhou0xcejyqzbkleg5z.jpg",
+                                    "index": 2
+                                  }
+                                },
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "Y0dWDEhknxvlnu7LbZmAn",
+                                    "title": "2 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "6060e3b8934cf30048c10efb",
+                                  "answerOption": {
+                                    "id": "EvXlrFznJwcrUq5L8ycoe",
+                                    "title": "Dazwischen",
+                                    "imageURL": "",
+                                    "index": 3
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb6b24e13420047e71d98",
+                                  "answerOption": {
+                                    "id": "8-PZ1TrkOwGQupAucd2RC",
+                                    "title": "2 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781335da37b500477d5dc4",
+                                  "answerOption": {
+                                    "id": "PMEpMQ_Lr2A8sFr8AShJ2",
+                                    "title": "",
+                                    "imageURL": "https://res.cloudinary.com/hi-ffq/image/upload/v1618485408/lrwtyidulsmvv5w2w4uu.jpg",
+                                    "index": 2
+                                  }
+                                },
+                                {
+                                  "questionId": "606421486f26ec0047d01c89",
+                                  "answerOption": {
+                                    "id": "AyfZbeWQRNSPaTvj_IVqt",
+                                    "title": "5 - 6 Mal pro Woche",
+                                    "color": "dark"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781ca2da37b500477d5dcb",
+                                  "answerOption": [
+                                    {
+                                      "id": "g15MsdnkndqbW91wcn5lU",
+                                      "title": "mg",
+                                      "hasNumberInput": false,
+                                      "numberInputTitle": "mg"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "questionId": "60781ba5da37b500477d5dc9",
+                                  "answerOption": {
+                                    "id": "n9CtSm4yRuf2Cb6u33ZRU",
+                                    "title": "Nein",
+                                    "skip": [
+                                      "60781bf3da37b500477d5dca"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "questionId": "606466ba6f26ec0047d01c8c",
+                                  "answerOption": {
+                                    "id": "fCXvf6_7UOP3rpqFIiQkL",
+                                    "title": "Nein"
+                                  }
+                                },
+                                {
+                                  "questionId": "606eb56b4e13420047e71d97",
+                                  "answerOption": {
+                                    "id": "pGEMDRPjBfvoJ2qPqVwWN",
+                                    "title": "Nein",
+                                    "color": "danger"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a56da37b500477d5dc6",
+                                  "answerOption": {
+                                    "id": "eZ6jNmA_hFH2CaccOeccq",
+                                    "title": "vegetarisch"
+                                  }
+                                },
+                                {
+                                  "questionId": "60844fd3703fcd004709cfd4",
+                                  "answerOption": {
+                                    "id": "HXdsrxJv8lmREiGRKj6P6",
+                                    "title": "2"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781a58da37b500477d5dc7",
+                                  "answerOption": {
+                                    "id": "q937NcELBk28MUtgXGrTk",
+                                    "title": "Nein",
+                                    "color": "danger"
+                                  }
+                                },
+                                {
+                                  "questionId": "607824e3da37b500477d5dce",
+                                  "answerOption": [
+                                    {
+                                      "id": "LZHU-BKZDFdJ73hHxEihl",
+                                      "title": "Liter pro Tag",
+                                      "hasNumberInput": false,
+                                      "answer": "1,5"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "questionId": "607946cd85ba86004750db43",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                },
+                                {
+                                  "questionId": "608452f0703fcd004709cfd6",
+                                  "answerOption": [
+                                    {
+                                      "answer": "",
+                                      "hasNumberInput": false,
+                                      "id": "null",
+                                      "title": ""
+                                    }
+                                  ]
+                                }
+                              ],
+                              "finishedAt": "2021-05-15T21:31:39.001Z"
+                            }
+                          ],
+                          "id": "60a03d4a35d0bb0048ee571b"
+                        },
+                        {
+                          "firstName": "john",
+                          "lastName": "doe",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "60a3f8aba3cb950047de7eb6",
+                          "email": "123@abc.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [
+                                "60781a8dda37b500477d5dc8"
+                              ],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-05-18T19:04:30.807Z",
+                              "answers": [
+                                {
+                                  "questionId": "60648c806df321004815b6b4",
+                                  "answerOption": {
+                                    "id": "0djX4fdwDAyjdFYMhfcvX",
+                                    "title": "Ja"
+                                  }
+                                },
+                                {
+                                  "questionId": "60781799da37b500477d5dc5",
+                                  "answerOption": {
+                                    "id": "jLZCxGt-nu5xBnKa5KN9-",
+                                    "title": "Nie in den letzten 4 Wochen",
+                                    "skip": [
+                                      "60781a8dda37b500477d5dc8"
+                                    ]
+                                  }
+                                },
+                                {
+                                  "questionId": "6020b6527f81aa0047f81c7c",
+                                  "answerOption": {
+                                    "id": "uobtBBRHJVB78J3heJzSU",
+                                    "title": "1 Mal pro Tag",
+                                    "color": "dark"
+                                  }
+                                }
+                              ]
+                            }
+                          ],
+                          "id": "60a3f8aba3cb950047de7eb6"
+                        }
+                      ]
+                    }
+                  }
                 },
                 "examples": {
-                  "New User Bob Fellow": {
+                  "example-1": {
                     "value": {
-                      "id": 12,
-                      "firstName": "Bob",
-                      "lastName": "Fellow",
-                      "email": "bob.fellow@gmail.com",
-                      "dateOfBirth": "1996-08-24",
-                      "emailVerified": false,
-                      "createDate": "2020-11-18"
+                      "users": [
+                        {
+                          "firstName": "string",
+                          "lastName": "string",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [
+                            {}
+                          ],
+                          "screeningStatus": "string",
+                          "_id": "string",
+                          "email": "string",
+                          "iterations": [
+                            {
+                              "pausedAt": [
+                                {}
+                              ],
+                              "stoppedAtIndex": 0,
+                              "questionsToSkip": [
+                                {}
+                              ],
+                              "id": "string",
+                              "answers": [
+                                {
+                                  "questionId": "string",
+                                  "answerOption": {
+                                    "id": "string",
+                                    "title": "string",
+                                    "skip": [
+                                      {}
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          ],
+                          "id": "string"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "uniqueItems": true,
+                      "minItems": 1,
+                      "items": {
+                        "required": [
+                          "firstName",
+                          "lastName",
+                          "hasAcceptedConsentForm",
+                          "screeningStatus",
+                          "_id",
+                          "email",
+                          "id"
+                        ],
+                        "properties": {
+                          "firstName": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "lastName": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "hasAcceptedConsentForm": {
+                            "type": "boolean"
+                          },
+                          "screeningData": {
+                            "type": "array",
+                            "items": {
+                              "required": [],
+                              "properties": {}
+                            }
+                          },
+                          "screeningStatus": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "_id": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "email": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "iterations": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 1,
+                            "items": {
+                              "required": [
+                                "stoppedAtIndex",
+                                "id",
+                                "startedAt"
+                              ],
+                              "properties": {
+                                "pausedAt": {
+                                  "type": "array",
+                                  "items": {
+                                    "required": [],
+                                    "properties": {}
+                                  }
+                                },
+                                "stoppedAtIndex": {
+                                  "type": "number"
+                                },
+                                "questionsToSkip": {
+                                  "type": "array",
+                                  "items": {
+                                    "required": [],
+                                    "properties": {}
+                                  }
+                                },
+                                "id": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "startedAt": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "answers": {
+                                  "type": "array",
+                                  "items": {
+                                    "required": [],
+                                    "properties": {}
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "users"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "users": [
+                        {
+                          "firstName": "john",
+                          "lastName": "doe",
+                          "hasAcceptedConsentForm": true,
+                          "screeningData": [],
+                          "screeningStatus": "Accept",
+                          "_id": "60a3f8aba3cb950047de7eb6",
+                          "email": "123@abc.de",
+                          "iterations": [
+                            {
+                              "pausedAt": [],
+                              "stoppedAtIndex": -1,
+                              "questionsToSkip": [],
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "startedAt": "2021-05-18T19:04:30.807Z",
+                              "answers": []
+                            }
+                          ],
+                          "id": "60a3f8aba3cb950047de7eb6"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "examples": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "detail": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "detail"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "title": "Users not found",
+                      "detail": "No user could be found."
                     }
                   }
                 }
               }
             }
           },
-          "400": {
-            "description": "Missing Required Information"
-          },
-          "409": {
-            "description": "Email Already Taken"
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "stringValue": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "kind": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "value": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "path": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "reason": {
+                          "type": "object",
+                          "properties": {},
+                          "required": []
+                        }
+                      },
+                      "required": [
+                        "stringValue",
+                        "kind",
+                        "value",
+                        "path",
+                        "reason"
+                      ]
+                    },
+                    "title": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "detail": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "title",
+                    "detail"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": {
+                        "stringValue": "\"123\"",
+                        "kind": "ObjectId",
+                        "value": "123",
+                        "path": "_id",
+                        "reason": {}
+                      },
+                      "title": "Internal error.",
+                      "detail": "Something went wrong."
+                    }
+                  }
+                }
+              }
+            }
           }
         },
+        "tags": [
+          "users"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": {
-                  "firstName": {
-                    "type": "string"
-                  },
-                  "lastName": {
-                    "type": "string"
-                  },
-                  "email": {
-                    "type": "string"
-                  },
-                  "dateOfBirth": {
-                    "type": "string",
-                    "format": "date"
-                  }
-                },
-                "required": [
-                  "firstName",
-                  "lastName",
-                  "email",
-                  "dateOfBirth"
-                ]
-              },
-              "examples": {
-                "Create User Bob Fellow": {
-                  "value": {
-                    "firstName": "Bob",
-                    "lastName": "Fellow",
-                    "email": "bob.fellow@gmail.com",
-                    "dateOfBirth": "1996-08-24"
-                  }
-                }
+                "properties": {}
               }
             }
-          },
-          "description": "Post the necessary fields for the API to create a new user."
-        },
-        "description": "Create a new user.",
-        "tags": [
-          "users"
-        ]
-      },
-      "get": {
-        "summary": "",
-        "operationId": "get-user",
-        "responses": {
-          "200": {
-            "description": "OK"
           }
         },
-        "tags": [
-          "users"
-        ]
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "60a3f8aba3cb950047de7eb4s"
+            },
+            "in": "query",
+            "name": "userId",
+            "description": "ID of specific user"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "jH1WTbBdbc0dH7eBFduXl"
+            },
+            "in": "query",
+            "name": "iterationId",
+            "description": "ID of specific iteration"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMjBiNjI4N2Y4MWFhMDA0N2Y4MWM3OSIsImlhdCI6MTYyMTM2NzM4NSwiZXhwIjoxNjIxNDUzNzg1fQ.J15ebmt6IG82Uxq6Yd8U9XOs0r56u8cT-le1Bk1WsyB"
+            },
+            "in": "header",
+            "name": "x-access-token",
+            "description": "JWT",
+            "required": true
+          }
+        ],
+        "description": "Retrieve information of users"
       },
       "parameters": []
     },
@@ -241,25 +2280,661 @@
         "summary": "",
         "operationId": "post-questionnaires",
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "questionnaires": {
+                      "type": "array",
+                      "uniqueItems": true,
+                      "minItems": 1,
+                      "items": {
+                        "required": [
+                          "name",
+                          "consentScript",
+                          "_id",
+                          "createdAt",
+                          "updatedAt",
+                          "__v"
+                        ],
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "consentScript": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "selectionCriteria": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 1,
+                            "items": {
+                              "required": [],
+                              "properties": {}
+                            }
+                          },
+                          "questions": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 1,
+                            "items": {
+                              "required": [],
+                              "properties": {}
+                            }
+                          },
+                          "_id": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "screeningRules": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 1,
+                            "items": {
+                              "required": [
+                                "id",
+                                "operator",
+                                "decision"
+                              ],
+                              "properties": {
+                                "criteria": {
+                                  "type": "array",
+                                  "uniqueItems": true,
+                                  "minItems": 1,
+                                  "items": {
+                                    "required": [],
+                                    "properties": {}
+                                  }
+                                },
+                                "id": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "operator": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "decision": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              }
+                            }
+                          },
+                          "iterations": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 1,
+                            "items": {
+                              "required": [
+                                "id",
+                                "start",
+                                "startLabel",
+                                "end",
+                                "endLabel"
+                              ],
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "start": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "startLabel": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "end": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "endLabel": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              }
+                            }
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "__v": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "questionnaires",
+                    "message"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "questionnaires": [
+                        {
+                          "name": "string",
+                          "consentScript": "string",
+                          "selectionCriteria": [
+                            {}
+                          ],
+                          "questions": [
+                            {}
+                          ],
+                          "_id": "string",
+                          "screeningRules": [
+                            {
+                              "criteria": [
+                                {}
+                              ],
+                              "id": "string",
+                              "operator": "string",
+                              "decision": "string"
+                            }
+                          ],
+                          "iterations": [
+                            {
+                              "id": "string",
+                              "start": "string",
+                              "startLabel": "string",
+                              "end": "string",
+                              "endLabel": "string"
+                            }
+                          ],
+                          "createdAt": "string",
+                          "updatedAt": "string",
+                          "__v": 0
+                        }
+                      ],
+                      "message": "Questionnaire created!"
+                    }
+                  }
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "questionnaires": [
+                        {
+                          "name": "string",
+                          "consentScript": "string",
+                          "selectionCriteria": [
+                            {}
+                          ],
+                          "questions": [
+                            {}
+                          ],
+                          "_id": "string",
+                          "screeningRules": [
+                            {
+                              "criteria": [
+                                {}
+                              ],
+                              "id": "string",
+                              "operator": "string",
+                              "decision": "string"
+                            }
+                          ],
+                          "iterations": [
+                            {
+                              "id": "string",
+                              "start": "string",
+                              "startLabel": "string",
+                              "end": "string",
+                              "endLabel": "string"
+                            }
+                          ],
+                          "createdAt": "string",
+                          "updatedAt": "string",
+                          "__v": 0
+                        }
+                      ],
+                      "message": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "message": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "message": "string"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
           "questionnaires"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMjBiNjI4N2Y4MWFhMDA0N2Y4MWM3OSIsImlhdCI6MTYyMTQ0NTU5NiwiZXhwIjoxNjIxNTMxOTk2fQ.ZDxV6fEU9sOSpNjqpcRzf56_yJJL6LgXzjpBKtZAodQ"
+            },
+            "in": "header",
+            "name": "x-access-token",
+            "description": "JWT",
+            "required": true
+          }
         ]
       },
       "get": {
         "summary": "",
         "operationId": "get-questionnaires",
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "questionnaires": {
+                      "type": "array",
+                      "uniqueItems": true,
+                      "minItems": 1,
+                      "items": {
+                        "required": [
+                          "name",
+                          "consentScript",
+                          "_id",
+                          "createdAt",
+                          "updatedAt",
+                          "__v"
+                        ],
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "consentScript": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "selectionCriteria": {
+                            "type": "array",
+                            "items": {
+                              "required": [],
+                              "properties": {}
+                            }
+                          },
+                          "questions": {
+                            "type": "array",
+                            "items": {
+                              "required": [],
+                              "properties": {}
+                            }
+                          },
+                          "_id": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "screeningRules": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 1,
+                            "items": {
+                              "required": [
+                                "id",
+                                "operator",
+                                "decision"
+                              ],
+                              "properties": {
+                                "criteria": {
+                                  "type": "array",
+                                  "items": {
+                                    "required": [],
+                                    "properties": {}
+                                  }
+                                },
+                                "id": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "operator": {
+                                  "type": "string"
+                                },
+                                "decision": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              }
+                            }
+                          },
+                          "iterations": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 1,
+                            "items": {
+                              "required": [
+                                "id",
+                                "start",
+                                "startLabel",
+                                "end",
+                                "endLabel"
+                              ],
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "start": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "startLabel": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "end": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "endLabel": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              }
+                            }
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "__v": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "questionnaires"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "questionnaires": [
+                        {
+                          "name": "Verzehrshäufigkeitsfragebogen",
+                          "consentScript": "Hiermit stimme ich der Speicherung meiner Antworten zu den Fragen im nun folgenden Fragebogen zu. \n",
+                          "selectionCriteria": [
+                            "Laktoseintolerant",
+                            "omnivor",
+                            "doof",
+                            "Schwanger",
+                            "Stillend",
+                            "über 18 Jahre alt"
+                          ],
+                          "questions": [
+                            "605a375e23c2b4004795d061",
+                            "60648c806df321004815b6b4",
+                            "60781799da37b500477d5dc5",
+                            "60781a8dda37b500477d5dc8",
+                            "6020b6527f81aa0047f81c7c",
+                            "6060e3b8934cf30048c10efb",
+                            "606eb6b24e13420047e71d98",
+                            "60781335da37b500477d5dc4",
+                            "6064699d6f26ec0047d01c8e",
+                            "606421486f26ec0047d01c89",
+                            "60781ca2da37b500477d5dcb",
+                            "60781ba5da37b500477d5dc9",
+                            "60781bf3da37b500477d5dca",
+                            "606466ba6f26ec0047d01c8c",
+                            "606eb56b4e13420047e71d97",
+                            "60781a56da37b500477d5dc6",
+                            "60844fd3703fcd004709cfd4",
+                            "60781a58da37b500477d5dc7",
+                            "607824e3da37b500477d5dce",
+                            "607946cd85ba86004750db43",
+                            "608452f0703fcd004709cfd6",
+                            "60a42e9424af7500483435b9"
+                          ],
+                          "_id": "6020b6507f81aa0047f81c7a",
+                          "screeningRules": [
+                            {
+                              "criteria": [
+                                "Laktoseintolerant"
+                              ],
+                              "id": "O1S0brfjKugHLbNBCl3tE",
+                              "operator": "",
+                              "decision": "Reject"
+                            },
+                            {
+                              "criteria": [
+                                "Schwanger"
+                              ],
+                              "id": "hA99z0fkAwRGNm0SIoCFN",
+                              "operator": "",
+                              "decision": "Reject"
+                            },
+                            {
+                              "criteria": [
+                                "über 18 Jahre alt"
+                              ],
+                              "id": "8go9t0tXN34EFeAiE1iR3",
+                              "operator": "",
+                              "decision": "Accept"
+                            }
+                          ],
+                          "iterations": [
+                            {
+                              "id": "rPwlcoKcpu2krpGzn_Tr4",
+                              "start": "2021-03-30T22:00:00.000Z",
+                              "startLabel": "31.03.21",
+                              "end": "2021-05-20T21:59:59.999Z",
+                              "endLabel": "20.05.21"
+                            },
+                            {
+                              "id": "jH1WTbBdbc0dH7eBFduXl",
+                              "start": "2021-06-14T22:00:00.000Z",
+                              "startLabel": "15.06.21",
+                              "end": "2021-06-30T21:59:59.999Z",
+                              "endLabel": "30.06.21"
+                            },
+                            {
+                              "id": "vVj53jzXV78XyFX-kCP-p",
+                              "start": "2021-07-14T22:00:00.000Z",
+                              "startLabel": "15.07.21",
+                              "end": "2021-07-30T21:59:59.999Z",
+                              "endLabel": "30.07.21"
+                            }
+                          ],
+                          "createdAt": "2021-02-08T03:56:00.072Z",
+                          "updatedAt": "2021-05-18T21:16:04.607Z",
+                          "__v": 291
+                        }
+                      ]
+                    }
+                  }
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "questionnaires": [
+                        {
+                          "name": "string",
+                          "consentScript": "string",
+                          "selectionCriteria": [
+                            {}
+                          ],
+                          "questions": [
+                            {}
+                          ],
+                          "_id": "string",
+                          "screeningRules": [
+                            {
+                              "criteria": [
+                                {}
+                              ],
+                              "id": "string",
+                              "operator": "string",
+                              "decision": "string"
+                            }
+                          ],
+                          "iterations": [
+                            {
+                              "id": "string",
+                              "start": "string",
+                              "startLabel": "string",
+                              "end": "string",
+                              "endLabel": "string"
+                            }
+                          ],
+                          "createdAt": "string",
+                          "updatedAt": "string",
+                          "__v": 0
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "detail"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "detail": "No questionnaire could be found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "detail": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "title",
+                    "detail"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": "",
+                      "title": "Internal error.",
+                      "detail": "Something went wrong."
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
           "questionnaires"
-        ]
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMjBiNjI4N2Y4MWFhMDA0N2Y4MWM3OSIsImlhdCI6MTYyMTQ0NTU5NiwiZXhwIjoxNjIxNTMxOTk2fQ.ZDxV6fEU9sOSpNjqpcRzf56_yJJL6LgXzjpBKtZAodQ"
+            },
+            "in": "header",
+            "name": "x-access-token",
+            "description": "JWT",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "6030b6507f81aa0047f81c7b"
+            },
+            "in": "query",
+            "name": "questionnaireId",
+            "description": "Questionnaire ID"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "iterations"
+            },
+            "in": "query",
+            "name": "fields",
+            "description": "Specified fields are returned. If no fields are specified, the entire questionnaire is returned"
+          }
+        ],
+        "description": "Request questionnaires or specific fields of a questionnaire"
       }
     },
     "/questionnaires/{questionnaireId}/questions": {
@@ -268,21 +2943,579 @@
         "tags": [
           "questionnaires"
         ],
-        "responses": {},
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "question": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "answerOptions": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "options": {
+                              "type": "object",
+                              "properties": {
+                                "left": {
+                                  "type": "array",
+                                  "uniqueItems": true,
+                                  "minItems": 1,
+                                  "items": {
+                                    "required": [
+                                      "id",
+                                      "title"
+                                    ],
+                                    "properties": {
+                                      "id": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      "title": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      }
+                                    }
+                                  }
+                                },
+                                "right": {
+                                  "type": "array",
+                                  "uniqueItems": true,
+                                  "minItems": 1,
+                                  "items": {
+                                    "required": [
+                                      "id",
+                                      "title"
+                                    ],
+                                    "properties": {
+                                      "id": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      "title": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "required": [
+                                "left",
+                                "right"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "options"
+                          ]
+                        },
+                        "title": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "subtitle1": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "subtitle2": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "help": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "__v": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "_id",
+                        "answerOptions",
+                        "title",
+                        "subtitle1",
+                        "subtitle2",
+                        "help",
+                        "createdAt",
+                        "updatedAt",
+                        "__v"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "question"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "question": {
+                        "_id": "string",
+                        "answerOptions": {
+                          "type": "string",
+                          "options": {
+                            "left": [
+                              {
+                                "id": "string",
+                                "title": "string"
+                              }
+                            ],
+                            "right": [
+                              {
+                                "id": "string",
+                                "title": "string"
+                              }
+                            ]
+                          }
+                        },
+                        "title": "string",
+                        "subtitle1": "string",
+                        "subtitle2": "string",
+                        "help": "string",
+                        "createdAt": "string",
+                        "updatedAt": "string",
+                        "__v": 0
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "message"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": "",
+                      "message": "No question could be found."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "operationId": "get-questionnaires-:questionnaireId-questions",
-        "description": ""
+        "description": "",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "6030b6507f81aa0047f81c7b"
+            },
+            "in": "query",
+            "name": "questionnaireId",
+            "description": "ID of questionnaire",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMjBiNjI4N2Y4MWFhMDA0N2Y4MWM3OSIsImlhdCI6MTYyMTQ0NTU5NiwiZXhwIjoxNjIxNTMxOTk2fQ.ZDxV6fEU9sOSpNjqpcRzf56_yJJL6LgXzjpBKtZAodQ"
+            },
+            "in": "header",
+            "name": "x-access-token",
+            "description": "JWT",
+            "required": true
+          }
+        ]
       },
       "post": {
         "summary": "",
         "operationId": "post-questionnaires-:questionnaireId-questions",
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "question": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "answerOptions": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "options": {
+                              "type": "object",
+                              "properties": {
+                                "left": {
+                                  "type": "array",
+                                  "uniqueItems": true,
+                                  "minItems": 1,
+                                  "items": {
+                                    "required": [
+                                      "id",
+                                      "title"
+                                    ],
+                                    "properties": {
+                                      "id": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      "title": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      }
+                                    }
+                                  }
+                                },
+                                "right": {
+                                  "type": "array",
+                                  "uniqueItems": true,
+                                  "minItems": 1,
+                                  "items": {
+                                    "required": [
+                                      "id",
+                                      "title"
+                                    ],
+                                    "properties": {
+                                      "id": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      "title": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "required": [
+                                "left",
+                                "right"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "options"
+                          ]
+                        },
+                        "title": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "subtitle1": {
+                          "type": "string"
+                        },
+                        "subtitle2": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "help": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "__v": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "_id",
+                        "answerOptions",
+                        "title",
+                        "subtitle1",
+                        "subtitle2",
+                        "help",
+                        "createdAt",
+                        "updatedAt",
+                        "__v"
+                      ]
+                    },
+                    "message": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "question",
+                    "message"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "question": {
+                        "_id": "ObjectId(\"604d3409b85c0e25af88249a\")",
+                        "answerOptions": {
+                          "type": "Frequency",
+                          "options": {
+                            "left": [
+                              {
+                                "id": "akAjc8RmnTmniegmgfHVm",
+                                "title": "Yes"
+                              }
+                            ],
+                            "right": [
+                              {
+                                "id": "Oyze3YHYQjpjbO2Aja1ju",
+                                "title": "No"
+                              }
+                            ]
+                          }
+                        },
+                        "title": "Have you consumed any other food items in the last 4 weeks that were not included in the questionnaire?\t",
+                        "subtitle1": "",
+                        "subtitle2": "Please enter your answer in the text box below. If you do not want to provide any information, you can skip the question by clicking \"continue\"\t",
+                        "help": "Please enter your answer using the keyboard of your computer or tablet. Please enter your answer using the keyboard on your computer or tablet. If you name several foods, please separate the foods with a comma.",
+                        "createdAt": "ISODate(\"2021-03-13T21:52:09.285Z\")",
+                        "updatedAt": "ISODate(\"2021-04-10T12:50:42.458Z\")",
+                        "__v": 0
+                      },
+                      "message": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "question": {
+                        "_id": "ObjectId(\"604d3409b85c0e25af88249a\")",
+                        "answerOptions": {
+                          "type": "Frequency",
+                          "options": {
+                            "left": [
+                              {
+                                "id": "akAjc8RmnTmniegmgfHVm",
+                                "title": "Yes"
+                              }
+                            ],
+                            "right": [
+                              {
+                                "id": "Oyze3YHYQjpjbO2Aja1ju",
+                                "title": "No"
+                              }
+                            ]
+                          }
+                        },
+                        "title": "Have you consumed any other food items in the last 4 weeks that were not included in the questionnaire?\t",
+                        "subtitle1": "",
+                        "subtitle2": "Please enter your answer in the text box below. If you do not want to provide any information, you can skip the question by clicking \"continue\"\t",
+                        "help": "Please enter your answer using the keyboard of your computer or tablet. Please enter your answer using the keyboard on your computer or tablet. If you name several foods, please separate the foods with a comma.",
+                        "createdAt": "ISODate(\"2021-03-13T21:52:09.285Z\")",
+                        "updatedAt": "ISODate(\"2021-04-10T12:50:42.458Z\")",
+                        "__v": 0
+                      },
+                      "message": "string"
+                    }
+                  },
+                  "example-2": {
+                    "value": {
+                      "question": {
+                        "_id": "string",
+                        "answerOptions": {
+                          "type": "string",
+                          "options": {
+                            "left": [
+                              {
+                                "id": "string",
+                                "title": "string"
+                              }
+                            ],
+                            "right": [
+                              {
+                                "id": "string",
+                                "title": "string"
+                              }
+                            ]
+                          }
+                        },
+                        "title": "string",
+                        "subtitle1": "string",
+                        "subtitle2": "string",
+                        "help": "string",
+                        "createdAt": "string",
+                        "updatedAt": "string",
+                        "__v": 0
+                      },
+                      "message": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "message"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": "",
+                      "message": "Question not created!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "message"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": "",
+                      "message": "Questionnaire not found!"
+                    }
+                  }
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "error": "string",
+                      "message": "string"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
           "questionnaires"
-        ]
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMjBiNjI4N2Y4MWFhMDA0N2Y4MWM3OSIsImlhdCI6MTYyMTQ0NTU5NiwiZXhwIjoxNjIxNTMxOTk2fQ.ZDxV6fEU9sOSpNjqpcRzf56_yJJL6LgXzjpBKtZAodQ"
+            },
+            "in": "header",
+            "name": "x-access-token",
+            "description": "JWT",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "6030b6507f81aa0047f81c7b"
+            },
+            "in": "query",
+            "name": "questionnaireId",
+            "description": "ID of questionnaire",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "description": "",
+                "type": "object",
+                "x-examples": {
+                  "example-1": {
+                    "index": 5
+                  }
+                },
+                "properties": {
+                  "index": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          },
+          "description": "Index of the question in questionnaire"
+        }
       },
       "parameters": [
         {
@@ -460,6 +3693,14 @@
                       "message": "Nutzer erfolgreich registriert."
                     }
                   }
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "success": true,
+                      "message": "Nutzer erfolgreich registriert."
+                    }
+                  }
                 }
               }
             }
@@ -488,6 +3729,14 @@
                   "required": [
                     "message"
                   ]
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "message": "Role not found",
+                      "error": "string"
+                    }
+                  }
                 }
               }
             }
@@ -499,28 +3748,31 @@
                 "schema": {
                   "description": "",
                   "type": "object",
-                  "x-examples": {
-                    "example-1": {
-                      "title": "User was not saved."
-                    }
-                  },
                   "properties": {
+                    "error": {
+                      "type": "string"
+                    },
                     "title": {
                       "type": "string",
                       "minLength": 1
-                    },
-                    "error": {
-                      "type": "string"
                     }
                   },
                   "required": [
+                    "error",
                     "title"
-                  ]
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": "",
+                      "title": "User was not saved."
+                    }
+                  }
                 },
                 "examples": {
                   "example-1": {
                     "value": {
-                      "title": "string"
+                      "error": "",
+                      "title": "User was not saved."
                     }
                   }
                 }
@@ -563,6 +3815,16 @@
                 ],
                 "x-examples": {
                   "example-1": {
+                    "firstName": "john",
+                    "lastName": "doe",
+                    "email": "123@abc.de",
+                    "password": "12345"
+                  }
+                }
+              },
+              "examples": {
+                "example-1": {
+                  "value": {
                     "firstName": "john",
                     "lastName": "doe",
                     "email": "123@abc.de",
@@ -682,6 +3944,339 @@
                       "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYTNmOGFiYTNjYjk1MDA0N2RlN2ViNiIsImlhdCI6MTYyMTM1OTA0MCwiZXhwIjoxNjIxNDQ1NDQwfQ.vOvlF0BUZ_opIb4cXRm5nHZkFueeH0SnpalG-QkPgN8"
                     }
                   }
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "user": {
+                        "firstName": "john",
+                        "lastName": "doe",
+                        "hasAcceptedConsentForm": false,
+                        "screeningData": [],
+                        "screeningStatus": "",
+                        "_id": "60a3f8aba3cb950047de7eb6",
+                        "email": "123@abc.de",
+                        "iterations": [],
+                        "id": "60a3f8aba3cb950047de7eb6"
+                      },
+                      "roles": [
+                        "ROLE_USER"
+                      ],
+                      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYTNmOGFiYTNjYjk1MDA0N2RlN2ViNiIsImlhdCI6MTYyMTM1OTA0MCwiZXhwIjoxNjIxNDQ1NDQwfQ.vOvlF0BUZ_opIb4cXRm5nHZkFueeH0BnpalG-QkPgN8"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "x-examples": {
+                    "example-1": {
+                      "accessToken": null,
+                      "title": "Passwort ungültig",
+                      "detail": "Passwort ungültig"
+                    }
+                  },
+                  "properties": {
+                    "accessToken": {
+                      "nullable": true
+                    },
+                    "title": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "detail": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "detail"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "detail": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "detail"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "title": "User not found.",
+                      "detail": "The user could not be found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "detail": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "title",
+                    "detail"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": "",
+                      "title": "Internal error.",
+                      "detail": "Something went wrong."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "users"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "description": "",
+                "type": "object",
+                "x-examples": {
+                  "example-1": {
+                    "email": "123@abc.de",
+                    "password": "12345"
+                  }
+                },
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ]
+              },
+              "examples": {
+                "example-1": {
+                  "value": {
+                    "email": "123@abc.de",
+                    "password": "12345"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "User login"
+      }
+    },
+    "/users/requestPasswordReset": {
+      "post": {
+        "summary": "",
+        "operationId": "post-users-requestPasswordReset",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": ""
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "users"
+        ],
+        "description": "Request password reset"
+      }
+    },
+    "/users/resetpassword": {
+      "patch": {
+        "summary": "",
+        "operationId": "patch-users-resetpassword",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": ""
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "users"
+        ],
+        "description": "Reset password",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYTNmOGFiYTNjYjk1MDA0N2RlN2ViNiIsImlhdCI6MTYyMTM1OTA0MCwiZXhwIjoxNjIxNDQ1NDQwfQ.vOvlF0BUZ_opIb4cXRm5nHZkFueeH0SnpalG-QkPgN7"
+            },
+            "in": "header",
+            "name": "x-access-token",
+            "description": "JWT",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/users/{userId}/iterations/{iterationId}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string",
+            "example": "60a4254548f29b0048bb2f1d"
+          },
+          "name": "userId",
+          "in": "path",
+          "required": true
+        },
+        {
+          "schema": {
+            "type": "string",
+            "example": "rPwlcoKcpu2krpGzn_Tr4"
+          },
+          "name": "iterationId",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "patch": {
+        "summary": "",
+        "operationId": "patch-users-userId-iterations-iterationId",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "message"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": "",
+                      "message": "Iteration not updated!"
+                    }
+                  }
+                },
+                "examples": {
+                  "example-1": {
+                    "value": {
+                      "error": "string",
+                      "message": "Iteration not updated!"
+                    }
+                  }
                 }
               }
             }
@@ -697,97 +4292,95 @@
                 "description": "",
                 "type": "object",
                 "properties": {
-                  "email": {
+                  "questionId": {
                     "type": "string",
                     "minLength": 1
                   },
-                  "password": {
-                    "type": "string",
-                    "minLength": 1
+                  "answerOption": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "title": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "title"
+                    ]
                   }
                 },
                 "required": [
-                  "email",
-                  "password"
+                  "questionId",
+                  "answerOption"
                 ],
                 "x-examples": {
                   "example-1": {
-                    "email": "123@abc.de",
-                    "password": "12345"
+                    "questionId": "60648c806df321004815b6b4",
+                    "answerOption": {
+                      "id": "0djX4fdwDAyjdFYMhfcvX",
+                      "title": "Ja"
+                    }
                   }
                 }
               },
               "examples": {
                 "example-1": {
                   "value": {
-                    "email": "string",
-                    "password": "string"
+                    "questionId": "60648c806df321004815b6b4",
+                    "answerOption": {
+                      "id": "0djX4fdwDAyjdFYMhfcvX",
+                      "title": "Ja"
+                    }
+                  }
+                }
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "description": "",
+                "type": "object",
+                "properties": {
+                  "startedAt": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "startedAt"
+                ],
+                "x-examples": {
+                  "example-1": {
+                    "startedAt": "2021-05-18T20:37:11.733Z"
                   }
                 }
               }
             }
-          }
-        },
-        "description": "User login"
-      }
-    },
-    "/users/requestPasswordReset": {
-      "post": {
-        "summary": "",
-        "operationId": "post-users-requestPasswordReset",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "tags": [
-          "users"
-        ]
-      }
-    },
-    "/users/resetpassword": {
-      "patch": {
-        "summary": "",
-        "operationId": "patch-users-resetpassword",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "tags": [
-          "users"
-        ]
-      }
-    },
-    "/users/{userId}/iterations/{iterationId}": {
-      "parameters": [
-        {
-          "schema": {
-            "type": "string"
           },
-          "name": "userId",
-          "in": "path",
-          "required": true
+          "description": ""
         },
-        {
-          "schema": {
-            "type": "string"
-          },
-          "name": "iterationId",
-          "in": "path",
-          "required": true
-        }
-      ],
-      "patch": {
-        "summary": "",
-        "operationId": "patch-users-userId-iterations-iterationId",
-        "responses": {
-          "200": {
-            "description": "OK"
+        "description": "Update the users answer",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYTNmOGFiYTNjYjk1MDA0N2RlN2ViNiIsImlhdCI6MTYyMTM1OTA0MCwiZXhwIjoxNjIxNDQ1NDQwfQ.vOvlF0BUZ_opIb4cXRm5nHZkFueeH0SnpalG-QkPgN7"
+            },
+            "in": "header",
+            "name": "x-access-token",
+            "description": "JWT",
+            "required": true
           }
-        },
-        "tags": [
-          "users"
         ]
       }
     },
@@ -795,7 +4388,8 @@
       "parameters": [
         {
           "schema": {
-            "type": "string"
+            "type": "string",
+            "example": "60a4254548f29b0048bb2f1d"
           },
           "name": "userId",
           "in": "path",
@@ -803,7 +4397,8 @@
         },
         {
           "schema": {
-            "type": "string"
+            "type": "string",
+            "example": "rPwlcoKcpu2krpGzn_Tr4"
           },
           "name": "iterationId",
           "in": "path",
@@ -811,7 +4406,8 @@
         },
         {
           "schema": {
-            "type": "string"
+            "type": "string",
+            "example": "6020b6527f81aa0047f81c7c"
           },
           "name": "questionId",
           "in": "path",
@@ -822,443 +4418,14 @@
         "summary": "",
         "operationId": "patch-users-userId-iterations-iterationId-questions-questionId",
         "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "tags": [
-          "users"
-        ]
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "User": {
-        "description": "",
-        "type": "object",
-        "properties": {
-          "_id": {
-            "type": "string",
-            "minLength": 1
+          "204": {
+            "description": "No Content"
           },
-          "email": {
-            "type": "string",
-            "minLength": 1
-          },
-          "password": {
-            "type": "string",
-            "minLength": 1
-          },
-          "firstName": {
-            "type": "string",
-            "minLength": 1
-          },
-          "lastName": {
-            "type": "string",
-            "minLength": 1
-          },
-          "roles": {
-            "type": "array",
-            "items": {
-              "type": "object"
-            }
-          },
-          "hasAcceptedConsentForm": {
-            "type": "boolean"
-          },
-          "screeningData": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "screeningStatus": {
-            "type": "string",
-            "minLength": 1
-          },
-          "iterations": {
-            "type": "array",
-            "uniqueItems": true,
-            "minItems": 1,
-            "items": {
-              "type": "object",
-              "properties": {
-                "pausedAt": {
-                  "type": "array",
-                  "items": {
-                    "type": "number"
-                  }
-                },
-                "stoppedAtIndex": {
-                  "type": "number"
-                },
-                "questionsToSkip": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "id": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "startedAt": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "answers": {
-                  "type": "array",
-                  "uniqueItems": true,
-                  "minItems": 1,
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "questionId": {
-                        "type": "string",
-                        "minLength": 1
-                      },
-                      "answerOption": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "minLength": 1
-                          },
-                          "title": {
-                            "type": "string",
-                            "minLength": 1
-                          },
-                          "color": {
-                            "type": "string",
-                            "minLength": 1
-                          },
-                          "skip": {
-                            "type": "array",
-                            "items": {
-                              "type": "object"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "finishedAt": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              }
-            }
-          },
-          "createdAt": {
-            "type": "string",
-            "minLength": 1
-          },
-          "updatedAt": {
-            "type": "string",
-            "minLength": 1
-          },
-          "__v": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "_id",
-          "email",
-          "password"
-        ]
-      },
-      "Questionnaire": {
-        "description": "",
-        "type": "object",
-        "x-examples": {
-          "example-1": {
-            "_id": "ObjectId(\"601f1b1e17ed58f34ca46910\")",
-            "name": "FFQ",
-            "consentScript": "Consent script goes here...",
-            "selectionCriteria": [
-              "Lactose Intolerant",
-              "Older than 65"
-            ],
-            "questions": [
-              "ObjectId(\"604bb15f2b75107cd5a9d61f\")",
-              "ObjectId(\"604bb1602b75107cd5a9d620\")",
-              "ObjectId(\"604bb1612b75107cd5a9d621\")",
-              "ObjectId(\"604d3409b85c0e25af88249a\")"
-            ],
-            "screeningRules": [
-              {
-                "criteria": [
-                  "Over 65"
-                ],
-                "id": "ixogKquCVRLXKOcpf_Xnx",
-                "operator": "",
-                "decision": "Accept"
-              },
-              {
-                "criteria": [
-                  "Lactose Intolerant"
-                ],
-                "id": "zRNUaVushFZy8GjjycpDA",
-                "operator": "",
-                "decision": "Wait"
-              }
-            ],
-            "iterations": [
-              {
-                "id": "SnU4M30IstoUudDYVIhzO",
-                "start": "ISODate(\"2021-04-10T12:45:18.898Z\")",
-                "startLabel": "10.04.21",
-                "end": "ISODate(\"2021-04-12T21:59:59.999Z\")",
-                "endLabel": "12.04.21"
-              },
-              {
-                "id": "5z9UpalC_Zlaa9Hl1rujk",
-                "start": "ISODate(\"2021-04-12T22:00:00.000Z\")",
-                "startLabel": "13.04.21",
-                "end": "ISODate(\"2021-04-16T21:59:59.999Z\")",
-                "endLabel": "16.04.21"
-              }
-            ],
-            "createdAt": "ISODate(\"2021-02-06T22:41:34.473Z\")",
-            "updatedAt": "ISODate(\"2021-04-10T13:00:35.675Z\")",
-            "__v": 250
-          }
-        },
-        "properties": {
-          "_id": {
-            "type": "string",
-            "minLength": 1
-          },
-          "name": {
-            "type": "string",
-            "minLength": 1
-          },
-          "consentScript": {
-            "type": "string",
-            "minLength": 1
-          },
-          "selectionCriteria": {
-            "type": "array",
-            "items": {
-              "type": "object"
-            }
-          },
-          "questions": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "screeningRules": {
-            "type": "array",
-            "uniqueItems": true,
-            "minItems": 1,
-            "items": {
-              "type": "object",
-              "properties": {
-                "criteria": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "id": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "operator": {
-                  "type": "string"
-                },
-                "decision": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              },
-              "required": [
-                "id"
-              ]
-            }
-          },
-          "iterations": {
-            "type": "array",
-            "uniqueItems": true,
-            "minItems": 1,
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "start": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "startLabel": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "end": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "endLabel": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              },
-              "required": [
-                "id"
-              ]
-            }
-          },
-          "createdAt": {
-            "type": "string",
-            "minLength": 1
-          },
-          "updatedAt": {
-            "type": "string",
-            "minLength": 1
-          },
-          "__v": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "_id"
-        ]
-      },
-      "Question": {
-        "description": "",
-        "type": "object",
-        "x-examples": {
-          "example-1": {
-            "_id": "ObjectId(\"604d3409b85c0e25af88249a\")",
-            "answerOptions": {
-              "type": "Frequency",
-              "options": {
-                "left": [
-                  {
-                    "id": "akAjc8RmnTmniegmgfHVm",
-                    "title": "Yes"
-                  }
-                ],
-                "right": [
-                  {
-                    "id": "Oyze3YHYQjpjbO2Aja1ju",
-                    "title": "No"
-                  }
-                ]
-              }
-            },
-            "title": "Have you consumed any other food items in the last 4 weeks that were not included in the questionnaire?\t",
-            "subtitle1": "",
-            "subtitle2": "Please enter your answer in the text box below. If you do not want to provide any information, you can skip the question by clicking \"continue\"\t",
-            "help": "Please enter your answer using the keyboard of your computer or tablet. Please enter your answer using the keyboard on your computer or tablet. If you name several foods, please separate the foods with a comma.",
-            "createdAt": "ISODate(\"2021-03-13T21:52:09.285Z\")",
-            "updatedAt": "ISODate(\"2021-04-10T12:50:42.458Z\")",
-            "__v": 0
-          }
-        },
-        "properties": {
-          "_id": {
-            "type": "string",
-            "minLength": 1
-          },
-          "answerOptions": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string",
-                "minLength": 1
-              },
-              "options": {
-                "type": "object",
-                "properties": {
-                  "left": {
-                    "type": "array",
-                    "uniqueItems": true,
-                    "minItems": 1,
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string",
-                          "minLength": 1
-                        },
-                        "title": {
-                          "type": "string",
-                          "minLength": 1
-                        },
-                        "color": {
-                          "type": "string",
-                          "minLength": 1
-                        }
-                      }
-                    }
-                  },
-                  "right": {
-                    "type": "array",
-                    "uniqueItems": true,
-                    "minItems": 1,
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string",
-                          "minLength": 1
-                        },
-                        "title": {
-                          "type": "string",
-                          "minLength": 1
-                        },
-                        "color": {
-                          "type": "string",
-                          "minLength": 1
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "title": {
-            "type": "string",
-            "minLength": 1
-          },
-          "subtitle1": {
-            "type": "string",
-            "minLength": 1
-          },
-          "subtitle2": {
-            "type": "string",
-            "minLength": 1
-          },
-          "help": {
-            "type": "string",
-            "minLength": 1
-          },
-          "createdAt": {
-            "type": "string",
-            "minLength": 1
-          },
-          "updatedAt": {
-            "type": "string",
-            "minLength": 1
-          },
-          "__v": {
-            "type": "string",
-            "minLength": 1
-          }
-        },
-        "required": [
-          "_id"
-        ]
-      }
-    },
-    "securitySchemes": {}
-  }
-}
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+ 
