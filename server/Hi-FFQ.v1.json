@@ -77,6 +77,15 @@
                   "email": {
                     "type": "string",
                     "description": "If a new email is given, the user's email verified property will be set to false."
+                  },
+                  "newPassword": {
+                    "type": "string"
+                  },
+                  "oldPassword": {
+                    "type": "string"
+                  },
+                  "confirmPassword": {
+                    "type": "string"
                   }
                 }
               },
@@ -153,6 +162,16 @@
             "in": "header",
             "name": "x-access-token",
             "description": "JWT",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "6020b6287f81aa0047f81c79"
+            },
+            "in": "query",
+            "name": "userID",
+            "description": "ID of user",
             "required": true
           }
         ]
@@ -3543,12 +3562,64 @@
         "summary": "",
         "operationId": "patch-questionnaires-questionnaireId",
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "message"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": "",
+                      "message": "Questionnaire not updated!"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
           "questionnaires"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMjBiNjI4N2Y4MWFhMDA0N2Y4MWM3OSIsImlhdCI6MTYyMTQ0NTU5NiwiZXhwIjoxNjIxNTMxOTk2fQ.ZDxV6fEU9sOSpNjqpcRzf56_yJJL6LgXzjpBKtZAodQ"
+            },
+            "in": "header",
+            "name": "x-access-token",
+            "description": "JWT",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "6030b6507f81aa0047f81c7b"
+            },
+            "in": "query",
+            "name": "questionnaireId",
+            "description": "ID of questionnaire",
+            "required": true
+          }
         ]
       }
     },
@@ -3567,13 +3638,291 @@
         "summary": "",
         "operationId": "patch-questions-questionId",
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "message"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": "",
+                      "message": "Question not updated!"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
           "questions"
-        ]
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "606466ba6f26ec0047d01c8c"
+            },
+            "in": "query",
+            "name": "questionId",
+            "description": "ID of question",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMjBiNjI4N2Y4MWFhMDA0N2Y4MWM3OSIsImlhdCI6MTYyMTYwNDY5MiwiZXhwIjoxNjIxNjkxMDkyfQ.gkVAUFrLg9bz4T5a2n-4-DZf4A06DgbTuNXA23z4DvY"
+            },
+            "in": "header",
+            "name": "x-access-token",
+            "description": "JWT",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "description": "",
+                "type": "object",
+                "x-examples": {
+                  "example-1": {
+                    "_id": "string",
+                    "answerOptions": {
+                      "type": "string",
+                      "options": {
+                        "left": [
+                          {
+                            "id": "string",
+                            "title": "string",
+                            "color": "string",
+                            "skip": [
+                              "string"
+                            ]
+                          }
+                        ],
+                        "right": [
+                          {
+                            "id": "string",
+                            "title": "string",
+                            "color": "string",
+                            "skip": [
+                              "string"
+                            ]
+                          }
+                        ],
+                        "index": 0,
+                        "id": "string",
+                        "hasNumberInput": true,
+                        "numberInputTitle": "string",
+                        "imageURL": "string",
+                        "title": "string"
+                      }
+                    },
+                    "title": "string",
+                    "subtitle1": "string",
+                    "subtitle2": "string",
+                    "help": "string",
+                    "createdAt": "string",
+                    "updatedAt": "string",
+                    "__v": "string"
+                  }
+                },
+                "properties": {
+                  "_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "answerOptions": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "options": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "hasNumberInput",
+                          "numberInputTitle",
+                          "imageURL",
+                          "title"
+                        ],
+                        "properties": {
+                          "left": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 1,
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "title": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "color": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "skip": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "right": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 1,
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "title": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "color": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "skip": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "index": {
+                            "type": "number"
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "hasNumberInput": {
+                            "type": "boolean"
+                          },
+                          "numberInputTitle": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "imageURL": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "title": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "subtitle1": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "subtitle2": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "help": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "__v": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "_id",
+                  "answerOptions",
+                  "title",
+                  "subtitle1",
+                  "subtitle2",
+                  "help",
+                  "createdAt",
+                  "updatedAt",
+                  "__v"
+                ]
+              },
+              "examples": {
+                "example-1": {
+                  "value": {
+                    "title": "string",
+                    "subtitle1": "string",
+                    "subtitle2": "string",
+                    "help": "string",
+                    "answerOptions": {
+                      "type": "string",
+                      "options": {
+                        "left": [
+                          {
+                            "id": "string",
+                            "title": "string",
+                            "color": "string"
+                          }
+                        ],
+                        "right": [
+                          {
+                            "id": "string",
+                            "title": "string"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Updating the content of a question."
       }
     },
     "/questionnaires/{questionnaireId}/questions/{questionId}/position/{position}": {
@@ -3607,12 +3956,85 @@
         "summary": "",
         "operationId": "patch-questionnaires-:questionnaireId-questions-questionId-position-position",
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "message"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": "",
+                      "message": "Questionnaire or Question not found!"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
           "questionnaires"
+        ],
+        "description": "Move position of a question.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "6030b6507f81aa0047f81c7b"
+            },
+            "in": "query",
+            "name": "questionnaireID",
+            "required": true,
+            "description": "ID of questionnaire"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "606466ba6f26ec0047d01c8c"
+            },
+            "in": "query",
+            "name": "questionID",
+            "description": "ID of question",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "3"
+            },
+            "in": "query",
+            "name": "position",
+            "description": "Index of destination position in questionnaire",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMjBiNjI4N2Y4MWFhMDA0N2Y4MWM3OSIsImlhdCI6MTYyMTYwNDY5MiwiZXhwIjoxNjIxNjkxMDkyfQ.gkVAUFrLg9bz4T5a2n-4-DZf4A06DgbTuNXA23z4DvY"
+            },
+            "in": "header",
+            "name": "x-access-token",
+            "description": "JWT",
+            "required": true
+          }
         ]
       }
     },
@@ -3639,12 +4061,104 @@
         "summary": "",
         "operationId": "delete-questionnaires-questionnaireId-questions-questionId",
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "message"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": "",
+                      "message": "Questionnaire or Question not found!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "message"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "error": "",
+                      "message": "Question not found!'"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
           "questionnaires"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "6030b6507f81aa0047f81c7b"
+            },
+            "in": "query",
+            "name": "questionnaireID",
+            "description": "ID of questionnaire",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "606466ba6f26ec0047d01c8c"
+            },
+            "in": "query",
+            "name": "questionID",
+            "description": "ID of question",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMjBiNjI4N2Y4MWFhMDA0N2Y4MWM3OSIsImlhdCI6MTYyMTYwNDY5MiwiZXhwIjoxNjIxNjkxMDkyfQ.gkVAUFrLg9bz4T5a2n-4-DZf4A06DgbTuNXA23z4DvY"
+            },
+            "in": "header",
+            "name": "x-access-token",
+            "description": "JWT",
+            "required": true
+          }
         ]
       }
     },
@@ -3654,12 +4168,65 @@
         "operationId": "post-upload",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "",
+                  "type": "object",
+                  "x-examples": {
+                    "example-1": {
+                      "filename": "",
+                      "path": ""
+                    }
+                  },
+                  "properties": {
+                    "filename": {
+                      "type": "string"
+                    },
+                    "path": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "filename",
+                    "path",
+                    "url"
+                  ]
+                }
+              }
+            }
           }
         },
         "tags": [
           "images"
-        ]
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              },
+              "examples": {}
+            },
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              },
+              "examples": {
+                "example-1": {
+                  "value": {}
+                }
+              }
+            }
+          },
+          "description": "Image file"
+        }
       }
     },
     "/users/signup": {
@@ -4838,31 +5405,45 @@
         "type": "object",
         "x-examples": {
           "example-1": {
-            "_id": "ObjectId(\"604d3409b85c0e25af88249a\")",
+            "_id": "string",
             "answerOptions": {
-              "type": "Frequency",
+              "type": "string",
               "options": {
                 "left": [
                   {
-                    "id": "akAjc8RmnTmniegmgfHVm",
-                    "title": "Yes"
+                    "id": "string",
+                    "title": "string",
+                    "color": "string",
+                    "skip": [
+                      "string"
+                    ]
                   }
                 ],
                 "right": [
                   {
-                    "id": "Oyze3YHYQjpjbO2Aja1ju",
-                    "title": "No"
+                    "id": "string",
+                    "title": "string",
+                    "color": "string",
+                    "skip": [
+                      "string"
+                    ]
                   }
-                ]
+                ],
+                "index": 0,
+                "id": "string",
+                "hasNumberInput": true,
+                "numberInputTitle": "string",
+                "imageURL": "string",
+                "title": "string"
               }
             },
-            "title": "Have you consumed any other food items in the last 4 weeks that were not included in the questionnaire?\t",
-            "subtitle1": "",
-            "subtitle2": "Please enter your answer in the text box below. If you do not want to provide any information, you can skip the question by clicking \"continue\"\t",
-            "help": "Please enter your answer using the keyboard of your computer or tablet. Please enter your answer using the keyboard on your computer or tablet. If you name several foods, please separate the foods with a comma.",
-            "createdAt": "ISODate(\"2021-03-13T21:52:09.285Z\")",
-            "updatedAt": "ISODate(\"2021-04-10T12:50:42.458Z\")",
-            "__v": 0
+            "title": "string",
+            "subtitle1": "string",
+            "subtitle2": "string",
+            "help": "string",
+            "createdAt": "string",
+            "updatedAt": "string",
+            "__v": "string"
           }
         },
         "properties": {
@@ -4898,6 +5479,12 @@
                         "color": {
                           "type": "string",
                           "minLength": 1
+                        },
+                        "skip": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
                         }
                       }
                     }
@@ -4920,9 +5507,33 @@
                         "color": {
                           "type": "string",
                           "minLength": 1
+                        },
+                        "skip": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
                         }
                       }
                     }
+                  },
+                  "index": {
+                    "type": "integer"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "hasNumberInput": {
+                    "type": "boolean"
+                  },
+                  "numberInputTitle": {
+                    "type": "string"
+                  },
+                  "imageURL": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
                   }
                 }
               }
