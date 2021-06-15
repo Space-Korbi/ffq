@@ -386,9 +386,12 @@ const updateAnswer = async (req, res) => {
           iteration.questionsToSkip
         );
         answer.answerOption = answerOption;
+
+        answer.updatedAt = Date.now();
+        console.log('Answer:', answer);
       } else {
         iteration.questionsToSkip = updateSkip(null, answerOption, iteration.questionsToSkip);
-        iteration.answers.push({ questionId, answerOption });
+        iteration.answers.push({ questionId, answerOption, createdAt: Date.now() });
       }
 
       userUpdate.save().then(() => {

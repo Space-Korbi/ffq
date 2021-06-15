@@ -5,6 +5,8 @@ const { Schema } = mongoose;
 const Answer = Schema(
   {
     questionId: { type: String },
+    createdAt: { type: Date },
+    updatedAt: { type: Date },
     answerOption: { type: Schema.Types.Mixed }
   },
   { _id: false, default: [] }

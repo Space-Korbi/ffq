@@ -35,21 +35,27 @@ const questionHeaderFormatter = (column) => {
   );
 };
 
-const formatAnswer = (answers) => {
+const formatAnswer = (answer) => {
+  const { answerOption, createdAt, updatedAt } = answer;
   let formattedAnswer;
-  if (answers && !Array.isArray(answers)) {
-    if (answers.index) {
-      formattedAnswer = answers.index;
+  if (answerOption && !Array.isArray(answerOption)) {
+    if (answerOption.index) {
+      formattedAnswer = `${answerOption.index}`;
     } else {
-      formattedAnswer = answers.title;
+      formattedAnswer = `${answerOption.title}`;
     }
-  } else if (answers && Array.isArray(answers)) {
-    formattedAnswer = answers.map((answer) => {
-      if (!answer.hasNumberInput) {
-        return `${answer.title}: ${answer.answer}`;
+  } else if (answerOption && Array.isArray(answerOption)) {
+    formattedAnswer = answerOption.map((inputField) => {
+      if (!inputField.hasNumberInput) {
+        return `${inputField.title}: ${inputField.answer}`;
       }
-      return `${answer.title}: ${answer.answer} ${answer.numberAnswer} ${answer.numberInputTitle}`;
+      return `${inputField.title}: ${inputField.answer} ${inputField.numberAnswer} ${inputField.numberInputTitle}`;
     });
+  }
+
+  formattedAnswer = `${formattedAnswer}\nansweredAt: ${createdAt}`;
+  if (updatedAt) {
+    formattedAnswer = `${formattedAnswer}\nupdatedAt: ${updatedAt}`;
   }
 
   return formattedAnswer;
@@ -67,7 +73,7 @@ const parseAnswers = (users, selectedIteration) => {
     const userWithAnswers = { ...user };
 
     user.iterations[index].answers.forEach((answer) => {
-      userWithAnswers[answer.questionId] = formatAnswer(answer.answerOption);
+      userWithAnswers[answer.questionId] = formatAnswer(answer);
     });
     return userWithAnswers;
   });
