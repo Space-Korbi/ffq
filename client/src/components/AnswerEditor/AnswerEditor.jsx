@@ -22,7 +22,7 @@ const AnswerEditor = ({ answerOptions, dispatch, answerType, modalTable }) => {
         setEditor(
           <div>
             <ButtonsEditor
-              answerOptions={answerOptions.options}
+              answerOptions={answerOptions}
               dispatch={dispatch}
               modalTable={modalTable}
             />

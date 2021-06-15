@@ -28,6 +28,7 @@ function Answers({ answerOptions, setUserInput, submittedAnswer }) {
               leftAnswerOptions={answerOptions.options.left}
               rightAnswerOptions={answerOptions.options.right}
               submittedAnswer={submittedAnswer}
+              isMultipleChoice={answerOptions.isMultipleChoice}
               onClick={setUserInput}
             />
           </div>

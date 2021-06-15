@@ -107,6 +107,15 @@ const reducerHelper = {
     };
   },
 
+  setMultipleChoice: (state, action) => {
+    console.log(action.payload.isMultipleChoice);
+    return {
+      type: AnswerType.Frequency,
+      options: state.options,
+      isMultipleChoice: action.payload.isMultipleChoice
+    };
+  },
+
   addCard: (state, action) => {
     const newCard = {
       id: action.payload.id,
@@ -273,6 +282,8 @@ const answerReducer = (state, action) => {
       return reducerHelper.setSkippedQuestions(state, action);
     case 'changeButtonColor':
       return reducerHelper.changeButtonColor(state, action);
+    case 'setMultipleChoice':
+      return reducerHelper.setMultipleChoice(state, action);
     case 'addCard':
       return reducerHelper.addCard(state, action);
     case 'changeCardIndex':

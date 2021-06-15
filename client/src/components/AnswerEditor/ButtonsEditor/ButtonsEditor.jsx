@@ -92,6 +92,11 @@ const ButtonsEditor = ({ answerOptions, dispatch, modalTable }) => {
     dispatch({ type: 'removeButton', payload: { position, id: buttonToRemove.id } });
   };
 
+  const handleIsMultipleChoiceInputChange = (event) => {
+    const { checked } = event.target;
+    dispatch({ type: 'setMultipleChoice', payload: { isMultipleChoice: checked } });
+  };
+
   return (
     <div className="row no-gutters my-5">
       <div className="col-lg-12 col-md text-center">
@@ -103,11 +108,25 @@ const ButtonsEditor = ({ answerOptions, dispatch, modalTable }) => {
             <AddButton position="right" dispatch={dispatch} />
           </div>
         </div>
+        <div className="row no-gutters mt-3 mx-auto">
+          <div className="col">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              onChange={handleIsMultipleChoiceInputChange}
+              checked={answerOptions.isMultipleChoice}
+              id="multipleChoice"
+            />
+            <label className="form-check-label" htmlFor="multipleChoice">
+              Multiple choice
+            </label>
+          </div>
+        </div>
         <div className="row no-gutters row-cols-1 row-cols-sm-2">
-          {answerOptions.left && (
+          {answerOptions.options.left && (
             <div className="col pr-sm-2 pr-0">
               <ButtonColumn
-                answerOptions={answerOptions.left}
+                answerOptions={answerOptions.options.left}
                 position="left"
                 dispatch={dispatch}
                 removeButton={removeButton}
@@ -115,10 +134,10 @@ const ButtonsEditor = ({ answerOptions, dispatch, modalTable }) => {
               />
             </div>
           )}
-          {answerOptions.right && (
+          {answerOptions.options.right && (
             <div className="col pl-sm-2 pl-0">
               <ButtonColumn
-                answerOptions={answerOptions.right}
+                answerOptions={answerOptions.options.right}
                 position="right"
                 dispatch={dispatch}
                 removeButton={removeButton}
