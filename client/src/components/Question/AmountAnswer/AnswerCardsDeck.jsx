@@ -10,14 +10,14 @@ import AnswerCard from './AnswerCard';
  * @param answers - Array of answers data
  * @returns [<Amount Card/>] - Amount cards wrapped in a div to apply extra spacing to the first and last card
  */
-const AnswerCardsDeck = ({ answerOptions, submittedAnswer, onClick }) => {
+const AnswerCardsDeck = ({ answerOptions, previouslySubmittedAnswer, onClick }) => {
   return answerOptions.map((answerOption, index) => {
     if (!answerOption.id) {
       return <div />;
     }
 
     const isSelectedAnswer = (answerOptionId) => {
-      if (answerOptionId === get(submittedAnswer, 'answerOption.id', '')) {
+      if (answerOptionId === get(previouslySubmittedAnswer, 'answerOption.id', '')) {
         return true;
       }
       return false;
@@ -60,7 +60,7 @@ AnswerCardsDeck.propTypes = {
       imageName: string
     })
   ).isRequired,
-  submittedAnswer: shape({
+  previouslySubmittedAnswer: shape({
     questionId: string,
     answerOption: shape({ id: string, title: string })
   }),

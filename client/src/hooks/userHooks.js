@@ -1,5 +1,4 @@
 import { useEffect, useState, useReducer } from 'react';
-import { get } from 'lodash';
 
 // services
 import { userService } from '../services';
@@ -131,7 +130,7 @@ const useUpdateUser = (userId) => {
 
 // Custom answer saving hook
 const useSaveAnswer = (userId, iterationId, questionId) => {
-  const [answer, setAnswer] = useState();
+  const [userInput, setUserInput] = useState();
 
   const saveAnswerReducer = (state, action) => {
     switch (action.type) {
@@ -146,7 +145,7 @@ const useSaveAnswer = (userId, iterationId, questionId) => {
           ...state,
           isSavingAnswer: false,
           errorSavingAnswer: false,
-          answer: action.payload
+          userInput: action.payload
         };
       case 'SAVE_FAILURE':
         return {
@@ -160,36 +159,35 @@ const useSaveAnswer = (userId, iterationId, questionId) => {
   };
 
   const [state, dispatch] = useReducer(saveAnswerReducer, {
-    answer: {},
+    userInput: {},
     isSavingAnswer: false,
     errorSavingAnswer: false
   });
 
   useEffect(() => {
     let didCancel = false;
+    if (!userInput) {
+      return () => {
+        didCancel = true;
+      };
+    }
     const saveAnswer = async () => {
       dispatch({ type: 'SAVE_INIT' });
       try {
-        if (
-          get(answer, 'answerOption.id', false) ||
-          get(answer, ['answerOption', '0', 'id'], false)
-        ) {
-          const answers = {
-            questionId,
-            answerOption: answer.answerOption
-          };
-
-          await userService
-            .updateUserIterationAnswer(userId, iterationId, questionId, answers)
-            .then(() => {
-              if (!didCancel) {
-                dispatch({
-                  type: 'SAVE_SUCCESS',
-                  payload: answers
-                });
-              }
-            });
-        }
+        const answer = {
+          questionId,
+          userInput
+        };
+        await userService
+          .updateUserIterationAnswer(userId, iterationId, questionId, answer)
+          .then(() => {
+            if (!didCancel) {
+              dispatch({
+                type: 'SAVE_SUCCESS',
+                payload: answer
+              });
+            }
+          });
       } catch (error) {
         if (!didCancel) {
           dispatch({ type: 'SAVE_FAILURE' });
@@ -200,9 +198,9 @@ const useSaveAnswer = (userId, iterationId, questionId) => {
     return () => {
       didCancel = true;
     };
-  }, [answer]);
+  }, [userInput]);
 
-  return [state, setAnswer];
+  return [state, setUserInput];
 };
 
 export { useFetchUsers, useUpdateUser, useSaveAnswer };

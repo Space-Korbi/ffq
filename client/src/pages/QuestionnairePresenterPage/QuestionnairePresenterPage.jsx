@@ -63,6 +63,9 @@ const QuestionnairePresenter = ({
       const nextQuestionIndex = nextUnskippedQuestionAt(currentIndex + 1);
       setCurrentIndex(nextQuestionIndex);
     }
+    if (!answers.length && !toSkip.length) {
+      setCurrentIndex(0);
+    }
   }, [answers]);
 
   useEffect(() => {
@@ -114,23 +117,23 @@ const QuestionnairePresenter = ({
     if (prevAnswerOption && prevAnswerOption.skip) {
       removeQuestionIdsFromSkip(prevAnswerOption.skip);
     }
-    if (newAnswerOption.skip) {
+    if (newAnswerOption && newAnswerOption.skip) {
       addQuestionIdsSkip(newAnswerOption.skip);
     }
   };
 
   const handleSubmitAnswer = (answer) => {
-    const { answerOption, questionId } = answer;
+    const { questionId, userInput } = answer;
 
-    if (answersRef.current[currentIndex] && answersRef.current[currentIndex].answerOption) {
-      updateSkip(answersRef.current[currentIndex].answerOption, answerOption);
+    if (answersRef.current[currentIndex] && answersRef.current[currentIndex].userInput) {
+      updateSkip(answersRef.current[currentIndex].userInput, userInput);
     } else {
-      updateSkip(null, answerOption);
+      updateSkip(null, userInput);
     }
 
     setAnswers((prevState) => {
       const newState = [...prevState];
-      newState[currentIndex] = { questionId, answerOption };
+      newState[currentIndex] = { questionId, userInput };
       return newState;
     });
   };
@@ -169,7 +172,6 @@ const QuestionnairePresenter = ({
                   userService
                     .updateUserData(userId, { iterations: [{ id: 0, answers: [] }] })
                     .then(() => {
-                      setCurrentIndex(0);
                       setToSkip([]);
                       setAnswers([]);
                     });
@@ -211,7 +213,7 @@ const QuestionnairePresenter = ({
               <div className="pl-2" />
               <button
                 type="button"
-                className="btn btn btn-light"
+                className="btn btn-light"
                 onClick={() => handleOnPause()}
                 data-toggle="modal"
                 data-target="#staticBackdrop"
@@ -236,7 +238,7 @@ const QuestionnairePresenter = ({
                     subtitle1={questions[currentIndex].subtitle1}
                     subtitle2={questions[currentIndex].subtitle2}
                     help={questions[currentIndex].help}
-                    submittedAnswer={answers[currentIndex]}
+                    previouslySubmittedAnswer={answers[currentIndex]}
                     answerOptions={questions[currentIndex].answerOptions}
                     onSubmitAnswer={(answer) => handleSubmitAnswer(answer)}
                     currentIndex={currentIndex}
