@@ -53,18 +53,16 @@ const QuestionnairePresenter = ({
     if (willSkipQuestionAt(index)) {
       return nextUnskippedQuestionAt(newIndex + 1);
     }
+
     return newIndex;
   };
 
   useEffect(() => {
     answersRef.current = answers;
 
-    if (answers && answers.length && answers[0]) {
+    if (answers?.[0]?.questionId) {
       const nextQuestionIndex = nextUnskippedQuestionAt(currentIndex + 1);
       setCurrentIndex(nextQuestionIndex);
-    }
-    if (!answers.length && !toSkip.length) {
-      setCurrentIndex(0);
     }
   }, [answers]);
 
@@ -174,6 +172,7 @@ const QuestionnairePresenter = ({
                     .then(() => {
                       setToSkip([]);
                       setAnswers([]);
+                      setCurrentIndex(0);
                     });
                 }}
               >
