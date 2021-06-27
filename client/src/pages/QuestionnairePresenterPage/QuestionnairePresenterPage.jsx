@@ -140,9 +140,7 @@ const QuestionnairePresenter = ({
     if (pauses.indexOf(currentIndex) !== -1) {
       return;
     }
-
     userService.updateUserIteration(userId, iterationId, { pausedAt: [...pauses, currentIndex] });
-
     setPauses((prevState) => [...prevState, currentIndex]);
   };
 
@@ -316,22 +314,22 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
   }, []);
 
   useEffect(() => {
-    if (users && users.length) {
+    if (users?.length) {
       let answers = [];
       let questionsToSkip = [];
       let stoppedAtIndex = -1;
-      let pauses = [];
+      let pausedAt = [];
       const status = users[0].iterations.filter(
         (prevIteration) => prevIteration.id === iterationId
       );
-      if (status && status.length) {
+      if (status?.length) {
         answers = status[0].answers;
         questionsToSkip = status[0].questionsToSkip;
         stoppedAtIndex = status[0].stoppedAtIndex;
-        pauses = status[0].pausedAt;
+        pausedAt = status[0].pausedAt;
       }
 
-      setIteration({ answers, questionsToSkip, stoppedAtIndex, pauses });
+      setIteration({ answers, questionsToSkip, stoppedAtIndex, pausedAt });
     }
   }, [users]);
 
@@ -356,7 +354,7 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
           previousAnswers={iteration.answers}
           questionsToSkip={iteration.questionsToSkip}
           stoppedAtIndex={iteration.stoppedAtIndex + 1}
-          previousPauses={iteration.pauses}
+          previousPauses={iteration.pausedAt}
           isAdmin={isAdmin}
           iterationId={iterationId}
         />

@@ -159,7 +159,7 @@ const useSaveAnswer = (userId, iterationId, questionId) => {
   };
 
   const [state, dispatch] = useReducer(saveAnswerReducer, {
-    userInput: {},
+    userInput: null,
     isSavingAnswer: false,
     errorSavingAnswer: false
   });

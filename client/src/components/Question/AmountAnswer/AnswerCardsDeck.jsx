@@ -1,5 +1,5 @@
 import React from 'react';
-import { arrayOf, string, shape, func } from 'prop-types';
+import { arrayOf, string, shape, func, number } from 'prop-types';
 import { get } from 'lodash';
 
 // components
@@ -17,7 +17,7 @@ const AnswerCardsDeck = ({ answerOptions, previouslySubmittedAnswer, onClick }) 
     }
 
     const isSelectedAnswer = (answerOptionId) => {
-      if (answerOptionId === get(previouslySubmittedAnswer, 'answerOption.id', '')) {
+      if (answerOptionId === get(previouslySubmittedAnswer, 'userInput.id', '')) {
         return true;
       }
       return false;
@@ -62,7 +62,7 @@ AnswerCardsDeck.propTypes = {
   ).isRequired,
   previouslySubmittedAnswer: shape({
     questionId: string,
-    answerOption: shape({ id: string, title: string })
+    userInput: shape({ id: string, title: string, imageURL: string, index: number })
   }),
   onClick: func.isRequired
 };

@@ -170,7 +170,7 @@ Question.propTypes = {
     ])
   }).isRequired,
   previouslySubmittedAnswer: oneOfType([
-    undefined,
+    shape({}),
     shape({
       questionId: string,
       createdAt: string,
@@ -207,7 +207,7 @@ Question.defaultProps = {
   subtitle1: '',
   subtitle2: '',
   help: '',
-  previouslySubmittedAnswer: undefined,
+  previouslySubmittedAnswer: null,
   isPreview: false,
   isImage: false
 };

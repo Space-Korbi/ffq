@@ -17,37 +17,6 @@ const AnswerButtons = ({
   const [selectedButtonsLeft, setSelectedButtonsLeft] = useState([]);
   const [selectedButtonsRight, setSelectedButtonsRight] = useState([]);
 
-  useEffect(() => {
-    console.log('===============================');
-    console.log('answer options changed:', leftAnswerOptions, rightAnswerOptions);
-    console.log('previously submitted answer', previouslySubmittedAnswer);
-
-    setSelectedButtonsLeft(
-      leftAnswerOptions.map((answerOption) => {
-        if (
-          !previouslySubmittedAnswer ||
-          !previouslySubmittedAnswer.userInput.selectedButtonsLeft
-        ) {
-          return false;
-        }
-
-        return previouslySubmittedAnswer.userInput.selectedButtonsLeft.includes(answerOption);
-      })
-    );
-    setSelectedButtonsRight(
-      rightAnswerOptions.map((answerOption) => {
-        if (
-          !previouslySubmittedAnswer ||
-          !previouslySubmittedAnswer.userInput.selectedButtonsRight
-        ) {
-          return false;
-        }
-        return previouslySubmittedAnswer.userInput.selectedButtonsRight.includes(answerOption);
-      })
-    );
-    setHasUserInput(false);
-  }, [leftAnswerOptions, rightAnswerOptions]);
-
   const resetUserInput = () => {
     setSelectedButtonsLeft(leftAnswerOptions.map(() => false));
     setSelectedButtonsRight(rightAnswerOptions.map(() => false));
@@ -56,6 +25,30 @@ const AnswerButtons = ({
   useEffect(() => {
     resetUserInput();
   }, [isMultipleChoice]);
+
+  useEffect(() => {
+    setSelectedButtonsLeft(
+      leftAnswerOptions.map((answerOption) => {
+        if (previouslySubmittedAnswer?.userInput?.selectedButtonsLeft) {
+          return previouslySubmittedAnswer.userInput.selectedButtonsLeft.some(
+            (previousAnswer) => previousAnswer.id === answerOption.id
+          );
+        }
+        return false;
+      })
+    );
+    setSelectedButtonsRight(
+      rightAnswerOptions.map((answerOption) => {
+        if (!previouslySubmittedAnswer?.userInput?.selectedButtonsRight) {
+          return false;
+        }
+        return previouslySubmittedAnswer.userInput.selectedButtonsRight.some(
+          (previousAnswer) => previousAnswer.id === answerOption.id
+        );
+      })
+    );
+    setHasUserInput(false);
+  }, [leftAnswerOptions, rightAnswerOptions]);
 
   const updateSelectionLeft = (index) => {
     setSelectedButtonsLeft((prevSelection) => {
@@ -105,7 +98,7 @@ const AnswerButtons = ({
     <div>
       <div className="row mx-3">
         <div className="col-6">
-          {selectedButtonsLeft &&
+          {selectedButtonsLeft.length &&
             leftAnswerOptions.map((answerOption, index) => (
               <div key={answerOption.id}>
                 <AnswerButton
@@ -118,7 +111,7 @@ const AnswerButtons = ({
             ))}
         </div>
         <div className="col-6">
-          {selectedButtonsRight &&
+          {selectedButtonsRight.length &&
             rightAnswerOptions.map((answerOption, index) => (
               <div key={answerOption.id}>
                 <AnswerButton
@@ -165,10 +158,10 @@ AnswerButtons.propTypes = {
     questionId: string,
     createdAt: string,
     updatedAt: string,
-    userInput: {
+    userInput: shape({
       selectedButtonsLeft: arrayOf(shape({ id: string, title: string })),
       selectedButtonsRight: arrayOf(shape({ id: string, title: string }))
-    }
+    })
   }),
   setUserInput: func.isRequired,
   isPreview: bool.isRequired
