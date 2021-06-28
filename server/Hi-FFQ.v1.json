@@ -46,7 +46,10 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["error", "message"],
+                  "required": [
+                    "error",
+                    "message"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "error": "",
@@ -130,7 +133,11 @@
                     "minLength": 1
                   }
                 },
-                "required": ["oldPassword", "newPassword", "confirmPassword"],
+                "required": [
+                  "oldPassword",
+                  "newPassword",
+                  "confirmPassword"
+                ],
                 "x-examples": {
                   "example-1": {
                     "oldPassword": "12345",
@@ -143,7 +150,9 @@
           },
           "description": "Patch user properties to update."
         },
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "parameters": [
           {
             "schema": {
@@ -230,7 +239,10 @@
                             "uniqueItems": true,
                             "minItems": 1,
                             "items": {
-                              "required": ["stoppedAtIndex", "id"],
+                              "required": [
+                                "stoppedAtIndex",
+                                "id"
+                              ],
                               "properties": {
                                 "pausedAt": {
                                   "type": "array",
@@ -258,7 +270,9 @@
                                   "uniqueItems": true,
                                   "minItems": 1,
                                   "items": {
-                                    "required": ["questionId"],
+                                    "required": [
+                                      "questionId"
+                                    ],
                                     "properties": {
                                       "questionId": {
                                         "type": "string",
@@ -283,7 +297,11 @@
                                             }
                                           }
                                         },
-                                        "required": ["id", "title", "skip"]
+                                        "required": [
+                                          "id",
+                                          "title",
+                                          "skip"
+                                        ]
                                       }
                                     }
                                   }
@@ -299,7 +317,9 @@
                       }
                     }
                   },
-                  "required": ["users"],
+                  "required": [
+                    "users"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "users": [
@@ -326,7 +346,10 @@
                                   "answerOption": {
                                     "id": "2pqdWXQfhAn1idQiLrtwW",
                                     "title": "Nein",
-                                    "skip": ["60781799da37b500477d5dc5", "60781a8dda37b500477d5dc8"]
+                                    "skip": [
+                                      "60781799da37b500477d5dc5",
+                                      "60781a8dda37b500477d5dc8"
+                                    ]
                                   }
                                 },
                                 {
@@ -402,7 +425,9 @@
                           "email": "abc@def.de",
                           "iterations": [
                             {
-                              "pausedAt": [3],
+                              "pausedAt": [
+                                3
+                              ],
                               "stoppedAtIndex": -1,
                               "questionsToSkip": [],
                               "id": "E2egbvTxfdSe4Q-n-Ckcq",
@@ -447,7 +472,9 @@
                           "email": "person@beispiel.de",
                           "iterations": [
                             {
-                              "pausedAt": [6],
+                              "pausedAt": [
+                                6
+                              ],
                               "stoppedAtIndex": -1,
                               "questionsToSkip": [],
                               "id": "E2egbvTxfdSe4Q-n-Ckcq",
@@ -499,7 +526,9 @@
                           "email": "m.musterman@example.com",
                           "iterations": [
                             {
-                              "pausedAt": [1],
+                              "pausedAt": [
+                                1
+                              ],
                               "stoppedAtIndex": -1,
                               "questionsToSkip": [],
                               "id": "rPwlcoKcpu2krpGzn_Tr4",
@@ -644,7 +673,9 @@
                           "firstName": "Max",
                           "lastName": "Mustermann",
                           "hasAcceptedConsentForm": true,
-                          "screeningData": ["omnivor"],
+                          "screeningData": [
+                            "omnivor"
+                          ],
                           "screeningStatus": "Accept",
                           "_id": "606eb6ff4e13420047e71d99",
                           "email": "tweety090596@yahoo.de",
@@ -811,13 +842,17 @@
                           "firstName": "Test",
                           "lastName": "Tester",
                           "hasAcceptedConsentForm": true,
-                          "screeningData": ["omnivor"],
+                          "screeningData": [
+                            "omnivor"
+                          ],
                           "screeningStatus": "Accept",
                           "_id": "60782257da37b500477d5dcc",
                           "email": "test.test@gmail.com",
                           "iterations": [
                             {
-                              "pausedAt": [4],
+                              "pausedAt": [
+                                4
+                              ],
                               "stoppedAtIndex": -1,
                               "questionsToSkip": [],
                               "id": "rPwlcoKcpu2krpGzn_Tr4",
@@ -889,7 +924,9 @@
                             {
                               "pausedAt": [],
                               "stoppedAtIndex": -1,
-                              "questionsToSkip": ["60781ca2da37b500477d5dcb"],
+                              "questionsToSkip": [
+                                "60781ca2da37b500477d5dcb"
+                              ],
                               "id": "rPwlcoKcpu2krpGzn_Tr4",
                               "startedAt": "2021-04-15T11:33:29.324Z",
                               "answers": [
@@ -956,7 +993,9 @@
                                   "answerOption": {
                                     "id": "69djRm9tNoV1h_UB73hDm",
                                     "title": "Nie in den letzten 4 Wochen ",
-                                    "skip": ["60781ca2da37b500477d5dcb"]
+                                    "skip": [
+                                      "60781ca2da37b500477d5dcb"
+                                    ]
                                   }
                                 },
                                 {
@@ -1047,9 +1086,14 @@
                           "email": "test@interview.de",
                           "iterations": [
                             {
-                              "pausedAt": [6, 9],
+                              "pausedAt": [
+                                6,
+                                9
+                              ],
                               "stoppedAtIndex": -1,
-                              "questionsToSkip": ["6060e3b8934cf30048c10efb"],
+                              "questionsToSkip": [
+                                "6060e3b8934cf30048c10efb"
+                              ],
                               "id": "rPwlcoKcpu2krpGzn_Tr4",
                               "startedAt": "2021-04-15T21:49:22.187Z",
                               "answers": [
@@ -1083,7 +1127,9 @@
                                     "id": "LGwSuvelSrQ_4Twt8IT0s",
                                     "title": "nie in den letzten 4 Wochen",
                                     "color": "primary",
-                                    "skip": ["6060e3b8934cf30048c10efb"]
+                                    "skip": [
+                                      "6060e3b8934cf30048c10efb"
+                                    ]
                                   }
                                 },
                                 {
@@ -1171,7 +1217,9 @@
                           "email": "sebastian_gimpfl@gmx.de",
                           "iterations": [
                             {
-                              "pausedAt": [14],
+                              "pausedAt": [
+                                14
+                              ],
                               "stoppedAtIndex": -1,
                               "questionsToSkip": [
                                 "60781a8dda37b500477d5dc8",
@@ -1194,7 +1242,9 @@
                                   "answerOption": {
                                     "id": "jLZCxGt-nu5xBnKa5KN9-",
                                     "title": "Nie in den letzten 4 Wochen",
-                                    "skip": ["60781a8dda37b500477d5dc8"]
+                                    "skip": [
+                                      "60781a8dda37b500477d5dc8"
+                                    ]
                                   }
                                 },
                                 {
@@ -1203,7 +1253,9 @@
                                     "id": "LGwSuvelSrQ_4Twt8IT0s",
                                     "title": "nie in den letzten 4 Wochen",
                                     "color": "primary",
-                                    "skip": ["6060e3b8934cf30048c10efb"]
+                                    "skip": [
+                                      "6060e3b8934cf30048c10efb"
+                                    ]
                                   }
                                 },
                                 {
@@ -1212,7 +1264,9 @@
                                     "id": "uMyazwN_phFFK_l6M_zJ2",
                                     "title": "Nie in den letzten 4 Wochen",
                                     "color": "primary",
-                                    "skip": ["60781335da37b500477d5dc4"]
+                                    "skip": [
+                                      "60781335da37b500477d5dc4"
+                                    ]
                                   }
                                 },
                                 {
@@ -1220,7 +1274,9 @@
                                   "answerOption": {
                                     "id": "69djRm9tNoV1h_UB73hDm",
                                     "title": "Nie in den letzten 4 Wochen ",
-                                    "skip": ["60781ca2da37b500477d5dcb"]
+                                    "skip": [
+                                      "60781ca2da37b500477d5dcb"
+                                    ]
                                   }
                                 },
                                 {
@@ -1303,7 +1359,11 @@
                           "firstName": "Hi",
                           "lastName": "Bye",
                           "hasAcceptedConsentForm": true,
-                          "screeningData": ["über 18 Jahre alt", "doof", "omnivor"],
+                          "screeningData": [
+                            "über 18 Jahre alt",
+                            "doof",
+                            "omnivor"
+                          ],
                           "screeningStatus": "Accept",
                           "_id": "60794f0785ba86004750db44",
                           "email": "hallo@xn--tschss-6ya.de",
@@ -1329,9 +1389,13 @@
                           "email": "u14@web.de",
                           "iterations": [
                             {
-                              "pausedAt": [1],
+                              "pausedAt": [
+                                1
+                              ],
                               "stoppedAtIndex": -1,
-                              "questionsToSkip": ["60781bf3da37b500477d5dca"],
+                              "questionsToSkip": [
+                                "60781bf3da37b500477d5dca"
+                              ],
                               "id": "rPwlcoKcpu2krpGzn_Tr4",
                               "startedAt": "2021-04-24T17:11:04.807Z",
                               "answers": [
@@ -1417,7 +1481,9 @@
                                   "answerOption": {
                                     "id": "n9CtSm4yRuf2Cb6u33ZRU",
                                     "title": "Nein",
-                                    "skip": ["60781bf3da37b500477d5dca"]
+                                    "skip": [
+                                      "60781bf3da37b500477d5dca"
+                                    ]
                                   }
                                 },
                                 {
@@ -1669,9 +1735,13 @@
                           "email": "j.doe@example.com",
                           "iterations": [
                             {
-                              "pausedAt": [1],
+                              "pausedAt": [
+                                1
+                              ],
                               "stoppedAtIndex": -1,
-                              "questionsToSkip": ["60781bf3da37b500477d5dca"],
+                              "questionsToSkip": [
+                                "60781bf3da37b500477d5dca"
+                              ],
                               "id": "rPwlcoKcpu2krpGzn_Tr4",
                               "startedAt": "2021-05-15T21:31:07.538Z",
                               "answers": [
@@ -1757,7 +1827,9 @@
                                   "answerOption": {
                                     "id": "n9CtSm4yRuf2Cb6u33ZRU",
                                     "title": "Nein",
-                                    "skip": ["60781bf3da37b500477d5dca"]
+                                    "skip": [
+                                      "60781bf3da37b500477d5dca"
+                                    ]
                                   }
                                 },
                                 {
@@ -1848,7 +1920,9 @@
                             {
                               "pausedAt": [],
                               "stoppedAtIndex": -1,
-                              "questionsToSkip": ["60781a8dda37b500477d5dc8"],
+                              "questionsToSkip": [
+                                "60781a8dda37b500477d5dc8"
+                              ],
                               "id": "rPwlcoKcpu2krpGzn_Tr4",
                               "startedAt": "2021-05-18T19:04:30.807Z",
                               "answers": [
@@ -1864,7 +1938,9 @@
                                   "answerOption": {
                                     "id": "jLZCxGt-nu5xBnKa5KN9-",
                                     "title": "Nie in den letzten 4 Wochen",
-                                    "skip": ["60781a8dda37b500477d5dc8"]
+                                    "skip": [
+                                      "60781a8dda37b500477d5dc8"
+                                    ]
                                   }
                                 },
                                 {
@@ -1892,15 +1968,21 @@
                           "firstName": "string",
                           "lastName": "string",
                           "hasAcceptedConsentForm": true,
-                          "screeningData": [{}],
+                          "screeningData": [
+                            {}
+                          ],
                           "screeningStatus": "string",
                           "_id": "string",
                           "email": "string",
                           "iterations": [
                             {
-                              "pausedAt": [{}],
+                              "pausedAt": [
+                                {}
+                              ],
                               "stoppedAtIndex": 0,
-                              "questionsToSkip": [{}],
+                              "questionsToSkip": [
+                                {}
+                              ],
                               "id": "string",
                               "answers": [
                                 {
@@ -1908,7 +1990,9 @@
                                   "answerOption": {
                                     "id": "string",
                                     "title": "string",
-                                    "skip": [{}]
+                                    "skip": [
+                                      {}
+                                    ]
                                   }
                                 }
                               ]
@@ -1976,7 +2060,11 @@
                             "uniqueItems": true,
                             "minItems": 1,
                             "items": {
-                              "required": ["stoppedAtIndex", "id", "startedAt"],
+                              "required": [
+                                "stoppedAtIndex",
+                                "id",
+                                "startedAt"
+                              ],
                               "properties": {
                                 "pausedAt": {
                                   "type": "array",
@@ -2021,7 +2109,9 @@
                       }
                     }
                   },
-                  "required": ["users"],
+                  "required": [
+                    "users"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "users": [
@@ -2070,7 +2160,10 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["title", "detail"],
+                  "required": [
+                    "title",
+                    "detail"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "title": "Users not found",
@@ -2114,7 +2207,13 @@
                           "required": []
                         }
                       },
-                      "required": ["stringValue", "kind", "value", "path", "reason"]
+                      "required": [
+                        "stringValue",
+                        "kind",
+                        "value",
+                        "path",
+                        "reason"
+                      ]
                     },
                     "title": {
                       "type": "string",
@@ -2125,7 +2224,11 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["error", "title", "detail"],
+                  "required": [
+                    "error",
+                    "title",
+                    "detail"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "error": {
@@ -2144,7 +2247,9 @@
             }
           }
         },
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -2251,7 +2356,11 @@
                             "uniqueItems": true,
                             "minItems": 1,
                             "items": {
-                              "required": ["id", "operator", "decision"],
+                              "required": [
+                                "id",
+                                "operator",
+                                "decision"
+                              ],
                               "properties": {
                                 "criteria": {
                                   "type": "array",
@@ -2282,7 +2391,13 @@
                             "uniqueItems": true,
                             "minItems": 1,
                             "items": {
-                              "required": ["id", "start", "startLabel", "end", "endLabel"],
+                              "required": [
+                                "id",
+                                "start",
+                                "startLabel",
+                                "end",
+                                "endLabel"
+                              ],
                               "properties": {
                                 "id": {
                                   "type": "string",
@@ -2326,19 +2441,28 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["questionnaires", "message"],
+                  "required": [
+                    "questionnaires",
+                    "message"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "questionnaires": [
                         {
                           "name": "string",
                           "consentScript": "string",
-                          "selectionCriteria": [{}],
-                          "questions": [{}],
+                          "selectionCriteria": [
+                            {}
+                          ],
+                          "questions": [
+                            {}
+                          ],
                           "_id": "string",
                           "screeningRules": [
                             {
-                              "criteria": [{}],
+                              "criteria": [
+                                {}
+                              ],
                               "id": "string",
                               "operator": "string",
                               "decision": "string"
@@ -2369,12 +2493,18 @@
                         {
                           "name": "string",
                           "consentScript": "string",
-                          "selectionCriteria": [{}],
-                          "questions": [{}],
+                          "selectionCriteria": [
+                            {}
+                          ],
+                          "questions": [
+                            {}
+                          ],
                           "_id": "string",
                           "screeningRules": [
                             {
-                              "criteria": [{}],
+                              "criteria": [
+                                {}
+                              ],
                               "id": "string",
                               "operator": "string",
                               "decision": "string"
@@ -2414,7 +2544,9 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["message"],
+                  "required": [
+                    "message"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "message": "string"
@@ -2432,7 +2564,9 @@
             }
           }
         },
-        "tags": ["questionnaires"],
+        "tags": [
+          "questionnaires"
+        ],
         "parameters": [
           {
             "schema": {
@@ -2503,7 +2637,11 @@
                             "uniqueItems": true,
                             "minItems": 1,
                             "items": {
-                              "required": ["id", "operator", "decision"],
+                              "required": [
+                                "id",
+                                "operator",
+                                "decision"
+                              ],
                               "properties": {
                                 "criteria": {
                                   "type": "array",
@@ -2531,7 +2669,13 @@
                             "uniqueItems": true,
                             "minItems": 1,
                             "items": {
-                              "required": ["id", "start", "startLabel", "end", "endLabel"],
+                              "required": [
+                                "id",
+                                "start",
+                                "startLabel",
+                                "end",
+                                "endLabel"
+                              ],
                               "properties": {
                                 "id": {
                                   "type": "string",
@@ -2571,7 +2715,9 @@
                       }
                     }
                   },
-                  "required": ["questionnaires"],
+                  "required": [
+                    "questionnaires"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "questionnaires": [
@@ -2613,19 +2759,25 @@
                           "_id": "6020b6507f81aa0047f81c7a",
                           "screeningRules": [
                             {
-                              "criteria": ["Laktoseintolerant"],
+                              "criteria": [
+                                "Laktoseintolerant"
+                              ],
                               "id": "O1S0brfjKugHLbNBCl3tE",
                               "operator": "",
                               "decision": "Reject"
                             },
                             {
-                              "criteria": ["Schwanger"],
+                              "criteria": [
+                                "Schwanger"
+                              ],
                               "id": "hA99z0fkAwRGNm0SIoCFN",
                               "operator": "",
                               "decision": "Reject"
                             },
                             {
-                              "criteria": ["über 18 Jahre alt"],
+                              "criteria": [
+                                "über 18 Jahre alt"
+                              ],
                               "id": "8go9t0tXN34EFeAiE1iR3",
                               "operator": "",
                               "decision": "Accept"
@@ -2669,12 +2821,18 @@
                         {
                           "name": "string",
                           "consentScript": "string",
-                          "selectionCriteria": [{}],
-                          "questions": [{}],
+                          "selectionCriteria": [
+                            {}
+                          ],
+                          "questions": [
+                            {}
+                          ],
                           "_id": "string",
                           "screeningRules": [
                             {
-                              "criteria": [{}],
+                              "criteria": [
+                                {}
+                              ],
                               "id": "string",
                               "operator": "string",
                               "decision": "string"
@@ -2713,7 +2871,9 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["detail"],
+                  "required": [
+                    "detail"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "detail": "No questionnaire could be found."
@@ -2743,7 +2903,11 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["error", "title", "detail"],
+                  "required": [
+                    "error",
+                    "title",
+                    "detail"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "error": "",
@@ -2756,7 +2920,9 @@
             }
           }
         },
-        "tags": ["questionnaires"],
+        "tags": [
+          "questionnaires"
+        ],
         "parameters": [
           {
             "schema": {
@@ -2793,7 +2959,9 @@
     "/questionnaires/{questionnaireId}/questions": {
       "get": {
         "summary": "",
-        "tags": ["questionnaires"],
+        "tags": [
+          "questionnaires"
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -2825,7 +2993,10 @@
                                   "uniqueItems": true,
                                   "minItems": 1,
                                   "items": {
-                                    "required": ["id", "title"],
+                                    "required": [
+                                      "id",
+                                      "title"
+                                    ],
                                     "properties": {
                                       "id": {
                                         "type": "string",
@@ -2843,7 +3014,10 @@
                                   "uniqueItems": true,
                                   "minItems": 1,
                                   "items": {
-                                    "required": ["id", "title"],
+                                    "required": [
+                                      "id",
+                                      "title"
+                                    ],
                                     "properties": {
                                       "id": {
                                         "type": "string",
@@ -2857,10 +3031,16 @@
                                   }
                                 }
                               },
-                              "required": ["left", "right"]
+                              "required": [
+                                "left",
+                                "right"
+                              ]
                             }
                           },
-                          "required": ["type", "options"]
+                          "required": [
+                            "type",
+                            "options"
+                          ]
                         },
                         "title": {
                           "type": "string",
@@ -2903,7 +3083,9 @@
                       ]
                     }
                   },
-                  "required": ["question"],
+                  "required": [
+                    "question"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "question": {
@@ -2955,7 +3137,10 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["error", "message"],
+                  "required": [
+                    "error",
+                    "message"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "error": "",
@@ -3036,7 +3221,10 @@
                                   "uniqueItems": true,
                                   "minItems": 1,
                                   "items": {
-                                    "required": ["id", "title"],
+                                    "required": [
+                                      "id",
+                                      "title"
+                                    ],
                                     "properties": {
                                       "id": {
                                         "type": "string",
@@ -3054,7 +3242,10 @@
                                   "uniqueItems": true,
                                   "minItems": 1,
                                   "items": {
-                                    "required": ["id", "title"],
+                                    "required": [
+                                      "id",
+                                      "title"
+                                    ],
                                     "properties": {
                                       "id": {
                                         "type": "string",
@@ -3068,10 +3259,16 @@
                                   }
                                 }
                               },
-                              "required": ["left", "right"]
+                              "required": [
+                                "left",
+                                "right"
+                              ]
                             }
                           },
-                          "required": ["type", "options"]
+                          "required": [
+                            "type",
+                            "options"
+                          ]
                         },
                         "title": {
                           "type": "string",
@@ -3117,7 +3314,10 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["question", "message"],
+                  "required": [
+                    "question",
+                    "message"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "question": {
@@ -3236,7 +3436,10 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["error", "message"],
+                  "required": [
+                    "error",
+                    "message"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "error": "",
@@ -3263,7 +3466,10 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["error", "message"],
+                  "required": [
+                    "error",
+                    "message"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "error": "",
@@ -3283,7 +3489,9 @@
             }
           }
         },
-        "tags": ["questionnaires"],
+        "tags": [
+          "questionnaires"
+        ],
         "parameters": [
           {
             "schema": {
@@ -3373,7 +3581,10 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["error", "message"],
+                  "required": [
+                    "error",
+                    "message"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "error": "",
@@ -3385,7 +3596,9 @@
             }
           }
         },
-        "tags": ["questionnaires"],
+        "tags": [
+          "questionnaires"
+        ],
         "parameters": [
           {
             "schema": {
@@ -3444,7 +3657,10 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["error", "message"],
+                  "required": [
+                    "error",
+                    "message"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "error": "",
@@ -3456,7 +3672,9 @@
             }
           }
         },
-        "tags": ["questions"],
+        "tags": [
+          "questions"
+        ],
         "parameters": [
           {
             "schema": {
@@ -3496,7 +3714,9 @@
                             "id": "string",
                             "title": "string",
                             "color": "string",
-                            "skip": ["string"]
+                            "skip": [
+                              "string"
+                            ]
                           }
                         ],
                         "right": [
@@ -3504,7 +3724,9 @@
                             "id": "string",
                             "title": "string",
                             "color": "string",
-                            "skip": ["string"]
+                            "skip": [
+                              "string"
+                            ]
                           }
                         ],
                         "index": 0,
@@ -3753,7 +3975,10 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["error", "message"],
+                  "required": [
+                    "error",
+                    "message"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "error": "",
@@ -3765,7 +3990,9 @@
             }
           }
         },
-        "tags": ["questionnaires"],
+        "tags": [
+          "questionnaires"
+        ],
         "description": "Move position of a question.",
         "parameters": [
           {
@@ -3853,7 +4080,10 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["error", "message"],
+                  "required": [
+                    "error",
+                    "message"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "error": "",
@@ -3880,7 +4110,10 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["error", "message"],
+                  "required": [
+                    "error",
+                    "message"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "error": "",
@@ -3892,7 +4125,9 @@
             }
           }
         },
-        "tags": ["questionnaires"],
+        "tags": [
+          "questionnaires"
+        ],
         "parameters": [
           {
             "schema": {
@@ -3956,13 +4191,19 @@
                       "type": "string"
                     }
                   },
-                  "required": ["filename", "path", "url"]
+                  "required": [
+                    "filename",
+                    "path",
+                    "url"
+                  ]
                 }
               }
             }
           }
         },
-        "tags": ["images"],
+        "tags": [
+          "images"
+        ],
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -4009,7 +4250,10 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["success", "message"],
+                  "required": [
+                    "success",
+                    "message"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "success": true,
@@ -4049,7 +4293,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["message"]
+                  "required": [
+                    "message"
+                  ]
                 },
                 "examples": {
                   "example-1": {
@@ -4078,7 +4324,10 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["error", "title"],
+                  "required": [
+                    "error",
+                    "title"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "error": "",
@@ -4098,7 +4347,9 @@
             }
           }
         },
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -4123,7 +4374,12 @@
                     "minLength": 1
                   }
                 },
-                "required": ["firstName", "lastName", "email", "password"],
+                "required": [
+                  "firstName",
+                  "lastName",
+                  "email",
+                  "password"
+                ],
                 "x-examples": {
                   "example-1": {
                     "firstName": "john",
@@ -4231,7 +4487,11 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["user", "roles", "accessToken"],
+                  "required": [
+                    "user",
+                    "roles",
+                    "accessToken"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "user": {
@@ -4245,7 +4505,9 @@
                         "iterations": [],
                         "id": "60a3f8aba3cb950047de7eb6"
                       },
-                      "roles": ["ROLE_USER"],
+                      "roles": [
+                        "ROLE_USER"
+                      ],
                       "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYTNmOGFiYTNjYjk1MDA0N2RlN2ViNiIsImlhdCI6MTYyMTM1OTA0MCwiZXhwIjoxNjIxNDQ1NDQwfQ.vOvlF0BUZ_opIb4cXRm5nHZkFueeH0SnpalG-QkPgN8"
                     }
                   }
@@ -4264,7 +4526,9 @@
                         "iterations": [],
                         "id": "60a3f8aba3cb950047de7eb6"
                       },
-                      "roles": ["ROLE_USER"],
+                      "roles": [
+                        "ROLE_USER"
+                      ],
                       "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYTNmOGFiYTNjYjk1MDA0N2RlN2ViNiIsImlhdCI6MTYyMTM1OTA0MCwiZXhwIjoxNjIxNDQ1NDQwfQ.vOvlF0BUZ_opIb4cXRm5nHZkFueeH0BnpalG-QkPgN8"
                     }
                   }
@@ -4302,7 +4566,10 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["title", "detail"]
+                  "required": [
+                    "title",
+                    "detail"
+                  ]
                 }
               }
             }
@@ -4324,7 +4591,10 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["title", "detail"],
+                  "required": [
+                    "title",
+                    "detail"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "title": "User not found.",
@@ -4355,7 +4625,11 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["error", "title", "detail"],
+                  "required": [
+                    "error",
+                    "title",
+                    "detail"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "error": "",
@@ -4368,7 +4642,9 @@
             }
           }
         },
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -4391,7 +4667,10 @@
                     "minLength": 1
                   }
                 },
-                "required": ["email", "password"]
+                "required": [
+                  "email",
+                  "password"
+                ]
               },
               "examples": {
                 "example-1": {
@@ -4430,7 +4709,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["error"],
+                  "required": [
+                    "error"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "error": ""
@@ -4441,7 +4722,9 @@
             }
           }
         },
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "description": "Request password reset"
       }
     },
@@ -4465,7 +4748,9 @@
                       "type": "string"
                     }
                   },
-                  "required": ["error"],
+                  "required": [
+                    "error"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "error": ""
@@ -4476,7 +4761,9 @@
             }
           }
         },
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "description": "Reset password",
         "parameters": [
           {
@@ -4539,7 +4826,10 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["error", "message"],
+                  "required": [
+                    "error",
+                    "message"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "error": "",
@@ -4559,7 +4849,9 @@
             }
           }
         },
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -4583,10 +4875,16 @@
                         "minLength": 1
                       }
                     },
-                    "required": ["id", "title"]
+                    "required": [
+                      "id",
+                      "title"
+                    ]
                   }
                 },
-                "required": ["questionId", "answerOption"],
+                "required": [
+                  "questionId",
+                  "answerOption"
+                ],
                 "x-examples": {
                   "example-1": {
                     "questionId": "60648c806df321004815b6b4",
@@ -4625,7 +4923,9 @@
                     "minLength": 1
                   }
                 },
-                "required": ["startedAt"],
+                "required": [
+                  "startedAt"
+                ],
                 "x-examples": {
                   "example-1": {
                     "startedAt": "2021-05-18T20:37:11.733Z"
@@ -4708,7 +5008,11 @@
                       "minLength": 1
                     }
                   },
-                  "required": ["error", "title", "detail"],
+                  "required": [
+                    "error",
+                    "title",
+                    "detail"
+                  ],
                   "x-examples": {
                     "example-1": {
                       "error": "",
@@ -4721,7 +5025,9 @@
             }
           }
         },
-        "tags": ["users"],
+        "tags": [
+          "users"
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -4745,10 +5051,16 @@
                         "minLength": 1
                       }
                     },
-                    "required": ["id", "title"]
+                    "required": [
+                      "id",
+                      "title"
+                    ]
                   }
                 },
-                "required": ["questionId", "answerOption"],
+                "required": [
+                  "questionId",
+                  "answerOption"
+                ],
                 "x-examples": {
                   "example-1": {
                     "questionId": "60648c806df321004815b6b4",
@@ -4921,7 +5233,11 @@
             "type": "number"
           }
         },
-        "required": ["_id", "email", "password"]
+        "required": [
+          "_id",
+          "email",
+          "password"
+        ]
       },
       "Questionnaire": {
         "description": "",
@@ -4931,7 +5247,10 @@
             "_id": "ObjectId(\"601f1b1e17ed58f34ca46910\")",
             "name": "FFQ",
             "consentScript": "Consent script goes here...",
-            "selectionCriteria": ["Lactose Intolerant", "Older than 65"],
+            "selectionCriteria": [
+              "Lactose Intolerant",
+              "Older than 65"
+            ],
             "questions": [
               "ObjectId(\"604bb15f2b75107cd5a9d61f\")",
               "ObjectId(\"604bb1602b75107cd5a9d620\")",
@@ -4940,13 +5259,17 @@
             ],
             "screeningRules": [
               {
-                "criteria": ["Over 65"],
+                "criteria": [
+                  "Over 65"
+                ],
                 "id": "ixogKquCVRLXKOcpf_Xnx",
                 "operator": "",
                 "decision": "Accept"
               },
               {
-                "criteria": ["Lactose Intolerant"],
+                "criteria": [
+                  "Lactose Intolerant"
+                ],
                 "id": "zRNUaVushFZy8GjjycpDA",
                 "operator": "",
                 "decision": "Wait"
@@ -5023,7 +5346,9 @@
                   "minLength": 1
                 }
               },
-              "required": ["id"]
+              "required": [
+                "id"
+              ]
             }
           },
           "iterations": {
@@ -5054,7 +5379,9 @@
                   "minLength": 1
                 }
               },
-              "required": ["id"]
+              "required": [
+                "id"
+              ]
             }
           },
           "createdAt": {
@@ -5069,7 +5396,9 @@
             "type": "number"
           }
         },
-        "required": ["_id"]
+        "required": [
+          "_id"
+        ]
       },
       "Question": {
         "description": "",
@@ -5085,7 +5414,9 @@
                     "id": "string",
                     "title": "string",
                     "color": "string",
-                    "skip": ["string"]
+                    "skip": [
+                      "string"
+                    ]
                   }
                 ],
                 "right": [
@@ -5093,7 +5424,9 @@
                     "id": "string",
                     "title": "string",
                     "color": "string",
-                    "skip": ["string"]
+                    "skip": [
+                      "string"
+                    ]
                   }
                 ],
                 "index": 0,
@@ -5235,7 +5568,9 @@
             "minLength": 1
           }
         },
-        "required": ["_id"]
+        "required": [
+          "_id"
+        ]
       }
     },
     "securitySchemes": {}
