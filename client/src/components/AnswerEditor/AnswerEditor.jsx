@@ -20,7 +20,18 @@ const AnswerEditor = ({ answerOptions, dispatch, answerType, modalTable }) => {
 
   useEffect(() => {
     switch (answerType) {
-      case answers.TYPE.SingleChoiceButton || answers.TYPE.MultipleChoiceButton:
+      case answers.TYPE.SingleChoiceButton:
+        setEditor(
+          <div>
+            <ButtonsEditor
+              answerOptions={answerOptions}
+              dispatch={dispatch}
+              modalTable={modalTable}
+            />
+          </div>
+        );
+        break;
+      case answers.TYPE.MultipleChoiceButton:
         setEditor(
           <div>
             <ButtonsEditor

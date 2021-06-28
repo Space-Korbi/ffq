@@ -9,6 +9,8 @@ import * as answers from '../../constants/Answers';
 const Select = ({ onChange, dispatch, value }) => {
   const { t } = useTranslation(['globals']);
 
+  console.log('value', value);
+
   const setValue = () => {
     switch (value) {
       case answers.TYPE.SingleChoiceButton:
@@ -45,7 +47,7 @@ const Select = ({ onChange, dispatch, value }) => {
           }}
           style={{ minWidth: '180px' }}
         >
-          <option value="select">{t('globals:select...', 'Auswählen...')}</option>
+          <option value="select">{t('globals:select', 'Auswählen...')}</option>
           <option value={answers.TYPE.SingleChoiceButton}>{t('globals:buttons', 'Buttons')}</option>
           <option value={answers.TYPE.Card}>{t('globals:cards', 'Karten')}</option>
           <option value={answers.TYPE.TextInput}>{t('globals:user_input', 'Eingabefelder')}</option>
