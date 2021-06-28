@@ -41,13 +41,13 @@ const reducerHelper = {
     if (action.payload.position === 'left') {
       const buttonsLeft = state.options.left.filter((button) => button.id !== action.payload.id);
       return {
-        type: answers.TYPE.SingleChoiceButton,
+        ...state,
         options: { left: buttonsLeft, right: state.options.right }
       };
     }
     const buttonsRight = state.options.right.filter((button) => button.id !== action.payload.id);
     return {
-      type: answers.TYPE.SingleChoiceButton,
+      ...state,
       options: { left: state.options.left, right: buttonsRight }
     };
   },
@@ -57,7 +57,7 @@ const reducerHelper = {
         el.id === action.payload.id ? { ...el, title: action.payload.title } : el
       );
       return {
-        type: answers.TYPE.SingleChoiceButton,
+        ...state,
         options: { left: newState, right: state.options.right }
       };
     }
@@ -65,7 +65,7 @@ const reducerHelper = {
       el.id === action.payload.id ? { ...el, title: action.payload.title } : el
     );
     return {
-      type: answers.TYPE.SingleChoiceButton,
+      ...state,
       options: { left: state.options.left, right: newState }
     };
   },
@@ -75,7 +75,7 @@ const reducerHelper = {
         el.id === action.payload.id ? { ...el, color: action.payload.color } : el
       );
       return {
-        type: answers.TYPE.SingleChoiceButton,
+        ...state,
         options: { left: newState, right: state.options.right }
       };
     }
@@ -83,7 +83,7 @@ const reducerHelper = {
       el.id === action.payload.id ? { ...el, color: action.payload.color } : el
     );
     return {
-      type: answers.TYPE.SingleChoiceButton,
+      ...state,
       options: { left: state.options.left, right: newState }
     };
   },
@@ -93,7 +93,7 @@ const reducerHelper = {
         el.id === action.payload.id ? { ...el, skip: action.payload.skip } : el
       );
       return {
-        type: answers.TYPE.SingleChoiceButton,
+        ...state,
         options: { left: newState, right: state.options.right }
       };
     }
@@ -101,7 +101,7 @@ const reducerHelper = {
       el.id === action.payload.id ? { ...el, skip: action.payload.skip } : el
     );
     return {
-      type: answers.TYPE.SingleChoiceButton,
+      ...state,
       options: { left: state.options.left, right: newState }
     };
   },
