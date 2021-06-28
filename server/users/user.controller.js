@@ -258,31 +258,98 @@ const getUsers = async (req, res) => {
     });
 };
 
-// TODO
-// Adjust skip questions for multiple choice questions
-const addQuestionIdsToSkip = (questionIds, state) => {
-  return state.concat(questionIds);
+const flattenButtonArrays = (leftColumn, rightColumn) => {
+  return [].concat(leftColumn, rightColumn);
 };
 
-const removeQuestionIdsFromSkip = (questionIds, state) => {
-  return state.filter((prevAnswer) => !questionIds.includes(prevAnswer));
+const filterForButtonsContainingSkip = (buttons) => {
+  return buttons.filter((button) => button.skip?.length);
 };
 
-const updateSkip = (previousUserInput, newUserInput, state) => {
-  const newSkip = state;
+const filterForNewlySelectedButtons = (newUserInputs, previousUserInputs) => {
+  return newUserInputs.filter((newInput) => {
+    return !previousUserInputs.some((prevInput) => prevInput.id === newInput.id);
+  });
+};
 
-  console.log('previousUserInput - skip', previousUserInput);
-  console.log('newUserInput - skip', newUserInput);
+const filterForDeselectedButtons = (newUserInputs, previousUserInputs) => {
+  return previousUserInputs.filter((prevInput) => {
+    return !newUserInputs.some((newInput) => prevInput.id === newInput.id);
+  });
+};
 
-  // const newSkips = userUpdate;
-  /* if (prevAnswerOption && prevAnswerOption.skip) {
-    newSkip = removeQuestionIdsFromSkip(prevAnswerOption.skip, state);
+const removeQuestionIds = (questionIds, toSkip) => {
+  const updatedToSkip = new Set([...toSkip]);
+
+  questionIds.forEach((questionId) => {
+    updatedToSkip.delete(questionId);
+  });
+  return updatedToSkip;
+};
+
+const addQuestionIds = (questionIds, toSkip) => {
+  const updatedToSkip = new Set([...toSkip]);
+
+  questionIds.forEach((questionId) => {
+    updatedToSkip.add(questionId);
+  });
+  return updatedToSkip;
+};
+
+const updateToSkip = (previousUserInput, newUserInput, state) => {
+  let updatedQuestionsToSkip = new Set([...state]);
+
+  let filteredAndFlatNewUserInputs = [];
+  let filteredAndFlatPreviousUserInputs = [];
+
+  let newlySelectedButtons = [];
+  let deselectedButtons = [];
+
+  const questionIdsToRemove = new Set();
+  const questionIdsToAdd = new Set();
+
+  filteredAndFlatNewUserInputs = filterForButtonsContainingSkip(
+    flattenButtonArrays(newUserInput.selectedButtonsLeft, newUserInput.selectedButtonsRight)
+  );
+
+  if (
+    previousUserInput?.selectedButtonsLeft?.length ||
+    previousUserInput?.selectedButtonsRight?.length
+  ) {
+    filteredAndFlatPreviousUserInputs = filterForButtonsContainingSkip(
+      flattenButtonArrays(
+        previousUserInput.selectedButtonsLeft,
+        previousUserInput.selectedButtonsRight
+      )
+    );
   }
-  if (newAnswerOption.skip) {
-    newSkip = addQuestionIdsToSkip(newAnswerOption.skip, state);
-  } */
 
-  return newSkip;
+  deselectedButtons = filterForDeselectedButtons(
+    filteredAndFlatNewUserInputs,
+    filteredAndFlatPreviousUserInputs
+  );
+
+  newlySelectedButtons = filterForNewlySelectedButtons(
+    filteredAndFlatNewUserInputs,
+    filteredAndFlatPreviousUserInputs
+  );
+
+  deselectedButtons.forEach((button) => {
+    button.skip.forEach((questionId) => {
+      questionIdsToRemove.add(questionId);
+    });
+  });
+
+  newlySelectedButtons.forEach((button) => {
+    button.skip.forEach((questionId) => {
+      questionIdsToAdd.add(questionId);
+    });
+  });
+
+  updatedQuestionsToSkip = removeQuestionIds(questionIdsToRemove, updatedQuestionsToSkip);
+  updatedQuestionsToSkip = addQuestionIds(questionIdsToAdd, updatedQuestionsToSkip);
+
+  return [...updatedQuestionsToSkip];
 };
 
 const updateUser = async (req, res) => {
@@ -386,7 +453,7 @@ const updateAnswer = async (req, res) => {
         });
       }
       if (answer) {
-        iteration.questionsToSkip = updateSkip(
+        iteration.questionsToSkip = updateToSkip(
           answer.userInput,
           userInput,
           iteration.questionsToSkip
@@ -395,7 +462,7 @@ const updateAnswer = async (req, res) => {
         answer.updatedAt = Date.now();
         answer.type = type;
       } else {
-        iteration.questionsToSkip = updateSkip(null, userInput, iteration.questionsToSkip);
+        iteration.questionsToSkip = updateToSkip(null, userInput, iteration.questionsToSkip);
         iteration.answers.push({ questionId, type, userInput, createdAt: Date.now() });
       }
 

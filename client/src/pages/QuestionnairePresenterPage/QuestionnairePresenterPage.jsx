@@ -101,6 +101,7 @@ const QuestionnairePresenter = ({
     return newIndex;
   };
 
+  /*
   const addQuestionIdsSkip = (questionIds) => {
     setToSkip((state) => state.concat(questionIds));
   };
@@ -119,14 +120,109 @@ const QuestionnairePresenter = ({
       addQuestionIdsSkip(newAnswerOption.skip);
     }
   };
+  */
+
+  const flattenButtonArrays = (leftColumn, rightColumn) => {
+    return [].concat(leftColumn, rightColumn);
+  };
+
+  const filterForButtonsContainingSkip = (buttons) => {
+    return buttons.filter((button) => button.skip?.length);
+  };
+
+  const filterForNewlySelectedButtons = (newUserInputs, previousUserInputs) => {
+    return newUserInputs.filter((newInput) => {
+      return !previousUserInputs.some((prevInput) => prevInput.id === newInput.id);
+    });
+  };
+
+  const filterForDeselectedButtons = (newUserInputs, previousUserInputs) => {
+    return previousUserInputs.filter((prevInput) => {
+      return !newUserInputs.some((newInput) => prevInput.id === newInput.id);
+    });
+  };
+
+  const removeQuestionIds = (questionIds, skip) => {
+    const updatedToSkip = new Set([...skip]);
+
+    questionIds.forEach((questionId) => {
+      updatedToSkip.delete(questionId);
+    });
+    return updatedToSkip;
+  };
+
+  const addQuestionIds = (questionIds, skip) => {
+    const updatedToSkip = new Set([...skip]);
+
+    questionIds.forEach((questionId) => {
+      updatedToSkip.add(questionId);
+    });
+    return updatedToSkip;
+  };
+
+  const updateToSkip = (previousUserInput, newUserInput, state) => {
+    let updatedQuestionsToSkip = new Set([...state]);
+
+    let filteredAndFlatNewUserInputs = [];
+    let filteredAndFlatPreviousUserInputs = [];
+
+    let newlySelectedButtons = [];
+    let deselectedButtons = [];
+
+    const questionIdsToRemove = new Set();
+    const questionIdsToAdd = new Set();
+
+    filteredAndFlatNewUserInputs = filterForButtonsContainingSkip(
+      flattenButtonArrays(newUserInput.selectedButtonsLeft, newUserInput.selectedButtonsRight)
+    );
+
+    if (
+      previousUserInput?.selectedButtonsLeft?.length ||
+      previousUserInput?.selectedButtonsRight?.length
+    ) {
+      filteredAndFlatPreviousUserInputs = filterForButtonsContainingSkip(
+        flattenButtonArrays(
+          previousUserInput.selectedButtonsLeft,
+          previousUserInput.selectedButtonsRight
+        )
+      );
+    }
+
+    deselectedButtons = filterForDeselectedButtons(
+      filteredAndFlatNewUserInputs,
+      filteredAndFlatPreviousUserInputs
+    );
+
+    newlySelectedButtons = filterForNewlySelectedButtons(
+      filteredAndFlatNewUserInputs,
+      filteredAndFlatPreviousUserInputs
+    );
+
+    deselectedButtons.forEach((button) => {
+      button.skip.forEach((questionId) => {
+        questionIdsToRemove.add(questionId);
+      });
+    });
+
+    newlySelectedButtons.forEach((button) => {
+      button.skip.forEach((questionId) => {
+        questionIdsToAdd.add(questionId);
+      });
+    });
+
+    updatedQuestionsToSkip = removeQuestionIds(questionIdsToRemove, updatedQuestionsToSkip);
+    updatedQuestionsToSkip = addQuestionIds(questionIdsToAdd, updatedQuestionsToSkip);
+
+    setToSkip([...updatedQuestionsToSkip]);
+  };
 
   const handleSubmitAnswer = (answer) => {
     const { questionId, userInput } = answer;
 
     if (answersRef.current[currentIndex] && answersRef.current[currentIndex].userInput) {
-      updateSkip(answersRef.current[currentIndex].userInput, userInput);
+      updateToSkip(answersRef.current[currentIndex].userInput, userInput, toSkip);
     } else {
-      updateSkip(null, userInput);
+      updateToSkip(null, userInput, toSkip);
     }
 
     setAnswers((prevState) => {

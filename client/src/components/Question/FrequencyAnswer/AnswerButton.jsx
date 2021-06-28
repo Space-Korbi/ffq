@@ -16,12 +16,13 @@ const AnswerButton = ({ title, isSelectedAnswer, color, onClick }) => {
 AnswerButton.propTypes = {
   title: string.isRequired,
   color: string,
-  isSelectedAnswer: bool.isRequired,
+  isSelectedAnswer: bool,
   onClick: func.isRequired
 };
 
 AnswerButton.defaultProps = {
-  color: 'primary'
+  color: 'primary',
+  isSelectedAnswer: false
 };
 
 export default AnswerButton;
