@@ -1,6 +1,7 @@
 /* eslint-disable no-alert */
 import { updateQuestionById, uploadImage, uploadImageToCloudinary } from '../api';
-import AnswerType from '../types';
+
+import * as answers from '../constants/Answers';
 
 /**
  * * Image Paths
@@ -73,7 +74,7 @@ const saveQuestion = async (questionId, questionData, answerOptions) => {
 
   payload.answerOptions = answerOptions;
 
-  if (answerOptions.type === AnswerType.Amount) {
+  if (answerOptions.type === answers.TYPE.Card) {
     const updatedAmountOptions = await updateAmountOptions(answerOptions.options);
     payload.answerOptions.options = updatedAmountOptions;
   }

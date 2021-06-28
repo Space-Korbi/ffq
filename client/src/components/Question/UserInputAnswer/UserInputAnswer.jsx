@@ -42,7 +42,6 @@ const UserInputAnswer = ({ answerOptions, previouslySubmittedAnswer, setUserInpu
       setUserInput(userInputs);
     }
   };
-
   return (
     <div>
       {userInputs.map((userInput) => {

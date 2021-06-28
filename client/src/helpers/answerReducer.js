@@ -1,4 +1,5 @@
-import AnswerType from '../types/answer-type';
+// enums
+import * as answers from '../constants/Answers';
 
 const reducerHelper = {
   /**
@@ -13,7 +14,7 @@ const reducerHelper = {
 
   setDefaultState: (action) => {
     let options = [];
-    if (action.payload.answerType === AnswerType.Frequency) {
+    if (action.payload.answerType === answers.TYPE.SingleChoiceButton) {
       options = { left: [], right: [] };
     }
     return {
@@ -26,13 +27,13 @@ const reducerHelper = {
     if (action.payload.position === 'left') {
       const buttonsLeft = state.options.left.concat(newButton);
       return {
-        type: AnswerType.Frequency,
+        type: answers.TYPE.SingleChoiceButton,
         options: { left: buttonsLeft, right: state.options.right }
       };
     }
     const buttonsRight = state.options.right.concat(newButton);
     return {
-      type: AnswerType.Frequency,
+      type: answers.TYPE.SingleChoiceButton,
       options: { left: state.options.left, right: buttonsRight }
     };
   },
@@ -40,13 +41,13 @@ const reducerHelper = {
     if (action.payload.position === 'left') {
       const buttonsLeft = state.options.left.filter((button) => button.id !== action.payload.id);
       return {
-        type: AnswerType.Frequency,
+        type: answers.TYPE.SingleChoiceButton,
         options: { left: buttonsLeft, right: state.options.right }
       };
     }
     const buttonsRight = state.options.right.filter((button) => button.id !== action.payload.id);
     return {
-      type: AnswerType.Frequency,
+      type: answers.TYPE.SingleChoiceButton,
       options: { left: state.options.left, right: buttonsRight }
     };
   },
@@ -56,7 +57,7 @@ const reducerHelper = {
         el.id === action.payload.id ? { ...el, title: action.payload.title } : el
       );
       return {
-        type: AnswerType.Frequency,
+        type: answers.TYPE.SingleChoiceButton,
         options: { left: newState, right: state.options.right }
       };
     }
@@ -64,18 +65,17 @@ const reducerHelper = {
       el.id === action.payload.id ? { ...el, title: action.payload.title } : el
     );
     return {
-      type: AnswerType.Frequency,
+      type: answers.TYPE.SingleChoiceButton,
       options: { left: state.options.left, right: newState }
     };
   },
-
   changeButtonColor: (state, action) => {
     if (action.payload.position === 'left') {
       const newState = state.options.left.map((el) =>
         el.id === action.payload.id ? { ...el, color: action.payload.color } : el
       );
       return {
-        type: AnswerType.Frequency,
+        type: answers.TYPE.SingleChoiceButton,
         options: { left: newState, right: state.options.right }
       };
     }
@@ -83,18 +83,17 @@ const reducerHelper = {
       el.id === action.payload.id ? { ...el, color: action.payload.color } : el
     );
     return {
-      type: AnswerType.Frequency,
+      type: answers.TYPE.SingleChoiceButton,
       options: { left: state.options.left, right: newState }
     };
   },
-
   setSkippedQuestions: (state, action) => {
     if (action.payload.position === 'left') {
       const newState = state.options.left.map((el) =>
         el.id === action.payload.id ? { ...el, skip: action.payload.skip } : el
       );
       return {
-        type: AnswerType.Frequency,
+        type: answers.TYPE.SingleChoiceButton,
         options: { left: newState, right: state.options.right }
       };
     }
@@ -102,20 +101,24 @@ const reducerHelper = {
       el.id === action.payload.id ? { ...el, skip: action.payload.skip } : el
     );
     return {
-      type: AnswerType.Frequency,
+      type: answers.TYPE.SingleChoiceButton,
       options: { left: state.options.left, right: newState }
     };
   },
-
   setMultipleChoice: (state, action) => {
-    console.log(action.payload.isMultipleChoice);
+    if (action.payload.isMultipleChoice) {
+      return {
+        type: answers.TYPE.MultipleChoiceButton,
+        options: state.options,
+        isMultipleChoice: action.payload.isMultipleChoice
+      };
+    }
     return {
-      type: AnswerType.Frequency,
+      type: answers.TYPE.SingleChoiceButton,
       options: state.options,
       isMultipleChoice: action.payload.isMultipleChoice
     };
   },
-
   addCard: (state, action) => {
     const newCard = {
       id: action.payload.id,
@@ -124,7 +127,7 @@ const reducerHelper = {
     };
     const cards = state.options.concat(newCard);
     return {
-      type: AnswerType.Amount,
+      type: answers.TYPE.Card,
       options: cards
     };
   },
@@ -133,14 +136,14 @@ const reducerHelper = {
       el.id === action.payload.id ? { ...el, index: action.payload.index } : el
     );
     return {
-      type: AnswerType.Amount,
+      type: answers.TYPE.Card,
       options: newState
     };
   },
   removeCard: (state, action) => {
     const cards = state.options.filter((card) => card.id !== action.payload.id);
     return {
-      type: AnswerType.Amount,
+      type: answers.TYPE.Card,
       options: cards
     };
   },
@@ -149,7 +152,7 @@ const reducerHelper = {
       el.id === action.payload.id ? { ...el, title: action.payload.title } : el
     );
     return {
-      type: AnswerType.Amount,
+      type: answers.TYPE.Card,
       options: newState
     };
   },
@@ -160,7 +163,7 @@ const reducerHelper = {
         : el;
     });
     return {
-      type: AnswerType.Amount,
+      type: answers.TYPE.Card,
       options: newState
     };
   },
@@ -169,7 +172,7 @@ const reducerHelper = {
       return el.id === action.payload.id ? { ...el, imageURL: '', imageData: undefined } : el;
     });
     return {
-      type: AnswerType.Amount,
+      type: answers.TYPE.Card,
       options: newState
     };
   },
@@ -181,14 +184,14 @@ const reducerHelper = {
     };
     const textInputs = state.options.concat(newTextInput);
     return {
-      type: AnswerType.UserInput,
+      type: answers.TYPE.TextInput,
       options: textInputs
     };
   },
   removeTextInput: (state, action) => {
     const textInputs = state.options.filter((textInput) => textInput.id !== action.payload.id);
     return {
-      type: AnswerType.UserInput,
+      type: answers.TYPE.TextInput,
       options: textInputs
     };
   },
@@ -197,7 +200,7 @@ const reducerHelper = {
       el.id === action.payload.id ? { ...el, title: action.payload.title } : el
     );
     return {
-      type: AnswerType.UserInput,
+      type: answers.TYPE.TextInput,
       options: newState
     };
   },
@@ -208,7 +211,7 @@ const reducerHelper = {
         : el
     );
     return {
-      type: AnswerType.UserInput,
+      type: answers.TYPE.TextInput,
       options: newState
     };
   },
@@ -217,7 +220,7 @@ const reducerHelper = {
       el.id === action.payload.id ? { ...el, hasNumberInput: false } : el
     );
     return {
-      type: AnswerType.UserInput,
+      type: answers.TYPE.TextInput,
       options: newState
     };
   },
@@ -228,7 +231,7 @@ const reducerHelper = {
         : el
     );
     return {
-      type: AnswerType.UserInput,
+      type: answers.TYPE.TextInput,
       options: newState
     };
   },
@@ -238,7 +241,6 @@ const reducerHelper = {
       imageURL: action.payload.imageURL,
       imageData: action.payload.imageData
     });
-
     return {
       type: 'images',
       options: newState
@@ -260,7 +262,6 @@ const reducerHelper = {
       }
       return { id: option.id, imageURL: option.src };
     });
-
     return {
       type: 'images',
       options: newState

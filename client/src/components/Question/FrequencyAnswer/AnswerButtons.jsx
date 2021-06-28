@@ -4,6 +4,9 @@ import { arrayOf, shape, func, string, bool } from 'prop-types';
 
 import AnswerButton from './AnswerButton';
 
+// enum
+import * as answers from '../../../constants/Answers';
+
 const AnswerButtons = ({
   leftAnswerOptions,
   rightAnswerOptions,
@@ -98,7 +101,7 @@ const AnswerButtons = ({
     <div>
       <div className="row mx-3">
         <div className="col-6">
-          {selectedButtonsLeft.length &&
+          {selectedButtonsLeft.length > 0 &&
             leftAnswerOptions.map((answerOption, index) => (
               <div key={answerOption.id}>
                 <AnswerButton
@@ -111,7 +114,7 @@ const AnswerButtons = ({
             ))}
         </div>
         <div className="col-6">
-          {selectedButtonsRight.length &&
+          {selectedButtonsRight.length > 0 &&
             rightAnswerOptions.map((answerOption, index) => (
               <div key={answerOption.id}>
                 <AnswerButton

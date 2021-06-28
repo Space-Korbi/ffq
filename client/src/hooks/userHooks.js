@@ -129,7 +129,7 @@ const useUpdateUser = (userId) => {
 };
 
 // Custom answer saving hook
-const useSaveAnswer = (userId, iterationId, questionId) => {
+const useSaveAnswer = (userId, iterationId, questionId, answerType) => {
   const [userInput, setUserInput] = useState();
 
   const saveAnswerReducer = (state, action) => {
@@ -176,6 +176,7 @@ const useSaveAnswer = (userId, iterationId, questionId) => {
       try {
         const answer = {
           questionId,
+          type: answerType,
           userInput
         };
         await userService

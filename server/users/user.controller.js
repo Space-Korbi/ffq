@@ -258,6 +258,8 @@ const getUsers = async (req, res) => {
     });
 };
 
+// TODO
+// Adjust skip questions for multiple choice questions
 const addQuestionIdsToSkip = (questionIds, state) => {
   return state.concat(questionIds);
 };
@@ -364,7 +366,7 @@ const updateIteration = async (req, res) => {
 
 const updateAnswer = async (req, res) => {
   const { userId, iterationId, questionId } = req.params;
-  const { userInput } = req.body;
+  const { userInput, type } = req.body;
 
   await User.findById(userId)
     .then((user) => {
@@ -390,11 +392,11 @@ const updateAnswer = async (req, res) => {
           iteration.questionsToSkip
         );
         answer.userInput = userInput;
-
         answer.updatedAt = Date.now();
+        answer.type = type;
       } else {
         iteration.questionsToSkip = updateSkip(null, userInput, iteration.questionsToSkip);
-        iteration.answers.push({ questionId, userInput, createdAt: Date.now() });
+        iteration.answers.push({ questionId, type, userInput, createdAt: Date.now() });
       }
 
       userUpdate.save().then(() => {

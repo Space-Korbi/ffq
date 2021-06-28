@@ -15,12 +15,14 @@ import AmountAnswer from './AmountAnswer/AmountAnswer';
 import UserInputAnswer from './UserInputAnswer/UserInputAnswer';
 import Carousel from '../Carousel';
 
-// global constants
-import AnswerType from '../../types';
+// enums
+import * as answers from '../../constants/Answers';
 
 function Answers({ answerOptions, setUserInput, previouslySubmittedAnswer, isPreview }) {
+  console.log('single', answerOptions.type === answers.TYPE.SingleChoiceButton);
+  console.log('multiple', answerOptions.type === answers.TYPE.MultipleChoiceButton);
   switch (answerOptions.type) {
-    case AnswerType.Frequency:
+    case answers.TYPE.SingleChoiceButton:
       return (
         <div className="row no-gutters d-flex align-items-stretch">
           <div className="col">
@@ -35,7 +37,22 @@ function Answers({ answerOptions, setUserInput, previouslySubmittedAnswer, isPre
           </div>
         </div>
       );
-    case AnswerType.Amount:
+    case answers.TYPE.MultipleChoiceButton:
+      return (
+        <div className="row no-gutters d-flex align-items-stretch">
+          <div className="col">
+            <AnswerButtons
+              leftAnswerOptions={answerOptions.options.left}
+              rightAnswerOptions={answerOptions.options.right}
+              previouslySubmittedAnswer={previouslySubmittedAnswer}
+              isMultipleChoice={answerOptions.isMultipleChoice}
+              setUserInput={setUserInput}
+              isPreview={isPreview}
+            />
+          </div>
+        </div>
+      );
+    case answers.TYPE.Card:
       return (
         <div>
           <AmountAnswer
@@ -45,7 +62,7 @@ function Answers({ answerOptions, setUserInput, previouslySubmittedAnswer, isPre
           />
         </div>
       );
-    default:
+    case answers.TYPE.TextInput:
       return (
         <div className="row no-gutters d-flex align-items-stretch">
           <div className="col">
@@ -57,6 +74,8 @@ function Answers({ answerOptions, setUserInput, previouslySubmittedAnswer, isPre
           </div>
         </div>
       );
+    default:
+      return <div />;
   }
 }
 
@@ -77,7 +96,8 @@ const Question = ({
   const [{ userInput, isSaving, isSavingError }, setUserInput] = useSaveAnswer(
     userId,
     iterationId,
-    id
+    id,
+    answerOptions.type
   );
 
   useEffect(() => {
