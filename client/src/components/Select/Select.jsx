@@ -4,19 +4,21 @@ import { func, string } from 'prop-types';
 // localization
 import { useTranslation } from 'react-i18next';
 
-import AnswerType from '../../types';
+import * as answers from '../../constants/Answers';
 
 const Select = ({ onChange, dispatch, value }) => {
   const { t } = useTranslation(['globals']);
 
+  console.log('value', value);
+
   const setValue = () => {
     switch (value) {
-      case AnswerType.Frequency:
-        return AnswerType.Frequency;
-      case AnswerType.Amount:
-        return AnswerType.Amount;
-      case AnswerType.UserInput:
-        return AnswerType.UserInput;
+      case answers.TYPE.SingleChoiceButton:
+        return answers.TYPE.SingleChoiceButton;
+      case answers.TYPE.Card:
+        return answers.TYPE.Card;
+      case answers.TYPE.TextInput:
+        return answers.TYPE.TextInput;
       case 'images':
         return 'images';
       default:
@@ -45,10 +47,10 @@ const Select = ({ onChange, dispatch, value }) => {
           }}
           style={{ minWidth: '180px' }}
         >
-          <option value="select">{t('globals:select...', 'Auswählen...')}</option>
-          <option value={AnswerType.Frequency}>{t('globals:buttons', 'Buttons')}</option>
-          <option value={AnswerType.Amount}>{t('globals:cards', 'Karten')}</option>
-          <option value={AnswerType.UserInput}>{t('globals:user_input', 'Eingabefelder')}</option>
+          <option value="select">{t('globals:select', 'Auswählen...')}</option>
+          <option value={answers.TYPE.SingleChoiceButton}>{t('globals:buttons', 'Buttons')}</option>
+          <option value={answers.TYPE.Card}>{t('globals:cards', 'Karten')}</option>
+          <option value={answers.TYPE.TextInput}>{t('globals:user_input', 'Eingabefelder')}</option>
           <option value="images">{t('globals:images', 'Bilder')}</option>
         </select>
       </div>

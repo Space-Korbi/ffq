@@ -44,9 +44,7 @@
   "save_and_exit": "Speichern und schließen",
   "images": "Bilder",
   "answer_type": "Antwortarten",
-  "select": {
-    "": "Auswählen..."
-  },
+  "select": "Auswählen...",
   "buttons": "Buttons",
   "cards": "Karten",
   "user_input": "Eingabefelder",

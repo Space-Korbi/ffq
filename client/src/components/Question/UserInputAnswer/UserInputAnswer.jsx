@@ -2,16 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { shape, arrayOf, string, bool, func } from 'prop-types';
 import { get, findIndex, endsWith, trimEnd, differenceBy } from 'lodash';
 
-const UserInputAnswer = ({ answerOptions, submittedAnswer, onSubmit }) => {
+const UserInputAnswer = ({ answerOptions, previouslySubmittedAnswer, setUserInput }) => {
   const [userInputs, setUserInputs] = useState(answerOptions);
 
   useEffect(() => {
-    if (get(submittedAnswer, ['answerOption', '0', 'answer'])) {
-      const difference = differenceBy(submittedAnswer.answerOption, answerOptions, 'id');
-      const allInputFields = submittedAnswer.answerOption.concat(difference);
+    if (get(previouslySubmittedAnswer, ['answerOption', '0', 'answer'])) {
+      const difference = differenceBy(previouslySubmittedAnswer.answerOption, answerOptions, 'id');
+      const allInputFields = previouslySubmittedAnswer.answerOption.concat(difference);
       setUserInputs(allInputFields);
     }
-  }, [submittedAnswer]);
+  }, [previouslySubmittedAnswer]);
 
   useEffect(() => {
     setUserInputs(answerOptions);
@@ -37,12 +37,11 @@ const UserInputAnswer = ({ answerOptions, submittedAnswer, onSubmit }) => {
 
   const submit = () => {
     if (!userInputs.length) {
-      onSubmit([{ answer: '', hasNumberInput: false, id: 'null', title: '' }]);
+      setUserInput([{ answer: '', hasNumberInput: false, id: 'null', title: '' }]);
     } else {
-      onSubmit(userInputs);
+      setUserInput(userInputs);
     }
   };
-
   return (
     <div>
       {userInputs.map((userInput) => {
@@ -112,15 +111,15 @@ UserInputAnswer.propTypes = {
       numberInputTitle: string
     })
   ).isRequired,
-  submittedAnswer: shape({
+  previouslySubmittedAnswer: shape({
     questionId: string,
     answerOption: arrayOf(shape({ id: string, title: string }))
   }),
-  onSubmit: func.isRequired
+  setUserInput: func.isRequired
 };
 
 UserInputAnswer.defaultProps = {
-  submittedAnswer: { questionId: '', answer: [{ id: '', value: '' }] }
+  previouslySubmittedAnswer: { questionId: '', answer: [{ id: '', value: '' }] }
 };
 
 export default UserInputAnswer;

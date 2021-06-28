@@ -20,6 +20,7 @@ const Question = new Schema(
     help: { type: String, default: '' },
     answerOptions: {
       type: { type: String, default: '' },
+      isMultipleChoice: { type: Boolean, default: false },
       options: { type: Schema.Types.Mixed, default: [] }
     }
   },

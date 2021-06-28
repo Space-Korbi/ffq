@@ -5,7 +5,10 @@ const { Schema } = mongoose;
 const Answer = Schema(
   {
     questionId: { type: String },
-    answerOption: { type: Schema.Types.Mixed }
+    type: { type: String },
+    createdAt: { type: Date },
+    updatedAt: { type: Date },
+    userInput: { type: Schema.Types.Mixed }
   },
   { _id: false, default: [] }
 );

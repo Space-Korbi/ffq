@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unused-prop-types */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { string, shape, arrayOf, exact, bool, oneOfType, func } from 'prop-types';
 import { useParams } from 'react-router-dom';
 // custom hooks
@@ -15,46 +15,65 @@ import AmountAnswer from './AmountAnswer/AmountAnswer';
 import UserInputAnswer from './UserInputAnswer/UserInputAnswer';
 import Carousel from '../Carousel';
 
-// global constants
-import AnswerType from '../../types';
+// enums
+import * as answers from '../../constants/Answers';
 
-function Answers({ answerOptions, setUserInput, submittedAnswer }) {
+function Answers({ answerOptions, setUserInput, previouslySubmittedAnswer, isPreview }) {
   switch (answerOptions.type) {
-    case AnswerType.Frequency:
+    case answers.TYPE.SingleChoiceButton:
       return (
         <div className="row no-gutters d-flex align-items-stretch">
           <div className="col">
             <AnswerButtons
               leftAnswerOptions={answerOptions.options.left}
               rightAnswerOptions={answerOptions.options.right}
-              submittedAnswer={submittedAnswer}
-              onClick={setUserInput}
+              previouslySubmittedAnswer={previouslySubmittedAnswer}
+              isMultipleChoice={answerOptions.isMultipleChoice}
+              setUserInput={setUserInput}
+              isPreview={isPreview}
             />
           </div>
         </div>
       );
-    case AnswerType.Amount:
+    case answers.TYPE.MultipleChoiceButton:
+      return (
+        <div className="row no-gutters d-flex align-items-stretch">
+          <div className="col">
+            <AnswerButtons
+              leftAnswerOptions={answerOptions.options.left}
+              rightAnswerOptions={answerOptions.options.right}
+              previouslySubmittedAnswer={previouslySubmittedAnswer}
+              isMultipleChoice={answerOptions.isMultipleChoice}
+              setUserInput={setUserInput}
+              isPreview={isPreview}
+            />
+          </div>
+        </div>
+      );
+    case answers.TYPE.Card:
       return (
         <div>
           <AmountAnswer
             answerOptions={answerOptions.options}
-            submittedAnswer={submittedAnswer}
-            onClick={setUserInput}
+            previouslySubmittedAnswer={previouslySubmittedAnswer}
+            setUserInput={setUserInput}
           />
         </div>
       );
-    default:
+    case answers.TYPE.TextInput:
       return (
         <div className="row no-gutters d-flex align-items-stretch">
           <div className="col">
             <UserInputAnswer
               answerOptions={answerOptions.options}
-              submittedAnswer={submittedAnswer}
-              onSubmit={setUserInput}
+              previouslySubmittedAnswer={previouslySubmittedAnswer}
+              setUserInput={setUserInput}
             />
           </div>
         </div>
       );
+    default:
+      return <div />;
   }
 }
 
@@ -65,38 +84,28 @@ const Question = ({
   subtitle2,
   help,
   answerOptions,
-  submittedAnswer,
+  previouslySubmittedAnswer,
   onSubmitAnswer,
   iterationId,
   isPreview,
   isImage
 }) => {
   const { userId } = useParams();
-  const [userInput, setUserInput] = useState();
-  const [{ answer, isSaving, isSavingError }, setAnswer] = useSaveAnswer(userId, iterationId, id);
-
-  const [latestAnswer, setLatestAnswer] = useState();
-
-  useEffect(() => {
-    if (!isSaving && !isSavingError && userInput && !isPreview) {
-      setAnswer({ answerOption: userInput });
-    }
-  }, [userInput]);
+  const [{ userInput, isSaving, isSavingError }, setUserInput] = useSaveAnswer(
+    userId,
+    iterationId,
+    id,
+    answerOptions.type
+  );
 
   useEffect(() => {
-    if (!answer || !userInput) {
+    if (!userInput) {
       return;
     }
-    if (!isSaving && !isSavingError) {
-      setLatestAnswer(answer);
-      onSubmitAnswer(answer);
+    if (!isSaving && !isSavingError && !isPreview) {
+      onSubmitAnswer(userInput);
     }
-  }, [answer]);
-
-  useEffect(() => {
-    setLatestAnswer(submittedAnswer);
-    setUserInput(null);
-  }, [submittedAnswer]);
+  }, [userInput]);
 
   return (
     <div>
@@ -133,8 +142,9 @@ const Question = ({
                 ) : (
                   <Answers
                     answerOptions={answerOptions}
+                    previouslySubmittedAnswer={previouslySubmittedAnswer}
                     setUserInput={setUserInput}
-                    submittedAnswer={latestAnswer}
+                    isPreview={isPreview}
                   />
                 )}
               </>
@@ -175,11 +185,35 @@ Question.propTypes = {
           numberInputTitle: string
         })
       )
-    ]).isRequired
+    ])
   }).isRequired,
-  submittedAnswer: oneOfType([
-    shape({ questionId: string, answer: shape({ id: string, value: string }) }),
-    shape({ questionId: string, answer: arrayOf(shape({ id: string, value: string })) })
+  previouslySubmittedAnswer: oneOfType([
+    shape({}),
+    shape({
+      questionId: string,
+      createdAt: string,
+      updatedAt: string,
+      userInput: {
+        selectedButtonsLeft: arrayOf(shape({ id: string, title: string })),
+        selectedButtonsRight: arrayOf(shape({ id: string, title: string }))
+      }
+    }),
+    arrayOf(
+      shape({
+        id: string.isRequired,
+        title: string,
+        imageName: string,
+        imageURL: string
+      })
+    ),
+    arrayOf(
+      shape({
+        id: string.isRequired,
+        title: string,
+        hasNumberInput: bool,
+        numberInputTitle: string
+      })
+    )
   ]),
   onSubmitAnswer: func.isRequired,
   isPreview: bool,
@@ -191,7 +225,7 @@ Question.defaultProps = {
   subtitle1: '',
   subtitle2: '',
   help: '',
-  submittedAnswer: undefined,
+  previouslySubmittedAnswer: null,
   isPreview: false,
   isImage: false
 };

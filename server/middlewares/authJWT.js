@@ -66,8 +66,6 @@ const isAdmin = (req, res, next) => {
 };
 
 const authoriseUser = (req, res, next) => {
-  console.log('========', req.userId, req.query.userId);
-
   if (!req.userId || !req.query.userId) {
     // TODO if isAdmin -> next()
   } else if (req.userId !== req.query.userId) {

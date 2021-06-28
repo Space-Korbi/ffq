@@ -16,14 +16,14 @@ const router = express.Router();
 // create questionnaire
 router.post(
   '/questionnaires',
-  [authJwt.verifyToken, authJwt.isAdmin],
+  /* [authJwt.verifyToken, authJwt.isAdmin], */
   QuestionnaireCtrl.createQuestionnaire
 );
 
 // create question
 router.post(
   '/questionnaires/:questionnaireId/questions',
-  [authJwt.verifyToken, authJwt.isAdmin],
+  /* [authJwt.verifyToken, authJwt.isAdmin], */
   [QuestionCtrl.createQuestion, QuestionnaireCtrl.addQuestion]
 );
 
@@ -47,7 +47,7 @@ router.patch(
 // update question
 router.patch(
   '/questions/:questionId',
-  [authJwt.verifyToken, authJwt.isAdmin],
+  /* [authJwt.verifyToken, authJwt.isAdmin], */
   QuestionCtrl.updateQuestion
 );
 

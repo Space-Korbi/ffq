@@ -1,10 +1,8 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from 'react';
 import { bool, func, string } from 'prop-types';
 
 function AnswerCard({ title, imageURL, imageName, isSelectedAnswer, onClick }) {
-  const [currentURL, setCurrentURL] = useState(`http://localhost:3000/${imageName}`);
+  const [currentURL, setCurrentURL] = useState();
 
   useEffect(() => {
     if (imageURL) {

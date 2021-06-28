@@ -17,6 +17,9 @@ import { useFetchQuestions, useFetchQuestionnaires } from '../../hooks';
 // helpers
 import { addValidString } from '../../helpers';
 
+// enums
+import * as answers from '../../constants/Answers';
+
 // components
 import Spinner from '../../components/Spinner';
 import { NavTabs, NavContents } from '../../components/Navigation';
@@ -35,21 +38,67 @@ const questionHeaderFormatter = (column) => {
   );
 };
 
-const formatAnswer = (answers) => {
-  let formattedAnswer;
-  if (answers && !Array.isArray(answers)) {
-    if (answers.index) {
-      formattedAnswer = answers.index;
-    } else {
-      formattedAnswer = answers.title;
+const formatSingleChoiceButtons = (userInput) => {
+  if (userInput?.selectedButtonsLeft[0]) {
+    return userInput?.selectedButtonsLeft[0].title;
+  }
+  if (userInput?.selectedButtonsRight[0]) {
+    return userInput?.selectedButtonsRight[0].title;
+  }
+  return '';
+};
+
+const formatMultipleChoiceButtons = (userInput) => {
+  let formattedAnswer = '';
+
+  formattedAnswer = userInput.selectedButtonsLeft.map((selectedButton) => {
+    return `${formattedAnswer}\n${selectedButton.title}`;
+  });
+
+  formattedAnswer = userInput.selectedButtonsRight.map((selectedButton) => {
+    return `${formattedAnswer}\n${selectedButton.title}`;
+  });
+
+  return formattedAnswer;
+};
+
+const formatCards = (userInput) => {
+  return `${userInput.index}`;
+};
+
+const formatTextInputs = (userInput) => {
+  return userInput.map((inputField) => {
+    if (!inputField.hasNumberInput) {
+      return `${inputField.title}: ${inputField.answer}`;
     }
-  } else if (answers && Array.isArray(answers)) {
-    formattedAnswer = answers.map((answer) => {
-      if (!answer.hasNumberInput) {
-        return `${answer.title}: ${answer.answer}`;
-      }
-      return `${answer.title}: ${answer.answer} ${answer.numberAnswer} ${answer.numberInputTitle}`;
-    });
+    return `${inputField.title}: ${inputField.answer} ${inputField.numberAnswer} ${inputField.numberInputTitle}`;
+  });
+};
+
+const formatAnswer = (answer) => {
+  const { userInput, createdAt, updatedAt, type } = answer;
+  let formattedAnswer;
+
+  switch (type) {
+    case answers.TYPE.SingleChoiceButton:
+      formattedAnswer = formatSingleChoiceButtons(userInput);
+      break;
+    case answers.TYPE.MultipleChoiceButton:
+      formattedAnswer = formatMultipleChoiceButtons(userInput);
+      break;
+    case answers.TYPE.Card:
+      formattedAnswer = formatCards(userInput);
+      break;
+    case answers.TYPE.TextInput:
+      formattedAnswer = formatTextInputs(userInput);
+      break;
+    default:
+      return formattedAnswer;
+  }
+
+  formattedAnswer = `${formattedAnswer}\nansweredAt: ${createdAt}`;
+  if (updatedAt) {
+    formattedAnswer = `${formattedAnswer}\nupdatedAt: ${updatedAt}`;
   }
 
   return formattedAnswer;
@@ -67,7 +116,7 @@ const parseAnswers = (users, selectedIteration) => {
     const userWithAnswers = { ...user };
 
     user.iterations[index].answers.forEach((answer) => {
-      userWithAnswers[answer.questionId] = formatAnswer(answer.answerOption);
+      userWithAnswers[answer.questionId] = formatAnswer(answer);
     });
     return userWithAnswers;
   });

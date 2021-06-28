@@ -258,7 +258,9 @@ const getUsers = async (req, res) => {
     });
 };
 
-const addQuestionIdsSkip = (questionIds, state) => {
+// TODO
+// Adjust skip questions for multiple choice questions
+const addQuestionIdsToSkip = (questionIds, state) => {
   return state.concat(questionIds);
 };
 
@@ -266,15 +268,19 @@ const removeQuestionIdsFromSkip = (questionIds, state) => {
   return state.filter((prevAnswer) => !questionIds.includes(prevAnswer));
 };
 
-const updateSkip = (prevAnswerOption, newAnswerOption, state) => {
-  let newSkip = state;
+const updateSkip = (previousUserInput, newUserInput, state) => {
+  const newSkip = state;
+
+  console.log('previousUserInput - skip', previousUserInput);
+  console.log('newUserInput - skip', newUserInput);
+
   // const newSkips = userUpdate;
-  if (prevAnswerOption && prevAnswerOption.skip) {
+  /* if (prevAnswerOption && prevAnswerOption.skip) {
     newSkip = removeQuestionIdsFromSkip(prevAnswerOption.skip, state);
   }
   if (newAnswerOption.skip) {
-    newSkip = addQuestionIdsSkip(newAnswerOption.skip, state);
-  }
+    newSkip = addQuestionIdsToSkip(newAnswerOption.skip, state);
+  } */
 
   return newSkip;
 };
@@ -360,7 +366,7 @@ const updateIteration = async (req, res) => {
 
 const updateAnswer = async (req, res) => {
   const { userId, iterationId, questionId } = req.params;
-  const { answerOption } = req.body;
+  const { userInput, type } = req.body;
 
   await User.findById(userId)
     .then((user) => {
@@ -381,14 +387,16 @@ const updateAnswer = async (req, res) => {
       }
       if (answer) {
         iteration.questionsToSkip = updateSkip(
-          answer.answerOption,
-          answerOption,
+          answer.userInput,
+          userInput,
           iteration.questionsToSkip
         );
-        answer.answerOption = answerOption;
+        answer.userInput = userInput;
+        answer.updatedAt = Date.now();
+        answer.type = type;
       } else {
-        iteration.questionsToSkip = updateSkip(null, answerOption, iteration.questionsToSkip);
-        iteration.answers.push({ questionId, answerOption });
+        iteration.questionsToSkip = updateSkip(null, userInput, iteration.questionsToSkip);
+        iteration.answers.push({ questionId, type, userInput, createdAt: Date.now() });
       }
 
       userUpdate.save().then(() => {

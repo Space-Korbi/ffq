@@ -8,7 +8,7 @@ import { string, shape, arrayOf, bool, exact, oneOfType } from 'prop-types';
 // localization
 import { useTranslation } from 'react-i18next';
 
-import AnswerType from '../../types';
+import * as answers from '../../constants/Answers';
 
 import JumbotronInputs from './JumbotronInputs';
 import HelpTextInput from './HelpTextInput';
@@ -67,7 +67,7 @@ const QuestionEditor = ({ question, onExit, modalTable }) => {
     setSaving(true);
     const updatedQuestion = { title, subtitle1, subtitle2, help, answerOptions };
 
-    if (answerType === AnswerType.Amount || answerType === 'images') {
+    if (answerType === answers.TYPE.Card || answerType === 'images') {
       updatedQuestion.answerOptions.options = await updateAmountOptions(answerOptions.options);
     }
 

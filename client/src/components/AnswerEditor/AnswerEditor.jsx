@@ -5,10 +5,12 @@ import { arrayOf, func, string, shape, exact, bool, oneOfType } from 'prop-types
 // localization
 import { useTranslation } from 'react-i18next';
 
+// enums
+import * as answers from '../../constants/Answers';
+
 import ButtonsEditor from './ButtonsEditor/ButtonsEditor';
 import CardsEditor from './CardsEditor/CardsEditor';
 import InputsEditor from './InputsEditor/InputsEditor';
-import AnswerType from '../../types';
 import QuestionnaireImages from '../Images';
 
 const AnswerEditor = ({ answerOptions, dispatch, answerType, modalTable }) => {
@@ -18,25 +20,36 @@ const AnswerEditor = ({ answerOptions, dispatch, answerType, modalTable }) => {
 
   useEffect(() => {
     switch (answerType) {
-      case AnswerType.Frequency:
+      case answers.TYPE.SingleChoiceButton:
         setEditor(
           <div>
             <ButtonsEditor
-              answerOptions={answerOptions.options}
+              answerOptions={answerOptions}
               dispatch={dispatch}
               modalTable={modalTable}
             />
           </div>
         );
         break;
-      case AnswerType.Amount:
+      case answers.TYPE.MultipleChoiceButton:
+        setEditor(
+          <div>
+            <ButtonsEditor
+              answerOptions={answerOptions}
+              dispatch={dispatch}
+              modalTable={modalTable}
+            />
+          </div>
+        );
+        break;
+      case answers.TYPE.Card:
         setEditor(
           <div>
             <CardsEditor answerOptions={answerOptions.options} dispatch={dispatch} />
           </div>
         );
         break;
-      case AnswerType.UserInput:
+      case answers.TYPE.TextInput:
         setEditor(
           <div>
             <InputsEditor answerOptions={answerOptions.options} dispatch={dispatch} />

@@ -53,13 +53,14 @@ const QuestionnairePresenter = ({
     if (willSkipQuestionAt(index)) {
       return nextUnskippedQuestionAt(newIndex + 1);
     }
+
     return newIndex;
   };
 
   useEffect(() => {
     answersRef.current = answers;
 
-    if (answers && answers.length && answers[0]) {
+    if (answers?.[0]?.questionId) {
       const nextQuestionIndex = nextUnskippedQuestionAt(currentIndex + 1);
       setCurrentIndex(nextQuestionIndex);
     }
@@ -114,23 +115,23 @@ const QuestionnairePresenter = ({
     if (prevAnswerOption && prevAnswerOption.skip) {
       removeQuestionIdsFromSkip(prevAnswerOption.skip);
     }
-    if (newAnswerOption.skip) {
+    if (newAnswerOption && newAnswerOption.skip) {
       addQuestionIdsSkip(newAnswerOption.skip);
     }
   };
 
   const handleSubmitAnswer = (answer) => {
-    const { answerOption, questionId } = answer;
+    const { questionId, userInput } = answer;
 
-    if (answersRef.current[currentIndex] && answersRef.current[currentIndex].answerOption) {
-      updateSkip(answersRef.current[currentIndex].answerOption, answerOption);
+    if (answersRef.current[currentIndex] && answersRef.current[currentIndex].userInput) {
+      updateSkip(answersRef.current[currentIndex].userInput, userInput);
     } else {
-      updateSkip(null, answerOption);
+      updateSkip(null, userInput);
     }
 
     setAnswers((prevState) => {
       const newState = [...prevState];
-      newState[currentIndex] = { questionId, answerOption };
+      newState[currentIndex] = { questionId, userInput };
       return newState;
     });
   };
@@ -139,9 +140,7 @@ const QuestionnairePresenter = ({
     if (pauses.indexOf(currentIndex) !== -1) {
       return;
     }
-
     userService.updateUserIteration(userId, iterationId, { pausedAt: [...pauses, currentIndex] });
-
     setPauses((prevState) => [...prevState, currentIndex]);
   };
 
@@ -169,9 +168,9 @@ const QuestionnairePresenter = ({
                   userService
                     .updateUserData(userId, { iterations: [{ id: 0, answers: [] }] })
                     .then(() => {
-                      setCurrentIndex(0);
                       setToSkip([]);
                       setAnswers([]);
+                      setCurrentIndex(0);
                     });
                 }}
               >
@@ -211,7 +210,7 @@ const QuestionnairePresenter = ({
               <div className="pl-2" />
               <button
                 type="button"
-                className="btn btn btn-light"
+                className="btn btn-light"
                 onClick={() => handleOnPause()}
                 data-toggle="modal"
                 data-target="#staticBackdrop"
@@ -236,7 +235,7 @@ const QuestionnairePresenter = ({
                     subtitle1={questions[currentIndex].subtitle1}
                     subtitle2={questions[currentIndex].subtitle2}
                     help={questions[currentIndex].help}
-                    submittedAnswer={answers[currentIndex]}
+                    previouslySubmittedAnswer={answers[currentIndex]}
                     answerOptions={questions[currentIndex].answerOptions}
                     onSubmitAnswer={(answer) => handleSubmitAnswer(answer)}
                     currentIndex={currentIndex}
@@ -315,22 +314,22 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
   }, []);
 
   useEffect(() => {
-    if (users && users.length) {
+    if (users?.length) {
       let answers = [];
       let questionsToSkip = [];
       let stoppedAtIndex = -1;
-      let pauses = [];
+      let pausedAt = [];
       const status = users[0].iterations.filter(
         (prevIteration) => prevIteration.id === iterationId
       );
-      if (status && status.length) {
+      if (status?.length) {
         answers = status[0].answers;
         questionsToSkip = status[0].questionsToSkip;
         stoppedAtIndex = status[0].stoppedAtIndex;
-        pauses = status[0].pausedAt;
+        pausedAt = status[0].pausedAt;
       }
 
-      setIteration({ answers, questionsToSkip, stoppedAtIndex, pauses });
+      setIteration({ answers, questionsToSkip, stoppedAtIndex, pausedAt });
     }
   }, [users]);
 
@@ -355,7 +354,7 @@ const QuestionnairePresenterPage = ({ isAdmin }) => {
           previousAnswers={iteration.answers}
           questionsToSkip={iteration.questionsToSkip}
           stoppedAtIndex={iteration.stoppedAtIndex + 1}
-          previousPauses={iteration.pauses}
+          previousPauses={iteration.pausedAt}
           isAdmin={isAdmin}
           iterationId={iterationId}
         />
