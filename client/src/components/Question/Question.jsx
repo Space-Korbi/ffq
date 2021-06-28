@@ -19,8 +19,6 @@ import Carousel from '../Carousel';
 import * as answers from '../../constants/Answers';
 
 function Answers({ answerOptions, setUserInput, previouslySubmittedAnswer, isPreview }) {
-  console.log('single', answerOptions.type === answers.TYPE.SingleChoiceButton);
-  console.log('multiple', answerOptions.type === answers.TYPE.MultipleChoiceButton);
   switch (answerOptions.type) {
     case answers.TYPE.SingleChoiceButton:
       return (
