@@ -127,7 +127,7 @@ const QuestionnairePresenter = ({
   };
 
   const filterForButtonsContainingSkip = (buttons) => {
-    return buttons.filter((button) => button.skip?.length);
+    return buttons.filter((button) => button?.skip?.length);
   };
 
   const filterForNewlySelectedButtons = (newUserInputs, previousUserInputs) => {

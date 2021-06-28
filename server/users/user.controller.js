@@ -10,6 +10,9 @@ const User = require('./user.model');
 
 const Role = db.role;
 
+// enums
+const ANSWER_TYPE = require('../constants/Answers');
+
 // create user
 // api
 const createUser = (req, res) => {
@@ -453,16 +456,20 @@ const updateAnswer = async (req, res) => {
         });
       }
       if (answer) {
-        iteration.questionsToSkip = updateToSkip(
-          answer.userInput,
-          userInput,
-          iteration.questionsToSkip
-        );
+        if (type === ANSWER_TYPE.SingleChoiceButton || type === ANSWER_TYPE.MultipleChoiceButton) {
+          iteration.questionsToSkip = updateToSkip(
+            answer.userInput,
+            userInput,
+            iteration.questionsToSkip
+          );
+        }
         answer.userInput = userInput;
         answer.updatedAt = Date.now();
         answer.type = type;
       } else {
-        iteration.questionsToSkip = updateToSkip(null, userInput, iteration.questionsToSkip);
+        if (type === ANSWER_TYPE.SingleChoiceButton || type === ANSWER_TYPE.MultipleChoiceButton) {
+          iteration.questionsToSkip = updateToSkip(null, userInput, iteration.questionsToSkip);
+        }
         iteration.answers.push({ questionId, type, userInput, createdAt: Date.now() });
       }
 

@@ -4,9 +4,6 @@ import { arrayOf, shape, func, string, bool } from 'prop-types';
 
 import AnswerButton from './AnswerButton';
 
-// enum
-import * as answers from '../../../constants/Answers';
-
 const AnswerButtons = ({
   leftAnswerOptions,
   rightAnswerOptions,

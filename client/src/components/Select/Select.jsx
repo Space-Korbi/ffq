@@ -9,8 +9,6 @@ import * as answers from '../../constants/Answers';
 const Select = ({ onChange, dispatch, value }) => {
   const { t } = useTranslation(['globals']);
 
-  console.log('value', value);
-
   const setValue = () => {
     switch (value) {
       case answers.TYPE.SingleChoiceButton:
