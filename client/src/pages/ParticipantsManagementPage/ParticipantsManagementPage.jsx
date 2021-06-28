@@ -48,14 +48,19 @@ const formatSingleChoiceButtons = (userInput) => {
   return '';
 };
 
+const flattenButtonArrays = (leftColumn, rightColumn) => {
+  return [].concat(leftColumn, rightColumn);
+};
+
 const formatMultipleChoiceButtons = (userInput) => {
   let formattedAnswer = '';
 
-  formattedAnswer = userInput.selectedButtonsLeft.map((selectedButton) => {
-    return `${formattedAnswer}\n${selectedButton.title}`;
-  });
+  const flatButtons = flattenButtonArrays(
+    userInput.selectedButtonsLeft,
+    userInput.selectedButtonsRight
+  );
 
-  formattedAnswer = userInput.selectedButtonsRight.map((selectedButton) => {
+  formattedAnswer = flatButtons.map((selectedButton) => {
     return `${formattedAnswer}\n${selectedButton.title}`;
   });
 
